@@ -8,7 +8,7 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="24">
+        <!-- <el-col :span="24">
           资产类别
           <el-select v-model="zclb" placeholder="请选择">
             <el-option
@@ -23,7 +23,7 @@
           终点桩号
           自
           至
-        </el-col>
+        </el-col> -->
       </el-row>
     </div>
 </template>

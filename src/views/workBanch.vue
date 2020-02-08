@@ -9,6 +9,39 @@
           <el-col :span="4"><div class="topItem" style="background:rgb(114, 212, 223)" @click="toConsCost"><div class="ticon"></div><div class="ttile">养护费用管理</div></div></el-col>
         </el-row>
       </el-main>
+      <el-main>
+        <el-row>
+          <div id="assetsMap">
+            <div  id="astList">
+              <table>
+                <thead>
+                  <tr><th colspan="2">图例</th></tr>
+                </thead>
+                <tbody>
+                  <tr v-for="item in Assets" :key="item.id" @click="changeMarkers(item.id)"><td><img :src="item.src" alt=""></td><td>{{item.name}}</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="amap-wrapper">
+              <el-amap class="amap-box" vid="map"
+                :zoom="astZoom"
+                :center="astCenter" v-if="assAmap">
+                <el-amap-marker vid="marker"
+                  v-for="marker in astMarkers"
+                  :key="marker.id"
+                  :id="marker.id"
+                  :icon="marker.icon"
+                  :position="marker.location"
+                  :label="marker.label"
+                  :events="markerEvents"
+                  @click="markerEvent(marker.id)"
+                  >
+                </el-amap-marker>
+              </el-amap>
+            </div>
+          </div>
+        </el-row>
+      </el-main>
       <el-row>
         <el-col :span="12">
           <el-main>
@@ -246,12 +279,12 @@
               <div id="markerMap">
                 <div class="amap-wrapper">
                   <el-amap class="amap-box" vid="map"
-                    :zoom="zoom"
-                    :center="center">
+                    :zoom="loclZoom"
+                    :center="loclCenter">
                     <el-amap-marker vid="marker"
-                      :icon="icon"
-                      :position="center"
-                      :label="label"
+                      :icon="loclicon"
+                      :position="locMcenter"
+                      :label="loclabel"
                       >
                     </el-amap-marker>
                   </el-amap>
@@ -267,14 +300,43 @@
 export default {
   data () {
     return {
+      astZoom: 12,
+      astCenter: [108.860159, 34.978],
       locationDialog: false,
-      zoom: 10,
-      center: [108.860159, 34.978],
-      icon: '',
-      label: {
+      loclZoom: 10,
+      loclCenter: [108.860159, 34.978],
+      loclicon: '',
+      locMcenter: [108.860159, 34.978],
+      loclabel: {
         content: '',
         offset: [10, -20]
       },
+      assAmap: false,
+      Assets: [
+        { id: '1', name: '分公司', src: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg' },
+        { id: '2', name: '管理所', src: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg' },
+        { id: '2', name: '管理所', src: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg' },
+        { id: '2', name: '管理所', src: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg' },
+        { id: '2', name: '管理所', src: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg' },
+        { id: '2', name: '管理所', src: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg' },
+        { id: '2', name: '管理所', src: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg' },
+        { id: '2', name: '管理所', src: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg' },
+        { id: '2', name: '管理所', src: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg' },
+        { id: '2', name: '管理所', src: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg' },
+        { id: '2', name: '管理所', src: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg' },
+        { id: '2', name: '管理所', src: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg' },
+        { id: '2', name: '管理所', src: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg' },
+        { id: '2', name: '管理所', src: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg' },
+        { id: '2', name: '管理所', src: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg' },
+        { id: '2', name: '管理所', src: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg' },
+        { id: '2', name: '管理所', src: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg' },
+        { id: '2', name: '管理所', src: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg' },
+        { id: '2', name: '管理所', src: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg' }
+      ],
+      astMarkers: [
+        { id: '321', icon: '', location: [108.860159, 34.978], label: { content: '111', offset: [10, -20] } },
+        { id: '2', icon: '', location: [108.850159, 34.978], label: { content: '222', offset: [10, -20] } }
+      ],
       zcTable: [
         { zh: 'K111', name: '吕村收费站', num: '1', pic: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg', year: '2016-05-02', location: [108.860159, 34.978] },
         { zh: 'K111', name: '薛家咀大桥', num: '1', pic: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg', year: '2016-05-02', location: [108.850159, 34.878] },
@@ -303,11 +365,17 @@ export default {
         { name: '吕村收费站', income: '200.00', engineering: '100.00', date: '2019-1-1', bill: '' },
         { name: '吕村收费站', income: '200.00', engineering: '100.00', date: '2019-1-1', bill: '' }
       ],
-      srcList: []
+      srcList: [],
+      markerEvents: {
+        click (e) {
+          console.log(e.target.B)
+        }
+      }
     }
   },
   mounted () {
     this.setPicList()
+    this.assAmap = true
   },
   methods: {
     setPicList () {
@@ -339,11 +407,21 @@ export default {
     },
     openDialog (local, name) {
       this.locationDialog = true
-      this.center = local
-      this.label = {
+      this.loclCenter = local
+      this.loclabel = {
         content: name,
         offset: [10, -20]
       }
+    },
+    changeMarkers (id) {
+      this.astMarkers = [
+        { id: '1', icon: '', location: [108.760159, 34.978], label: { content: '', offset: [10, -20] } },
+        { id: '2', icon: '', location: [108.800159, 34.978], label: { content: '', offset: [10, -20] } }
+      ]
+    },
+    markerEvent (id) {
+      alert(1)
+      console.log(id)
     }
   }
 }
@@ -361,4 +439,20 @@ export default {
   #workBanck .amap-wrapper{
     height: 500px;
   }
+  #workBanck #assetsMap{position: relative;}
+  #workBanck #assetsMap #astList{position: absolute;top: 0px;right: 0px;z-index: 999;text-align: center;background: #fff;border-right: 1px solid #bbb;border-bottom: 1px solid #bbb;border-collapse:collapse;height: 400px;overflow-y: auto;min-width: 100px;}
+  #workBanck #assetsMap #astList::-webkit-scrollbar {
+    width: 5px;
+  }
+  #workBanck #assetsMap #astList::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      background: rgba(0,0,0,0.2);
+  }
+  #workBanck #assetsMap #astList::-webkit-scrollbar-track {
+      border-radius: 0;
+      background: rgba(0,0,0,0.1);
+  }
+  #workBanck #assetsMap #astList tr{cursor: pointer;}
+  #workBanck #assetsMap #astList td,#workBanck #assetsMap #astList th{text-align: center;border-left: 1px solid #bbb;font-size: 14px;vertical-align: middle;border-top: 1px solid #bbb;padding:3px 10px;}
+  #workBanck #assetsMap #astList td img{height: 20px;}
 </style>

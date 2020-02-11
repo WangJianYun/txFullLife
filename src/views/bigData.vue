@@ -7,35 +7,39 @@
         <el-row :gutter="30">
           <el-col :span="4">
             <div class="topItem" style="background:rgb(114, 212, 223)">
-              <div class="ticon"></div>
+              <div class="ticon" style="font-size:50px;"><i class="el-icon-s-data"></i> </div>
               <div class="ttile">
                 <p style="width:100%;text-align:left;">累计入驻养护工区</p>
                 <p style="width:80%;text-align:right;"><span style="font-size:20px;display:inline-block;margin:0 10px;">5</span>家</p>
               </div>
             </div>
           </el-col>
-          <el-col :span="4"><div class="topItem" style="background:rgb(143, 199, 64)"><div class="ticon"></div>
+          <el-col :span="4"><div class="topItem" style="background:rgb(143, 199, 64)">
+            <div class="ticon" style="font-size:50px;"><i class="el-icon-s-data"></i> </div>
             <div class="ttile">
               <p style="width:100%;text-align:left;">累计使用用户</p>
               <p style="width:80%;text-align:right;"><span style="font-size:20px;display:inline-block;margin:0 10px;">58</span>名</p>
             </div>
             </div>
           </el-col>
-          <el-col :span="4"><div class="topItem" style="background:rgb(104, 204, 166)"><div class="ticon"></div>
+          <el-col :span="4"><div class="topItem" style="background:rgb(104, 204, 166)">
+            <div class="ticon" style="font-size:50px;"><i class="el-icon-s-data"></i> </div>
             <div class="ttile">
               <p style="width:100%;text-align:left;">公路资产总计</p>
               <p style="width:80%;text-align:right;"><span style="font-size:20px;display:inline-block;margin:0 10px;">256,368,266</span></p>
             </div>
             </div>
           </el-col>
-          <el-col :span="4"><div class="topItem" style="background:rgb(255, 204, 102)"><div class="ticon"></div>
+          <el-col :span="4"><div class="topItem" style="background:rgb(255, 204, 102)">
+            <div class="ticon" style="font-size:50px;"><i class="el-icon-s-data"></i> </div>
             <div class="ttile">
               <p style="width:100%;text-align:left;">日常费用详情<span style="font-size:14px;">（万元）</span></p>
               <p style="width:80%;text-align:right;">收<span style="font-size:20px;display:inline-block;margin:0 10px;">25630</span></p>
             </div>
             </div>
           </el-col>
-          <el-col :span="4"><div class="topItem" style="background:rgb(114, 212, 223)"><div class="ticon"></div>
+          <el-col :span="4"><div class="topItem" style="background:rgb(114, 212, 223)">
+            <div class="ticon" style="font-size:50px;"><i class="el-icon-s-data"></i> </div>
             <div class="ttile">
               <p style="width:100%;text-align:left;">养护费用详情<span style="font-size:14px;">（万元）</span></p>
               <p style="width:80%;text-align:right;">支<span style="font-size:20px;display:inline-block;margin:0 10px;">13250</span></p>

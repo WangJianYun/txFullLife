@@ -62,7 +62,8 @@ export default {
 <style>
 .login-container {
   height: 100%;
-  background-image: linear-gradient(#1FB5AC, #32323c);
+  background: url('../assets/002.jpg') no-repeat 0% 0%;
+  background-size: 100% 100%;
 }
 .login-header{height: 15%;}
 .container{
@@ -70,7 +71,7 @@ export default {
   margin: 0 auto;
   position: relative;
   height: 70%;
-  background-image: linear-gradient(#32323c, #1FB5AC);
+  /* background-image: linear-gradient(#32323c, #1FB5AC); */
 }
 .login-container-title {
   width: 100%;

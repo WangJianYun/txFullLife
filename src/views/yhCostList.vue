@@ -1,3 +1,7 @@
+/*
+ * @Author: liuhaosheng
+ * @Description：历年费用收支详情
+ */
 <template>
   <div id="yhCostMap">
     <p class="title-p">
@@ -96,6 +100,7 @@
         <el-button
           type="primary"
           icon="el-icon-delete"
+          @click="delListFun"
         >批量删除</el-button>
         <span class="serach-span"> 您的检索： <span> 无 </span> </span>
       </div>
@@ -113,7 +118,7 @@
           >
           <el-table-column
             type="selection"
-            width="55"
+            width="40"
           >
           </el-table-column>
           <el-table-column
@@ -171,7 +176,7 @@
           </el-table-column>
           <el-table-column
             fixed="right"
-            width="175"
+            width="170"
             label="操作"
           >
             <template slot-scope="scope">
@@ -197,7 +202,7 @@
     </div>
     <!--  新增 -->
     <el-dialog
-      title="养护费用收支录入"
+      title=">> 养护费用收支录入"
       :visible.sync="addShow"
       :close-on-click-modal="false"
       custom-class="dialog-div"
@@ -501,7 +506,9 @@ export default {
       this.infoShow = true
     },
     handleEdit (data) {},
-    handleDelete (data) {}
+    handleDelete (data) {},
+    // 批量删除
+    delListFun () {}
   }
 }
 </script>
@@ -533,7 +540,7 @@ export default {
       border: 1px solid #dcdfe6;
       td {
         border: 1px solid #dcdfe6;
-        padding: 5px 10px;
+        padding: 10px;
       }
     }
     .bg-td {

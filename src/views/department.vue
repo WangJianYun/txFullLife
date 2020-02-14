@@ -8,7 +8,7 @@
                 归属上级公司：<span class="preDepartment">铜旬分公司</span>
             </el-col>
             <el-col :span="12" style="text-align:right;padding-right:30px;">
-                <el-button type="primary" @click="openDialog">添加部门</el-button>
+                <el-button type="primary" icon="el-icon-plus" @click="openDialog('add')">添加部门</el-button>
             </el-col>
         </el-row>
         <el-main id="tableWrap">
@@ -59,9 +59,9 @@
                     label="操作"
                     align="center">
                     <template slot-scope="scope">
-                      <el-button type="primary" size="small" @click="openDialog('look',scope.row)">查看</el-button>
-                      <el-button type="primary" size="small" @click="openDialog('edit',scope.row)">编辑</el-button>
-                      <el-button type="primary" size="small" @click="delete(scope.row)">删除</el-button>
+                      <el-button type="info" size="mini" @click="openDialog('look',scope.$index,scope.row)">查看</el-button>
+                      <el-button type="primary" size="mini" @click="openDialog('edit',scope.$index,scope.row)">编辑</el-button>
+                      <el-button type="danger" size="mini" @click="deleteRow(scope.$index,scope.row)">删除</el-button>
                     </template>
                   </el-table-column>
 
@@ -82,13 +82,40 @@
           <el-dialog :title="dialogName" id="disZbDialog" :fullscreen="false" :visible.sync="disVisible" width="60%" :before-close="closeDialog">
             <el-main>
               <el-form :inline="true" ref="form" v-model="form" size="small" label-width="140px"  class="demo-form-inline">
-                <el-row>
+                <table class="add-table">
+                  <tr>
+                    <td class="bg-td">选择部门归属：</td>
+                    <td>
+                      <el-select v-model="form.department" placeholder="--- 请选择 ---" style="width:100%;" size="small">
+                          <el-option v-for="option in options" :key="option.value" :label="option.label" :value="option.value"></el-option>
+                      </el-select>
+                    </td>
+                    <td class="bg-td">部门名称：</td>
+                    <td><el-input type="text" v-model="form.name" size="small"></el-input></td>
+                  </tr>
+                  <tr>
+                    <td class="bg-td">是否激活：</td>
+                    <td colspan="3">
+                      <el-switch
+                        v-model="form.switch"
+                        active-color="#409eff"
+                        inactive-color="#bbb">
+                      </el-switch>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="bg-td">备注：</td>
+                    <td colspan="3">
+                      <el-input type="textarea" rows="5" v-model="form.remark" size="small"></el-input>
+                    </td>
+                  </tr>
+                </table>
+                <!-- <el-row :gutter="20">
                   <el-col :span="12">
                     <el-form-item label="选择部门归属：" label-width="150px">
                         <el-select v-model="form.department" placeholder="--- 请选择 ---">
                             <el-option v-for="option in options" :key="option.value" :label="option.label" :value="option.value"></el-option>
                         </el-select>
-                        <!-- <el-input type="text" v-model="form.department"></el-input> -->
                     </el-form-item>
                   </el-col>
                   <el-col :span="12">
@@ -97,29 +124,29 @@
                     </el-form-item>
                   </el-col>
                 </el-row>
-                <el-row>
+                <el-row :gutter="20">
                   <el-col :span="24">
                     <el-form-item label="是否激活：" label-width="150px">
                         <el-switch
                           v-model="form.switch"
-                          active-color="#13ce66"
-                          inactive-color="#ff4949">
+                        active-color="#409eff"
+                        inactive-color="#bbb">
                         </el-switch>
                     </el-form-item>
                   </el-col>
                 </el-row>
-                <el-row>
+                <el-row :gutter="20">
                   <el-col :span="24">
                     <el-form-item label="备注：" label-width="150px" id="remark">
                       <el-input type="textarea" rows="5" style="width:90%;" v-model="form.remark"></el-input>
                     </el-form-item>
                   </el-col>
-                </el-row>
+                </el-row> -->
               </el-form>
             </el-main>
               <div slot="footer" class="dialog-footer">
-                  <el-button type="primary" @click="save">提交</el-button>
-                  <el-button type="primary" @click="closeDialog">重置</el-button>
+                  <el-button type="primary" @click="save" size="small">提交</el-button>
+                  <el-button @click="closeDialog" size="small">重置</el-button>
               </div>
           </el-dialog>
         </el-row>
@@ -174,15 +201,23 @@ export default {
         // this.tableData = tabDatas
       })
     },
-    check (row) {
-
-    },
     save () {
 
     },
-    openDialog (type, row) {
+    openDialog (type, index, row) {
       this.disVisible = true
-      this.form = row
+      // if (type.indexOf('add') > -1) {
+      //   this.form = {
+      //     department: '',
+      //     name: '',
+      //     switch: true,
+      //     remark: ''
+      //   }
+      // } else {
+      //   this.form = row
+      //   this.form.department = ''
+      //   this.form.switch = false
+      // }
     },
     closeDialog () {
       this.disVisible = false
@@ -193,14 +228,42 @@ export default {
         remark: ''
       }
     },
-    delete () {
-
+    deleteRow (index, row) {
+      // alert(1)
+      // this.$api.post('', row.id, '删除成功', r => {})
+      this.$confirm('确认删除？此操作不可取消', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        let form = {}
+        form.id = row.id
+        this.$api.post('', form, '删除成功', r => {
+          this.refreshTable(1)
+        })
+      })
     }
   }
 }
 </script>
-<style>
-  #department #tableWrap{background: #fff;margin-top: 20px;}
-  #department .el-form-item{width: 100%;}
-  #department #remark .el-form-item__content{width: 80%;}
+<style lang="scss">
+  #department{
+    #tableWrap{background: #fff;margin-top: 20px;}
+    .add-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid #dcdfe6;
+      tr {
+        border: 1px solid #dcdfe6;
+        td {
+          border: 1px solid #dcdfe6;
+          padding: 5px 10px;
+        }
+      }
+      .bg-td {
+        background: #f0f0f0;
+        text-align: center;
+      }
+    }
+  }
 </style>

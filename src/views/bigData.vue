@@ -157,67 +157,14 @@
 export default {
   data () {
     return {
-      locationDialog: false,
-      zoom: 10,
-      center: [108.860159, 34.978],
-      icon: '',
-      label: {
-        content: '',
-        offset: [10, -20]
-      },
-      zcTable: [
-        { zh: 'K111', name: '吕村收费站', num: '1', pic: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg', year: '2016-05-02', location: [108.860159, 34.978] },
-        { zh: 'K111', name: '薛家咀大桥', num: '1', pic: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg', year: '2016-05-02', location: [108.850159, 34.878] },
-        { zh: 'K111', name: '吕村河1号大桥', num: '1', pic: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg', year: '2016-05-02', location: [108.840159, 34.778] },
-        { zh: 'K111', name: '架子山隧道', num: '1', pic: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1578919218447&di=88173d153222fa2a4a93340176956f20&imgtype=0&src=http%3A%2F%2Fpic3.16pic.com%2F00%2F53%2F76%2F16pic_5376776_b.jpg', year: '2016-05-02', location: [108.830159, 34.678] },
-        { zh: 'K111', name: 'ABV', num: '1', pic: '', year: '2016-05-02', location: [108.820159, 34.478] }
-      ],
-      techTable: [
-        { name: '吕村收费站', report: '', tech: '二级', date: '2018-9-20', year: '2018' },
-        { name: '吕村收费站', report: '', tech: '二级', date: '2018-9-20', year: '2018' },
-        { name: '吕村收费站', report: '', tech: '二级', date: '2018-9-20', year: '2018' },
-        { name: '吕村收费站', report: '', tech: '四级', date: '2018-9-20', year: '2018' },
-        { name: '吕村收费站', report: '', tech: '二级', date: '2018-9-20', year: '2018' }
-      ],
-      dayliTable: [
-        { name: '吕村收费站', income: '200.00', expenditure: '100.00', date: '2019-1-1', bill: '' },
-        { name: '吕村收费站', income: '200.00', expenditure: '100.00', date: '2019-1-1', bill: '' },
-        { name: '吕村收费站', income: '200.00', expenditure: '100.00', date: '2019-1-1', bill: '' },
-        { name: '吕村收费站', income: '200.00', expenditure: '100.00', date: '2019-1-1', bill: '' },
-        { name: '吕村收费站', income: '200.00', expenditure: '100.00', date: '2019-1-1', bill: '' }
-      ],
-      conservTable: [
-        { name: '吕村收费站', cost: '200.00', engineering: '100.00', date: '2019-1-1', bill: '' },
-        { name: '吕村收费站', income: '200.00', engineering: '100.00', date: '2019-1-1', bill: '' },
-        { name: '吕村收费站', income: '200.00', engineering: '100.00', date: '2019-1-1', bill: '' },
-        { name: '吕村收费站', income: '200.00', engineering: '100.00', date: '2019-1-1', bill: '' },
-        { name: '吕村收费站', income: '200.00', engineering: '100.00', date: '2019-1-1', bill: '' }
-      ],
-      srcList: [],
       assetsRange: '',
       levelRange: ''
     }
   },
   mounted () {
-    this.setPicList()
     this.loadChart()
   },
   methods: {
-    setPicList () {
-      let tst = this
-      this.zcTable.forEach(function (i, n) {
-        tst.srcList.push(i.pic)
-      })
-      // console.log(tst.srcList)
-    },
-    openDialog (local, name) {
-      this.locationDialog = true
-      this.center = local
-      this.label = {
-        content: name,
-        offset: [10, -20]
-      }
-    },
     loadChart () {
       let myChart1 = this.$echarts.init(document.getElementById('roadChart'))
       // 绘制图表

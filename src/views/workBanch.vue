@@ -179,7 +179,7 @@
           <el-main>
             <el-row class="itemTh">
               公路资产
-              <el-button type="info" class="more" size="mini">查看>></el-button>
+              <el-button type="info" class="more" size="mini" @click="toAssets">查看>></el-button>
             </el-row>
             <el-row>
               <template>
@@ -244,7 +244,7 @@
           <el-main>
             <el-row class="itemTh">
               技术等级
-              <el-button type="info" class="more" size="mini">查看>></el-button>
+              <el-button type="info" class="more" size="mini" @click="toTech">查看>></el-button>
             </el-row>
             <el-row>
               <template>
@@ -269,7 +269,7 @@
                     label="检查报告查看"
                     align="center">
                     <template slot-scope="scope">
-                      <el-button type="primary" size="small" :btitle="scope.row.report">报告查看</el-button>
+                      <el-button type="primary" size="small" :btitle="scope.row.report" @click="imgDialog(scope.row.img)">报告查看</el-button>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -304,7 +304,7 @@
           <el-main>
             <el-row class="itemTh">
               日常费用收支
-              <el-button type="info" class="more" size="mini">查看>></el-button>
+              <el-button type="info" class="more" size="mini" @click="toDayliCost">查看>></el-button>
             </el-row>
             <el-row>
               <template>
@@ -343,7 +343,7 @@
                     label="票据查看"
                     align="center">
                     <template slot-scope="scope">
-                      <el-button type="primary" size="small" :btitle="scope.row.bill">票据查看</el-button>
+                      <el-button type="primary" size="small" :btitle="scope.row.bill" @click="imgDialog(scope.row.img)">票据查看</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -355,7 +355,7 @@
           <el-main>
             <el-row class="itemTh">
               养护费用管理
-              <el-button type="info" class="more" size="mini">查看>></el-button>
+              <el-button type="info" class="more" size="mini" @click="toConsCost">查看>></el-button>
             </el-row>
             <el-row>
               <template>
@@ -395,7 +395,7 @@
                     label="票据查看"
                     align="center">
                     <template slot-scope="scope">
-                      <el-button type="primary" size="small" :btitle="scope.row.bill">票据查看</el-button>
+                      <el-button type="primary" size="small" :btitle="scope.row.bill" @click="imgDialog(scope.row.img)">票据查看</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -405,7 +405,7 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-dialog  title="位置查看" :visible.sync="locationDialog" width="60%">
+        <el-dialog  title="位置查看" :visible.sync="locationDialog" width="60%" :before-close="closeLoclDialog">
           <!-- <el-main> -->
             <el-row>
               <div id="localMap">
@@ -421,6 +421,17 @@
                     </el-amap-marker>
                   </el-amap>
                 </div>
+              </div>
+            </el-row>
+          <!-- </el-main> -->
+        </el-dialog>
+      </el-row>
+      <el-row>
+        <el-dialog  :title="portName" :visible.sync="portDialog" width="60%" :before-close="closeImgDialog">
+          <!-- <el-main> -->
+            <el-row>
+              <div id="report">
+                <img :src="imgUrl" alt="">
               </div>
             </el-row>
           <!-- </el-main> -->
@@ -444,6 +455,9 @@ export default {
         offset: [10, -20]
       },
       assAmap: false,
+      portName: '',
+      portDialog: false,
+      imgUrl: '',
       Assets: [
         { id: '1', name: '加油站', src: require('../assets/addoil.png') },
         { id: '2', name: '桥梁', src: require('../assets/bridge.png') },
@@ -558,13 +572,60 @@ export default {
       }
     },
     changeMarkers (id) {
-      this.astMarkers = [
-        { id: '1', icon: '', location: [108.760159, 34.978], label: { content: '', offset: [10, -20] } },
-        { id: '2', icon: '', location: [108.800159, 34.978], label: { content: '', offset: [10, -20] } }
-      ]
+      switch (id) {
+        case '1':
+          this.astMarkers = [
+            { id: '1', icon: require('../assets/addoil.png'), location: [108.760159, 34.978], label: { content: '11', offset: [10, -20] } },
+            { id: '2', icon: require('../assets/addoil.png'), location: [108.800159, 34.978], label: { content: '12', offset: [10, -20] } }
+          ]
+          break
+        case '2':
+          this.astMarkers = [
+            { id: '1', icon: require('../assets/bridge.png'), location: [108.760159, 34.978], label: { content: '21', offset: [10, -20] } },
+            { id: '2', icon: require('../assets/bridge.png'), location: [108.800159, 34.978], label: { content: '22', offset: [10, -20] } }
+          ]
+          break
+        case '3':
+          this.astMarkers = [
+            { id: '1', icon: require('../assets/htlj.png'), location: [108.760159, 34.978], label: { content: '31', offset: [10, -20] } },
+            { id: '2', icon: require('../assets/htlj.png'), location: [108.800159, 34.978], label: { content: '32', offset: [10, -20] } }
+          ]
+          break
+        case '4':
+          this.astMarkers = [
+            { id: '1', icon: require('../assets/sfz.png'), location: [108.760159, 34.978], label: { content: '41', offset: [10, -20] } },
+            { id: '2', icon: require('../assets/sfz.png'), location: [108.800159, 34.978], label: { content: '42', offset: [10, -20] } }
+          ]
+          break
+        case '5':
+          this.astMarkers = [
+            { id: '1', icon: require('../assets/tenant.png'), location: [108.760159, 34.978], label: { content: '51', offset: [10, -20] } },
+            { id: '2', icon: require('../assets/tenant.png'), location: [108.800159, 34.978], label: { content: '52', offset: [10, -20] } }
+          ]
+          break
+      }
     },
     closeMk () {
       document.getElementById('mkDialog').style.display = 'none'
+    },
+    imgDialog (img) {
+      this.portDialog = true
+      this.imgUrl = img
+    },
+    closeLoclDialog () {
+      this.locationDialog = false
+      this.loclZoom = 10
+      this.loclCenter = [108.860159, 34.978]
+      this.loclicon = ''
+      this.locMcenter = [108.860159, 34.978]
+      this.loclabel = {
+        content: '',
+        offset: [10, -20]
+      }
+    },
+    closeImgDialog () {
+      this.portDialog = false
+      this.imgUrl = ''
     }
   }
 }

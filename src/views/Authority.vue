@@ -38,8 +38,8 @@
                                     <span v-for="item in scope.row.names" :key="item.code">{{item.code}}({{(item.name)}})、</span>
                                 </td>
                                 <td style="width:160px;">
-                                    <el-button type="info" size="mini" v-if="scope.row.num>0">查看<span class="num">{{scope.row.num}}</span></el-button>
-                                    <el-button type="primary" icon="el-icon-plus" size="mini">添加</el-button>
+                                    <el-button type="danger" size="mini" v-if="scope.row.num>0" @click="checkMangers(scope.row.names)">查看<span class="num">{{scope.row.num}}</span></el-button>
+                                    <el-button type="primary" icon="el-icon-plus" size="mini" @click="addManager(scope.row.id)">添加</el-button>
                                 </td>
                             </tr>
                         </table>
@@ -280,6 +280,18 @@
               </div>
           </el-dialog>
         </el-row>
+        <div id="managers" v-if="managerDialog" :style="manStyle">
+          <span class="el-icon-close" style="position:absolute;right:5px;top:5px;cursor:pointer;" @click="closeManger"></span>
+          <el-checkbox-group v-model="everyManager">
+            <div v-for="item in mans" :key="item.$index"><el-checkbox :label="item"></el-checkbox></div>
+          </el-checkbox-group>
+        </div>
+        <div id="checkMans" v-if="checkMans" :style="checkStyle">
+          <span class="el-icon-close" style="position:absolute;right:5px;top:5px;cursor:pointer;" @click="closeCheck"></span>
+          <div id="chMans">
+            <span v-for="item in chkMans" :key="item.code">{{item.code}}{{item.name}}</span>
+          </div>
+        </div>
     </div>
 </template>
 
@@ -289,10 +301,10 @@ export default {
     return {
       pageIndex: 1,
       dpData: [
-        { name: 'blue', switch: true, maker: '1', makeTime: '2020-02-02', num: 32, names: [{ code: 'y12', name: '张三' }, { code: 'x23', name: '刘德华' }, { code: 'a23', name: '刘德华' }, { code: 'b23', name: '刘德华' }, { code: 'c23', name: '刘德华' }, { code: 'y123', name: '刘德华' }, { code: 'd23', name: '刘德华' }] },
-        { name: 'red', switch: false, maker: '2', makeTime: '2020-02-02', num: 0, names: [{ code: 'wjy', name: '李四' }] },
-        { name: 'yellow', switch: true, maker: '3', makeTime: '2020-02-02', num: 2, names: [{ code: 'abc', name: '王五' }] },
-        { name: 'green', switch: false, maker: '4', makeTime: '2020-02-02', num: 1, names: [{ code: 'dd', name: '赵六' }] }
+        { id: '1', name: 'blue', switch: true, maker: '1', makeTime: '2020-02-02', num: 32, names: [{ code: 'y12', name: '张三' }, { code: 'x23', name: '刘德华' }, { code: 'a23', name: '刘德华' }, { code: 'b23', name: '刘德华' }, { code: 'c23', name: '刘德华' }, { code: 'y123', name: '刘德华' }, { code: 'd23', name: '刘德华' }] },
+        { id: '2', name: 'red', switch: false, maker: '2', makeTime: '2020-02-02', num: 0, names: [{ code: 'wjy', name: '李四' }] },
+        { id: '3', name: 'yellow', switch: true, maker: '3', makeTime: '2020-02-02', num: 2, names: [{ code: 'abc', name: '王五' }] },
+        { id: '4', name: 'green', switch: false, maker: '4', makeTime: '2020-02-02', num: 1, names: [{ code: 'dd', name: '赵六' }] }
       ],
       totalData: 3,
       condition: { currentPage: 1 },
@@ -300,6 +312,13 @@ export default {
       disVisible: false,
       auths: ['查看', '新增', '修改', '删除', '批量删除', '锁定', '启用'],
       sunnys: ['查看', '修改', '删除'],
+      everyManager: [],
+      mans: ['张三', '李四', '王五', '赵六'],
+      chkMans: [],
+      managerDialog: false,
+      checkMans: false,
+      manStyle: { left: 0, top: 0 },
+      checkStyle: { left: 0, top: 0 },
       form: {
         name: '',
         switch: false,
@@ -353,6 +372,8 @@ export default {
     },
     openDialog (type, index, row) {
       this.disVisible = true
+      this.managerDialog = false
+      this.checkMans = false
     //   if (type.indexOf('add') > -1) {
     //     this.form = {
     //       name: '',
@@ -417,6 +438,32 @@ export default {
           console.log(this.form.yhCostIn)
           break
       }
+    },
+    addManager (id) {
+      this.managerDialog = true
+      this.checkMans = false
+      let e = window.event
+      this.manStyle = { left: e.clientX - 280 + 'px', top: e.clientY - 150 + 'px' }
+      if (id.indexOf('1') !== -1) {
+        this.everyManager = ['张三', '李四']
+      } else {
+        this.everyManager = ['王五', '赵六']
+      }
+    },
+    closeManger () {
+      this.managerDialog = false
+      this.checkMans = false
+    },
+    checkMangers (names) {
+      this.checkMans = true
+      this.managerDialog = false
+      let e = window.event
+      this.checkStyle = { left: e.clientX - 280 + 'px', top: e.clientY - 150 + 'px' }
+      this.chkMans = names
+    },
+    closeCheck () {
+      this.checkMans = false
+      this.managerDialog = false
     }
   }
 }
@@ -424,6 +471,9 @@ export default {
 <style lang="scss">
   #authority{
     #tableWrap{background: #fff;margin-top: 20px;}
+    #managers{position: absolute;width: 100px;box-shadow: 0 0 5px #bbb;padding:20px 0 20px 20px;background-color: #fff;}
+    #checkMans{position: absolute;width: 150px;box-shadow: 0 0 5px #bbb;padding:16px 0 16px 16px;background-color: #fff;}
+    #chMans span{display: inline-block;margin: 3px 10px;font-size: 14px;color: #444;}
     .tabs{padding: 8px 30px;background: rgb(76, 195, 165);color: #fff;}
     .authTable{margin: 20px 0 30px 0;}
     .add-table {

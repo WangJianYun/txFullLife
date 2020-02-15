@@ -146,9 +146,9 @@
           class="table-page"
           @size-change="sizeChange"
           @current-change="currentChange"
-          :current-page="jurisdiction.page_num"
+          :current-page="jurisdiction.currentPage"
           :page-sizes="[10, 50, 100]"
-          :page-size="jurisdiction.page_size"
+          :page-size="jurisdiction.showCount"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
         ></el-pagination>
@@ -487,8 +487,8 @@ export default {
         }
       ],
       jurisdiction: {
-        page_size: 10,
-        page_num: 1
+        showCount: 10,
+        currentPage: 1
       },
       total: 0,
       selectList: []
@@ -497,10 +497,10 @@ export default {
   methods: {
     // 分页
     sizeChange (val) {
-      this.jurisdiction.page_size = val
+      this.jurisdiction.showCount = val
     },
     currentChange (val) {
-      this.jurisdiction.page_num = val
+      this.jurisdiction.currentPage = val
     },
     selectTable (selection) {
       this.selectList = selection

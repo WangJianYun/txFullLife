@@ -131,9 +131,9 @@
           class="table-page"
           @size-change="sizeChange"
           @current-change="currentChange"
-          :current-page="higway.page_num"
+          :current-page="higway.currentPage"
           :page-sizes="[10, 50, 100]"
-          :page-size="higway.page_size"
+          :page-size="higway.showCount"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
         ></el-pagination>
@@ -453,8 +453,8 @@ export default {
         }
       ],
       higway: {
-        page_size: 10,
-        page_num: 1
+        showCount: 10,
+        currentPage: 1
       },
       total: 0,
       selectList: []
@@ -463,10 +463,10 @@ export default {
   methods: {
     // 分页
     sizeChange (val) {
-      this.higway.page_size = val
+      this.higway.showCount = val
     },
     currentChange (val) {
-      this.higway.page_num = val
+      this.higway.currentPage = val
     },
     selectTable (selection) {
       this.selectList = selection

@@ -9,7 +9,7 @@
       <el-button
         type="primary"
         icon="el-icon-plus"
-        @click="addShowFun"
+        @click="addFun"
       >增加养护费用收支</el-button>
     </p>
     <div class="content">
@@ -169,10 +169,14 @@
             label="费用发生时间"
           >
           </el-table-column>
-          <el-table-column
-            prop="g"
-            label="票据查看"
-          >
+          <el-table-column label="票据查看">
+            <template slot-scope="scope">
+              <el-button
+                type="primary"
+                size="mini"
+                @click="handleInfo(scope.row)"
+              >票据查看</el-button>
+            </template>
           </el-table-column>
           <el-table-column
             fixed="right"
@@ -198,6 +202,16 @@
             </template>
           </el-table-column>
         </el-table>
+        <el-pagination
+          class="table-page"
+          @size-change="sizeChange"
+          @current-change="currentChange"
+          :current-page="cost.currentPage"
+          :page-sizes="[10, 50, 100]"
+          :page-size="cost.showCount"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+        ></el-pagination>
       </div>
     </div>
     <!--  新增 -->
@@ -380,13 +394,258 @@
         >确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 修改 -->
+    <el-dialog
+      title=">> 修改养护费用收支"
+      :visible.sync="editShow"
+      :close-on-click-modal="false"
+      custom-class="dialog-div"
+    >
+      <el-row :gutter="20">
+        <el-form
+          label-position="right"
+          label-width="100px"
+          :model="cost"
+        >
+          <el-col :span="2">
+            <el-form-item label="资产范围检索">
+            </el-form-item>
+          </el-col>
+          <el-col :span="10">
+            <el-form-item label="资产类别">
+              <el-select
+                v-model="cost.a"
+                style="width:100%"
+                size="small"
+              >
+                <el-option
+                  v-for="item in assetList"
+                  :key="item.code"
+                  :label="item.name"
+                  :value="item.code"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10">
+            <el-form-item label="搜索关键词">
+              <el-input
+                v-model.trim="cost.words"
+                size="small"
+              ></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2">
+            <el-button
+              type="primary"
+              size="small"
+            >搜索</el-button>
+          </el-col>
+        </el-form>
+      </el-row>
+      <el-row :gutter="20">
+        <el-form
+          label-position="right"
+          label-width="100px"
+          :model="cost"
+        >
+          <el-col :span="2">
+            <el-form-item label="桩号范围检索">
+            </el-form-item>
+          </el-col>
+          <el-col :span="10">
+            <el-form-item label="起点桩号">
+              <el-select
+                v-model="cost.code1"
+                style="width:100%"
+                size="small"
+              >
+                <el-option
+                  v-for="item in stationList"
+                  :key="item.code"
+                  :label="item.name"
+                  :value="item.code"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10">
+            <el-form-item label="终点桩号">
+              <el-select
+                v-model="cost.code2"
+                style="width:100%"
+                size="small"
+              >
+                <el-option
+                  v-for="item in stationList"
+                  :key="item.code"
+                  :label="item.name"
+                  :value="item.code"
+                ></el-option>
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="2">
+            <el-button
+              type="primary"
+              size="small"
+            >搜索</el-button>
+          </el-col>
+        </el-form>
+      </el-row>
+      <p> 您的检索： </p>
+      <table class="add-table">
+        <tr>
+          <td class="bg-td">请选择资产：</td>
+          <td>
+            <el-select
+              v-model="editForm.name"
+              style="width:100%"
+              size="small"
+            >
+              <el-option
+                v-for="item in stationList"
+                :key="item.code"
+                :label="item.name"
+                :value="item.code"
+              ></el-option>
+            </el-select>
+          </td>
+          <td class="bg-td">金额（万元）： </td>
+          <td>
+            <el-input
+              v-model.trim="editForm.a"
+              size="small"
+            ></el-input>
+          </td>
+        </tr>
+        <tr>
+          <td class="bg-td">养护工程选择： </td>
+          <td>
+            <el-select
+              v-model="editForm.b"
+              style="width:100%"
+              size="small"
+            >
+              <el-option
+                v-for="item in stationList"
+                :key="item.code"
+                :label="item.name"
+                :value="item.code"
+              ></el-option>
+            </el-select>
+          </td>
+          <td class="bg-td">工程时间区间：</td>
+          <td>
+            <el-date-picker
+              size="small"
+              style="width:100%"
+              v-model="editForm.date"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            >
+            </el-date-picker>
+          </td>
+        </tr>
+        <tr>
+          <td class="bg-td">票据上传：</td>
+          <td colspan="3"></td>
+        </tr>
+        <tr>
+          <td class="bg-td">费用况详情（备注）：</td>
+          <td colspan="3">
+            <el-input
+              type="textarea"
+              v-model="editForm.desc"
+            ></el-input>
+          </td>
+        </tr>
+      </table>
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
+        <el-button @click="editShow = false">取 消</el-button>
+        <el-button type="primary">确 定</el-button>
+      </div>
+    </el-dialog>
     <!-- 查看 -->
     <el-dialog
-      title="养护费用收支查看"
+      title="查看养护费用收支"
       :visible.sync="infoShow"
       custom-class="dialog-div"
     >
-    <p>  查看 </p>
+      <table class="add-table">
+        <tr>
+          <td class="bg-td">请选择资产：</td>
+          <td>
+            <el-select
+              v-model="infoForm.name"
+              style="width:100%"
+              size="small"
+            >
+              <el-option
+                v-for="item in stationList"
+                :key="item.code"
+                :label="item.name"
+                :value="item.code"
+              ></el-option>
+            </el-select>
+          </td>
+          <td class="bg-td">金额（万元）： </td>
+          <td>
+            <el-input
+              v-model.trim="infoForm.a"
+              size="small"
+            ></el-input>
+          </td>
+        </tr>
+        <tr>
+          <td class="bg-td">养护工程选择： </td>
+          <td>
+            <el-select
+              v-model="infoForm.b"
+              style="width:100%"
+              size="small"
+            >
+              <el-option
+                v-for="item in stationList"
+                :key="item.code"
+                :label="item.name"
+                :value="item.code"
+              ></el-option>
+            </el-select>
+          </td>
+          <td class="bg-td">工程时间区间：</td>
+          <td>
+            <el-date-picker
+              size="small"
+              style="width:100%"
+              v-model="infoForm.date"
+              type="daterange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+            >
+            </el-date-picker>
+          </td>
+        </tr>
+        <tr>
+          <td class="bg-td">票据上传：</td>
+          <td colspan="3"></td>
+        </tr>
+        <tr>
+          <td class="bg-td">费用况详情（备注）：</td>
+          <td colspan="3">
+            <el-input
+              type="textarea"
+              v-model="infoForm.desc"
+            ></el-input>
+          </td>
+        </tr>
+      </table>
     </el-dialog>
 
   </div>
@@ -396,18 +655,24 @@ export default {
   data () {
     return {
       addShow: false,
+      editShow: false,
       infoShow: false,
       loading: false,
       selectList: [],
       addForm: {},
+      editForm: {},
+      infoForm: {},
       rulesForm: {},
       cost: {
         a: '',
         code: '',
         code1: '',
         code2: '',
-        time: []
+        time: [],
+        showCount: 10,
+        currentPage: 1
       },
+      total: 0,
       assetList: [
         {
           code: '1',
@@ -464,7 +729,7 @@ export default {
       ],
       tableData: [
         {
-          date: '2016-05-03',
+          date: '[2016-05-03,2016-06-20]',
           name: '一类',
           address: '收费站',
           a: '3.00',
@@ -492,9 +757,12 @@ export default {
   },
   created () {},
   methods: {
-    // 点击新建
-    addShowFun () {
-      this.addShow = true
+    // 分页
+    sizeChange (val) {
+      this.cost.showCount = val
+    },
+    currentChange (val) {
+      this.cost.currentPage = val
     },
     selectTable (selection) {
       this.selectList = selection
@@ -502,10 +770,17 @@ export default {
     selectAll (selection) {
       this.selectList = selection
     },
+    addFun () {
+      this.addShow = true
+    },
     handleInfo (data) {
       this.infoShow = true
+      this.infoForm = Object.assign({}, data)
     },
-    handleEdit (data) {},
+    handleEdit (data) {
+      this.editShow = true
+      this.editForm = Object.assign({}, data)
+    },
     handleDelete (data) {},
     // 批量删除
     delListFun () {}

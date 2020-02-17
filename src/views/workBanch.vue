@@ -143,6 +143,27 @@
         </el-row>
       </el-main>
       <el-main>
+        <el-row style="margin-bottom:20px;">
+          <el-col :span="24">
+            资产类别
+            <el-select v-model="condition.type" size="small">
+              <el-option></el-option>
+            </el-select>
+            起点桩号
+            <el-select v-model="condition.startZh" size="small">
+              <el-option></el-option>
+            </el-select>
+            终点桩号
+            <el-select v-model="condition.endZh" size="small">
+              <el-option></el-option>
+            </el-select>
+            归属年份
+            <el-select v-model="condition.year" size="small">
+              <el-option></el-option>
+            </el-select>
+            <el-button type="primary" size="small" @click="changeMarkers">搜</el-button>
+          </el-col>
+        </el-row>
         <el-row>
           <div id="assetsMap">
             <div  id="astList">
@@ -528,6 +549,12 @@ export default {
             document.getElementById('mkBox').getElementsByClassName('mkTitle')[0].innerText = '土桥'
           }
         }
+      },
+      condition: {
+        type: '',
+        startZh: '',
+        endZh: '',
+        year: ''
       }
     }
   },
@@ -572,38 +599,38 @@ export default {
       }
     },
     changeMarkers (id) {
-      switch (id) {
-        case '1':
-          this.astMarkers = [
-            { id: '1', icon: require('../assets/addoil.png'), location: [108.760159, 34.978], label: { content: '11', offset: [10, -20] } },
-            { id: '2', icon: require('../assets/addoil.png'), location: [108.800159, 34.978], label: { content: '12', offset: [10, -20] } }
-          ]
-          break
-        case '2':
-          this.astMarkers = [
-            { id: '1', icon: require('../assets/bridge.png'), location: [108.760159, 34.978], label: { content: '21', offset: [10, -20] } },
-            { id: '2', icon: require('../assets/bridge.png'), location: [108.800159, 34.978], label: { content: '22', offset: [10, -20] } }
-          ]
-          break
-        case '3':
-          this.astMarkers = [
-            { id: '1', icon: require('../assets/htlj.png'), location: [108.760159, 34.978], label: { content: '31', offset: [10, -20] } },
-            { id: '2', icon: require('../assets/htlj.png'), location: [108.800159, 34.978], label: { content: '32', offset: [10, -20] } }
-          ]
-          break
-        case '4':
-          this.astMarkers = [
-            { id: '1', icon: require('../assets/sfz.png'), location: [108.760159, 34.978], label: { content: '41', offset: [10, -20] } },
-            { id: '2', icon: require('../assets/sfz.png'), location: [108.800159, 34.978], label: { content: '42', offset: [10, -20] } }
-          ]
-          break
-        case '5':
-          this.astMarkers = [
-            { id: '1', icon: require('../assets/tenant.png'), location: [108.760159, 34.978], label: { content: '51', offset: [10, -20] } },
-            { id: '2', icon: require('../assets/tenant.png'), location: [108.800159, 34.978], label: { content: '52', offset: [10, -20] } }
-          ]
-          break
-      }
+      // switch (id) {
+      //   case '1':
+      //     this.astMarkers = [
+      //       { id: '1', icon: require('../assets/addoil.png'), location: [108.760159, 34.978], label: { content: '11', offset: [10, -20] } },
+      //       { id: '2', icon: require('../assets/addoil.png'), location: [108.800159, 34.978], label: { content: '12', offset: [10, -20] } }
+      //     ]
+      //     break
+      //   case '2':
+      //     this.astMarkers = [
+      //       { id: '1', icon: require('../assets/bridge.png'), location: [108.760159, 34.978], label: { content: '21', offset: [10, -20] } },
+      //       { id: '2', icon: require('../assets/bridge.png'), location: [108.800159, 34.978], label: { content: '22', offset: [10, -20] } }
+      //     ]
+      //     break
+      //   case '3':
+      //     this.astMarkers = [
+      //       { id: '1', icon: require('../assets/htlj.png'), location: [108.760159, 34.978], label: { content: '31', offset: [10, -20] } },
+      //       { id: '2', icon: require('../assets/htlj.png'), location: [108.800159, 34.978], label: { content: '32', offset: [10, -20] } }
+      //     ]
+      //     break
+      //   case '4':
+      //     this.astMarkers = [
+      //       { id: '1', icon: require('../assets/sfz.png'), location: [108.760159, 34.978], label: { content: '41', offset: [10, -20] } },
+      //       { id: '2', icon: require('../assets/sfz.png'), location: [108.800159, 34.978], label: { content: '42', offset: [10, -20] } }
+      //     ]
+      //     break
+      //   case '5':
+      //     this.astMarkers = [
+      //       { id: '1', icon: require('../assets/tenant.png'), location: [108.760159, 34.978], label: { content: '51', offset: [10, -20] } },
+      //       { id: '2', icon: require('../assets/tenant.png'), location: [108.800159, 34.978], label: { content: '52', offset: [10, -20] } }
+      //     ]
+      //     break
+      // }
     },
     closeMk () {
       document.getElementById('mkDialog').style.display = 'none'

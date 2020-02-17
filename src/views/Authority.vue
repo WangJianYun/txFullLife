@@ -175,13 +175,6 @@
                                     </el-checkbox-group>
                                 </td>
                             </tr>
-                            <tr><td>2</td><td>技术类别列表</td>
-                                <td>
-                                    <el-checkbox-group v-model="form.techType">
-                                        <el-checkbox v-for="item in auths" :key="item.$index" :label="item"></el-checkbox>
-                                    </el-checkbox-group>
-                                </td>
-                            </tr>
                         </tbody>
                     </table>
                     <span class="tabs">公路资产</span>
@@ -191,13 +184,6 @@
                             <tr><td>1</td><td>资产列表</td>
                                 <td>
                                     <el-checkbox-group v-model="form.assetList" @change="changeAuths('yhcostin')">
-                                        <el-checkbox v-for="item in auths" :key="item.$index" :label="item"></el-checkbox>
-                                    </el-checkbox-group>
-                                </td>
-                            </tr>
-                            <tr><td>2</td><td>类别管理</td>
-                                <td>
-                                    <el-checkbox-group v-model="form.assetType">
                                         <el-checkbox v-for="item in auths" :key="item.$index" :label="item"></el-checkbox>
                                     </el-checkbox-group>
                                 </td>
@@ -258,19 +244,6 @@
                             </tr>
                         </tbody>
                     </table>
-                    <span class="tabs">晴雨表</span>
-                    <table class="add-table authTable">
-                        <thead><tr><th>序号</th><th>模块名称</th><th>权限节点</th></tr></thead>
-                        <tbody>
-                            <tr><td>1</td><td>天气配置</td>
-                                <td>
-                                    <el-checkbox-group v-model="form.sunny" @change="changeAuths('yhcostin')">
-                                        <el-checkbox v-for="item in sunnys" :key="item.$index" :label="item"></el-checkbox>
-                                    </el-checkbox-group>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
                 </el-main>
               </el-form>
             </el-main>
@@ -311,7 +284,6 @@ export default {
       dialogName: '新增权限组',
       disVisible: false,
       auths: ['查看', '新增', '修改', '删除', '批量删除', '锁定', '启用'],
-      sunnys: ['查看', '修改', '删除'],
       everyManager: [],
       mans: ['张三', '李四', '王五', '赵六'],
       chkMans: [],
@@ -330,16 +302,13 @@ export default {
         dayCostIn: [],
         dayCostXq: [],
         techLevel: [],
-        techType: [],
         assetList: [],
-        assetType: [],
         meters: [],
         highway: [],
         department: [],
         position: [],
         manager: [],
-        authority: [],
-        sunny: []
+        authority: []
       }
     }
   },
@@ -399,9 +368,7 @@ export default {
         dayCostIn: [],
         dayCostXq: [],
         techLevel: [],
-        techType: [],
         assetList: [],
-        assetType: [],
         meters: [],
         highway: [],
         department: [],

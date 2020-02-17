@@ -6,8 +6,8 @@
       <div class="login-container-form">
         <h2>欢迎您，请登录</h2>
         <el-form :model="form" ref="form" :rules="rules" class="login-form" @keyup.enter.native="onSubmit">
-          <el-form-item prop="acct" label="用户名">
-            <el-input v-model="form.acct" placeholder="用户名" style="width:100%"></el-input>
+          <el-form-item prop="userName" label="用户名">
+            <el-input v-model="form.userName" placeholder="用户名" style="width:100%"></el-input>
           </el-form-item>
           <el-form-item prop="password" label="密码">
             <el-input type="password" placeholder="密码" style="width:100%" v-model="form.password"></el-input>
@@ -29,11 +29,11 @@ export default {
   data () {
     return {
       form: {
-        acct: '',
-        password: ''
+        userName: 'admin',
+        password: '1'
       },
       rules: {
-        acct: [
+        userName: [
           { required: true, message: '请输入用户名', trigger: 'blur' }
         ],
         password: [
@@ -44,17 +44,18 @@ export default {
   },
   methods: {
     onSubmit () {
-      // this.$refs['form'].validate((valid) => {
-      //   if (valid) {
-      //     this.$api.post('user/login', this.form, null, r => {
-      //       sessionStorage.clear()
-      //       sessionStorage.setItem('currentUser', JSON.stringify(r.data))
-      this.$router.push('/workBanch')
-    //       })
-    //     } else {
-    //       return false
-    //     }
-    //   })
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          this.$api.post('/cycle/login/login', this.form, 'aaa', r => {
+            alert(1)
+            sessionStorage.clear()
+            sessionStorage.setItem('currentUser', JSON.stringify(r.data))
+            this.$router.push('/workBanch')
+          })
+        } else {
+          return false
+        }
+      })
     }
   }
 }

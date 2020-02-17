@@ -141,7 +141,7 @@ export default {
     },
     getMenu () {
       let menuData = [
-        { id: '1', name: '工作台', icon: '', url: '/workBanch', lvl: '1', children: [], isNotFinal: false },
+        { id: '1', name: '我的桌面', icon: '', url: '/workBanch', lvl: '1', children: [], isNotFinal: false },
         { id: '2', name: '大数据分析', icon: '', url: '/bigData', lvl: '1', children: [] },
         { id: '3', name: '养护费用', icon: '', url: '1', lvl: '1', children: [] },
         { id: '4', name: '费用管理', icon: '', url: '/yhCostList', lvl: '2', parentId: '3' },
@@ -153,7 +153,7 @@ export default {
         { id: '18', name: '公路资产', icon: '', url: '4', lvl: '1', children: [] },
         { id: '8', name: '资产管理', icon: '', url: '/Assets', lvl: '2', parentId: '18' },
         // { id: '9', name: '类别管理', icon: '', url: '/assetsClass', lvl: '2', parentId: '18' },
-        { id: '19', name: '公路基础', icon: '', url: '5', lvl: '1', children: [] },
+        { id: '19', name: '基础数据', icon: '', url: '5', lvl: '1', children: [] },
         { id: '10', name: '百米桩', icon: '', url: '/metersPile', lvl: '2', parentId: '19' },
         { id: '11', name: '管辖路段', icon: '', url: '/Jurisdiction', lvl: '2', parentId: '19' },
         // { id: '12', name: '高速管理', icon: '', url: '/highway', lvl: '2', parentId: '19' },
@@ -163,7 +163,7 @@ export default {
         { id: '15', name: '职务', icon: '', url: '/Position', lvl: '2', parentId: '20' },
         { id: '22', name: '权限配置', icon: '', url: '/Authority', lvl: '2', parentId: '20' },
         { id: '21', name: '个人中心', icon: '', url: '7', lvl: '1', children: [] },
-        { id: '23', name: '个人中心', icon: '', url: '/Personal', lvl: '2', parentId: '21' }
+        { id: '23', name: '我的资料', icon: '', url: '/Personal', lvl: '2', parentId: '21' }
       ]
       // this.$api.post('sys/res/by/user/list', [], null, r => {
       menuData.forEach(val => {

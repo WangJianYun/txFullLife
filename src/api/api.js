@@ -77,16 +77,16 @@ function apiAxios (method, url, params, tip, success) {
   }).then(function (res) {
     let data = res.data
     if (res.status === 200) {
-      if (data.msg === 'ok') {
-        success(res.data)
-        if (tip != null) {
-          Message({
-            showClose: true,
-            message: tip,
-            type: 'success'
-          })
-        }
+      // if (data.msg === 'ok' || data.msg === 'success' || data) {
+      success(res.data)
+      if (tip != null) {
+        Message({
+          showClose: true,
+          message: tip,
+          type: 'success'
+        })
       }
+      // }
     }
   }).catch(function (err) {
     let res = err.response

@@ -8,53 +8,53 @@
               <tr>
                 <td rowspan="4" class="imgWrap"><img src="../assets/002.jpg" alt=""></td>
                 <td class="right">简称：</td>
-                <td class="left">铜旬分公司</td>
+                <td class="left jc">铜旬分公司</td>
               </tr>
               <tr>
                 <td class="right">起终点桩号：</td>
-                <td class="left">K692.265～K742.326</td>
+                <td class="left fgszh">K692.265～K742.326</td>
               </tr>
               <tr>
                 <td class="right">经度：</td>
-                <td class="left">108</td>
+                <td class="left fgslg">108</td>
               </tr>
               <tr>
                 <td class="right">纬度：</td>
-                <td class="left">34</td>
+                <td class="left fgslat">34</td>
               </tr>
             </table>
             <table class="baseTb">
               <tr>
                 <td rowspan="7" class="imgWrap"><img src="../assets/002.jpg" alt=""></td>
                 <td class="right">类别：</td>
-                <td class="left">桥梁</td>
+                <td class="left type">桥梁</td>
               </tr>
               <tr>
                 <td class="right">起终点桩号：</td>
-                <td class="left">K692.265～K742.326</td>
+                <td class="left seZh">K692.265～K742.326</td>
               </tr>
               <tr>
                 <td class="right">归属年份：</td>
-                <td class="left">2016年5月</td>
+                <td class="left year">2016年5月</td>
               </tr>
               <tr>
                 <td class="right">管理公司：</td>
-                <td class="left">铜旬分公司</td>
+                <td class="left glgs">铜旬分公司</td>
               </tr>
               <tr>
                 <td class="right">养管单位：</td>
-                <td class="left">吕村养护工区</td>
+                <td class="left ygdw">吕村养护工区</td>
               </tr>
               <tr>
                 <td class="right">责任人：</td>
-                <td class="left">王伟民</td>
+                <td class="left zrr">王伟民</td>
               </tr>
               <tr>
                 <td class="right">联系电话：</td>
-                <td class="left">13333333333</td>
+                <td class="left phone">13333333333</td>
               </tr>
             </table>
-            <p style="text-indent:2rem;">土桥铜川市合凤高速南部塬区，建筑年代2015年，建设单位：*****建筑公司，属二类技术等级桥梁。</p>
+            <p style="text-indent:2rem;" class="remark">土桥铜川市合凤高速南部塬区，建筑年代2015年，建设单位：*****建筑公司，属二类技术等级桥梁。</p>
             <table class="bdtable" id="techLevel">
               <thead>
                 <tr>
@@ -66,9 +66,9 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>二类</td>
-                  <td>陕西建大维固质量检测技术有限公司</td>
-                  <td>2018-03-25</td>
+                  <td class="techlevel">二类</td>
+                  <td class="techcomp">陕西建大维固质量检测技术有限公司</td>
+                  <td class="techtime">2018-03-25</td>
                   <td><el-button type="primary" size="small">详细</el-button></td>
                 </tr>
               </tbody>
@@ -146,20 +146,20 @@
         <el-row style="margin-bottom:20px;">
           <el-col :span="24">
             资产类别
-            <el-select v-model="condition.type" size="small">
-              <el-option></el-option>
+            <el-select v-model="condition.ASSET_TYPE_ID" size="small">
+              <el-option v-for="item in zctypeArr" :key="item.T0001_ID" :value="item.T0001_ID" :label="item.T0001_ASSETTYPE_NAME"></el-option>
             </el-select>
             起点桩号
-            <el-select v-model="condition.startZh" size="small">
-              <el-option></el-option>
+            <el-select v-model="condition.START_PILE" size="small">
+              <el-option v-for="item in startzhArr" :key="item.$index" :value="item"  :label="item"></el-option>
             </el-select>
             终点桩号
-            <el-select v-model="condition.endZh" size="small">
-              <el-option></el-option>
+            <el-select v-model="condition.END_PILE" size="small">
+              <el-option v-for="item in endzhArr" :key="item.$index" :value="item"  :label="item"></el-option>
             </el-select>
             归属年份
-            <el-select v-model="condition.year" size="small">
-              <el-option></el-option>
+            <el-select v-model="condition.YEAR" size="small">
+              <el-option v-for="item in yearArr" :key="item.$index" :value="item"  :label="item"></el-option>
             </el-select>
             <el-button type="primary" size="small" @click="changeMarkers">搜</el-button>
           </el-col>
@@ -181,9 +181,9 @@
                 :zoom="astZoom"
                 :center="astCenter" v-if="assAmap">
                 <el-amap-marker
-                  :vid="marker.id"
+                  :vid="marker.T0002_ID"
                   v-for="marker in astMarkers"
-                  :key="marker.id"
+                  :key="marker.T0002_ID"
                   :icon="marker.icon"
                   :position="marker.location"
                   :label="marker.label"
@@ -253,7 +253,7 @@
                     label="位置"
                     align="center">
                     <template slot-scope="scope">
-                      <i class="el-icon-location" @click="openDialog(scope.row.location,scope.row.name)"></i>
+                      <i class="el-icon-location" @click="openDialog(scope.row.location,scope.row.name,scope.row.pic)"></i>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -272,7 +272,6 @@
                 <el-table
                   :data="techTable"
                   border
-
                   style="width: 100%"
                   :header-cell-style="{background:'rgb(240,240,240)'}">
                   <el-table-column
@@ -290,7 +289,7 @@
                     label="检查报告查看"
                     align="center">
                     <template slot-scope="scope">
-                      <el-button type="primary" size="small" :btitle="scope.row.report" @click="imgDialog(scope.row.img)">报告查看</el-button>
+                      <el-button type="primary" size="small" :btitle="scope.row.report" @click="imgDialog(scope.row.report)">报告查看</el-button>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -364,7 +363,7 @@
                     label="票据查看"
                     align="center">
                     <template slot-scope="scope">
-                      <el-button type="primary" size="small" :btitle="scope.row.bill" @click="imgDialog(scope.row.img)">票据查看</el-button>
+                      <el-button type="primary" size="small" :btitle="scope.row.bill" @click="imgDialog(scope.row.bill)">票据查看</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -416,7 +415,7 @@
                     label="票据查看"
                     align="center">
                     <template slot-scope="scope">
-                      <el-button type="primary" size="small" :btitle="scope.row.bill" @click="imgDialog(scope.row.img)">票据查看</el-button>
+                      <el-button type="primary" size="small" :btitle="scope.row.bill" @click="imgDialog(scope.row.bill)">票据查看</el-button>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -451,8 +450,8 @@
         <el-dialog  :title="portName" :visible.sync="portDialog" width="60%" :before-close="closeImgDialog">
           <!-- <el-main> -->
             <el-row>
-              <div id="report">
-                <img :src="imgUrl" alt="">
+              <div id="report" style="text-align:center;">
+                <img :src="imgUrl" alt="" style="height:300px;">
               </div>
             </el-row>
           <!-- </el-main> -->
@@ -487,51 +486,22 @@ export default {
         { id: '5', name: '隧道', src: require('../assets/tenant.png') },
         { id: '6', name: '涵洞', src: require('../assets/tunnel.png') }
       ],
-      astMarkers: [
-        { id: 'fgs123', icon: require('../assets/addoil.png'), location: [108.860159, 34.978], label: { content: '加油站', offset: [10, -20] } },
-        { id: 'ql1', icon: require('../assets/bridge.png'), location: [108.850159, 34.978], label: { content: '桥梁', offset: [10, -20] } },
-        { id: 'ql12', icon: require('../assets/htlj.png'), location: [108.840159, 34.978], label: { content: '互通立交', offset: [10, -20] } },
-        { id: 'ql123', icon: require('../assets/sfz.png'), location: [108.830159, 34.978], label: { content: '收费站', offset: [10, -20] } },
-        { id: 'ql23', icon: require('../assets/tenant.png'), location: [108.820159, 34.978], label: { content: '隧道', offset: [10, -20] } },
-        { id: 'ql3', icon: require('../assets/tunnel.png'), location: [108.810159, 34.978], label: { content: '涵洞', offset: [10, -20] } }
-      ],
-      zcTable: [
-        { zh: 'K111', name: '吕村收费站', num: '1', pic: require('../assets/logo.png'), year: '2016-05-02', location: [108.860159, 34.978] },
-        { zh: 'K111', name: '薛家咀大桥', num: '1', pic: require('../assets/logo.png'), year: '2016-05-02', location: [108.850159, 34.878] },
-        { zh: 'K111', name: '吕村河1号大桥', num: '1', pic: require('../assets/logo.png'), year: '2016-05-02', location: [108.840159, 34.778] },
-        { zh: 'K111', name: '架子山隧道', num: '1', pic: require('../assets/logo.png'), year: '2016-05-02', location: [108.830159, 34.678] },
-        { zh: 'K111', name: 'ABV', num: '1', pic: '', year: '2016-05-02', location: [108.820159, 34.478] }
-      ],
-      techTable: [
-        { name: '吕村收费站', report: '', tech: '二级', date: '2018-9-20', year: '2018' },
-        { name: '吕村收费站', report: '', tech: '二级', date: '2018-9-20', year: '2018' },
-        { name: '吕村收费站', report: '', tech: '二级', date: '2018-9-20', year: '2018' },
-        { name: '吕村收费站', report: '', tech: '四级', date: '2018-9-20', year: '2018' },
-        { name: '吕村收费站', report: '', tech: '二级', date: '2018-9-20', year: '2018' }
-      ],
-      dayliTable: [
-        { name: '吕村收费站', income: '200.00', expenditure: '100.00', date: '2019-1-1', bill: '' },
-        { name: '吕村收费站', income: '200.00', expenditure: '100.00', date: '2019-1-1', bill: '' },
-        { name: '吕村收费站', income: '200.00', expenditure: '100.00', date: '2019-1-1', bill: '' },
-        { name: '吕村收费站', income: '200.00', expenditure: '100.00', date: '2019-1-1', bill: '' },
-        { name: '吕村收费站', income: '200.00', expenditure: '100.00', date: '2019-1-1', bill: '' }
-      ],
-      conservTable: [
-        { name: '吕村收费站', cost: '200.00', engineering: '100.00', date: '2019-1-1', bill: '' },
-        { name: '吕村收费站', income: '200.00', engineering: '100.00', date: '2019-1-1', bill: '' },
-        { name: '吕村收费站', income: '200.00', engineering: '100.00', date: '2019-1-1', bill: '' },
-        { name: '吕村收费站', income: '200.00', engineering: '100.00', date: '2019-1-1', bill: '' },
-        { name: '吕村收费站', income: '200.00', engineering: '100.00', date: '2019-1-1', bill: '' }
-      ],
+      astMarkers: [],
+      zctypeArr: [],
+      startzhArr: [],
+      endzhArr: [],
+      ZHS: [],
+      yearArr: ['2017', '2018', '2019', '2020', '2021'],
+      zcTable: [],
+      techTable: [],
+      dayliTable: [],
+      conservTable: [],
       srcList: [],
       markerEvents: {
         click (e) {
           // console.log(e)
-          // console.log(e.target.B)
-          let data = e.target.B
-          document.getElementById('mkDialog').style.display = 'block'
-          document.getElementById('mkDialog').title = '土桥'
-          if (data.vid.indexOf('fgs') > -1) {
+          let data = e.target.w
+          if (data.label.content.indexOf('分公司') > -1) {
             document.getElementById('mkBox').getElementsByClassName('baseTb')[0].style.display = 'none'
             document.getElementById('techLevel').style.display = 'none'
             document.getElementById('dailyCost').style.display = 'none'
@@ -546,29 +516,98 @@ export default {
             document.getElementById('yhCost').style.display = 'block'
             document.getElementById('mkBox').getElementsByClassName('fgstb')[0].style.display = 'none'
             document.getElementById('fgsCost').style.display = 'none'
-            document.getElementById('mkBox').getElementsByClassName('mkTitle')[0].innerText = '土桥'
+          }
+
+          let id = data.vid
+          // 1.创建ajax对象(此处兼容性的创建)
+          let xhr = new XMLHttpRequest()
+          // 2.调用open方法（true----异步）
+          xhr.open('post', 'http://192.168.7.101:8800/cycle/desktopData/getInfoByAsset', true)
+          // 3.发送数据
+          xhr.setRequestHeader('content-type', 'application/json')
+          xhr.send(id)
+          // 4.请求状态改变事件
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+              if (xhr.status === 200) {
+                let mkdt = JSON.parse(xhr.responseText)
+                console.log(mkdt)
+                document.getElementById('mkDialog').style.display = 'block'
+                if (mkdt.ASSET_INFO.length === 0)mkdt.ASSET_INFO[0] = {}
+                if (mkdt.TECH_DATA.length === 0)mkdt.TECH_DATA[0] = {}
+                if (mkdt.CURING_COST.length === 0)mkdt.CURING_COST[0] = {}
+                if (mkdt.COST_BUDGET.length === 0)mkdt.COST_BUDGET[0] = {}
+                if (!mkdt.ASSET_INFO[0].T0002_ASSET_NAME)mkdt.ASSET_INFO[0].T0002_ASSET_NAME = ''
+                if (!mkdt.ASSET_INFO[0].T0002_START_PILE)mkdt.ASSET_INFO[0].T0002_START_PILE = ''
+                if (!mkdt.ASSET_INFO[0].T0002_ASSET_DATE)mkdt.ASSET_INFO[0].T0002_ASSET_DATE = ''
+                if (!mkdt.ASSET_INFO[0].T0002_LOAD_NAME)mkdt.ASSET_INFO[0].T0002_LOAD_NAME = ''
+                if (!mkdt.ASSET_INFO[0].T0002_CURING_UNIT)mkdt.ASSET_INFO[0].T0002_CURING_UNIT = ''
+                if (!mkdt.ASSET_INFO[0].T0002_DUTY_PERSON)mkdt.ASSET_INFO[0].T0002_DUTY_PERSON = ''
+                if (!mkdt.ASSET_INFO[0].T0002_TOUCH_TEL)mkdt.ASSET_INFO[0].T0002_TOUCH_TEL = ''
+                if (!mkdt.ASSET_INFO[0].T0002_ASSET_REAMRK)mkdt.ASSET_INFO[0].T0002_ASSET_REAMRK = ''
+                if (!mkdt.TECH_DATA[0].T0006_TECHTYPE_NAME)mkdt.TECH_DATA[0].T0006_TECHTYPE_NAME = ''
+                if (!mkdt.TECH_DATA[0].T0003_CHECK_UNIT)mkdt.TECH_DATA[0].T0003_CHECK_UNIT = ''
+                if (!mkdt.TECH_DATA[0].T0003_CHECK_TIME)mkdt.TECH_DATA[0].T0003_CHECK_TIME = ''
+                document.getElementById('mkBox').getElementsByClassName('mkTitle')[0].innerText = mkdt.ASSET_INFO[0].T0002_ASSET_NAME
+                document.getElementById('mkBox').getElementsByClassName('type')[0].innerText = mkdt.ASSET_INFO[0].T0002_ASSET_NAME
+                document.getElementById('mkBox').getElementsByClassName('seZh')[0].innerText = mkdt.ASSET_INFO[0].T0002_START_PILE
+                document.getElementById('mkBox').getElementsByClassName('year')[0].innerText = mkdt.ASSET_INFO[0].T0002_ASSET_DATE
+                document.getElementById('mkBox').getElementsByClassName('glgs')[0].innerText = mkdt.ASSET_INFO[0].T0002_LOAD_NAME
+                document.getElementById('mkBox').getElementsByClassName('ygdw')[0].innerText = mkdt.ASSET_INFO[0].T0002_CURING_UNIT
+                document.getElementById('mkBox').getElementsByClassName('zrr')[0].innerText = mkdt.ASSET_INFO[0].T0002_DUTY_PERSON
+                document.getElementById('mkBox').getElementsByClassName('phone')[0].innerText = mkdt.ASSET_INFO[0].T0002_TOUCH_TEL
+                document.getElementById('mkBox').getElementsByClassName('remark')[0].innerText = mkdt.ASSET_INFO[0].T0002_ASSET_REAMRK
+                document.getElementById('techLevel').getElementsByClassName('techlevel')[0].innerText = mkdt.TECH_DATA[0].T0006_TECHTYPE_NAME
+                document.getElementById('techLevel').getElementsByClassName('techcomp')[0].innerText = mkdt.TECH_DATA[0].T0003_CHECK_UNIT
+                document.getElementById('techLevel').getElementsByClassName('techtime')[0].innerText = mkdt.TECH_DATA[0].T0003_CHECK_TIME
+              } else {
+                alert('错误' + xhr.status)
+              }
+            }
           }
         }
       },
       condition: {
-        type: '',
-        startZh: '',
-        endZh: '',
-        year: ''
+        ASSET_TYPE_ID: '',
+        START_PILE: '',
+        END_PILE: '',
+        YEAR: ''
       }
     }
   },
   mounted () {
-    this.setPicList()
     this.assAmap = true
+    this.loadMarkers()
+    this.loadSelect()
+    this.loadTableData()
   },
   methods: {
-    setPicList () {
-      let tst = this
-      this.zcTable.forEach(function (i, n) {
-        tst.srcList.push(i.pic)
+    loadMarkers () {
+      // { id: 'fgs123', icon: require('../assets/addoil.png'), location: [108.860159, 34.978], label: { content: '加油站', offset: [10, -20] } },
+      this.$api.post('/cycle/desktopData/getListAll', {}, null, r => {
+        // console.log(r.ASSET_List)
+        r.ASSET_List.forEach(function (item, index) {
+          // console.log(item)
+          if (item.T0002_ASSET_NAME.indexOf('加油站') > -1) {
+            item.icon = require('../assets/addoil.png')
+          } else if (item.T0002_ASSET_NAME.indexOf('桥') > -1) {
+            item.icon = require('../assets/bridge.png')
+          } else if (item.T0002_ASSET_NAME.indexOf('互通立交') > -1) {
+            item.icon = require('../assets/htlj.png')
+          } else if (item.T0002_ASSET_NAME.indexOf('收费站') > -1) {
+            item.icon = require('../assets/sfz.png')
+          } else if (item.T0002_ASSET_NAME.indexOf('隧道') > -1) {
+            item.icon = require('../assets/tenant.png')
+          } else if (item.T0002_ASSET_NAME.indexOf('涵洞') > -1) {
+            item.icon = require('../assets/tunnel.png')
+          } else {
+
+          }
+          item.location = [item.T0002_ASSET_PRECI, item.T0002_ASSET_LATI]
+          item.label = { content: item.T0002_ASSET_NAME, offset: [10, -20] }
+        })
+        this.astMarkers = r.ASSET_List
       })
-      // console.log(tst.srcList)
     },
     toBaseData () {
       this.$bus.$emit('changeActMenu', '/metersPile')
@@ -590,47 +629,41 @@ export default {
       this.$bus.$emit('changeActMenu', '/yhCostList')
       this.$router.push('/yhCostList')
     },
-    openDialog (local, name) {
+    openDialog (local, name, icon) {
       this.locationDialog = true
       this.loclCenter = local
+      this.loclicon = icon
       this.loclabel = {
         content: name,
         offset: [10, -20]
       }
     },
-    changeMarkers (id) {
-      // switch (id) {
-      //   case '1':
-      //     this.astMarkers = [
-      //       { id: '1', icon: require('../assets/addoil.png'), location: [108.760159, 34.978], label: { content: '11', offset: [10, -20] } },
-      //       { id: '2', icon: require('../assets/addoil.png'), location: [108.800159, 34.978], label: { content: '12', offset: [10, -20] } }
-      //     ]
-      //     break
-      //   case '2':
-      //     this.astMarkers = [
-      //       { id: '1', icon: require('../assets/bridge.png'), location: [108.760159, 34.978], label: { content: '21', offset: [10, -20] } },
-      //       { id: '2', icon: require('../assets/bridge.png'), location: [108.800159, 34.978], label: { content: '22', offset: [10, -20] } }
-      //     ]
-      //     break
-      //   case '3':
-      //     this.astMarkers = [
-      //       { id: '1', icon: require('../assets/htlj.png'), location: [108.760159, 34.978], label: { content: '31', offset: [10, -20] } },
-      //       { id: '2', icon: require('../assets/htlj.png'), location: [108.800159, 34.978], label: { content: '32', offset: [10, -20] } }
-      //     ]
-      //     break
-      //   case '4':
-      //     this.astMarkers = [
-      //       { id: '1', icon: require('../assets/sfz.png'), location: [108.760159, 34.978], label: { content: '41', offset: [10, -20] } },
-      //       { id: '2', icon: require('../assets/sfz.png'), location: [108.800159, 34.978], label: { content: '42', offset: [10, -20] } }
-      //     ]
-      //     break
-      //   case '5':
-      //     this.astMarkers = [
-      //       { id: '1', icon: require('../assets/tenant.png'), location: [108.760159, 34.978], label: { content: '51', offset: [10, -20] } },
-      //       { id: '2', icon: require('../assets/tenant.png'), location: [108.800159, 34.978], label: { content: '52', offset: [10, -20] } }
-      //     ]
-      //     break
-      // }
+    changeMarkers () {
+      console.log(this.condition)
+      this.$api.post('/cycle/desktopData/getListAll', this.condition, null, r => {
+        console.log(r.ASSET_List)
+        r.ASSET_List.forEach(function (item, index) {
+          // console.log(item)
+          if (item.T0002_ASSET_NAME.indexOf('加油站') > -1) {
+            item.icon = require('../assets/addoil.png')
+          } else if (item.T0002_ASSET_NAME.indexOf('桥') > -1) {
+            item.icon = require('../assets/bridge.png')
+          } else if (item.T0002_ASSET_NAME.indexOf('互通立交') > -1) {
+            item.icon = require('../assets/htlj.png')
+          } else if (item.T0002_ASSET_NAME.indexOf('收费站') > -1) {
+            item.icon = require('../assets/sfz.png')
+          } else if (item.T0002_ASSET_NAME.indexOf('隧道') > -1) {
+            item.icon = require('../assets/tenant.png')
+          } else if (item.T0002_ASSET_NAME.indexOf('涵洞') > -1) {
+            item.icon = require('../assets/tunnel.png')
+          } else {
+
+          }
+          item.location = [item.T0002_ASSET_PRECI, item.T0002_ASSET_LATI]
+          item.label = { content: item.T0002_ASSET_NAME, offset: [10, -20] }
+        })
+        this.astMarkers = r.ASSET_List
+      })
     },
     closeMk () {
       document.getElementById('mkDialog').style.display = 'none'
@@ -653,6 +686,127 @@ export default {
     closeImgDialog () {
       this.portDialog = false
       this.imgUrl = ''
+    },
+    loadSelect () {
+      this.$api.post('/cycle/assetData/listAll', {}, null, r => {
+        // console.log(r)
+        let arr1 = []
+        let arr2 = []
+        r.data.forEach((item, index) => {
+          if (arr1.indexOf(item.T0002_START_PILE) < 0)arr1.push(item.T0002_START_PILE)
+          if (arr2.indexOf(item.T0002_END_PILE) < 0)arr2.push(item.T0002_END_PILE)
+        })
+        this.startzhArr = arr1
+        this.endzhArr = arr2
+      })
+      this.$api.post('/cycle/assetType/listAll', {}, null, r => {
+        this.zctypeArr = r.data
+        r.data.forEach((item, index) => {
+          if (item.T0001_PID !== '0') {
+            item.T0001_ASSETTYPE_NAME = '-- ' + item.T0001_ASSETTYPE_NAME
+          }
+        })
+      })
+    },
+    loadTableData () {
+      this.$api.post('/cycle/assetData/listPage', {}, null, r => {
+        // console.log(r)
+        r.data.forEach((item, index) => {
+          if (item.T0002_ASSET_NAME.indexOf('加油站') > -1) {
+            item.pic = require('../assets/addoil.png')
+          } else if (item.T0002_ASSET_NAME.indexOf('桥') > -1) {
+            item.pic = require('../assets/bridge.png')
+          } else if (item.T0002_ASSET_NAME.indexOf('互通立交') > -1) {
+            item.pic = require('../assets/htlj.png')
+          } else if (item.T0002_ASSET_NAME.indexOf('收费站') > -1) {
+            item.pic = require('../assets/sfz.png')
+          } else if (item.T0002_ASSET_NAME.indexOf('隧道') > -1) {
+            item.pic = require('../assets/tenant.png')
+          } else if (item.T0002_ASSET_NAME.indexOf('涵洞') > -1) {
+            item.pic = require('../assets/tunnel.png')
+          } else {
+
+          }
+          if (!item.T0002_START_PILE)item.T0002_START_PILE = ''
+          if (!item.T0002_ASSET_NAME)item.T0002_ASSET_NAME = ''
+          if (!item.T0002_ASSET_AMOUNT)item.T0002_ASSET_AMOUNT = ''
+          if (!item.T0002_ASSET_DATE)item.T0002_ASSET_DATE = ''
+          if (!item.T0002_ASSET_PRECI)item.T0002_ASSET_PRECI = ''
+          if (!item.T0002_ASSET_LATI)item.T0002_ASSET_LATI = ''
+          item.zh = item.T0002_START_PILE
+          item.name = item.T0002_ASSET_NAME
+          item.num = item.T0002_ASSET_AMOUNT
+          item.year = item.T0002_ASSET_DATE
+          item.location = [item.T0002_ASSET_PRECI, item.T0002_ASSET_LATI]
+        })
+        this.zcTable = r.data.slice(0, 5)
+        let tst = this
+        this.zcTable.forEach(function (i, n) {
+          tst.srcList.push(i.pic)
+        })
+      })
+      this.$api.post('/cycle/techData/listPage', {}, null, r => {
+        // console.log(r)
+        r.data.forEach((item, index) => {
+          if (!item.T0002_ASSET_NAME)item.T0002_ASSET_NAME = ''
+          if (!item.T0006_TECHTYPE_NAME)item.T0006_TECHTYPE_NAME = ''
+          if (!item.T0003_CHECK_TIME)item.T0003_CHECK_TIME = ''
+          item.report = require('../assets/logo.png')
+          item.name = item.T0002_ASSET_NAME
+          item.tech = item.T0006_TECHTYPE_NAME
+          item.date = item.T0003_CHECK_TIME
+          item.year = item.T0003_CHECK_TIME.split('-')[0]
+        })
+        this.techTable = r.data.slice(0, 5)
+      })
+      this.$api.post('/cycle/curingCost/listPage', {}, null, r => {
+        // console.log(r)
+        r.data.forEach((item, index) => {
+          if (!item.T0002_ASSET_NAME)item.T0002_ASSET_NAME = ''
+          if (!item.T0006_TECHTYPE_NAME)item.T0006_TECHTYPE_NAME = ''
+          if (!item.T0004_CURINGCOST_MONEY)item.T0004_CURINGCOST_MONEY = '0.00'
+          if (!item.T0003_CHECK_TIME)item.T0003_CHECK_TIME = ''
+          item.name = item.T0002_ASSET_NAME
+          if (item.T0004_CURINGCOST_TYPE === 1) {
+            item.income = item.T0004_CURINGCOST_MONEY
+            item.expenditure = '--'
+          } else {
+            item.income = '--'
+            item.expenditure = item.T0004_CURINGCOST_MONEY
+          }
+          item.date = item.T0004_CURINGCOST_TIME
+          item.bill = require('../assets/002.jpg')
+        })
+        this.dayliTable = r.data.slice(0, 5)
+      })
+      this.$api.post('/cycle/costBudget/listPage', {}, null, r => {
+        // console.log(r)
+        r.data.forEach((item, index) => {
+          if (!item.T0002_ASSET_NAME)item.T0002_ASSET_NAME = ''
+          if (!item.T0001_ASSETTYPE_NAME)item.T0001_ASSETTYPE_NAME = ''
+          if (!item.T0005_COSTBUDGET_MONEY)item.T0005_COSTBUDGET_MONEY = '0.00'
+          if (!item.T0003_CHECK_TIME)item.T0003_CHECK_TIME = ''
+          item.name = item.T0002_ASSET_NAME
+          item.cost = item.T0005_COSTBUDGET_MONEY
+          switch (item.T0005_ENGIN_MAINT) {
+            case 1:
+              item.engineering = '日常养护'
+              break
+            case 2:
+              item.engineering = '小修保养'
+              break
+            case 3:
+              item.engineering = '中修工程'
+              break
+            case 4:
+              item.engineering = '大修工程'
+              break
+          }
+          item.date = item.T0005_COSTBUDGET_TIME
+          item.bill = require('../assets/logo.png')
+        })
+        this.conservTable = r.data.slice(0, 5)
+      })
     }
   }
 }

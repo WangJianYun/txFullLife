@@ -84,7 +84,7 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="8"><el-main>
+        <el-col :span="12"><el-main>
             <el-row class="itemTh">
               日常费用收支情况
               <el-button type="info" class="more" size="mini">查看>></el-button>
@@ -93,7 +93,7 @@
               <div id="dailyChart" class="dataChart"></div>
             </el-row>
           </el-main></el-col>
-        <el-col :span="8"><el-main>
+        <el-col :span="12"><el-main>
             <el-row class="itemTh">
               历年养护费用统计
               <el-button type="info" class="more" size="mini">查看>></el-button>
@@ -101,7 +101,7 @@
             <el-row>
               <div id="yearsChart" class="dataChart"></div>
             </el-row></el-main></el-col>
-        <el-col :span="8"><el-main>
+        <!-- <el-col :span="8"><el-main>
             <el-row class="itemTh">
               路面技术等级检测数据
                <el-date-picker
@@ -116,7 +116,7 @@
             </el-row>
             <el-row>
               <div id="techChart" class="dataChart"></div>
-            </el-row></el-main></el-col>
+            </el-row></el-main></el-col> -->
       </el-row>
       <el-main>
         <el-row type="flex" justify="space-between">
@@ -166,357 +166,336 @@ export default {
   },
   methods: {
     loadChart () {
-      let myChart1 = this.$echarts.init(document.getElementById('roadChart'))
-      // 绘制图表
-      myChart1.setOption({
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: { // 坐标轴指示器，坐标轴触发有效
-            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-          }
-        },
-        xAxis: {
-          type: 'category',
-          name: '数量/单位',
-          nameLocation: 'start',
-          axisLabel: {
-            interval: 0,
-            rotate: 40
-          },
-          nameTextStyle: {
-            fontSize: 12
-          },
-          data: ['管理所', '桥梁', '隧道', '涵洞', '收费站', '服务区', '排水沟', '互通式立交', '标志牌', '绿化物', '停车区', '观景台', '养护设备', '沿线设施']
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [{
-          data: [120, 200, 150, 80, 70, 110, 200, 150, 80, 70, 110, 110, 110, 110],
-          type: 'bar',
-          barWidth: 20,
-          barGap: 0,
-          barCategoryGap: 0,
-          itemStyle: {
-            normal: {
-              // 每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
-              color: function (params) {
-                var colorList = ['rgb(164,205,238)', 'rgb(42,170,227)', 'rgb(25,46,94)', 'rgb(195,229,235)']
-                return colorList[params.dataIndex]
-              }
+      this.$api.post('/cycle/bigData/getAssetSumByType', {}, null, r => {
+        let arr1 = []
+        let arr2 = []
+        r.forEach(element => {
+          arr1.push(element.T0001_ASSETTYPE_NAME)
+          arr2.push(element.ASSET_AMOUNT)
+        })
+        let myChart1 = this.$echarts.init(document.getElementById('roadChart'))
+        // 绘制图表
+        myChart1.setOption({
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: { // 坐标轴指示器，坐标轴触发有效
+              type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
             }
-          }
-        }]
-      })
-      let myChart2 = this.$echarts.init(document.getElementById('safeChart'))
-      // 绘制图表
-      myChart2.setOption({
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: { // 坐标轴指示器，坐标轴触发有效
-            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-          }
-        },
-        dataset: {
-          source: [
-            ['amount', 'product'],
-            [122, '导向标'],
-            [313, '防抛网'],
-            [214, '收费站护栏'],
-            [425, '金属制品护栏'],
-            [163, '方钢护栏'],
-            [423, '预应力护栏'],
-            [242, '隔音墙'],
-            [216, '轮廓标'],
-            [187, '防眩板'],
-            [278, '波形梁护栏']
-          ]
-        },
-        grid: {
-          left: '25%',
-          top: '0',
-          right: '0',
-          bottom: '0'
-        },
-        xAxis: { show: false },
-        yAxis: { type: 'category' },
-        series: [
-          {
+          },
+          xAxis: {
+            type: 'category',
+            name: '数量/单位',
+            nameLocation: 'start',
+            axisLabel: {
+              interval: 0,
+              rotate: 40
+            },
+            nameTextStyle: {
+              fontSize: 12
+            },
+            data: arr1
+          // data: ['管理所', '桥梁', '隧道', '涵洞', '收费站', '服务区', '排水沟', '互通式立交', '标志牌', '绿化物', '停车区', '观景台', '养护设备', '沿线设施']
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [{
+            data: arr2,
             type: 'bar',
-            encode: {
-              // Map the "amount" column to X axis.
-              x: 'amount',
-              // Map the "product" column to Y axis
-              y: 'product'
-            },
-            label: {
-              show: true,
-              position: 'right'
-            },
-            barWidth: 10,
-            barGap: 5,
+            barWidth: 20,
+            barGap: 0,
             barCategoryGap: 0,
             itemStyle: {
               normal: {
-                // 每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
-                color: function (params) {
-                  var colorList = ['rgb(164,205,238)', 'rgb(42,170,227)', 'rgb(25,46,94)', 'rgb(195,229,235)']
-                  return colorList[params.dataIndex]
-                }
-              }
-            }
-          }
-        ]
-      })
-      let myChart3 = this.$echarts.init(document.getElementById('dailyChart'))
-      // 绘制图表
-      myChart3.setOption({
-        legend: {},
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: { // 坐标轴指示器，坐标轴触发有效
-            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
-          }
-        },
-        grid: {
-          left: '6%',
-          top: '8%',
-          right: '0',
-          bottom: '8%'
-        },
-        dataset: {
-          source: [
-            ['product', '收入', '支出'],
-            ['2016', 43.3, 85.8],
-            ['2017', 83.1, 73.4],
-            ['2018', 86.4, 65.2],
-            ['2019', 72.4, 53.9]
-          ]
-        },
-        xAxis: { type: 'category' },
-        yAxis: {},
-        // Declare several bar series, each will be mapped
-        // to a column of dataset.source by default.
-        series: [
-          { type: 'bar',
-            barGap: '-50%',
-            itemStyle: { color: 'rgb(164,205,238)' },
-            barWidth: 30 },
-          { type: 'bar',
-            itemStyle: { color: 'rgb(25,46,94)' },
-            barWidth: 30 }
-        ]
-      })
-      let myChart4 = this.$echarts.init(document.getElementById('yearsChart'))
-      // 绘制图表
-      myChart4.setOption({
-        legend: { data: ['支出', '收入'] },
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: { // 坐标轴指示器，坐标轴触发有效
-            type: 'cross' // 默认为直线，可选为：'line' | 'shadow'
-          }
-        },
-        grid: {
-          left: '6%',
-          top: '8%',
-          right: '0',
-          bottom: '8%'
-        },
-        xAxis: {
-          type: 'category',
-          data: ['2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020']
-        },
-        yAxis: {
-          type: 'value'
-        },
-        series: [{
-          name: '支出',
-          data: [820, 932, 901, 934, 1290, 1330, 1320],
-          type: 'line',
-          itemStyle: {
-            color: 'rgb(25,46,94)'
-          }
-        }, {
-          name: '收入',
-          data: [80, 93, 341, 1934, 1000, 1030, 1320],
-          type: 'line',
-          itemStyle: { color: 'rgb(164,205,238)' }
-        }]
-      })
-      let myChart5 = this.$echarts.init(document.getElementById('techChart'))
-      // 绘制图表
-      myChart5.setOption({
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: { // 坐标轴指示器，坐标轴触发有效
-            type: 'cross' // 默认为直线，可选为：'line' | 'shadow'
-          }
-        },
-        angleAxis: {
-          type: 'category',
-          data: ['优', '良', '中', '次', '差']
-        },
-        radiusAxis: {
-        },
-        polar: {
-        },
-        series: [{
-          type: 'bar',
-          data: [ 1, 2, 3, 4, 3 ],
-          coordinateSystem: 'polar',
-          stack: 'a',
-          itemStyle: {
-            normal: {
-              // 每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
-              color: function (params) {
-                var colorList = ['rgb(164,205,238)', 'rgb(42,170,227)', 'rgb(25,46,94)', 'rgb(195,229,235)']
-                return colorList[params.dataIndex]
-              }
-            }
-          }
-        }]
-      })
-      let myChart6 = this.$echarts.init(document.getElementById('bridgeChart'))
-      // 绘制图表
-      myChart6.setOption({
-        tooltip: {
-          trigger: 'item',
-          formatter: '{a} <br/>{b} : {c} ({d}%)'
-        },
-        series: [
-          {
-            name: '桥梁技术等级',
-            type: 'pie',
-            radius: '55%',
-            center: ['50%', '60%'],
-            data: [
-              { value: 335, name: '一类' },
-              { value: 310, name: '二类' },
-              { value: 234, name: '三类' },
-              { value: 135, name: '四类' },
-              { value: 1548, name: '五类' }
-            ],
-            emphasis: {
-              itemStyle: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: 'rgba(0, 0, 0, 0.5)'
-              }
-            },
-            itemStyle: {
-              normal: {
               // 每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
                 color: function (params) {
                   var colorList = ['rgb(164,205,238)', 'rgb(42,170,227)', 'rgb(25,46,94)', 'rgb(195,229,235)']
                   return colorList[params.dataIndex]
                 }
               }
-            },
-            label: {
-              normal: {
-                formatter: '{b}{value|{c}}座',
-                rich: {
-                  value: {
-                    fontSize: 20
-                  }
-                }
-              }
-
             }
-          }
-        ]
+          }]
+        })
       })
-      let myChart7 = this.$echarts.init(document.getElementById('tunnelChart'))
-      // 绘制图表
-      myChart7.setOption({
-        tooltip: {
-          trigger: 'item',
-          formatter: '{a} <br/>{b} : {c} ({d}%)'
-        },
-        series: [
-          {
-            name: '隧道技术等级',
-            type: 'pie',
-            radius: ['50%', '70%'],
-            avoidLabelOverlap: false,
-            data: [
-              { value: 335, name: '一级' },
-              { value: 310, name: '二级' },
-              { value: 234, name: '三级' }
-            ],
-            itemStyle: {
-              normal: {
-              // 每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
-                color: function (params) {
-                  var colorList = ['rgb(164,205,238)', 'rgb(42,170,227)', 'rgb(25,46,94)']
-                  return colorList[params.dataIndex]
-                }
-              }
-            },
-            label: {
-              normal: {
-                formatter: '{b}{value|{c}}座',
-                rich: {
-                  value: {
-                    fontSize: 20
-                  }
-                }
-              }
-
+      this.$api.post('/cycle/bigData/getAssetSumByType', {}, null, r => {
+        let arr2 = [['amount', 'product']]
+        r.forEach(element => {
+          let arr1 = [element.ASSET_AMOUNT, element.T0001_ASSETTYPE_NAME]
+          arr2.push(arr1)
+        })
+        let myChart2 = this.$echarts.init(document.getElementById('safeChart'))
+        // 绘制图表
+        myChart2.setOption({
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: { // 坐标轴指示器，坐标轴触发有效
+              type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
             }
-          }
-        ]
-      })
-      let myChart8 = this.$echarts.init(document.getElementById('culvertChart'))
-      // 绘制图表
-      myChart8.setOption({
-        tooltip: {
-          trigger: 'item',
-          formatter: '{a} <br/>{b} : {c}个'
-        },
-        series: [
-          {
-            name: '涵洞技术等级',
-            type: 'funnel',
-            top: 15,
-            // x2: 80,
-            bottom: 15,
-            left: 0,
-            width: '100%',
-            // height: {totalHeight} - y - y2,
-            minSize: '0%',
-            maxSize: '80%',
-            // height: {totalHeight} - y - y2,
-            sort: 'descending',
-            gap: 2,
-            label: {
-              normal: {
-                show: true,
-                position: 'inside',
-                formatter: '{b}{value|{c}}个',
-                rich: {
-                  value: {
-                    fontSize: 20,
-                    color: '#fff'
-                  }
-                }
-              }
-            },
-            emphasis: {
+          },
+          dataset: {
+            source: arr2
+          },
+          grid: {
+            left: '25%',
+            top: '0',
+            right: '5%',
+            bottom: '0'
+          },
+          xAxis: { show: false },
+          yAxis: { type: 'category' },
+          series: [
+            {
+              type: 'bar',
+              encode: {
+              // Map the "amount" column to X axis.
+                x: 'amount',
+                // Map the "product" column to Y axis
+                y: 'product'
+              },
               label: {
-                fontSize: 20
+                show: true,
+                position: 'right'
+              },
+              barWidth: 10,
+              barGap: 5,
+              barCategoryGap: 0,
+              itemStyle: {
+                normal: {
+                // 每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
+                  color: function (params) {
+                    var colorList = ['rgb(164,205,238)', 'rgb(42,170,227)', 'rgb(25,46,94)', 'rgb(195,229,235)']
+                    return colorList[params.dataIndex]
+                  }
+                }
               }
-            },
-            data: [
-              { value: 25, name: '好' },
-              { value: 15, name: '较好' },
-              { value: 8, name: '较差' },
-              { value: 2, name: '差' },
-              { value: 1, name: '危险' }
-            ]
-          }
-        ]
+            }
+          ]
+        })
+      })
+      this.$api.post('/cycle/bigData/getMoneySumByCuring', {}, null, r => {
+        let arr1 = [['product', '收入', '支出']]
+        r.forEach(element => {
+          let arr2 = [element.YEAR, element.INCOME_MONEY, element.TOCOME_MONEY]
+          arr1.push(arr2)
+        })
+        let myChart3 = this.$echarts.init(document.getElementById('dailyChart'))
+        // 绘制图表
+        myChart3.setOption({
+          legend: {},
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: { // 坐标轴指示器，坐标轴触发有效
+              type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+            }
+          },
+          grid: {
+            left: '6%',
+            top: '8%',
+            right: '0',
+            bottom: '8%'
+          },
+          dataset: {
+            source: arr1
+          },
+          xAxis: { type: 'category' },
+          yAxis: {},
+          // Declare several bar series, each will be mapped
+          // to a column of dataset.source by default.
+          series: [
+            { type: 'bar',
+              barGap: '-50%',
+              itemStyle: { color: 'rgb(164,205,238)' },
+              barWidth: 30 },
+            { type: 'bar',
+              itemStyle: { color: 'rgb(25,46,94)' },
+              barWidth: 30 }
+          ]
+        })
+      })
+      this.$api.post('/cycle/bigData/getMoneySumByCost', {}, null, r => {
+        let arr1 = []
+        let arr2 = []
+        r.forEach(element => {
+          arr1.push(element.YEAR)
+          arr2.push(element.SUM_MOENY)
+        })
+        let myChart4 = this.$echarts.init(document.getElementById('yearsChart'))
+        // 绘制图表
+        myChart4.setOption({
+        // legend: { data: ['支出', '收入'] },
+          tooltip: {
+            trigger: 'axis',
+            axisPointer: { // 坐标轴指示器，坐标轴触发有效
+              type: 'cross' // 默认为直线，可选为：'line' | 'shadow'
+            }
+          },
+          grid: {
+            left: '6%',
+            top: '8%',
+            right: '0',
+            bottom: '8%'
+          },
+          xAxis: {
+            type: 'category',
+            data: arr1
+          },
+          yAxis: {
+            type: 'value'
+          },
+          series: [{
+            name: '养护费用',
+            data: arr2,
+            type: 'line',
+            itemStyle: {
+              color: 'rgb(25,46,94)'
+            }
+          }]
+        })
+      })
+      this.$api.post('/cycle/bigData/getCountByTech', { 'TYPE': 'QL' }, null, r => {
+        let arr1 = []
+        r.forEach(element => {
+          arr1.push({ value: element.COUNT, name: element.T0006_TECHTYPE_NAME })
+        })
+        let myChart6 = this.$echarts.init(document.getElementById('bridgeChart'))
+        // 绘制图表
+        myChart6.setOption({
+          tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b} : {c} ({d}%)'
+          },
+          series: [
+            {
+              name: '桥梁技术等级',
+              type: 'pie',
+              radius: '55%',
+              center: ['50%', '60%'],
+              data: arr1,
+              emphasis: {
+                itemStyle: {
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+              },
+              itemStyle: {
+                normal: {
+                  // 每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
+                  color: function (params) {
+                    var colorList = ['rgb(164,205,238)', 'rgb(42,170,227)', 'rgb(25,46,94)', 'rgb(195,229,235)']
+                    return colorList[params.dataIndex]
+                  }
+                }
+              },
+              label: {
+                normal: {
+                  formatter: '{b}{value|{c}}座',
+                  rich: {
+                    value: {
+                      fontSize: 20
+                    }
+                  }
+                }
+
+              }
+            }
+          ]
+        })
+      })
+      this.$api.post('/cycle/bigData/getCountByTech', { 'TYPE': 'SD' }, null, r => {
+        let arr1 = []
+        // console.log(r)
+        r.forEach(element => {
+          arr1.push({ value: element.COUNT, name: element.T0006_TECHTYPE_NAME })
+        })
+        let myChart7 = this.$echarts.init(document.getElementById('tunnelChart'))
+        // 绘制图表
+        myChart7.setOption({
+          tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b} : {c} ({d}%)'
+          },
+          series: [
+            {
+              name: '隧道技术等级',
+              type: 'pie',
+              radius: ['50%', '70%'],
+              avoidLabelOverlap: false,
+              data: arr1,
+              itemStyle: {
+                normal: {
+                  // 每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
+                  color: function (params) {
+                    var colorList = ['rgb(164,205,238)', 'rgb(42,170,227)', 'rgb(25,46,94)']
+                    return colorList[params.dataIndex]
+                  }
+                }
+              },
+              label: {
+                normal: {
+                  formatter: '{b}{value|{c}}座',
+                  rich: {
+                    value: {
+                      fontSize: 20
+                    }
+                  }
+                }
+
+              }
+            }
+          ]
+        })
+      })
+      this.$api.post('/cycle/bigData/getCountByTech', { 'TYPE': 'HD' }, null, r => {
+        let arr1 = []
+        // console.log(r)
+        r.forEach(element => {
+          arr1.push({ value: element.COUNT, name: element.T0006_TECHTYPE_NAME })
+        })
+        let myChart8 = this.$echarts.init(document.getElementById('culvertChart'))
+        // 绘制图表
+        myChart8.setOption({
+          tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b} : {c}个'
+          },
+          series: [
+            {
+              name: '涵洞技术等级',
+              type: 'funnel',
+              top: 15,
+              // x2: 80,
+              bottom: 15,
+              left: 0,
+              width: '100%',
+              // height: {totalHeight} - y - y2,
+              minSize: '0%',
+              maxSize: '80%',
+              // height: {totalHeight} - y - y2,
+              sort: 'descending',
+              gap: 2,
+              label: {
+                normal: {
+                  show: true,
+                  position: 'inside',
+                  formatter: '{b}{value|{c}}个',
+                  rich: {
+                    value: {
+                      fontSize: 20,
+                      color: '#fff'
+                    }
+                  }
+                }
+              },
+              emphasis: {
+                label: {
+                  fontSize: 20
+                }
+              },
+              data: arr1
+            }
+          ]
+        })
       })
     }
   }

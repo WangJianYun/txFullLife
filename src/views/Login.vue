@@ -50,6 +50,7 @@ export default {
             console.log(r)
             sessionStorage.clear()
             sessionStorage.setItem('currentUser', JSON.stringify(r.data))
+            sessionStorage['TokenId'] = r.data.TokenId
             this.$router.push('/workBanch')
           })
         } else {

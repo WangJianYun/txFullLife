@@ -1,5 +1,5 @@
 import { Message } from 'element-ui'
-import { router } from 'vue-router'
+// import { router } from 'vue-router'
 import that from '../main.js'
 
 // 引用axios
@@ -26,6 +26,17 @@ function filterNull (o) {
   return o
 }
 
+axios.interceptors.request.use(
+  config => {
+    if (sessionStorage['TokenId']) {
+      config.headers.common['TokenId'] = sessionStorage['TokenId']
+    }
+    return config
+  },
+  err => {
+    return Promise.reject(err)
+  }
+)
 axios.interceptors.response.use(
   response => {
     return response
@@ -61,13 +72,13 @@ axios.interceptors.response.use(
     }
     return Promise.reject(error)// 返回接口返回的错误信息
   })
-function apiAxios (method, url, params, token, tip, success) {
+function apiAxios (method, url, params, tip, success) {
   if (params) {
     if (typeof (params) !== 'string') {
       params = filterNull(params)
     }
   }
-  axios.defaults.headers.common['TokenId'] = token
+  // axios.defaults.headers.common['TokenId'] = token
   axios({
     method: method,
     url: url,
@@ -76,7 +87,7 @@ function apiAxios (method, url, params, token, tip, success) {
     baseURL: 'api',
     withCredentials: true
   }).then(function (res) {
-    let data = res.data
+    // let data = res.data
     if (res.status === 200) {
       // if (data.msg === 'ok' || data.msg === 'success' || data) {
       success(res.data)
@@ -90,7 +101,7 @@ function apiAxios (method, url, params, token, tip, success) {
       // }
     }
   }).catch(function (err) {
-    let res = err.response
+    // let res = err.response
     if (err) {
       // console.log('api error, HTTP CODE: ' + res.status)
     }
@@ -99,16 +110,16 @@ function apiAxios (method, url, params, token, tip, success) {
 
 // 返回在vue模板中的调用接口
 export default {
-  get: function (url, params, token, tip, success) {
-    return apiAxios('GET', url, params, token, tip, success)
+  get: function (url, params, tip, success) {
+    return apiAxios('GET', url, params, tip, success)
   },
-  post: function (url, params, token, tip, success) {
-    return apiAxios('POST', url, params, token, tip, success)
+  post: function (url, params, tip, success) {
+    return apiAxios('POST', url, params, tip, success)
   },
-  put: function (url, params, token, success) {
-    return apiAxios('PUT', url, params, token, success)
+  put: function (url, params, success) {
+    return apiAxios('PUT', url, params, success)
   },
-  delete: function (url, params, token, success) {
-    return apiAxios('DELETE', url, params, token, success)
+  delete: function (url, params, success) {
+    return apiAxios('DELETE', url, params, success)
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="meterspile-wrap">
+  <div class="dataParam-wrap">
     <p class="title-p">
       <span style="display:inline-block;margin-bottom:20px;"> >> 桩号展示 </span>
       <el-button
@@ -13,19 +13,19 @@
         <el-form
           label-position="right"
           label-width="70px"
-          :model="meterspile"
+          :model="dataParam"
         >
           <el-col :span="5">
             <el-form-item label="所属路段">
               <el-select
-                v-model="meterspile.a"
+                v-model="dataParam.ROAD_ID"
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in assetList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
+                  v-for="item in loadList"
+                  :key="item.M0010_ID"
+                  :label="item.M0010_LOAD_NAME"
+                  :value="item.M0010_ID"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -33,7 +33,7 @@
           <el-col :span="5">
             <el-form-item label="起点桩号">
               <el-select
-                v-model="meterspile.code"
+                v-model="dataParam.START_PILE"
                 style="width:100%"
               >
                 <el-option
@@ -48,7 +48,7 @@
           <el-col :span="5">
             <el-form-item label="终点桩号">
               <el-select
-                v-model="meterspile.code1"
+                v-model="dataParam.END_PILE"
                 style="width:100%"
               >
                 <el-option
@@ -64,7 +64,7 @@
             <el-form-item label="年份选择">
               <el-date-picker
                 style="width:100%"
-                v-model="meterspile.year"
+                v-model="dataParam.YEAR"
                 type="year"
               >
               </el-date-picker>
@@ -74,7 +74,7 @@
             <el-form-item label="关键字">
               <el-input
                 placeholder="请输入关键字"
-                v-model="meterspile.a"
+                v-model="dataParam.SEARCH_KEY"
               >
               </el-input>
             </el-form-item>
@@ -184,9 +184,9 @@
           class="table-page"
           @size-change="sizeChange"
           @current-change="currentChange"
-          :current-page="meterspile.currentPage"
+          :current-page="currentPage"
           :page-sizes="[10, 50, 100]"
-          :page-size="meterspile.showCount"
+          :page-size="showCount"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
         ></el-pagination>
@@ -220,14 +220,14 @@
           <td class="bg-td">桩号： </td>
           <td>
             <el-input
-              v-model.trim="addForm.words"
+              v-model.trim="addForm.M0009_PILENUMBER_NAME"
               size="small"
               maxlength="20"
             ></el-input>
           </td>
           <td class="bg-td">方向：</td>
           <td>
-            <el-radio-group v-model="addForm.d">
+            <el-radio-group v-model="addForm.M0009_PILENUMBER_DREICT">
               <el-radio :label="1">上行线</el-radio>
               <el-radio :label="2">下行线</el-radio>
             </el-radio-group>
@@ -237,14 +237,14 @@
           <td class="bg-td">经度： </td>
           <td>
             <el-input
-              v-model.trim="addForm.words"
+              v-model.trim="addForm.M0009_PILENUMBER_PRECI"
               size="small"
             ></el-input>
           </td>
           <td class="bg-td">纬度：</td>
           <td>
             <el-input
-              v-model.trim="addForm.words"
+              v-model.trim="addForm.M0009_PILENUMBER_LATI"
               size="small"
             ></el-input>
           </td>
@@ -253,7 +253,7 @@
           <td class="bg-td">归属年份： </td>
           <td>
             <el-date-picker
-              v-model="addForm.value3"
+              v-model="addForm.M0009_PILENUMBER_YEAR"
               type="year"
               placeholder="选择年"
               style="width: 100%"
@@ -271,7 +271,7 @@
         <el-button @click="addShow = false">取 消</el-button>
         <el-button
           type="primary"
-          @click="submitForm('ruleForm')"
+          @click="addSaveFun('ruleForm')"
         >确 定</el-button>
       </div>
     </el-dialog>
@@ -419,12 +419,16 @@ export default {
       editShow: false,
       infoShow: false,
       editForm: {},
-      addForm: {},
-      infoForm: {},
-      meterspile: {
-        showCount: 10,
-        currentPage: 1
+      addForm: {
+        M0008_ID: '',
+        M0010_ID: '',
+        M0009_PILENUMBER_NAME: '',
+        M0009_PILENUMBER_DREICT: 1,
+        M0009_PILENUMBER_PRECI: '',
+        M0009_PILENUMBER_LATI: '',
+        M0009_PILENUMBER_YEAR: ''
       },
+      infoForm: {},
       tableData: [
         {
           M0009_PILENUMBER_NAME: 'K692+200',
@@ -434,17 +438,27 @@ export default {
           M0009_PILENUMBER_YEAR: '2010'
         }
       ],
+      showCount: 10,
+      currentPage: 1,
       total: 0,
-      selectList: []
+      selectList: [],
+      loadList: [],
+      dataParam: {
+        ROAD_ID: '',
+        START_PILE: '',
+        END_PILE: '',
+        YEAR: '',
+        SEARCH_KEY: ''
+      }
     }
   },
   methods: {
     // 分页
     sizeChange (val) {
-      this.meterspile.showCount = val
+      this.showCount = val
     },
     currentChange (val) {
-      this.meterspile.currentPage = val
+      this.currentPage = val
     },
     selectTable (selection) {
       this.selectList = selection
@@ -462,15 +476,59 @@ export default {
     handleEdit (data) {
       this.editShow = true
       this.editForm = Object.assign({}, data)
+      this.$api.post('/cycle/pileNumber/selectById', {}, null, r => {
+        console.log(r)
+      })
     },
-    handleDelete (data) {},
-    // 批量删除
-    delListFun () {}
+    handleDelete (data) {
+      this.$api.post('/cycle/pileNumber/deleteById', {}, null, r => {
+        console.log(r)
+      })
+    },
+    // 请求 白米桩分页列表
+    getPileList () {
+      let _data = {
+        currentPage: this.currentPage,
+        showCount: this.showCount,
+        mapParam: [this.dataParam]
+      }
+      this.$api.post('/cycle/pileNumber/listPage', _data, null, r => {
+        console.log(r)
+      })
+    },
+    // 管辖路段接口
+    getLoadList () {
+      this.$api.post('/cycle/load/listAll', {}, null, r => {
+        this.loadList = r.data
+      })
+    },
+    // 添加保存
+    addSaveFun () {
+      this.$api.post('/cycle/pileNumber/insert', this.addForm, null, r => {
+        console.log(r)
+      })
+    },
+    // 修改保存
+    editSaveFun () {
+      this.$api.post('/cycle/pileNumber/update', this.editForm, null, r => {
+        console.log(r)
+      })
+    },
+    // 删除多个
+    delListFun () {
+      this.$api.post('/cycle/pileNumber/deleteByIds', {}, null, r => {
+        console.log(r)
+      })
+    }
+  },
+  created () {
+    this.getLoadList()
+    this.getPileList()
   }
 }
 </script>
 <style lang="scss">
-.meterspile-wrap {
+.dataParam-wrap {
   .title-p {
     button {
       float: right;

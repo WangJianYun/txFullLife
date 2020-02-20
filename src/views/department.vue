@@ -177,6 +177,9 @@ export default {
       }
     }
   },
+  mounted () {
+    this.save()
+  },
   methods: {
     refreshTable (pageIndex) {
       this.pageIndex = pageIndex
@@ -202,7 +205,7 @@ export default {
       })
     },
     save () {
-
+      console.log(sessionStorage.getItem('currentUser'))
     },
     openDialog (type, index, row) {
       this.disVisible = true

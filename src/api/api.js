@@ -61,12 +61,13 @@ axios.interceptors.response.use(
     }
     return Promise.reject(error)// 返回接口返回的错误信息
   })
-function apiAxios (method, url, params, tip, success) {
+function apiAxios (method, url, params, token, tip, success) {
   if (params) {
     if (typeof (params) !== 'string') {
       params = filterNull(params)
     }
   }
+  axios.defaults.headers.common['TokenId'] = token
   axios({
     method: method,
     url: url,
@@ -98,16 +99,16 @@ function apiAxios (method, url, params, tip, success) {
 
 // 返回在vue模板中的调用接口
 export default {
-  get: function (url, params, tip, success) {
-    return apiAxios('GET', url, params, tip, success)
+  get: function (url, params, token, tip, success) {
+    return apiAxios('GET', url, params, token, tip, success)
   },
-  post: function (url, params, tip, success) {
-    return apiAxios('POST', url, params, tip, success)
+  post: function (url, params, token, tip, success) {
+    return apiAxios('POST', url, params, token, tip, success)
   },
-  put: function (url, params, success) {
-    return apiAxios('PUT', url, params, success)
+  put: function (url, params, token, success) {
+    return apiAxios('PUT', url, params, token, success)
   },
-  delete: function (url, params, success) {
-    return apiAxios('DELETE', url, params, success)
+  delete: function (url, params, token, success) {
+    return apiAxios('DELETE', url, params, token, success)
   }
 }

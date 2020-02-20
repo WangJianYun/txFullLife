@@ -46,9 +46,10 @@ export default {
     onSubmit () {
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          this.$api.post('/cycle/login/login', this.form, '登陆成功', r => {
-            // sessionStorage.clear()
-            // sessionStorage.setItem('currentUser', JSON.stringify(r.data))
+          this.$api.post('/cycle/login/login', this.form, '', '登陆成功', r => {
+            console.log(r)
+            sessionStorage.clear()
+            sessionStorage.setItem('currentUser', JSON.stringify(r.data))
             this.$router.push('/workBanch')
           })
         } else {

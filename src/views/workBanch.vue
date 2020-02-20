@@ -517,7 +517,7 @@ export default {
             document.getElementById('mkBox').getElementsByClassName('fgstb')[0].style.display = 'none'
             document.getElementById('fgsCost').style.display = 'none'
           }
-
+          let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
           let id = data.vid
           // 1.创建ajax对象(此处兼容性的创建)
           let xhr = new XMLHttpRequest()
@@ -525,6 +525,7 @@ export default {
           xhr.open('post', 'http://192.168.7.101:8800/cycle/desktopData/getInfoByAsset', true)
           // 3.发送数据
           xhr.setRequestHeader('content-type', 'application/json')
+          xhr.setRequestHeader('TokenId', token)
           xhr.send(id)
           // 4.请求状态改变事件
           xhr.onreadystatechange = function () {
@@ -583,8 +584,8 @@ export default {
   },
   methods: {
     loadMarkers () {
-      // { id: 'fgs123', icon: require('../assets/addoil.png'), location: [108.860159, 34.978], label: { content: '加油站', offset: [10, -20] } },
-      this.$api.post('/cycle/desktopData/getListAll', {}, null, r => {
+      let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
+      this.$api.post('/cycle/desktopData/getListAll', {}, token, null, r => {
         // console.log(r.ASSET_List)
         r.ASSET_List.forEach(function (item, index) {
           // console.log(item)
@@ -639,8 +640,10 @@ export default {
       }
     },
     changeMarkers () {
-      console.log(this.condition)
-      this.$api.post('/cycle/desktopData/getListAll', this.condition, null, r => {
+      // console.log(this.condition)
+      let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
+      // this.condition.TokenId = token
+      this.$api.post('/cycle/desktopData/getListAll', this.condition, token, null, r => {
         console.log(r.ASSET_List)
         r.ASSET_List.forEach(function (item, index) {
           // console.log(item)
@@ -688,7 +691,8 @@ export default {
       this.imgUrl = ''
     },
     loadSelect () {
-      this.$api.post('/cycle/assetData/listAll', {}, null, r => {
+      let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
+      this.$api.post('/cycle/assetData/listAll', {}, token, null, r => {
         // console.log(r)
         let arr1 = []
         let arr2 = []
@@ -699,7 +703,7 @@ export default {
         this.startzhArr = arr1
         this.endzhArr = arr2
       })
-      this.$api.post('/cycle/assetType/listAll', {}, null, r => {
+      this.$api.post('/cycle/assetType/listAll', {}, token, null, r => {
         this.zctypeArr = r.data
         r.data.forEach((item, index) => {
           if (item.T0001_PID !== '0') {
@@ -709,9 +713,11 @@ export default {
       })
     },
     loadTableData () {
-      this.$api.post('/cycle/assetData/listPage', {}, null, r => {
-        // console.log(r)
-        r.data.forEach((item, index) => {
+      let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
+      // console.log(token)
+      this.$api.post('/cycle/assetData/listPage', {}, token, null, r => {
+        // console.log(r.data.returnParam)
+        r.data.returnParam.forEach((item, index) => {
           if (item.T0002_ASSET_NAME.indexOf('加油站') > -1) {
             item.pic = require('../assets/addoil.png')
           } else if (item.T0002_ASSET_NAME.indexOf('桥') > -1) {
@@ -739,15 +745,15 @@ export default {
           item.year = item.T0002_ASSET_DATE
           item.location = [item.T0002_ASSET_PRECI, item.T0002_ASSET_LATI]
         })
-        this.zcTable = r.data.slice(0, 5)
+        this.zcTable = r.data.returnParam.slice(0, 5)
         let tst = this
         this.zcTable.forEach(function (i, n) {
           tst.srcList.push(i.pic)
         })
       })
-      this.$api.post('/cycle/techData/listPage', {}, null, r => {
+      this.$api.post('/cycle/techData/listPage', {}, token, null, r => {
         // console.log(r)
-        r.data.forEach((item, index) => {
+        r.data.returnParam.forEach((item, index) => {
           if (!item.T0002_ASSET_NAME)item.T0002_ASSET_NAME = ''
           if (!item.T0006_TECHTYPE_NAME)item.T0006_TECHTYPE_NAME = ''
           if (!item.T0003_CHECK_TIME)item.T0003_CHECK_TIME = ''
@@ -757,11 +763,11 @@ export default {
           item.date = item.T0003_CHECK_TIME
           item.year = item.T0003_CHECK_TIME.split('-')[0]
         })
-        this.techTable = r.data.slice(0, 5)
+        this.techTable = r.data.returnParam.slice(0, 5)
       })
-      this.$api.post('/cycle/curingCost/listPage', {}, null, r => {
+      this.$api.post('/cycle/curingCost/listPage', {}, token, null, r => {
         // console.log(r)
-        r.data.forEach((item, index) => {
+        r.data.returnParam.forEach((item, index) => {
           if (!item.T0002_ASSET_NAME)item.T0002_ASSET_NAME = ''
           if (!item.T0006_TECHTYPE_NAME)item.T0006_TECHTYPE_NAME = ''
           if (!item.T0004_CURINGCOST_MONEY)item.T0004_CURINGCOST_MONEY = '0.00'
@@ -777,11 +783,11 @@ export default {
           item.date = item.T0004_CURINGCOST_TIME
           item.bill = require('../assets/002.jpg')
         })
-        this.dayliTable = r.data.slice(0, 5)
+        this.dayliTable = r.data.returnParam.slice(0, 5)
       })
-      this.$api.post('/cycle/costBudget/listPage', {}, null, r => {
+      this.$api.post('/cycle/costBudget/listPage', {}, token, null, r => {
         // console.log(r)
-        r.data.forEach((item, index) => {
+        r.data.returnParam.forEach((item, index) => {
           if (!item.T0002_ASSET_NAME)item.T0002_ASSET_NAME = ''
           if (!item.T0001_ASSETTYPE_NAME)item.T0001_ASSETTYPE_NAME = ''
           if (!item.T0005_COSTBUDGET_MONEY)item.T0005_COSTBUDGET_MONEY = '0.00'
@@ -805,7 +811,7 @@ export default {
           item.date = item.T0005_COSTBUDGET_TIME
           item.bill = require('../assets/logo.png')
         })
-        this.conservTable = r.data.slice(0, 5)
+        this.conservTable = r.data.returnParam.slice(0, 5)
       })
     }
   }

@@ -12,7 +12,7 @@
         </el-row>
         <el-row>
           <div class="userWel">
-            <span>尊敬的用户、{{currentUser.name}}：您好！</span>
+            <span>尊敬的用户、{{currentUser.UserName}}：您好！</span>
           </div>
         </el-row>
         <el-row>
@@ -107,10 +107,10 @@ export default {
     this.changeActive()
     // this.defaultActiveMenu = '/workBanch'
 
-    // if (sessionStorage.getItem('currentUser') === null) {
-    //   this.$router.push('/')
-    // }
-    // this.currentUser = JSON.parse(sessionStorage.getItem('currentUser'))
+    if (sessionStorage.getItem('currentUser').TokenId === null) {
+      this.$router.push('/')
+    }
+    this.currentUser = JSON.parse(sessionStorage.getItem('currentUser'))
     // this.currentUserImg = 'api' + this.currentUser.avatarUrl
   },
   methods: {
@@ -160,8 +160,8 @@ export default {
         { id: '20', name: '系统配置', icon: '', url: '6', lvl: '1', children: [] },
         { id: '13', name: '部门管理', icon: '', url: '/department', lvl: '2', parentId: '20' },
         { id: '14', name: '管理员', icon: '', url: '/manager', lvl: '2', parentId: '20' },
-        { id: '15', name: '职务', icon: '', url: '/Position', lvl: '2', parentId: '20' },
-        { id: '22', name: '权限配置', icon: '', url: '/Authority', lvl: '2', parentId: '20' },
+        { id: '15', name: '职务管理', icon: '', url: '/Position', lvl: '2', parentId: '20' },
+        // { id: '22', name: '权限配置', icon: '', url: '/Authority', lvl: '2', parentId: '20' },
         { id: '21', name: '个人中心', icon: '', url: '7', lvl: '1', children: [] },
         { id: '23', name: '我的资料', icon: '', url: '/Personal', lvl: '2', parentId: '21' }
       ]

@@ -166,7 +166,8 @@ export default {
   },
   methods: {
     loadChart () {
-      this.$api.post('/cycle/bigData/getAssetSumByType', {}, null, r => {
+      let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
+      this.$api.post('/cycle/bigData/getAssetSumByType', {}, token, null, r => {
         let arr1 = []
         let arr2 = []
         r.forEach(element => {
@@ -217,7 +218,7 @@ export default {
           }]
         })
       })
-      this.$api.post('/cycle/bigData/getAssetSumByType', {}, null, r => {
+      this.$api.post('/cycle/bigData/getAssetSumByType', {}, token, null, r => {
         let arr2 = [['amount', 'product']]
         r.forEach(element => {
           let arr1 = [element.ASSET_AMOUNT, element.T0001_ASSETTYPE_NAME]
@@ -272,7 +273,7 @@ export default {
           ]
         })
       })
-      this.$api.post('/cycle/bigData/getMoneySumByCuring', {}, null, r => {
+      this.$api.post('/cycle/bigData/getMoneySumByCuring', {}, token, null, r => {
         let arr1 = [['product', '收入', '支出']]
         r.forEach(element => {
           let arr2 = [element.YEAR, element.INCOME_MONEY, element.TOCOME_MONEY]
@@ -312,7 +313,7 @@ export default {
           ]
         })
       })
-      this.$api.post('/cycle/bigData/getMoneySumByCost', {}, null, r => {
+      this.$api.post('/cycle/bigData/getMoneySumByCost', {}, token, null, r => {
         let arr1 = []
         let arr2 = []
         r.forEach(element => {
@@ -352,7 +353,7 @@ export default {
           }]
         })
       })
-      this.$api.post('/cycle/bigData/getCountByTech', { 'TYPE': 'QL' }, null, r => {
+      this.$api.post('/cycle/bigData/getCountByTech', { 'TYPE': 'QL' }, token, null, r => {
         let arr1 = []
         r.forEach(element => {
           arr1.push({ value: element.COUNT, name: element.T0006_TECHTYPE_NAME })
@@ -402,7 +403,7 @@ export default {
           ]
         })
       })
-      this.$api.post('/cycle/bigData/getCountByTech', { 'TYPE': 'SD' }, null, r => {
+      this.$api.post('/cycle/bigData/getCountByTech', { 'TYPE': 'SD' }, token, null, r => {
         let arr1 = []
         // console.log(r)
         r.forEach(element => {
@@ -446,7 +447,7 @@ export default {
           ]
         })
       })
-      this.$api.post('/cycle/bigData/getCountByTech', { 'TYPE': 'HD' }, null, r => {
+      this.$api.post('/cycle/bigData/getCountByTech', { 'TYPE': 'HD' }, token, null, r => {
         let arr1 = []
         // console.log(r)
         r.forEach(element => {

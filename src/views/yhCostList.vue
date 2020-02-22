@@ -52,7 +52,7 @@
           <el-col :span="4">
             <el-form-item label="起点桩号">
               <el-select
-                v-model="searchMap.code1"
+                v-model="searchMap.T0002_START_PILE"
                 style="width:100%"
               >
                 <el-option
@@ -67,7 +67,7 @@
           <el-col :span="4">
             <el-form-item label="终点桩号">
               <el-select
-                v-model="searchMap.code2"
+                v-model="searchMap.T0002_END_PILE"
                 style="width:100%"
               >
                 <el-option
@@ -88,6 +88,7 @@
                 range-separator="至"
                 start-placeholder="开始日期"
                 end-placeholder="结束日期"
+                value-format="yyyy-MM-dd"
               >
               </el-date-picker>
             </el-form-item>
@@ -95,8 +96,11 @@
         </el-form>
       </el-row>
       <div>
-        <el-button type="primary">搜索</el-button>
-        <el-button>重置</el-button>
+        <el-button
+          type="primary"
+          @click="getCostBudgetList"
+        >搜索</el-button>
+        <el-button @click="reset">重置</el-button>
         <el-button
           type="primary"
           icon="el-icon-delete"
@@ -249,7 +253,7 @@
           <el-col :span="5">
             <el-form-item label="起点桩号">
               <el-select
-                v-model="addSearch.a"
+                v-model="addSearch.T0002_START_PILE"
                 style="width:100%"
               >
                 <el-option
@@ -264,7 +268,7 @@
           <el-col :span="5">
             <el-form-item label="终点桩号">
               <el-select
-                v-model="addSearch.code"
+                v-model="addSearch.T0002_END_PILE"
                 style="width:100%"
               >
                 <el-option
@@ -282,82 +286,99 @@
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-button type="primary">搜索</el-button>
-            <el-button>重置</el-button>
+            <el-button
+              type="primary"
+              @click="addSearchFun"
+            >搜索</el-button>
+            <el-button @click="addReset">重置</el-button>
           </el-col>
         </el-form>
       </el-row>
       <p> 您的检索： </p>
-      <table class="add-table">
-        <tr>
-          <td class="bg-td">请选择资产：</td>
-          <td>
-            <el-select
-              v-model="addForm.T0002_ID"
-              style="width:100%"
-              size="small"
-            >
-              <el-option
-                v-for="item in assetDataList"
-                :key="item.T0002_ID"
-                :label="item.T0002_ASSET_NAME"
-                :value="item.T0002_ID"
-              ></el-option>
-            </el-select>
-          </td>
-          <td class="bg-td">金额（万元）： </td>
-          <td>
-            <el-input
-              v-model.trim="addForm.T0005_COSTBUDGET_MONEY"
-              size="small"
-            ></el-input>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">养护工程选择： </td>
-          <td>
-            <el-select
-              v-model="addForm.T0005_ENGIN_MAINT"
-              style="width:100%"
-              size="small"
-            >
-              <el-option
-                v-for="item in projectList"
-                :key="item.code"
-                :label="item.name"
-                :value="item.code"
-              ></el-option>
-            </el-select>
-          </td>
-          <td class="bg-td">工程时间区间：</td>
-          <td>
-            <el-date-picker
-              size="small"
-              style="width:100%"
-              v-model="addForm.time"
-              type="daterange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              value-format="yyyy-MM-dd"
-            >
-            </el-date-picker>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">票据上传：</td>
-          <td colspan="3"></td>
-        </tr>
-        <tr>
-          <td class="bg-td">费用况详情（备注）：</td>
-          <td colspan="3">
-            <el-input
-              type="textarea"
-              v-model="addForm.T0005_COSTBUDGET_REMARK"
-            ></el-input>
-          </td>
-        </tr>
-      </table>
+      <el-form
+        :model="addForm"
+        :rules="rules"
+        ref="addFormRef"
+      >
+        <table class="add-table">
+          <tr>
+            <td class="bg-td">请选择资产：</td>
+            <td>
+              <el-form-item prop="T0002_ID">
+                <el-select
+                  v-model="addForm.T0002_ID"
+                  style="width:100%"
+                  size="small"
+                >
+                  <el-option
+                    v-for="item in assetDataList"
+                    :key="item.T0002_ID"
+                    :label="item.T0002_ASSET_NAME"
+                    :value="item.T0002_ID"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+            <td class="bg-td">金额（万元）： </td>
+            <td>
+              <el-form-item prop="T0005_COSTBUDGET_MONEY">
+                <el-input
+                  v-model.trim="addForm.T0005_COSTBUDGET_MONEY"
+                  size="small"
+                ></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">养护工程选择： </td>
+            <td>
+              <el-form-item prop="T0005_ENGIN_MAINT">
+                <el-select
+                  v-model="addForm.T0005_ENGIN_MAINT"
+                  style="width:100%"
+                  size="small"
+                >
+                  <el-option
+                    v-for="item in projectList"
+                    :key="item.code"
+                    :label="item.name"
+                    :value="item.code"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+            <td class="bg-td">工程时间区间：</td>
+            <td>
+              <el-form-item prop="time">
+                <el-date-picker
+                  size="small"
+                  style="width:100%"
+                  v-model="addForm.time"
+                  type="daterange"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                  value-format="yyyy-MM-dd"
+                >
+                </el-date-picker>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">票据上传：</td>
+            <td colspan="3"></td>
+          </tr>
+          <tr>
+            <td class="bg-td">费用况详情（备注）：</td>
+            <td colspan="3">
+              <el-input
+                type="textarea"
+                v-model="addForm.T0005_COSTBUDGET_REMARK"
+              ></el-input>
+            </td>
+          </tr>
+        </table>
+      </el-form>
       <div
         slot="footer"
         class="dialog-footer"
@@ -380,12 +401,12 @@
         <el-form
           label-position="right"
           label-width="70px"
-          :model="editSearch"
+          :model="addSearch"
         >
           <el-col :span="5">
             <el-form-item label="资产类别">
               <el-select
-                v-model="editSearch.T0001_ID"
+                v-model="addSearch.T0001_ID"
                 style="width:100%"
               >
                 <el-option
@@ -400,7 +421,7 @@
           <el-col :span="5">
             <el-form-item label="起点桩号">
               <el-select
-                v-model="editSearch.a"
+                v-model="addSearch.T0002_START_PILE"
                 style="width:100%"
               >
                 <el-option
@@ -415,7 +436,7 @@
           <el-col :span="5">
             <el-form-item label="终点桩号">
               <el-select
-                v-model="editSearch.code"
+                v-model="addSearch.T0002_END_PILE"
                 style="width:100%"
               >
                 <el-option
@@ -429,86 +450,103 @@
           </el-col>
           <el-col :span="5">
             <el-form-item label="关键字">
-              <el-input v-model.trim="editSearch.SEARCH_KEY"></el-input>
+              <el-input v-model.trim="addSearch.SEARCH_KEY"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-button type="primary">搜索</el-button>
-            <el-button>重置</el-button>
+            <el-button
+              type="primary"
+              @click="addSearchFun"
+            >搜索</el-button>
+            <el-button @click="addReset">重置</el-button>
           </el-col>
         </el-form>
       </el-row>
       <p> 您的检索： </p>
-      <table class="add-table">
-        <tr>
-          <td class="bg-td">请选择资产：</td>
-          <td>
-            <el-select
-              v-model="editForm.T0002_ID"
-              style="width:100%"
-              size="small"
-            >
-              <el-option
-                v-for="item in assetDataList"
-                :key="item.T0002_ID"
-                :label="item.T0002_ASSET_NAME"
-                :value="item.T0002_ID"
-              ></el-option>
-            </el-select>
-          </td>
-          <td class="bg-td">金额（万元）： </td>
-          <td>
-            <el-input
-              v-model.trim="editForm.T0005_COSTBUDGET_MONEY"
-              size="small"
-            ></el-input>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">养护工程选择： </td>
-          <td>
-            <el-select
-              v-model="editForm.T0005_ENGIN_MAINT"
-              style="width:100%"
-              size="small"
-            >
-              <el-option
-                v-for="item in projectList"
-                :key="item.code"
-                :label="item.name"
-                :value="item.code"
-              ></el-option>
-            </el-select>
-          </td>
-          <td class="bg-td">工程时间区间：</td>
-          <td>
-            <el-date-picker
-              size="small"
-              style="width:100%"
-              v-model="editForm.time"
-              type="daterange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              value-format="yyyy-MM-dd"
-            >
-            </el-date-picker>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">票据上传：</td>
-          <td colspan="3"></td>
-        </tr>
-        <tr>
-          <td class="bg-td">费用况详情（备注）：</td>
-          <td colspan="3">
-            <el-input
-              type="textarea"
-              v-model="editForm.T0005_COSTBUDGET_REMARK"
-            ></el-input>
-          </td>
-        </tr>
-      </table>
+      <el-form
+        :model="editForm"
+        :rules="rules"
+        ref="editFormRef"
+      >
+        <table class="add-table">
+          <tr>
+            <td class="bg-td">请选择资产：</td>
+            <td>
+              <el-form-item prop="T0002_ID">
+                <el-select
+                  v-model="editForm.T0002_ID"
+                  style="width:100%"
+                  size="small"
+                >
+                  <el-option
+                    v-for="item in assetDataList"
+                    :key="item.T0002_ID"
+                    :label="item.T0002_ASSET_NAME"
+                    :value="item.T0002_ID"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+            <td class="bg-td">金额（万元）： </td>
+            <td>
+              <el-form-item prop="T0005_COSTBUDGET_MONEY">
+                <el-input
+                  v-model.trim="editForm.T0005_COSTBUDGET_MONEY"
+                  size="small"
+                ></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">养护工程选择： </td>
+            <td>
+              <el-form-item prop="T0005_ENGIN_MAINT">
+                <el-select
+                  v-model="editForm.T0005_ENGIN_MAINT"
+                  style="width:100%"
+                  size="small"
+                >
+                  <el-option
+                    v-for="item in projectList"
+                    :key="item.code"
+                    :label="item.name"
+                    :value="item.code"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+            <td class="bg-td">工程时间区间：</td>
+            <td>
+              <el-form-item prop="time">
+                <el-date-picker
+                  size="small"
+                  style="width:100%"
+                  v-model="editForm.time"
+                  type="daterange"
+                  range-separator="至"
+                  start-placeholder="开始日期"
+                  end-placeholder="结束日期"
+                  value-format="yyyy-MM-dd"
+                >
+                </el-date-picker>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">票据上传：</td>
+            <td colspan="3"></td>
+          </tr>
+          <tr>
+            <td class="bg-td">费用况详情（备注）：</td>
+            <td colspan="3">
+              <el-input
+                type="textarea"
+                v-model="editForm.T0005_COSTBUDGET_REMARK"
+              ></el-input>
+            </td>
+          </tr>
+        </table>
+      </el-form>
       <div
         slot="footer"
         class="dialog-footer"
@@ -548,7 +586,7 @@
           </td>
         </tr>
         <tr>
-          <td class="bg-td">票据上传：</td>
+          <td class="bg-td">票据</td>
           <td colspan="3"></td>
         </tr>
         <tr>
@@ -565,6 +603,14 @@
 <script>
 export default {
   data () {
+    const validNum = (rule, value, callback) => {
+      let reg = /^\d+.?\d{0,2}$/
+      if (!reg.test(value)) {
+        callback(new Error('金额不能是负数并且小数点后最多两位'))
+      } else {
+        callback()
+      }
+    }
     return {
       addShow: false,
       editShow: false,
@@ -577,11 +623,35 @@ export default {
         T0005_ENGIN_MAINT: '',
         T0005_START_TIME: '',
         T0005_END_TIME: '',
-        T0005_COSTBUDGET_REMARK: ''
+        T0005_COSTBUDGET_REMARK: '',
+        time: []
+      },
+      // 表单验证规则
+      rules: {
+        T0002_ID: [
+          { required: true, message: '请选择资产', trigger: 'change' }
+        ],
+        T0005_COSTBUDGET_MONEY: [
+          { required: true, message: '请填写金额', trigger: 'change' },
+          { validator: validNum, trigger: 'blur' }
+        ],
+        T0005_ENGIN_MAINT: [
+          { required: true, message: '请选择养护工程', trigger: 'change' }
+        ],
+        time: [
+          {
+            required: true,
+            message: '请选择起止时间',
+            trigger: 'blur',
+            type: 'array'
+          }
+        ]
       },
       addSearch: {
         T0001_ID: '',
-        SEARCH_KEY: ''
+        SEARCH_KEY: '',
+        T0002_START_PILE: '',
+        T0002_END_PILE: ''
       },
       editSearch: {
         T0001_ID: '',
@@ -595,16 +665,12 @@ export default {
       total: 0,
       searchMap: {
         T0001_ID: '',
-        T0005_ENGIN_MAINT: ''
-      },
-      cost: {
-        a: '',
-        code: '',
-        code1: '',
-        code2: '',
+        T0005_ENGIN_MAINT: '',
         time: [],
-        showCount: 10,
-        currentPage: 1
+        T0005_START_TIME: '',
+        T0005_END_TIME: '',
+        T0002_START_PILE: '',
+        T0002_END_PILE: ''
       },
       projectList: [
         {
@@ -655,15 +721,50 @@ export default {
     },
     addFun () {
       this.addShow = true
+      this.addReset()
+      this.$nextTick(() => {
+        this.$refs['addFormRef'].resetFields()
+      })
+    },
+    reset () {
+      this.searchMap.T0001_ID = ''
+      this.searchMap.T0005_ENGIN_MAINT = ''
+      this.searchMap.T0005_START_TIME = ''
+      this.searchMap.T0005_END_TIME = ''
+      this.searchMap.time = []
+      this.showCount = 10
+      this.currentPage = 1
+      this.getAssetList()
+    },
+    // 新建 / 修改 搜索
+    addSearchFun () {
+      let _data = {
+        searchMap: this.addSearch
+      }
+      this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
+        this.assetDataList = r.data
+      })
+    },
+    // 新建/ 修改 重置
+    addReset () {
+      this.addSearch.T0001_ID = ''
+      this.addSearch.SEARCH_KEY = ''
+      this.addSearch.T0002_START_PILE = ''
+      this.addSearch.T0002_END_PILE = ''
+      this.getAssetDataList()
     },
     // 新建保存
     addSaveFun () {
-      this.addForm.T0005_START_TIME = this.addForm.time[0]
-      this.addForm.T0005_END_TIME = this.addForm.time[1]
-      this.$api.post('/cycle/costBudget/insert', this.addForm, null, r => {
-        this.$message.success('新增成功')
-        this.addShow = false
-        this.getCostBudgetList()
+      this.$refs['addFormRef'].validate(valid => {
+        if (valid) {
+          this.addForm.T0005_START_TIME = this.addForm.time[0]
+          this.addForm.T0005_END_TIME = this.addForm.time[1]
+          this.$api.post('/cycle/costBudget/insert', this.addForm, null, r => {
+            this.$message.success('新增成功')
+            this.addShow = false
+            this.getCostBudgetList()
+          })
+        }
       })
     },
     handleInfo (data) {
@@ -684,6 +785,7 @@ export default {
       )
     },
     handleEdit (data) {
+      this.addReset()
       this.editShow = true
       this.$api.post(
         `/cycle/costBudget/selectById?ID=${data.T0005_ID}`,
@@ -701,12 +803,16 @@ export default {
     },
     // 修改保存
     editSaveFun () {
-      this.editForm.T0005_START_TIME = this.editForm.time[0]
-      this.editForm.T0005_END_TIME = this.editForm.time[1]
-      this.$api.post(`/cycle/costBudget/update`, this.editForm, null, r => {
-        this.$message.success('修改成功')
-        this.editShow = false
-        this.getCostBudgetList()
+      this.$refs['editFormRef'].validate(valid => {
+        if (valid) {
+          this.editForm.T0005_START_TIME = this.editForm.time[0]
+          this.editForm.T0005_END_TIME = this.editForm.time[1]
+          this.$api.post(`/cycle/costBudget/update`, this.editForm, null, r => {
+            this.$message.success('修改成功')
+            this.editShow = false
+            this.getCostBudgetList()
+          })
+        }
       })
     },
     // 获取资产类别 list
@@ -723,6 +829,10 @@ export default {
     },
     // 养护费用list
     getCostBudgetList () {
+      if (this.searchMap.time.length > 0) {
+        this.searchMap.T0005_START_TIME = this.searchMap.time[0]
+        this.searchMap.T0005_END_TIME = this.searchMap.time[1]
+      }
       let _data = {
         currentPage: this.currentPage,
         showCount: this.showCount,
@@ -817,7 +927,7 @@ export default {
       border: 1px solid #dcdfe6;
       td {
         border: 1px solid #dcdfe6;
-        padding: 10px;
+        padding: 15px 10px;
       }
     }
     .bg-td {

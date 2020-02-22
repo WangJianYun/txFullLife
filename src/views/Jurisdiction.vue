@@ -33,7 +33,10 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="getLoadList">搜索</el-button>
+          <el-button
+            type="primary"
+            @click="getLoadList"
+          >搜索</el-button>
           <el-button @click="reset">重置</el-button>
         </el-form-item>
       </el-form>
@@ -152,60 +155,71 @@
       <el-form
         :model="addForm"
         :rules="rules"
-        ref="addRefForm"
-        label-width="100px"
+        ref="addFormRef"
       >
         <table class="add-table">
           <tr>
             <td class="bg-td">路段名称：</td>
             <td>
-              <el-input
-                v-model.trim="addForm.M0010_LOAD_NAME"
-                size="small"
-                maxlength="50"
-              ></el-input>
+              <el-form-item prop="M0010_LOAD_NAME">
+                <el-input
+                  v-model.trim="addForm.M0010_LOAD_NAME"
+                  size="small"
+                  maxlength="50"
+                ></el-input>
+              </el-form-item>
             </td>
             <td class="bg-td">养管单位名称： </td>
             <td>
-              <el-input
-                v-model.trim="addForm.M0010_CURING_UNIT"
-                size="small"
-                maxlength="50"
-              ></el-input>
+              <el-form-item prop="M0010_CURING_UNIT">
+                <el-input
+                  v-model.trim="addForm.M0010_CURING_UNIT"
+                  size="small"
+                  maxlength="50"
+                ></el-input>
+              </el-form-item>
             </td>
           </tr>
           <tr>
             <td class="bg-td">起点桩号： </td>
             <td>
-              <el-input
-                v-model.trim="addForm.M0010_START_PILE"
-                size="small"
-                maxlength="20"
-              ></el-input>
+              <el-form-item prop="M0010_START_PILE">
+                <el-input
+                  v-model.trim="addForm.M0010_START_PILE"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
+              </el-form-item>
             </td>
             <td class="bg-td">终点桩号：</td>
             <td>
-              <el-input
-                v-model.trim="addForm.M0010_END_PILE"
-                size="small"
-                maxlength="20"
-              ></el-input>
+              <el-form-item prop="M0010_END_PILE">
+                <el-input
+                  v-model.trim="addForm.M0010_END_PILE"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
+              </el-form-item>
             </td>
           </tr>
           <tr>
             <td class="bg-td">经度： </td>
             <td>
-              <el-input
-                v-model.trim="addForm.M0010_LOAD_PRECI"
-                size="small"
-              ></el-input>
+              <el-form-item prop="M0010_LOAD_PRECI">
+                <el-input
+                  v-model.trim="addForm.M0010_LOAD_PRECI"
+                  size="small"
+                ></el-input>
+              </el-form-item>
             </td>
             <td class="bg-td">纬度：</td>
             <td>
-              <el-input
-                v-model.trim="addForm.M0010_LOAD_LATI"
-                size="small"
-              ></el-input>
+              <el-form-item prop="M0010_LOAD_LATI">
+                <el-input
+                  v-model.trim="addForm.M0010_LOAD_LATI"
+                  size="small"
+                ></el-input>
+              </el-form-item>
             </td>
           </tr>
           <tr>
@@ -232,7 +246,7 @@
         <el-button @click="addShow = false">取 消</el-button>
         <el-button
           type="primary"
-          @click="addSaveFun('addRefForm')"
+          @click="addSaveFun"
         >确 定</el-button>
       </div>
     </el-dialog>
@@ -246,60 +260,72 @@
       <el-form
         :model="editForm"
         :rules="rules"
-        ref="editRefForm"
+        ref="editFormRef"
         label-width="100px"
       >
         <table class="add-table">
           <tr>
             <td class="bg-td">路段名称：</td>
             <td>
-              <el-input
-                v-model.trim="editForm.M0010_LOAD_NAME"
-                size="small"
-                maxlength="50"
-              ></el-input>
+              <el-form-item prop="M0010_LOAD_NAME">
+                <el-input
+                  v-model.trim="editForm.M0010_LOAD_NAME"
+                  size="small"
+                  maxlength="50"
+                ></el-input>
+              </el-form-item>
             </td>
             <td class="bg-td">养管单位名称： </td>
             <td>
-              <el-input
-                v-model.trim="editForm.M0010_CURING_UNIT"
-                size="small"
-                maxlength="50"
-              ></el-input>
+              <el-form-item prop="M0010_CURING_UNIT">
+                <el-input
+                  v-model.trim="editForm.M0010_CURING_UNIT"
+                  size="small"
+                  maxlength="50"
+                ></el-input>
+              </el-form-item>
             </td>
           </tr>
           <tr>
             <td class="bg-td">起点桩号： </td>
             <td>
-              <el-input
-                v-model.trim="editForm.M0010_START_PILE"
-                size="small"
-                maxlength="20"
-              ></el-input>
+              <el-form-item prop="M0010_START_PILE">
+                <el-input
+                  v-model.trim="editForm.M0010_START_PILE"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
+              </el-form-item>
             </td>
             <td class="bg-td">终点桩号：</td>
             <td>
-              <el-input
-                v-model.trim="editForm.M0010_END_PILE"
-                size="small"
-                maxlength="20"
-              ></el-input>
+              <el-form-item prop="M0010_END_PILE">
+                <el-input
+                  v-model.trim="editForm.M0010_END_PILE"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
+              </el-form-item>
             </td>
           </tr>
           <tr>
             <td class="bg-td">经度： </td>
             <td>
-              <el-input
-                v-model.trim="editForm.M0010_LOAD_PRECI"
-                size="small"
-              ></el-input>
+              <el-form-item prop="M0010_LOAD_PRECI">
+                <el-input
+                  v-model.trim="editForm.M0010_LOAD_PRECI"
+                  size="small"
+                ></el-input>
+              </el-form-item>
             </td>
             <td class="bg-td">纬度：</td>
             <td>
-              <el-input
-                v-model.trim="editForm.M0010_LOAD_LATI"
-                size="small"
-              ></el-input>
+              <el-form-item prop="M0010_LOAD_LATI">
+                <el-input
+                  v-model.trim="editForm.M0010_LOAD_LATI"
+                  size="small"
+                ></el-input>
+              </el-form-item>
             </td>
           </tr>
           <tr>
@@ -313,7 +339,7 @@
               <el-input
                 type="textarea"
                 maxlength="500"
-                v-model="editForm.M0010_LOAD_REMARK"
+                v-model="addForm.M0010_LOAD_REMARK"
               ></el-input>
             </td>
           </tr>
@@ -324,7 +350,10 @@
         class="dialog-footer"
       >
         <el-button @click="editShow = false">取 消</el-button>
-        <el-button type="primary" @click="editSaveFun">确 定</el-button>
+        <el-button
+          type="primary"
+          @click="editSaveFun"
+        >确 定</el-button>
       </div>
     </el-dialog>
     <!-- 查看 -->
@@ -384,15 +413,53 @@
 <script>
 export default {
   data () {
+    const validNoText = (rule, value, callback) => {
+      let reg = new RegExp('[\\u4E00-\\u9FFF]+', 'g')
+      if (reg.test(value)) {
+        callback(new Error('不能输入文本'))
+      } else {
+        callback()
+      }
+    }
     return {
       loading: true,
       addShow: false,
       infoShow: false,
       editShow: false,
-      addForm: {},
+      addForm: {
+        M0010_LOAD_NAME: '',
+        M0010_CURING_UNIT: '',
+        M0010_START_PILE: '',
+        M0010_END_PILE: '',
+        M0010_LOAD_PRECI: '',
+        M0010_LOAD_LATI: ''
+      },
       editForm: {},
       infoForm: {},
-      rules: {},
+      rules: {
+        M0010_LOAD_NAME: [
+          { required: true, message: '请填写路段名称', trigger: 'change' }
+        ],
+        M0010_CURING_UNIT: [
+          { required: true, message: '请填写养管单位名称', trigger: 'change' }
+        ],
+        M0010_START_PILE: [
+          { required: true, message: '请填写起点桩号', trigger: 'change' },
+          { validator: validNoText, trigger: 'blur' }
+        ],
+        M0010_END_PILE: [
+          { required: true, message: '请填写终点桩号', trigger: 'change' },
+          { validator: validNoText, trigger: 'blur' }
+        ],
+        M0010_LOAD_PRECI: [
+          { required: true, message: '请填写经度', trigger: 'change' },
+          { validator: validNoText, trigger: 'blur' }
+        ],
+        M0010_LOAD_LATI: [
+          { required: true, message: '请填写纬度', trigger: 'change' },
+          { validator: validNoText, trigger: 'blur' }
+        ]
+      },
       tableData: [],
       showCount: 10,
       currentPage: 1,
@@ -435,6 +502,18 @@ export default {
         }
       )
     },
+    // 修改保存
+    editSaveFun () {
+      this.$refs['editFormRef'].validate(valid => {
+        if (valid) {
+          this.$api.post(`/cycle//load/update`, this.editForm, null, r => {
+            this.$message.success('修改成功')
+            this.editShow = false
+            this.getLoadList()
+          })
+        }
+      })
+    },
     // 请求select 的所属路段
     getListNameList () {
       this.$api.post('/cycle/load/listLoadName', {}, null, r => {
@@ -444,21 +523,26 @@ export default {
     addFun () {
       this.addShow = true
       this.$nextTick(() => {
-        this.$refs['addRefForm'].resetFields()
+        this.$refs['addFormRef'].resetFields()
+      })
+    },
+    // 新增保存
+    addSaveFun () {
+      this.$refs['addFormRef'].validate(valid => {
+        if (valid) {
+          this.$api.post('/cycle/load/insert', this.addForm, null, r => {
+            this.$message.success('新增成功')
+            this.addShow = false
+            this.getLoadList()
+          })
+        }
       })
     },
     reset () {
       this.searchMap.M0010_LOAD_NAME = ''
       this.getLoadList()
     },
-    // 新增保存
-    addSaveFun () {
-      this.$api.post('/cycle/load/insert', this.addForm, null, r => {
-        this.$message.success('新增成功')
-        this.addShow = false
-        this.getLoadList()
-      })
-    },
+
     //  管辖路段 列表
     getLoadList () {
       let _data = {
@@ -489,14 +573,7 @@ export default {
         )
       })
     },
-    // 修改保存
-    editSaveFun () {
-      this.$api.post(`/cycle//load/update`, this.editForm, null, r => {
-        this.$message.success('修改成功')
-        this.editShow = false
-        this.getLoadList()
-      })
-    },
+
     // 批量删除
     delListFun () {
       let _list = []
@@ -564,7 +641,7 @@ export default {
       border: 1px solid #dcdfe6;
       td {
         border: 1px solid #dcdfe6;
-        padding: 10px;
+        padding: 15px 10px;
       }
     }
     .bg-td {
@@ -580,6 +657,9 @@ export default {
   }
   .dialog-div {
     width: 1000px;
+    .el-form-item {
+      margin-bottom: 0;
+    }
   }
 }
 </style>

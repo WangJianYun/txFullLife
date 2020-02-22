@@ -37,7 +37,7 @@
           <el-col :span="5">
             <el-form-item label="起点桩号">
               <el-select
-                v-model="searchMap.code"
+                v-model="searchMap.T0002_START_PILE"
                 style="width:100%"
               >
                 <el-option
@@ -52,7 +52,7 @@
           <el-col :span="5">
             <el-form-item label="终点桩号">
               <el-select
-                v-model="searchMap.code1"
+                v-model="searchMap.T0002_END_PILE"
                 style="width:100%"
               >
                 <el-option
@@ -214,155 +214,185 @@
       :close-on-click-modal="false"
       custom-class="dialog-div"
     >
-      <table class="add-table">
-        <tr>
-          <td class="bg-td">资产名称：</td>
-          <td>
-            <el-input
-              v-model.trim="addForm.T0002_ASSET_NAME"
-              size="small"
-              maxlength="50"
-            ></el-input>
-          </td>
-          <td class="bg-td">资产类别： </td>
-          <td>
-            <el-select
-              v-model="addForm.T0001_ID"
-              style="width:100%"
-              size="small"
-            >
-              <el-option
-                v-for="item in assetTypeList"
-                :key="item.T0001_ID"
-                :label="item.T0001_ASSETTYPE_NAME"
-                :value="item.T0001_ID"
-              ></el-option>
-            </el-select>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">所属路段：</td>
-          <td>
-            <el-select
-              v-model="addForm.T0002_LOAD_NAME"
-              style="width:100%"
-              size="small"
-            >
-              <el-option
-                v-for="(item,index ) in listNameList"
-                :key="index"
-                :label="item.M0010_LOAD_NAME"
-                :value="item.M0010_LOAD_NAME"
-              >
-              </el-option>
-            </el-select>
-          </td>
-          <td> </td>
-          <td> </td>
-        </tr>
-        <tr>
-          <td class="bg-td">起点桩号： </td>
-          <td>
-            <el-input
-              v-model.trim="addForm.T0002_START_PILE"
-              size="small"
-              maxlength="20"
-            ></el-input>
-          </td>
-          <td class="bg-td">终点桩号：</td>
-          <td>
-            <el-input
-              v-model.trim="addForm.T0002_END_PILE"
-              size="small"
-              maxlength="20"
-            ></el-input>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">数量： </td>
-          <td>
-            <el-input
-              v-model.trim="addForm.T0002_ASSET_AMOUNT"
-              size="small"
-            ></el-input>
-          </td>
-          <td class="bg-td">归属年份：</td>
-          <td>
-            <el-date-picker
-              v-model="addForm.T0002_ASSET_DATE"
-              type="date"
-              placeholder="选择年"
-              style="width: 100%"
-              size="small"
-              value-format="yyyy-MM-dd"
-            >
-            </el-date-picker>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">归属公司： </td>
-          <td>
-            {{ addForm.T0002_ASSET_COMPANY }}
-          </td>
-          <td class="bg-td"> 所属养管公司： </td>
-          <td>
-            <el-input
-              v-model.trim="addForm.T0002_CURING_UNIT"
-              size="small"
-              maxlength="50"
-            ></el-input>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">责任人： </td>
-          <td>
-            <el-input
-              v-model.trim="addForm.T0002_DUTY_PERSON"
-              size="small"
-              maxlength="20"
-            ></el-input>
-          </td>
-          <td class="bg-td"> 联系电话： </td>
-          <td>
-            <el-input
-              v-model.trim="addForm.T0002_TOUCH_TEL"
-              size="small"
-              maxlength="20"
-            ></el-input>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">经度： </td>
-          <td>
-            <el-input
-              v-model.trim="addForm.T0002_ASSET_PRECI"
-              size="small"
-            ></el-input>
-          </td>
-          <td class="bg-td"> 纬度： </td>
-          <td>
-            <el-input
-              v-model.trim="addForm.T0002_ASSET_LATI"
-              size="small"
-            ></el-input>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">图片上传：</td>
-          <td colspan="3">
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">费用况详情（备注）：</td>
-          <td colspan="3">
-            <el-input
-              type="textarea"
-              v-model="addForm.T0002_ASSET_REAMRK"
-              maxlength="500"
-            ></el-input>
-          </td>
-        </tr>
-      </table>
+      <el-form
+        :model="addForm"
+        :rules="rules"
+        ref="addFormRef"
+      >
+        <table class="add-table">
+          <tr>
+            <td class="bg-td">资产名称：</td>
+            <td>
+              <el-form-item prop="T0002_ASSET_NAME">
+                <el-input
+                  v-model.trim="addForm.T0002_ASSET_NAME"
+                  size="small"
+                  maxlength="50"
+                ></el-input>
+              </el-form-item>
+            </td>
+            <td class="bg-td">资产类别： </td>
+            <td>
+              <el-form-item prop="T0001_ID">
+                <el-select
+                  v-model="addForm.T0001_ID"
+                  style="width:100%"
+                  size="small"
+                >
+                  <el-option
+                    v-for="item in assetTypeList"
+                    :key="item.T0001_ID"
+                    :label="item.T0001_ASSETTYPE_NAME"
+                    :value="item.T0001_ID"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">所属路段：</td>
+            <td>
+              <el-form-item prop="T0002_LOAD_NAME">
+                <el-select
+                  v-model="addForm.T0002_LOAD_NAME"
+                  style="width:100%"
+                  size="small"
+                >
+                  <el-option
+                    v-for="(item,index ) in listNameList"
+                    :key="index"
+                    :label="item.M0010_LOAD_NAME"
+                    :value="item.M0010_LOAD_NAME"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+            <td> </td>
+            <td> </td>
+          </tr>
+          <tr>
+            <td class="bg-td">起点桩号： </td>
+            <td>
+              <el-form-item prop="T0002_START_PILE">
+                <el-input
+                  v-model.trim="addForm.T0002_START_PILE"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
+              </el-form-item>
+            </td>
+            <td class="bg-td">终点桩号：</td>
+            <td>
+              <el-form-item prop="T0002_END_PILE">
+                <el-input
+                  v-model.trim="addForm.T0002_END_PILE"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">数量： </td>
+            <td>
+              <el-form-item prop="T0002_ASSET_AMOUNT">
+                <el-input
+                  v-model.trim="addForm.T0002_ASSET_AMOUNT"
+                  size="small"
+                ></el-input>
+              </el-form-item>
+            </td>
+            <td class="bg-td">归属年份：</td>
+            <td>
+              <el-form-item prop="T0002_ASSET_DATE">
+                <el-date-picker
+                  v-model="addForm.T0002_ASSET_DATE"
+                  type="date"
+                  placeholder="选择年"
+                  style="width: 100%"
+                  size="small"
+                  value-format="yyyy-MM-dd"
+                >
+                </el-date-picker>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">归属公司： </td>
+            <td>
+              {{ addForm.T0002_ASSET_COMPANY }}
+            </td>
+            <td class="bg-td"> 所属养管公司： </td>
+            <td>
+              <el-form-item prop="T0002_CURING_UNIT">
+                <el-input
+                  v-model.trim="addForm.T0002_CURING_UNIT"
+                  size="small"
+                  maxlength="50"
+                ></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">责任人： </td>
+            <td>
+              <el-form-item prop="T0002_DUTY_PERSON">
+                <el-input
+                  v-model.trim="addForm.T0002_DUTY_PERSON"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
+              </el-form-item>
+            </td>
+            <td class="bg-td"> 联系电话： </td>
+            <td>
+              <el-form-item prop="T0002_TOUCH_TEL">
+                <el-input
+                  v-model.trim="addForm.T0002_TOUCH_TEL"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">经度： </td>
+            <td>
+              <el-form-item prop="T0002_ASSET_PRECI">
+                <el-input
+                  v-model.trim="addForm.T0002_ASSET_PRECI"
+                  size="small"
+                ></el-input>
+              </el-form-item>
+            </td>
+            <td class="bg-td"> 纬度： </td>
+            <td>
+              <el-form-item prop="T0002_ASSET_LATI">
+                <el-input
+                  v-model.trim="addForm.T0002_ASSET_LATI"
+                  size="small"
+                ></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">图片上传：</td>
+            <td colspan="3">
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">费用况详情（备注）：</td>
+            <td colspan="3">
+              <el-input
+                type="textarea"
+                v-model="addForm.T0002_ASSET_REAMRK"
+                maxlength="500"
+              ></el-input>
+            </td>
+          </tr>
+        </table>
+      </el-form>
       <div
         slot="footer"
         class="dialog-footer"
@@ -381,155 +411,185 @@
       :close-on-click-modal="false"
       custom-class="dialog-div"
     >
-      <table class="add-table">
-        <tr>
-          <td class="bg-td">资产名称：</td>
-          <td>
-            <el-input
-              v-model.trim="editForm.T0002_ASSET_NAME"
-              size="small"
-              maxlength="50"
-            ></el-input>
-          </td>
-          <td class="bg-td">资产类别： </td>
-          <td>
-            <el-select
-              v-model="editForm.T0001_ID"
-              style="width:100%"
-              size="small"
-            >
-              <el-option
-                v-for="item in assetTypeList"
-                :key="item.T0001_ID"
-                :label="item.T0001_ASSETTYPE_NAME"
-                :value="item.T0001_ID"
-              ></el-option>
-            </el-select>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">所属路段：</td>
-          <td>
-            <el-select
-              v-model="editForm.T0002_LOAD_NAME"
-              style="width:100%"
-              size="small"
-            >
-              <el-option
-                v-for="(item,index ) in listNameList"
-                :key="index"
-                :label="item.M0010_LOAD_NAME"
-                :value="item.M0010_LOAD_NAME"
-              >
-              </el-option>
-            </el-select>
-          </td>
-          <td> </td>
-          <td> </td>
-        </tr>
-        <tr>
-          <td class="bg-td">起点桩号： </td>
-          <td>
-            <el-input
-              v-model.trim="editForm.T0002_START_PILE"
-              size="small"
-              maxlength="20"
-            ></el-input>
-          </td>
-          <td class="bg-td">终点桩号：</td>
-          <td>
-            <el-input
-              v-model.trim="editForm.T0002_END_PILE"
-              size="small"
-              maxlength="20"
-            ></el-input>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">数量： </td>
-          <td>
-            <el-input
-              v-model.trim="editForm.T0002_ASSET_AMOUNT"
-              size="small"
-            ></el-input>
-          </td>
-          <td class="bg-td">归属年份：</td>
-          <td>
-            <el-date-picker
-              v-model="editForm.T0002_ASSET_DATE"
-              type="date"
-              placeholder="选择年"
-              style="width: 100%"
-              size="small"
-              value-format="yyyy-MM-dd"
-            >
-            </el-date-picker>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">归属公司： </td>
-          <td>
-            {{ editForm.T0002_ASSET_COMPANY }}
-          </td>
-          <td class="bg-td"> 所属养管公司： </td>
-          <td>
-            <el-input
-              v-model.trim="editForm.T0002_CURING_UNIT"
-              size="small"
-              maxlength="50"
-            ></el-input>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">责任人： </td>
-          <td>
-            <el-input
-              v-model.trim="editForm.T0002_DUTY_PERSON"
-              size="small"
-              maxlength="20"
-            ></el-input>
-          </td>
-          <td class="bg-td"> 联系电话： </td>
-          <td>
-            <el-input
-              v-model.trim="editForm.T0002_TOUCH_TEL"
-              size="small"
-              maxlength="20"
-            ></el-input>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">经度： </td>
-          <td>
-            <el-input
-              v-model.trim="editForm.T0002_ASSET_PRECI"
-              size="small"
-            ></el-input>
-          </td>
-          <td class="bg-td"> 纬度： </td>
-          <td>
-            <el-input
-              v-model.trim="editForm.T0002_ASSET_LATI"
-              size="small"
-            ></el-input>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">图片上传：</td>
-          <td colspan="3">
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">费用况详情（备注）：</td>
-          <td colspan="3">
-            <el-input
-              type="textarea"
-              v-model="editForm.T0002_ASSET_REAMRK"
-              maxlength="500"
-            ></el-input>
-          </td>
-        </tr>
-      </table>
+      <el-form
+        :model="editForm"
+        :rules="rules"
+        ref="editFormRef"
+      >
+        <table class="add-table">
+          <tr>
+            <td class="bg-td">资产名称：</td>
+            <td>
+              <el-form-item prop="T0002_ASSET_NAME">
+                <el-input
+                  v-model.trim="editForm.T0002_ASSET_NAME"
+                  size="small"
+                  maxlength="50"
+                ></el-input>
+              </el-form-item>
+            </td>
+            <td class="bg-td">资产类别： </td>
+            <td>
+              <el-form-item prop="T0001_ID">
+                <el-select
+                  v-model="editForm.T0001_ID"
+                  style="width:100%"
+                  size="small"
+                >
+                  <el-option
+                    v-for="item in assetTypeList"
+                    :key="item.T0001_ID"
+                    :label="item.T0001_ASSETTYPE_NAME"
+                    :value="item.T0001_ID"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">所属路段：</td>
+            <td>
+              <el-form-item prop="T0002_LOAD_NAME">
+                <el-select
+                  v-model="editForm.T0002_LOAD_NAME"
+                  style="width:100%"
+                  size="small"
+                >
+                  <el-option
+                    v-for="(item,index ) in listNameList"
+                    :key="index"
+                    :label="item.M0010_LOAD_NAME"
+                    :value="item.M0010_LOAD_NAME"
+                  >
+                  </el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+            <td> </td>
+            <td> </td>
+          </tr>
+          <tr>
+            <td class="bg-td">起点桩号： </td>
+            <td>
+              <el-form-item prop="T0002_START_PILE">
+                <el-input
+                  v-model.trim="editForm.T0002_START_PILE"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
+              </el-form-item>
+            </td>
+            <td class="bg-td">终点桩号：</td>
+            <td>
+              <el-form-item prop="resource">
+                <el-input
+                  v-model.trim="editForm.T0002_END_PILE"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">数量： </td>
+            <td>
+              <el-form-item prop="T0002_ASSET_AMOUNT">
+                <el-input
+                  v-model.trim="editForm.T0002_ASSET_AMOUNT"
+                  size="small"
+                ></el-input>
+              </el-form-item>
+            </td>
+            <td class="bg-td">归属年份：</td>
+            <td>
+              <el-form-item prop="T0002_ASSET_DATE">
+                <el-date-picker
+                  v-model="editForm.T0002_ASSET_DATE"
+                  type="date"
+                  placeholder="选择年"
+                  style="width: 100%"
+                  size="small"
+                  value-format="yyyy-MM-dd"
+                >
+                </el-date-picker>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">归属公司： </td>
+            <td>
+              {{ editForm.T0002_ASSET_COMPANY }}
+            </td>
+            <td class="bg-td"> 所属养管公司： </td>
+            <td>
+              <el-form-item prop="T0002_CURING_UNIT">
+                <el-input
+                  v-model.trim="editForm.T0002_CURING_UNIT"
+                  size="small"
+                  maxlength="50"
+                ></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">责任人： </td>
+            <td>
+              <el-form-item prop="resource">
+                <el-input
+                  v-model.trim="editForm.T0002_DUTY_PERSON"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
+              </el-form-item>
+            </td>
+            <td class="bg-td"> 联系电话： </td>
+            <td>
+              <el-form-item prop="T0002_TOUCH_TEL">
+                <el-input
+                  v-model.trim="editForm.T0002_TOUCH_TEL"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">经度： </td>
+            <td>
+              <el-form-item prop="T0002_ASSET_PRECI">
+                <el-input
+                  v-model.trim="editForm.T0002_ASSET_PRECI"
+                  size="small"
+                ></el-input>
+              </el-form-item>
+            </td>
+            <td class="bg-td"> 纬度： </td>
+            <td>
+              <el-form-item prop="T0002_ASSET_LATI">
+                <el-input
+                  v-model.trim="editForm.T0002_ASSET_LATI"
+                  size="small"
+                ></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">图片上传：</td>
+            <td colspan="3">
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">费用况详情（备注）：</td>
+            <td colspan="3">
+              <el-input
+                type="textarea"
+                v-model="editForm.T0002_ASSET_REAMRK"
+                maxlength="500"
+              ></el-input>
+            </td>
+          </tr>
+        </table>
+      </el-form>
       <div
         slot="footer"
         class="dialog-footer"
@@ -639,6 +699,22 @@
 <script>
 export default {
   data () {
+    const validOrder = (rule, value, callback) => {
+      let reg = /^[1-9]\d*$/
+      if (!reg.test(value)) {
+        callback(new Error('数量必须是正整数'))
+      } else {
+        callback()
+      }
+    }
+    const validNoText = (rule, value, callback) => {
+      let reg = new RegExp('[\\u4E00-\\u9FFF]+', 'g')
+      if (reg.test(value)) {
+        callback(new Error('不能输入文本'))
+      } else {
+        callback()
+      }
+    }
     return {
       assetList: [],
       loading: true,
@@ -662,15 +738,63 @@ export default {
         T0002_ASSET_LATI: '',
         T0002_ASSET_REAMRK: ''
       },
+      rules: {
+        T0002_ASSET_NAME: [
+          { required: true, message: '请填写资产名称', trigger: 'blur' }
+        ],
+        T0001_ID: [
+          { required: true, message: '请选择资产类别', trigger: 'change' }
+        ],
+        T0002_LOAD_NAME: [
+          { required: true, message: '请选择所属路段', trigger: 'change' }
+        ],
+        T0002_START_PILE: [
+          { required: true, message: '请填写起点桩号', trigger: 'blur' },
+          { validator: validNoText, trigger: 'blur' }
+        ],
+        T0002_END_PILE: [
+          { required: true, message: '请填写起点桩号', trigger: 'blur' },
+          { validator: validNoText, trigger: 'blur' }
+        ],
+        T0002_ASSET_AMOUNT: [
+          { required: true, message: '请填写数量', trigger: 'blur' },
+          { validator: validOrder, trigger: 'blur' }
+        ],
+        T0002_ASSET_DATE: [
+          {
+            required: true,
+            message: '请选择归属年份',
+            trigger: 'change'
+          }
+        ],
+        T0002_CURING_UNIT: [
+          { required: true, message: '请填写所属养管公司', trigger: 'blur' }
+        ],
+        T0002_DUTY_PERSON: [
+          { required: true, message: '请填写责任人', trigger: 'blur' }
+        ],
+        T0002_TOUCH_TEL: [
+          { required: true, message: '请填写联系电话', trigger: 'blur' }
+        ],
+        T0002_ASSET_PRECI: [
+          { required: true, message: '请填写经度', trigger: 'blur' },
+          { validator: validNoText, trigger: 'blur' }
+        ],
+        T0002_ASSET_LATI: [
+          { required: true, message: '请填写纬度', trigger: 'blur' },
+          { validator: validNoText, trigger: 'blur' }
+        ]
+      },
       infoForm: {},
-      assets: {},
       showCount: 10,
       currentPage: 1,
       total: 0,
       searchMap: {
         T0001_ID: '',
         YEAR: '',
-        SEARCH_KEY: ''
+        SEARCH_KEY: '',
+        T0002_START_PILE: '',
+        T0002_END_PILE: ''
       },
       tableData: [],
       selectList: [],
@@ -696,6 +820,21 @@ export default {
     },
     addFun () {
       this.addShow = true
+      this.$nextTick(() => {
+        this.$refs['addFormRef'].resetFields()
+      })
+    },
+    // 新增保存
+    addSaveFun () {
+      this.$refs['addFormRef'].validate(valid => {
+        if (valid) {
+          this.$api.post(`/cycle/assetData/insert`, this.addForm, null, r => {
+            this.$message.success('新增成功')
+            this.addShow = false
+            this.getAssetList()
+          })
+        }
+      })
     },
     handleInfo (data) {
       this.infoShow = true
@@ -711,6 +850,18 @@ export default {
           this.editForm = Object.assign({}, r.data)
         }
       )
+    },
+    // 修改保存
+    editSaveFun () {
+      this.$refs['editFormRef'].validate(valid => {
+        if (valid) {
+          this.$api.post(`/cycle/assetData/update`, this.editForm, null, r => {
+            this.$message.success('修改成功')
+            this.editShow = false
+            this.getAssetList()
+          })
+        }
+      })
     },
     // 获取资产类别 list
     getAssetTypeList () {
@@ -737,27 +888,13 @@ export default {
         this.total = r.data.totalResult
       })
     },
-    // 新增保存
-    addSaveFun () {
-      this.$api.post(`/cycle/assetData/insert`, this.addForm, null, r => {
-        this.$message.success('新增成功')
-        this.addShow = false
-        this.getAssetList()
-      })
-    },
-    // 修改保存
-    editSaveFun () {
-      this.$api.post(`/cycle/assetData/update`, this.editForm, null, r => {
-        this.$message.success('修改成功')
-        this.editShow = false
-        this.getAssetList()
-      })
-    },
     // 重置
     reset () {
       this.searchMap.T0001_ID = ''
       this.searchMap.YEAR = ''
       this.searchMap.SEARCH_KEY = ''
+      this.searchMap.T0002_START_PILE = ''
+      this.searchMap.T0002_END_PILE = ''
       this.showCount = 10
       this.currentPage = 1
       this.getAssetList()
@@ -850,7 +987,7 @@ export default {
       border: 1px solid #dcdfe6;
       td {
         border: 1px solid #dcdfe6;
-        padding: 10px;
+        padding: 15px 10px;
       }
     }
     .bg-td {
@@ -866,6 +1003,9 @@ export default {
   }
   .dialog-div {
     width: 1000px;
+    .el-form-item {
+      margin-bottom: 0;
+    }
   }
 }
 </style>

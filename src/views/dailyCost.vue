@@ -53,7 +53,7 @@
           <el-col :span="4">
             <el-form-item label="起点桩号">
               <el-select
-                v-model="searchMap.code1"
+                v-model="searchMap.T0002_START_PILE"
                 style="width:100%"
               >
                 <el-option
@@ -68,7 +68,7 @@
           <el-col :span="4">
             <el-form-item label="终点桩号">
               <el-select
-                v-model="searchMap.code2"
+                v-model="searchMap.T0002_END_PILE"
                 style="width:100%"
               >
                 <el-option
@@ -96,8 +96,11 @@
         </el-form>
       </el-row>
       <div>
-        <el-button type="primary">搜索</el-button>
-        <el-button>重置</el-button>
+        <el-button
+          type="primary"
+          @click="getCuringList"
+        >搜索</el-button>
+        <el-button @click="reset">重置</el-button>
         <el-button
           type="primary"
           icon="el-icon-delete"
@@ -239,12 +242,12 @@
         <el-form
           label-position="right"
           label-width="70px"
-          :model="dailycost"
+          :model="addSearch"
         >
           <el-col :span="5">
             <el-form-item label="资产类别">
               <el-select
-                v-model="dailycost.T0001_ID"
+                v-model="addSearch.T0001_ID"
                 style="width:100%"
               >
                 <el-option
@@ -259,14 +262,14 @@
           <el-col :span="5">
             <el-form-item label="起点桩号">
               <el-select
-                v-model="dailycost.a"
+                v-model="addSearch.T0002_START_PILE"
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in assetList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
+                  v-for="item in assetTypeList"
+                  :key="item.T0001_ID"
+                  :label="item.T0001_ASSETTYPE_NAME"
+                  :value="item.T0001_ID"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -274,104 +277,120 @@
           <el-col :span="5">
             <el-form-item label="终点桩号">
               <el-select
-                v-model="dailycost.code"
+                v-model="addSearch.T0002_END_PILE"
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in assetList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
+                  v-for="item in assetTypeList"
+                  :key="item.T0001_ID"
+                  :label="item.T0001_ASSETTYPE_NAME"
+                  :value="item.T0001_ID"
                 ></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="5">
             <el-form-item label="关键字">
-              <el-input v-model.trim="addForm.T0002_END_PILE"></el-input>
+              <el-input v-model.trim="addSearch.SEARCH_KEY"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-button type="primary">搜索</el-button>
-            <el-button>重置</el-button>
+            <el-button
+              type="primary"
+              @click="addSearchFun"
+            >搜索</el-button>
+            <el-button @click="addReset">重置</el-button>
           </el-col>
         </el-form>
       </el-row>
       <p> 您的检索： <span> 无 </span> </p>
-      <table class="add-table">
-        <tr>
-          <td class="bg-td">请选择资产：</td>
-          <td>
-            <el-select
-              v-model="addForm.T0002_ID"
-              style="width:100%"
-              size="small"
-            >
-              <el-option
-                v-for="item in assetDataList"
-                :key="item.T0002_ID"
-                :label="item.T0002_ASSET_NAME"
-                :value="item.T0002_ID"
-              ></el-option>
-            </el-select>
-          </td>
-          <td class="bg-td"> </td>
-          <td> </td>
-        </tr>
-        <tr>
-          <td class="bg-td">费用名称： </td>
-          <td>
-            <el-input
-              v-model.trim="addForm.T0004_CURINGCOST_NAME"
-              size="small"
-            ></el-input>
-          </td>
-          <td class="bg-td">金额（元）：</td>
-          <td>
-            <el-input
-              v-model.trim="addForm.T0004_CURINGCOST_MONEY"
-              size="small"
-              maxlength="20"
-            ></el-input>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">收支选择： </td>
-          <td>
-            <el-radio-group v-model="addForm.T0004_CURINGCOST_TYPE">
-              <el-radio :label="1">收入</el-radio>
-              <el-radio :label="2">支出</el-radio>
-            </el-radio-group>
-
-          </td>
-          <td class="bg-td">归属时间：</td>
-          <td>
-            <el-date-picker
-              v-model="addForm.T0004_CREATE_TIME"
-              type="date"
-              size="small"
-              style="width:100%"
-              value-format="yyyy-MM-dd"
-            >
-            </el-date-picker>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">票据上传：</td>
-          <td colspan="3">
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">费用况详情（备注）：</td>
-          <td colspan="3">
-            <el-input
-              type="textarea"
-              v-model="addForm.T0004_CURINGCOST_REMARK"
-              maxlength="500"
-            ></el-input>
-          </td>
-        </tr>
-      </table>
+      <el-form
+        :model="addForm"
+        :rules="rules"
+        ref="addFormRef"
+      >
+        <table class="add-table">
+          <tr>
+            <td class="bg-td">请选择资产：</td>
+            <td>
+              <el-form-item prop="T0002_ID">
+                <el-select
+                  v-model="addForm.T0002_ID"
+                  style="width:100%"
+                  size="small"
+                >
+                  <el-option
+                    v-for="item in assetDataList"
+                    :key="item.T0002_ID"
+                    :label="item.T0002_ASSET_NAME"
+                    :value="item.T0002_ID"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+            <td class="bg-td"> </td>
+            <td> </td>
+          </tr>
+          <tr>
+            <td class="bg-td">费用名称： </td>
+            <td>
+              <el-form-item prop="T0004_CURINGCOST_NAME">
+                <el-input
+                  v-model.trim="addForm.T0004_CURINGCOST_NAME"
+                  size="small"
+                ></el-input>
+              </el-form-item>
+            </td>
+            <td class="bg-td">金额（元）：</td>
+            <td>
+              <el-form-item prop="T0004_CURINGCOST_MONEY">
+                <el-input
+                  v-model.trim="addForm.T0004_CURINGCOST_MONEY"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">收支选择： </td>
+            <td>
+              <el-radio-group v-model="addForm.T0004_CURINGCOST_TYPE">
+                <el-radio :label="1">收入</el-radio>
+                <el-radio :label="2">支出</el-radio>
+              </el-radio-group>
+            </td>
+            <td class="bg-td">归属时间：</td>
+            <td>
+              <el-form-item prop="T0004_CREATE_TIME">
+                <el-date-picker
+                  v-model="addForm.T0004_CREATE_TIME"
+                  type="date"
+                  size="small"
+                  style="width:100%"
+                  value-format="yyyy-MM-dd"
+                >
+                </el-date-picker>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">票据上传：</td>
+            <td colspan="3">
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">费用况详情（备注）：</td>
+            <td colspan="3">
+              <el-input
+                type="textarea"
+                v-model="addForm.T0004_CURINGCOST_REMARK"
+                maxlength="500"
+              ></el-input>
+            </td>
+          </tr>
+        </table>
+      </el-form>
       <div
         slot="footer"
         class="dialog-footer"
@@ -394,12 +413,12 @@
         <el-form
           label-position="right"
           label-width="70px"
-          :model="dailycost"
+          :model="addSearch"
         >
           <el-col :span="5">
             <el-form-item label="资产类别">
               <el-select
-                v-model="dailycost.T0001_ID"
+                v-model="addSearch.T0001_ID"
                 style="width:100%"
               >
                 <el-option
@@ -414,14 +433,14 @@
           <el-col :span="5">
             <el-form-item label="起点桩号">
               <el-select
-                v-model="dailycost.a"
+                v-model="addSearch.T0002_START_PILE"
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in assetList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
+                  v-for="item in assetTypeList"
+                  :key="item.T0001_ID"
+                  :label="item.T0001_ASSETTYPE_NAME"
+                  :value="item.T0001_ID"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -429,104 +448,120 @@
           <el-col :span="5">
             <el-form-item label="终点桩号">
               <el-select
-                v-model="dailycost.code"
+                v-model="addSearch.T0002_END_PILE"
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in assetList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
+                  v-for="item in assetTypeList"
+                  :key="item.T0001_ID"
+                  :label="item.T0001_ASSETTYPE_NAME"
+                  :value="item.T0001_ID"
                 ></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="5">
             <el-form-item label="关键字">
-              <el-input v-model.trim="addForm.T0002_END_PILE"></el-input>
+              <el-input v-model.trim="addSearch.SEARCH_KEY"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-button type="primary">搜索</el-button>
-            <el-button>重置</el-button>
+            <el-button
+              type="primary"
+              @click="addSearchFun"
+            >搜索</el-button>
+            <el-button @click="addReset">重置</el-button>
           </el-col>
         </el-form>
       </el-row>
       <p> 您的检索： <span> 无 </span> </p>
-      <table class="add-table">
-        <tr>
-          <td class="bg-td">请选择资产：</td>
-          <td>
-            <el-select
-              v-model="editForm.T0002_ID"
-              style="width:100%"
-              size="small"
-            >
-              <el-option
-                v-for="item in assetDataList"
-                :key="item.T0002_ID"
-                :label="item.T0002_ASSET_NAME"
-                :value="item.T0002_ID"
-              ></el-option>
-            </el-select>
-          </td>
-          <td class="bg-td"> </td>
-          <td> </td>
-        </tr>
-        <tr>
-          <td class="bg-td">费用名称： </td>
-          <td>
-            <el-input
-              v-model.trim="editForm.T0004_CURINGCOST_NAME"
-              size="small"
-            ></el-input>
-          </td>
-          <td class="bg-td">金额（元）：</td>
-          <td>
-            <el-input
-              v-model.trim="editForm.T0004_CURINGCOST_MONEY"
-              size="small"
-              maxlength="20"
-            ></el-input>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">收支选择： </td>
-          <td>
-            <el-radio-group v-model="editForm.T0004_CURINGCOST_TYPE">
-              <el-radio :label="1">收入</el-radio>
-              <el-radio :label="2">支出</el-radio>
-            </el-radio-group>
-
-          </td>
-          <td class="bg-td">归属时间：</td>
-          <td>
-            <el-date-picker
-              v-model="editForm.T0004_CREATE_TIME"
-              type="date"
-              size="small"
-              style="width:100%"
-              value-format="yyyy-MM-dd"
-            >
-            </el-date-picker>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">票据上传：</td>
-          <td colspan="3">
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">费用况详情（备注）：</td>
-          <td colspan="3">
-            <el-input
-              type="textarea"
-              v-model="editForm.T0004_CURINGCOST_REMARK"
-              maxlength="500"
-            ></el-input>
-          </td>
-        </tr>
-      </table>
+      <el-form
+        :model="editForm"
+        :rules="rules"
+        ref="editFormRef"
+      >
+        <table class="add-table">
+          <tr>
+            <td class="bg-td">请选择资产：</td>
+            <td>
+              <el-form-item prop="T0002_ID">
+                <el-select
+                  v-model="editForm.T0002_ID"
+                  style="width:100%"
+                  size="small"
+                >
+                  <el-option
+                    v-for="item in assetDataList"
+                    :key="item.T0002_ID"
+                    :label="item.T0002_ASSET_NAME"
+                    :value="item.T0002_ID"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+            <td class="bg-td"> </td>
+            <td> </td>
+          </tr>
+          <tr>
+            <td class="bg-td">费用名称： </td>
+            <td>
+              <el-form-item prop="T0004_CURINGCOST_NAME">
+                <el-input
+                  v-model.trim="editForm.T0004_CURINGCOST_NAME"
+                  size="small"
+                ></el-input>
+              </el-form-item>
+            </td>
+            <td class="bg-td">金额（元）：</td>
+            <td>
+              <el-form-item prop="T0004_CURINGCOST_MONEY">
+                <el-input
+                  v-model.trim="editForm.T0004_CURINGCOST_MONEY"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">收支选择： </td>
+            <td>
+              <el-radio-group v-model="editForm.T0004_CURINGCOST_TYPE">
+                <el-radio :label="1">收入</el-radio>
+                <el-radio :label="2">支出</el-radio>
+              </el-radio-group>
+            </td>
+            <td class="bg-td">归属时间：</td>
+            <td>
+              <el-form-item prop="T0004_CREATE_TIME">
+                <el-date-picker
+                  v-model="editForm.T0004_CREATE_TIME"
+                  type="date"
+                  size="small"
+                  style="width:100%"
+                  value-format="yyyy-MM-dd"
+                >
+                </el-date-picker>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">票据上传：</td>
+            <td colspan="3">
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">费用况详情（备注）：</td>
+            <td colspan="3">
+              <el-input
+                type="textarea"
+                v-model="editForm.T0004_CURINGCOST_REMARK"
+                maxlength="500"
+              ></el-input>
+            </td>
+          </tr>
+        </table>
+      </el-form>
       <div
         slot="footer"
         class="dialog-footer"
@@ -574,7 +609,7 @@
           </td>
         </tr>
         <tr>
-          <td class="bg-td">票据上传：</td>
+          <td class="bg-td">票据</td>
           <td colspan="3">
           </td>
         </tr>
@@ -596,6 +631,14 @@
 <script>
 export default {
   data () {
+    const validNum = (rule, value, callback) => {
+      let reg = /^\d+.?\d{0,2}$/
+      if (!reg.test(value)) {
+        callback(new Error('金额不能是负数并且小数点后最多两位'))
+      } else {
+        callback()
+      }
+    }
     return {
       dailycost: {},
       assetList: [],
@@ -607,12 +650,32 @@ export default {
       infoShow: false,
       editForm: {},
       addForm: {
-        T0001_ID: '',
+        T0002_ID: '',
         T0004_CURINGCOST_NAME: '',
         T0004_CURINGCOST_MONEY: '',
         T0004_CURINGCOST_TYPE: 1,
         T0004_CREATE_TIME: '',
         T0004_CURINGCOST_REMARK: ''
+      },
+      // 表单验证规则
+      rules: {
+        T0002_ID: [
+          { required: true, message: '请选择资产', trigger: 'change' }
+        ],
+        T0004_CURINGCOST_NAME: [
+          { required: true, message: '请填写费用名称', trigger: 'change' }
+        ],
+        T0004_CURINGCOST_MONEY: [
+          { required: true, message: '请填写金额', trigger: 'change' },
+          { validator: validNum, trigger: 'blur' }
+        ],
+        T0004_CREATE_TIME: [
+          {
+            required: true,
+            message: '请选择归属时间',
+            trigger: 'change'
+          }
+        ]
       },
       infoForm: {},
       tableData: [],
@@ -621,7 +684,18 @@ export default {
       total: 0,
       searchMap: {
         T0001_ID: '',
-        T0004_CURINGCOST_TYPE: ''
+        T0004_CURINGCOST_TYPE: '',
+        T0002_START_PILE: '',
+        T0002_END_PILE: '',
+        time: [],
+        START_TIME: '',
+        END_TIME: ''
+      },
+      addSearch: {
+        T0001_ID: '',
+        SEARCH_KEY: '',
+        T0002_START_PILE: '',
+        T0002_END_PILE: ''
       },
       selectList: [],
       curincostList: [
@@ -670,13 +744,51 @@ export default {
     },
     addFun () {
       this.addShow = true
+      this.addReset()
+      this.$nextTick(() => {
+        this.$refs['addFormRef'].resetFields()
+      })
+    },
+    // 新建 / 修改 搜索
+    addSearchFun () {
+      let _data = {
+        searchMap: this.addSearch
+      }
+      this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
+        this.assetDataList = r.data
+      })
+    },
+    // 新建/ 修改 重置
+    addReset () {
+      this.addSearch.T0001_ID = ''
+      this.addSearch.SEARCH_KEY = ''
+      this.addSearch.T0002_START_PILE = ''
+      this.addSearch.T0002_END_PILE = ''
+      this.getAssetDataList()
+    },
+    // 重置
+    reset () {
+      this.searchMap.T0001_ID = ''
+      this.searchMap.T0004_CURINGCOST_TYPE = ''
+      this.searchMap.T0002_START_PILE = ''
+      this.searchMap.T0002_END_PILE = ''
+      this.searchMap.time = []
+      this.searchMap.START_TIME = ''
+      this.searchMap.END_TIME = ''
+      this.showCount = 10
+      this.currentPage = 1
+      this.getCuringList()
     },
     // 新增保存
     addSaveFun () {
-      this.$api.post('/cycle/curingCost/insert', this.addForm, null, r => {
-        this.$message.success('新增成功')
-        this.addShow = false
-        this.getCuringList()
+      this.$refs['addFormRef'].validate(valid => {
+        if (valid) {
+          this.$api.post('/cycle/curingCost/insert', this.addForm, null, r => {
+            this.$message.success('新增成功')
+            this.addShow = false
+            this.getCuringList()
+          })
+        }
       })
     },
     // 获取资产类别 list
@@ -693,6 +805,10 @@ export default {
     },
     // 日常费用 list
     getCuringList () {
+      if (this.searchMap.time.length > 0) {
+        this.searchMap.START_TIME = this.searchMap.time[0]
+        this.searchMap.END_TIME = this.searchMap.time[1]
+      }
       let _data = {
         currentPage: this.currentPage,
         showCount: this.showCount,
@@ -734,10 +850,14 @@ export default {
     },
     // 修改保存
     editSaveFun () {
-      this.$api.post(`/cycle/load/update`, this.editForm, null, r => {
-        this.$message.success('修改成功')
-        this.editShow = false
-        this.getCuringList()
+      this.$refs['editFormRef'].validate(valid => {
+        if (valid) {
+          this.$api.post(`/cycle/curingCost/update`, this.editForm, null, r => {
+            this.$message.success('修改成功')
+            this.editShow = false
+            this.getCuringList()
+          })
+        }
       })
     },
     handleDelete (data) {
@@ -828,7 +948,7 @@ export default {
       border: 1px solid #dcdfe6;
       td {
         border: 1px solid #dcdfe6;
-        padding: 10px;
+        padding: 15px 10px;
       }
     }
     .bg-td {
@@ -844,6 +964,9 @@ export default {
   }
   .dialog-div {
     width: 1000px;
+    .el-form-item {
+      margin-bottom: 0;
+    }
   }
 }
 </style>

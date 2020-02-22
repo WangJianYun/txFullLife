@@ -205,89 +205,108 @@
       :close-on-click-modal="false"
       custom-class="dialog-div"
     >
-      <table class="add-table">
-        <tr>
-          <td class="bg-td">高速名称：</td>
-          <td>
-            <el-select
-              v-model="addForm.M0008_ID"
-              style="width:100%"
-            >
-              <el-option
-                v-for="item in highspeedList"
-                :key="item.M0008_ID"
-                :label="item.M0008_HIGHSPEED_NAME"
-                :value="item.M0008_ID"
-                size="small"
-              ></el-option>
-            </el-select>
-          </td>
-          <td class="bg-td">所属路段： </td>
-          <td>
-            <el-select
-              v-model="addForm.M0009_LOAD_NAME"
-              style="width:100%"
-            >
-              <el-option
-                v-for="item in loadList"
-                :key="item.M0010_LOAD_NAME"
-                :label="item.M0010_LOAD_NAME"
-                :value="item.M0010_LOAD_NAME"
-                size="small"
-              ></el-option>
-            </el-select>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">桩号： </td>
-          <td>
-            <el-input
-              v-model.trim="addForm.M0009_PILENUMBER_NAME"
-              size="small"
-              maxlength="20"
-            ></el-input>
-          </td>
-          <td class="bg-td">方向：</td>
-          <td>
-            <el-radio-group v-model="addForm.M0009_PILENUMBER_DREICT">
-              <el-radio :label="1">上行线</el-radio>
-              <el-radio :label="2">下行线</el-radio>
-            </el-radio-group>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">经度： </td>
-          <td>
-            <el-input
-              v-model.trim="addForm.M0009_PILENUMBER_PRECI"
-              size="small"
-            ></el-input>
-          </td>
-          <td class="bg-td">纬度：</td>
-          <td>
-            <el-input
-              v-model.trim="addForm.M0009_PILENUMBER_LATI"
-              size="small"
-            ></el-input>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">归属年份： </td>
-          <td>
-            <el-date-picker
-              v-model="addForm.M0009_PILENUMBER_YEAR"
-              type="date"
-              placeholder="选择日期"
-              style="width: 100%"
-              size="small"
-              value-format="yyyy-MM-dd"
-            >
-            </el-date-picker>
-          </td>
-          <td></td>
-          <td></td>
-        </tr>
-      </table>
+      <el-form
+        :model="addForm"
+        :rules="rules"
+        ref="addFormRef"
+      >
+        <table class="add-table">
+          <tr>
+            <td class="bg-td">高速名称：</td>
+            <td>
+              <el-form-item prop="M0008_ID">
+                <el-select
+                  v-model="addForm.M0008_ID"
+                  style="width:100%"
+                  size="small"
+                >
+                  <el-option
+                    v-for="item in highspeedList"
+                    :key="item.M0008_ID"
+                    :label="item.M0008_HIGHSPEED_NAME"
+                    :value="item.M0008_ID"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+            <td class="bg-td">所属路段： </td>
+            <td>
+              <el-form-item prop="M0009_LOAD_NAME">
+                <el-select
+                  v-model="addForm.M0009_LOAD_NAME"
+                  style="width:100%"
+                  size="small"
+                >
+                  <el-option
+                    v-for="item in loadList"
+                    :key="item.M0010_LOAD_NAME"
+                    :label="item.M0010_LOAD_NAME"
+                    :value="item.M0010_LOAD_NAME"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">桩号： </td>
+            <td>
+              <el-form-item prop="M0009_PILENUMBER_NAME">
+                <el-input
+                  v-model.trim="addForm.M0009_PILENUMBER_NAME"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
+              </el-form-item>
+            </td>
+            <td class="bg-td">方向：</td>
+            <td>
+              <el-radio-group v-model="addForm.M0009_PILENUMBER_DREICT">
+                <el-radio :label="1">上行线</el-radio>
+                <el-radio :label="2">下行线</el-radio>
+              </el-radio-group>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">经度： </td>
+            <td>
+              <el-form-item prop="M0009_PILENUMBER_PRECI">
+                <el-input
+                  v-model.trim="addForm.M0009_PILENUMBER_PRECI"
+                  size="small"
+                ></el-input>
+              </el-form-item>
+
+            </td>
+            <td class="bg-td">纬度：</td>
+            <td>
+              <el-form-item prop="M0009_PILENUMBER_LATI">
+                <el-input
+                  v-model.trim="addForm.M0009_PILENUMBER_LATI"
+                  size="small"
+                ></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">归属年份： </td>
+            <td>
+              <el-form-item prop="M0009_PILENUMBER_YEAR">
+                <el-date-picker
+                  v-model="addForm.M0009_PILENUMBER_YEAR"
+                  type="date"
+                  placeholder="选择日期"
+                  style="width: 100%"
+                  size="small"
+                  value-format="yyyy-MM-dd"
+                >
+                </el-date-picker>
+              </el-form-item>
+            </td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+      </el-form>
       <div
         slot="footer"
         class="dialog-footer"
@@ -306,89 +325,108 @@
       :close-on-click-modal="false"
       custom-class="dialog-div"
     >
-      <table class="add-table">
-        <tr>
-          <td class="bg-td">高速名称：</td>
-          <td>
-            <el-select
-              v-model="editForm.M0008_ID"
-              style="width:100%"
-            >
-              <el-option
-                v-for="item in highspeedList"
-                :key="item.M0008_ID"
-                :label="item.M0008_HIGHSPEED_NAME"
-                :value="item.M0008_ID"
-                size="small"
-              ></el-option>
-            </el-select>
-          </td>
-          <td class="bg-td">所属路段： </td>
-          <td>
-            <el-select
-              v-model="editForm.M0009_LOAD_NAME"
-              style="width:100%"
-            >
-              <el-option
-                v-for="item in loadList"
-                :key="item.M0010_LOAD_NAME"
-                :label="item.M0010_LOAD_NAME"
-                :value="item.M0010_LOAD_NAME"
-                size="small"
-              ></el-option>
-            </el-select>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">桩号： </td>
-          <td>
-            <el-input
-              v-model.trim="editForm.M0009_PILENUMBER_NAME"
-              size="small"
-              maxlength="20"
-            ></el-input>
-          </td>
-          <td class="bg-td">方向：</td>
-          <td>
-            <el-radio-group v-model="editForm.M0009_PILENUMBER_DREICT">
-              <el-radio :label="1">上行线</el-radio>
-              <el-radio :label="2">下行线</el-radio>
-            </el-radio-group>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">经度： </td>
-          <td>
-            <el-input
-              v-model.trim="editForm.M0009_PILENUMBER_PRECI"
-              size="small"
-            ></el-input>
-          </td>
-          <td class="bg-td">纬度：</td>
-          <td>
-            <el-input
-              v-model.trim="editForm.M0009_PILENUMBER_LATI"
-              size="small"
-            ></el-input>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">归属年份： </td>
-          <td>
-            <el-date-picker
-              v-model="editForm.M0009_PILENUMBER_YEAR"
-              type="date"
-              placeholder="选择日期"
-              style="width: 100%"
-              size="small"
-              value-format="yyyy-MM-dd"
-            >
-            </el-date-picker>
-          </td>
-          <td></td>
-          <td></td>
-        </tr>
-      </table>
+      <el-form
+        :model="editForm"
+        :rules="rules"
+        ref="editFormRef"
+      >
+        <table class="add-table">
+          <tr>
+            <td class="bg-td">高速名称：</td>
+            <td>
+              <el-form-item prop="M0008_ID">
+                <el-select
+                  v-model="editForm.M0008_ID"
+                  style="width:100%"
+                  size="small"
+                >
+                  <el-option
+                    v-for="item in highspeedList"
+                    :key="item.M0008_ID"
+                    :label="item.M0008_HIGHSPEED_NAME"
+                    :value="item.M0008_ID"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+            <td class="bg-td">所属路段： </td>
+            <td>
+              <el-form-item prop="M0009_LOAD_NAME">
+                <el-select
+                  v-model="editForm.M0009_LOAD_NAME"
+                  style="width:100%"
+                  size="small"
+                >
+                  <el-option
+                    v-for="item in loadList"
+                    :key="item.M0010_LOAD_NAME"
+                    :label="item.M0010_LOAD_NAME"
+                    :value="item.M0010_LOAD_NAME"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">桩号： </td>
+            <td>
+              <el-form-item prop="M0009_PILENUMBER_NAME">
+                <el-input
+                  v-model.trim="editForm.M0009_PILENUMBER_NAME"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
+              </el-form-item>
+            </td>
+            <td class="bg-td">方向：</td>
+            <td>
+              <el-radio-group v-model="editForm.M0009_PILENUMBER_DREICT">
+                <el-radio :label="1">上行线</el-radio>
+                <el-radio :label="2">下行线</el-radio>
+              </el-radio-group>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">经度： </td>
+            <td>
+              <el-form-item prop="M0009_PILENUMBER_PRECI">
+                <el-input
+                  v-model.trim="editForm.M0009_PILENUMBER_PRECI"
+                  size="small"
+                ></el-input>
+              </el-form-item>
+
+            </td>
+            <td class="bg-td">纬度：</td>
+            <td>
+              <el-form-item prop="M0009_PILENUMBER_LATI">
+                <el-input
+                  v-model.trim="editForm.M0009_PILENUMBER_LATI"
+                  size="small"
+                ></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">归属年份： </td>
+            <td>
+              <el-form-item prop="M0009_PILENUMBER_YEAR">
+                <el-date-picker
+                  v-model="editForm.M0009_PILENUMBER_YEAR"
+                  type="date"
+                  placeholder="选择日期"
+                  style="width: 100%"
+                  size="small"
+                  value-format="yyyy-MM-dd"
+                >
+                </el-date-picker>
+              </el-form-item>
+            </td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+      </el-form>
       <div
         slot="footer"
         class="dialog-footer"
@@ -457,6 +495,14 @@
 <script>
 export default {
   data () {
+    const validNoText = (rule, value, callback) => {
+      let reg = new RegExp('[\\u4E00-\\u9FFF]+', 'g')
+      if (reg.test(value)) {
+        callback(new Error('不能输入文本'))
+      } else {
+        callback()
+      }
+    }
     return {
       assetList: [],
       loading: true,
@@ -472,6 +518,33 @@ export default {
         M0009_PILENUMBER_PRECI: '',
         M0009_PILENUMBER_LATI: '',
         M0009_PILENUMBER_YEAR: ''
+      },
+      rules: {
+        M0008_ID: [
+          { required: true, message: '请选择高速名称', trigger: 'change' }
+        ],
+        M0009_LOAD_NAME: [
+          { required: true, message: '请选择所属路段', trigger: 'change' }
+        ],
+        M0009_PILENUMBER_NAME: [
+          { required: true, message: '请填写桩号', trigger: 'change' },
+          { validator: validNoText, trigger: 'blur' }
+        ],
+        M0009_PILENUMBER_PRECI: [
+          { required: true, message: '请填写经度', trigger: 'change' },
+          { validator: validNoText, trigger: 'blur' }
+        ],
+        M0009_PILENUMBER_LATI: [
+          { required: true, message: '请填写纬度', trigger: 'change' },
+          { validator: validNoText, trigger: 'blur' }
+        ],
+        M0009_PILENUMBER_YEAR: [
+          {
+            required: true,
+            message: '请选择归属年份',
+            trigger: 'change'
+          }
+        ]
       },
       infoForm: {},
       tableData: [],
@@ -519,6 +592,21 @@ export default {
     },
     addFun () {
       this.addShow = true
+      this.$nextTick(() => {
+        this.$refs['addFormRef'].resetFields()
+      })
+    },
+    // 添加保存
+    addSaveFun () {
+      this.$refs['addFormRef'].validate(valid => {
+        if (valid) {
+          this.$api.post('/cycle/pileNumber/insert', this.addForm, null, r => {
+            this.$message.success('新增成功')
+            this.addShow = false
+            this.getPileList()
+          })
+        }
+      })
     },
     handleInfo (data) {
       this.infoShow = true
@@ -540,6 +628,18 @@ export default {
           this.editForm = Object.assign({}, r.data)
         }
       )
+    },
+    // 修改保存
+    editSaveFun () {
+      this.$refs['editFormRef'].validate(valid => {
+        if (valid) {
+          this.$api.post('/cycle/pileNumber/update', this.editForm, null, r => {
+            this.$message.success('修改成功')
+            this.editShow = false
+            this.getPileList()
+          })
+        }
+      })
     },
     // 点击删除
     handleDelete (data) {
@@ -582,22 +682,6 @@ export default {
     getHighspeedList () {
       this.$api.post('/cycle/highspeed/listAll', {}, null, r => {
         this.highspeedList = r.data
-      })
-    },
-    // 添加保存
-    addSaveFun () {
-      this.$api.post('/cycle/pileNumber/insert', this.addForm, null, r => {
-        this.$message.success('新增成功')
-        this.addShow = false
-        this.getPileList()
-      })
-    },
-    // 修改保存
-    editSaveFun () {
-      this.$api.post('/cycle/pileNumber/update', this.editForm, null, r => {
-        this.$message.success('修改成功')
-        this.editShow = false
-        this.getPileList()
       })
     },
     // 删除多个
@@ -671,7 +755,7 @@ export default {
       border: 1px solid #dcdfe6;
       td {
         border: 1px solid #dcdfe6;
-        padding: 10px;
+        padding: 15px 10px;
       }
     }
     .bg-td {
@@ -687,6 +771,9 @@ export default {
   }
   .dialog-div {
     width: 1000px;
+    .el-form-item {
+      margin-bottom: 0;
+    }
   }
 }
 </style>

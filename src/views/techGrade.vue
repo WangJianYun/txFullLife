@@ -37,7 +37,7 @@
           <el-col :span="5">
             <el-form-item label="等级选择">
               <el-select
-                v-model="searchMap.a"
+                v-model="searchMap.T0006_ID"
                 style="width:100%"
               >
                 <el-option
@@ -52,7 +52,7 @@
           <el-col :span="5">
             <el-form-item label="起点桩号">
               <el-select
-                v-model="searchMap.code"
+                v-model="searchMap.T0002_START_PILE"
                 style="width:100%"
               >
                 <el-option
@@ -67,7 +67,7 @@
           <el-col :span="5">
             <el-form-item label="终点桩号">
               <el-select
-                v-model="searchMap.code1"
+                v-model="searchMap.T0002_END_PILE"
                 style="width:100%"
               >
                 <el-option
@@ -218,12 +218,12 @@
         <el-form
           label-position="right"
           label-width="70px"
-          :model="techgrade"
+          :model="addSearch"
         >
           <el-col :span="5">
             <el-form-item label="资产类别">
               <el-select
-                v-model="techgrade.T0001_ID"
+                v-model="addSearch.T0001_ID"
                 style="width:100%"
               >
                 <el-option
@@ -238,14 +238,14 @@
           <el-col :span="5">
             <el-form-item label="起点桩号">
               <el-select
-                v-model="techgrade.a"
+                v-model="addSearch.T0002_START_PILE"
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in techTypeList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
+                  v-for="item in assetTypeList"
+                  :key="item.T0001_ID"
+                  :label="item.T0001_ASSETTYPE_NAME"
+                  :value="item.T0001_ID"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -253,100 +253,118 @@
           <el-col :span="5">
             <el-form-item label="终点桩号">
               <el-select
-                v-model="techgrade.code"
+                v-model="addSearch.T0002_END_PILE"
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in techTypeList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
+                  v-for="item in assetTypeList"
+                  :key="item.T0001_ID"
+                  :label="item.T0001_ASSETTYPE_NAME"
+                  :value="item.T0001_ID"
                 ></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="5">
             <el-form-item label="关键字">
-              <el-input v-model.trim="techgrade.SEARCH_KEY"></el-input>
+              <el-input v-model.trim="addSearch.SEARCH_KEY"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-button type="primary">搜索</el-button>
-            <el-button>重置</el-button>
+            <el-button
+              type="primary"
+              @click="addSearchFun"
+            >搜索</el-button>
+            <el-button @click="addReset">重置</el-button>
           </el-col>
         </el-form>
       </el-row>
-      <table class="add-table">
-        <tr>
-          <td class="bg-td">请选择资产：</td>
-          <td>
-            <el-select
-              v-model="addForm.T0002_ID"
-              style="width:100%"
-              size="small"
-            >
-              <el-option
-                v-for="item in assetDataList"
-                :key="item.T0002_ID"
-                :label="item.T0002_ASSET_NAME"
-                :value="item.T0002_ID"
-              ></el-option>
-            </el-select>
-          </td>
-          <td class="bg-td">技术等级分类： </td>
-          <td>
-            <el-select
-              v-model="addForm.T0006_ID"
-              style="width:100%"
-              size="small"
-            >
-              <el-option
-                v-for="item in techTypeList"
-                :key="item.T0006_ID"
-                :label="item.T0006_TECHTYPE_NAME"
-                :value="item.T0006_ID"
-              ></el-option>
-            </el-select>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">检测单位/评测单位： </td>
-          <td>
-            <el-input
-              v-model.trim="addForm.T0003_CHECK_UNIT"
-              size="small"
-              maxlength="20"
-            ></el-input>
-          </td>
-          <td class="bg-td">检测/评测时间：</td>
-          <td>
-            <el-date-picker
-              v-model="addForm.T0003_CHECK_TIME"
-              type="date"
-              placeholder="选择年"
-              style="width: 100%"
-              size="small"
-              value-format="yyyy-MM-dd"
-            >
-            </el-date-picker>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">检测/评测报告上传：</td>
-          <td colspan="3">
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">详情备注：</td>
-          <td colspan="3">
-            <el-input
-              type="textarea"
-              v-model="addForm.T0003_TECH_REMARK"
-              maxlength="500"
-            ></el-input>
-          </td>
-        </tr>
-      </table>
+      <p> 您的检索： <span> 无 </span> </p>
+      <el-form
+        :model="addForm"
+        :rules="rules"
+        ref="addFormRef"
+      >
+        <table class="add-table">
+          <tr>
+            <td class="bg-td">请选择资产：</td>
+            <td>
+              <el-form-item prop="T0002_ID">
+                <el-select
+                  v-model="addForm.T0002_ID"
+                  style="width:100%"
+                  size="small"
+                >
+                  <el-option
+                    v-for="item in assetDataList"
+                    :key="item.T0002_ID"
+                    :label="item.T0002_ASSET_NAME"
+                    :value="item.T0002_ID"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+            <td class="bg-td">技术等级分类： </td>
+            <td>
+              <el-form-item prop="T0006_ID">
+                <el-select
+                  v-model="addForm.T0006_ID"
+                  style="width:100%"
+                  size="small"
+                >
+                  <el-option
+                    v-for="item in techTypeList"
+                    :key="item.T0006_ID"
+                    :label="item.T0006_TECHTYPE_NAME"
+                    :value="item.T0006_ID"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">检测单位/评测单位： </td>
+            <td>
+              <el-form-item prop="T0003_CHECK_UNIT">
+                <el-input
+                  v-model.trim="addForm.T0003_CHECK_UNIT"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
+              </el-form-item>
+            </td>
+            <td class="bg-td">检测/评测时间：</td>
+            <td>
+              <el-form-item prop="T0003_CHECK_TIME">
+                <el-date-picker
+                  v-model="addForm.T0003_CHECK_TIME"
+                  type="date"
+                  placeholder="选择年"
+                  style="width: 100%"
+                  size="small"
+                  value-format="yyyy-MM-dd"
+                >
+                </el-date-picker>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">检测/评测报告上传：</td>
+            <td colspan="3">
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">详情备注：</td>
+            <td colspan="3">
+              <el-input
+                type="textarea"
+                v-model="addForm.T0003_TECH_REMARK"
+                maxlength="500"
+              ></el-input>
+            </td>
+          </tr>
+        </table>
+      </el-form>
       <div
         slot="footer"
         class="dialog-footer"
@@ -369,12 +387,12 @@
         <el-form
           label-position="right"
           label-width="70px"
-          :model="techgrade"
+          :model="addSearch"
         >
           <el-col :span="5">
             <el-form-item label="资产类别">
               <el-select
-                v-model="techgrade.T0001_ID"
+                v-model="addSearch.T0001_ID"
                 style="width:100%"
               >
                 <el-option
@@ -389,14 +407,14 @@
           <el-col :span="5">
             <el-form-item label="起点桩号">
               <el-select
-                v-model="techgrade.a"
+                v-model="addSearch.T0002_START_PILE"
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in techTypeList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
+                  v-for="item in assetTypeList"
+                  :key="item.T0001_ID"
+                  :label="item.T0001_ASSETTYPE_NAME"
+                  :value="item.T0001_ID"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -404,100 +422,118 @@
           <el-col :span="5">
             <el-form-item label="终点桩号">
               <el-select
-                v-model="techgrade.code"
+                v-model="addSearch.T0002_END_PILE"
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in techTypeList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
+                  v-for="item in assetTypeList"
+                  :key="item.T0001_ID"
+                  :label="item.T0001_ASSETTYPE_NAME"
+                  :value="item.T0001_ID"
                 ></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="5">
             <el-form-item label="关键字">
-              <el-input v-model.trim="techgrade.SEARCH_KEY"></el-input>
+              <el-input v-model.trim="addSearch.SEARCH_KEY"></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-button type="primary">搜索</el-button>
-            <el-button>重置</el-button>
+            <el-button
+              type="primary"
+              @click="addSearchFun"
+            >搜索</el-button>
+            <el-button @click="addReset">重置</el-button>
           </el-col>
         </el-form>
       </el-row>
-      <table class="add-table">
-        <tr>
-          <td class="bg-td">请选择资产：</td>
-          <td>
-            <el-select
-              v-model="editForm.T0002_ID"
-              style="width:100%"
-              size="small"
-            >
-              <el-option
-                v-for="item in assetDataList"
-                :key="item.T0002_ID"
-                :label="item.T0002_ASSET_NAME"
-                :value="item.T0002_ID"
-              ></el-option>
-            </el-select>
-          </td>
-          <td class="bg-td">技术等级分类： </td>
-          <td>
-            <el-select
-              v-model="editForm.T0006_ID"
-              style="width:100%"
-              size="small"
-            >
-              <el-option
-                v-for="item in techTypeList"
-                :key="item.T0006_ID"
-                :label="item.T0006_TECHTYPE_NAME"
-                :value="item.T0006_ID"
-              ></el-option>
-            </el-select>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">检测单位/评测单位： </td>
-          <td>
-            <el-input
-              v-model.trim="editForm.T0003_CHECK_UNIT"
-              size="small"
-              maxlength="20"
-            ></el-input>
-          </td>
-          <td class="bg-td">检测/评测时间：</td>
-          <td>
-            <el-date-picker
-              v-model="editForm.T0003_CHECK_TIME"
-              type="date"
-              placeholder="选择年"
-              style="width: 100%"
-              size="small"
-              value-format="yyyy-MM-dd"
-            >
-            </el-date-picker>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">检测/评测报告上传：</td>
-          <td colspan="3">
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">详情备注：</td>
-          <td colspan="3">
-            <el-input
-              type="textarea"
-              v-model="editForm.T0003_TECH_REMARK"
-              maxlength="500"
-            ></el-input>
-          </td>
-        </tr>
-      </table>
+      <p> 您的检索： <span> 无 </span> </p>
+      <el-form
+        :model="editForm"
+        :rules="rules"
+        ref="editFormRef"
+      >
+        <table class="add-table">
+          <tr>
+            <td class="bg-td">请选择资产：</td>
+            <td>
+              <el-form-item prop="T0002_ID">
+                <el-select
+                  v-model="editForm.T0002_ID"
+                  style="width:100%"
+                  size="small"
+                >
+                  <el-option
+                    v-for="item in assetDataList"
+                    :key="item.T0002_ID"
+                    :label="item.T0002_ASSET_NAME"
+                    :value="item.T0002_ID"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+            <td class="bg-td">技术等级分类： </td>
+            <td>
+              <el-form-item prop="T0006_ID">
+                <el-select
+                  v-model="editForm.T0006_ID"
+                  style="width:100%"
+                  size="small"
+                >
+                  <el-option
+                    v-for="item in techTypeList"
+                    :key="item.T0006_ID"
+                    :label="item.T0006_TECHTYPE_NAME"
+                    :value="item.T0006_ID"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">检测单位/评测单位： </td>
+            <td>
+              <el-form-item prop="T0003_CHECK_UNIT">
+                <el-input
+                  v-model.trim="editForm.T0003_CHECK_UNIT"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
+              </el-form-item>
+            </td>
+            <td class="bg-td">检测/评测时间：</td>
+            <td>
+              <el-form-item prop="T0003_CHECK_TIME">
+                <el-date-picker
+                  v-model="editForm.T0003_CHECK_TIME"
+                  type="date"
+                  placeholder="选择年"
+                  style="width: 100%"
+                  size="small"
+                  value-format="yyyy-MM-dd"
+                >
+                </el-date-picker>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">检测/评测报告上传：</td>
+            <td colspan="3">
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">详情备注：</td>
+            <td colspan="3">
+              <el-input
+                type="textarea"
+                v-model="editForm.T0003_TECH_REMARK"
+                maxlength="500"
+              ></el-input>
+            </td>
+          </tr>
+        </table>
+      </el-form>
       <div
         slot="footer"
         class="dialog-footer"
@@ -566,12 +602,40 @@ export default {
       editShow: false,
       infoShow: false,
       editForm: {},
+      addSearch: {
+        T0001_ID: '',
+        SEARCH_KEY: '',
+        T0002_START_PILE: '',
+        T0002_END_PILE: ''
+      },
       addForm: {
         T0002_ID: '',
         T0006_ID: '',
         T0003_CHECK_UNIT: '',
         T0003_CHECK_TIME: '',
         T0003_TECH_REMARK: ''
+      },
+      rules: {
+        T0002_ID: [
+          { required: true, message: '请选择资产', trigger: 'change' }
+        ],
+        T0006_ID: [
+          { required: true, message: '请选择技术等级分类', trigger: 'change' }
+        ],
+        T0003_CHECK_UNIT: [
+          {
+            required: true,
+            message: '请填写检测单位/评测单位',
+            trigger: 'change'
+          }
+        ],
+        T0003_CHECK_TIME: [
+          {
+            required: true,
+            message: '请选择检测/评测时间',
+            trigger: 'change'
+          }
+        ]
       },
       infoForm: {},
       techgrade: {},
@@ -580,7 +644,10 @@ export default {
       total: 0,
       searchMap: {
         T0001_ID: '',
-        YEAR: ''
+        T0006_ID: '',
+        YEAR: '',
+        T0002_START_PILE: '',
+        T0002_END_PILE: ''
       },
       tableData: [],
       selectList: [],
@@ -607,26 +674,43 @@ export default {
     },
     addFun () {
       this.addShow = true
+      this.addReset()
+      this.$nextTick(() => {
+        this.$refs['addFormRef'].resetFields()
+      })
+    },
+    // 新建 / 修改 搜索
+    addSearchFun () {
+      let _data = {
+        searchMap: this.addSearch
+      }
+      this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
+        this.assetDataList = r.data
+      })
+    },
+    // 新建/ 修改 重置
+    addReset () {
+      this.addSearch.T0001_ID = ''
+      this.addSearch.SEARCH_KEY = ''
+      this.addSearch.T0002_START_PILE = ''
+      this.addSearch.T0002_END_PILE = ''
+      this.getAssetDataList()
     },
     // 新建保存
     addSaveFun () {
-      this.$api.post(`/cycle/techData/insert`, this.addForm, null, r => {
-        this.$message.success('新增成功')
-        this.addShow = false
-        this.getTechDataList()
+      this.$refs['addFormRef'].validate(valid => {
+        if (valid) {
+          this.$api.post(`/cycle/techData/insert`, this.addForm, null, r => {
+            this.$message.success('新增成功')
+            this.addShow = false
+            this.getTechDataList()
+          })
+        }
       })
     },
     handleInfo (data) {
       this.infoShow = true
       this.infoForm = Object.assign({}, data)
-    },
-    // 修改保存
-    editSaveFun () {
-      this.$api.post(`/cycle/techData/update`, this.editForm, null, r => {
-        this.$message.success('修改成功')
-        this.editShow = false
-        this.getTechDataList()
-      })
     },
     // 点击修改
     handleEdit (data) {
@@ -640,6 +724,19 @@ export default {
         }
       )
     },
+    // 修改保存
+    editSaveFun () {
+      this.$refs['editFormRef'].validate(valid => {
+        if (valid) {
+          this.$api.post(`/cycle/techData/update`, this.editForm, null, r => {
+            this.$message.success('修改成功')
+            this.editShow = false
+            this.getTechDataList()
+          })
+        }
+      })
+    },
+
     // 获取资产类别 list
     getAssetTypeList () {
       this.$api.post(`/cycle/assetType/listAll`, {}, null, r => {
@@ -675,6 +772,9 @@ export default {
     reset () {
       this.searchMap.T0001_ID = ''
       this.searchMap.YEAR = ''
+      this.searchMap.T0006_ID = ''
+      this.searchMap.T0002_START_PILE = ''
+      this.searchMap.T0002_END_PILE = ''
       this.showCount = 10
       this.currentPage = 1
       this.getTechDataList()
@@ -768,7 +868,7 @@ export default {
       border: 1px solid #dcdfe6;
       td {
         border: 1px solid #dcdfe6;
-        padding: 10px;
+        padding: 15px 10px;
       }
     }
     .bg-td {
@@ -784,6 +884,9 @@ export default {
   }
   .dialog-div {
     width: 1000px;
+    .el-form-item {
+      margin-bottom: 0;
+    }
   }
 }
 </style>

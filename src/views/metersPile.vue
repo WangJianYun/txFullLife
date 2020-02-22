@@ -1,5 +1,5 @@
 <template>
-  <div class="dataParam-wrap">
+  <div class="meters-wrap">
     <p class="title-p">
       <span style="display:inline-block;margin-bottom:20px;"> >> 桩号展示 </span>
       <el-button
@@ -18,14 +18,14 @@
           <el-col :span="5">
             <el-form-item label="所属路段">
               <el-select
-                v-model="dataParam.ROAD_ID"
+                v-model="dataParam.M0010_LOAD_NAME"
                 style="width:100%"
               >
                 <el-option
                   v-for="item in loadList"
-                  :key="item.M0010_ID"
+                  :key="item.M0010_LOAD_NAME"
                   :label="item.M0010_LOAD_NAME"
-                  :value="item.M0010_ID"
+                  :value="item.M0010_LOAD_NAME"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -66,6 +66,7 @@
                 style="width:100%"
                 v-model="dataParam.YEAR"
                 type="year"
+                value-format="yyyy"
               >
               </el-date-picker>
             </el-form-item>
@@ -82,8 +83,11 @@
         </el-form>
       </el-row>
       <div class="div-btn">
-        <el-button type="primary">搜索</el-button>
-        <el-button>重置</el-button>
+        <el-button
+          type="primary"
+          @click="getPileList"
+        >搜索</el-button>
+        <el-button @click="reset">重置</el-button>
         <el-button
           type="primary"
           icon="el-icon-delete"
@@ -122,12 +126,13 @@
           >
           </el-table-column>
           <el-table-column
-            prop="M0008_HIGHSPEED_ABBR"
+            prop="M0009_LOAD_NAME"
             label="路段名称"
           >
           </el-table-column>
           <el-table-column
-            prop="M0008_HIGHSPEED_NUM"
+            prop="M0018_COMPANY_NAME"
+            show-overflow-tooltip
             label="管理单位"
           >
           </el-table-column>
@@ -139,6 +144,7 @@
           <el-table-column
             prop="M0009_PILENUMBER_DREICT"
             label="方向"
+            :formatter="codeFmt"
           >
           </el-table-column>
           <el-table-column
@@ -203,17 +209,33 @@
         <tr>
           <td class="bg-td">高速名称：</td>
           <td>
-            <el-input
-              v-model.trim="addForm.words"
-              size="small"
-            ></el-input>
+            <el-select
+              v-model="addForm.M0008_ID"
+              style="width:100%"
+            >
+              <el-option
+                v-for="item in highspeedList"
+                :key="item.M0008_ID"
+                :label="item.M0008_HIGHSPEED_NAME"
+                :value="item.M0008_ID"
+                size="small"
+              ></el-option>
+            </el-select>
           </td>
           <td class="bg-td">所属路段： </td>
           <td>
-            <el-input
-              v-model.trim="addForm.words"
-              size="small"
-            ></el-input>
+            <el-select
+              v-model="addForm.M0009_LOAD_NAME"
+              style="width:100%"
+            >
+              <el-option
+                v-for="item in loadList"
+                :key="item.M0010_LOAD_NAME"
+                :label="item.M0010_LOAD_NAME"
+                :value="item.M0010_LOAD_NAME"
+                size="small"
+              ></el-option>
+            </el-select>
           </td>
         </tr>
         <tr>
@@ -254,9 +276,11 @@
           <td>
             <el-date-picker
               v-model="addForm.M0009_PILENUMBER_YEAR"
-              type="year"
-              placeholder="选择年"
+              type="date"
+              placeholder="选择日期"
               style="width: 100%"
+              size="small"
+              value-format="yyyy-MM-dd"
             >
             </el-date-picker>
           </td>
@@ -286,17 +310,33 @@
         <tr>
           <td class="bg-td">高速名称：</td>
           <td>
-            <el-input
-              v-model.trim="editForm.words"
-              size="small"
-            ></el-input>
+            <el-select
+              v-model="editForm.M0008_ID"
+              style="width:100%"
+            >
+              <el-option
+                v-for="item in highspeedList"
+                :key="item.M0008_ID"
+                :label="item.M0008_HIGHSPEED_NAME"
+                :value="item.M0008_ID"
+                size="small"
+              ></el-option>
+            </el-select>
           </td>
           <td class="bg-td">所属路段： </td>
           <td>
-            <el-input
-              v-model.trim="editForm.words"
-              size="small"
-            ></el-input>
+            <el-select
+              v-model="editForm.M0009_LOAD_NAME"
+              style="width:100%"
+            >
+              <el-option
+                v-for="item in loadList"
+                :key="item.M0010_LOAD_NAME"
+                :label="item.M0010_LOAD_NAME"
+                :value="item.M0010_LOAD_NAME"
+                size="small"
+              ></el-option>
+            </el-select>
           </td>
         </tr>
         <tr>
@@ -337,9 +377,11 @@
           <td>
             <el-date-picker
               v-model="editForm.M0009_PILENUMBER_YEAR"
-              type="year"
-              placeholder="选择年"
+              type="date"
+              placeholder="选择日期"
               style="width: 100%"
+              size="small"
+              value-format="yyyy-MM-dd"
             >
             </el-date-picker>
           </td>
@@ -352,7 +394,10 @@
         class="dialog-footer"
       >
         <el-button @click="editShow = false">取 消</el-button>
-        <el-button type="primary">确 定</el-button>
+        <el-button
+          type="primary"
+          @click="editSaveFun"
+        >确 定</el-button>
       </div>
     </el-dialog>
     <!-- 查看 -->
@@ -365,11 +410,11 @@
         <tr>
           <td class="bg-td">高速名称：</td>
           <td>
-            {{ infoForm.words }}
+            {{ infoForm.M0008_HIGHSPEED_NAME }}
           </td>
           <td class="bg-td">所属路段： </td>
           <td>
-            {{ infoForm.words }}
+            {{ infoForm.M0010_LOAD_NAME }}
           </td>
         </tr>
         <tr>
@@ -414,14 +459,14 @@ export default {
   data () {
     return {
       assetList: [],
-      loading: false,
+      loading: true,
       addShow: false,
       editShow: false,
       infoShow: false,
       editForm: {},
       addForm: {
         M0008_ID: '',
-        M0010_ID: '',
+        M0009_LOAD_NAME: '',
         M0009_PILENUMBER_NAME: '',
         M0009_PILENUMBER_DREICT: 1,
         M0009_PILENUMBER_PRECI: '',
@@ -429,36 +474,42 @@ export default {
         M0009_PILENUMBER_YEAR: ''
       },
       infoForm: {},
-      tableData: [
-        {
-          M0009_PILENUMBER_NAME: 'K692+200',
-          M0009_PILENUMBER_DREICT: 1,
-          M0009_PILENUMBER_PRECI: '34.96355213',
-          M0009_PILENUMBER_LATI: '34.96355213',
-          M0009_PILENUMBER_YEAR: '2010'
-        }
-      ],
+      tableData: [],
       showCount: 10,
       currentPage: 1,
       total: 0,
       selectList: [],
       loadList: [],
       dataParam: {
-        ROAD_ID: '',
+        M0010_LOAD_NAME: '',
         START_PILE: '',
         END_PILE: '',
         YEAR: '',
         SEARCH_KEY: ''
-      }
+      },
+      highspeedList: [] //
     }
   },
   methods: {
+    codeFmt (row) {
+      return row.M0009_PILENUMBER_DREICT === '1' ? '上行线' : '下行线'
+    },
+    reset () {
+      this.dataParam.M0010_LOAD_NAME = ''
+      this.dataParam.START_PILE = ''
+      this.dataParam.END_PILE = ''
+      this.dataParam.YEAR = ''
+      this.dataParam.SEARCH_KEY = ''
+      this.getPileList()
+    },
     // 分页
     sizeChange (val) {
       this.showCount = val
+      this.getPileList()
     },
     currentChange (val) {
       this.currentPage = val
+      this.getPileList()
     },
     selectTable (selection) {
       this.selectList = selection
@@ -471,64 +522,120 @@ export default {
     },
     handleInfo (data) {
       this.infoShow = true
+      if (data.M0009_PILENUMBER_DREICT === 1) {
+        data.M0009_PILENUMBER_DREICT = '上行线'
+      } else {
+        data.M0009_PILENUMBER_DREICT = '下行线'
+      }
       this.infoForm = Object.assign({}, data)
     },
+    // 点击编辑
     handleEdit (data) {
       this.editShow = true
-      this.editForm = Object.assign({}, data)
-      this.$api.post('/cycle/pileNumber/selectById', {}, null, r => {
-        console.log(r)
-      })
+      this.$api.post(
+        `/cycle/pileNumber/selectById?ID=${data.M0009_ID}`,
+        {},
+        null,
+        r => {
+          this.editForm = Object.assign({}, r.data)
+        }
+      )
     },
+    // 点击删除
     handleDelete (data) {
-      this.$api.post('/cycle/pileNumber/deleteById', {}, null, r => {
-        console.log(r)
+      this.$confirm('确定要删除该条记录?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$api.post(
+          `/cycle/pileNumber/deleteById?ID=${data.M0009_ID}`,
+          {},
+          null,
+          r => {
+            this.$message.success('删除成功')
+            this.getPileList()
+          }
+        )
       })
     },
-    // 请求 白米桩分页列表
+    // 请求 百米桩分页列表
     getPileList () {
       let _data = {
         currentPage: this.currentPage,
         showCount: this.showCount,
-        mapParam: [this.dataParam]
+        searchMap: this.dataParam
       }
       this.$api.post('/cycle/pileNumber/listPage', _data, null, r => {
-        console.log(r)
+        this.loading = false
+        this.tableData = r.data.returnParam
+        this.total = r.data.totalResult
       })
     },
     // 管辖路段接口
     getLoadList () {
-      this.$api.post('/cycle/load/listAll', {}, null, r => {
+      this.$api.post('/cycle/load/listLoadName', {}, null, r => {
         this.loadList = r.data
+      })
+    },
+    // 选择高速下拉框 list
+    getHighspeedList () {
+      this.$api.post('/cycle/highspeed/listAll', {}, null, r => {
+        this.highspeedList = r.data
       })
     },
     // 添加保存
     addSaveFun () {
       this.$api.post('/cycle/pileNumber/insert', this.addForm, null, r => {
-        console.log(r)
+        this.$message.success('新增成功')
+        this.addShow = false
+        this.getPileList()
       })
     },
     // 修改保存
     editSaveFun () {
       this.$api.post('/cycle/pileNumber/update', this.editForm, null, r => {
-        console.log(r)
+        this.$message.success('修改成功')
+        this.editShow = false
+        this.getPileList()
       })
     },
     // 删除多个
     delListFun () {
-      this.$api.post('/cycle/pileNumber/deleteByIds', {}, null, r => {
-        console.log(r)
-      })
+      let _list = []
+      if (this.selectList.length > 0) {
+        for (let i = 0; i < this.selectList.length; i++) {
+          _list.push(this.selectList[i].M0009_ID)
+        }
+        this.$confirm('确定要删除这些记录?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$api.post(
+            `/cycle/pileNumber/deleteByIds?IDS=${_list}`,
+            {},
+            null,
+            r => {
+              this.$message.success('删除成功')
+              this.getPileList()
+            }
+          )
+        })
+      } else {
+        this.$message.warning('请选择要删除的数据！')
+      }
     }
   },
   created () {
+    this.getHighspeedList()
     this.getLoadList()
     this.getPileList()
   }
 }
 </script>
 <style lang="scss">
-.dataParam-wrap {
+.meters-wrap {
   .title-p {
     button {
       float: right;

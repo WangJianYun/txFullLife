@@ -14,28 +14,27 @@
     </p>
     <div class="content">
       <el-form
-        ref="jurisdictionForm"
-        :model="jurisdiction"
+        :model="searchMap"
         label-width="70px"
         :inline="true"
       >
-        <el-form-item label="路段名称">
+        <el-form-item label="所属路段">
           <el-select
-            v-model="jurisdiction.value"
+            v-model="searchMap.M0010_LOAD_NAME"
             placeholder="请选择"
           >
             <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="(item,index ) in listNameList"
+              :key="index"
+              :label="item.M0010_LOAD_NAME"
+              :value="item.M0010_LOAD_NAME"
             >
             </el-option>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">搜索</el-button>
-          <el-button>重置</el-button>
+          <el-button type="primary" @click="getLoadList">搜索</el-button>
+          <el-button @click="reset">重置</el-button>
         </el-form-item>
       </el-form>
       <p>
@@ -79,6 +78,7 @@
           <el-table-column
             prop="M0010_CURING_UNIT"
             label="管理公司"
+            :show-overflow-tooltip="true"
           >
           </el-table-column>
           <el-table-column
@@ -89,18 +89,6 @@
           <el-table-column
             prop="M0010_END_PILE"
             label="终点桩号"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="M0010_COMPAY_FULLNAME"
-            label="分公司全称"
-            :show-overflow-tooltip="true"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="M0010_COMPAY_SIMPNAME"
-            label="分公司简称"
-            :show-overflow-tooltip="true"
           >
           </el-table-column>
           <el-table-column
@@ -146,9 +134,9 @@
           class="table-page"
           @size-change="sizeChange"
           @current-change="currentChange"
-          :current-page="jurisdiction.currentPage"
+          :current-page="currentPage"
           :page-sizes="[10, 50, 100]"
-          :page-size="jurisdiction.showCount"
+          :page-size="showCount"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
         ></el-pagination>
@@ -221,24 +209,6 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-td"> 分公司全称：</td>
-            <td>
-              <el-input
-                v-model.trim="addForm.M0010_COMPAY_FULLNAME"
-                size="small"
-                maxlength="50"
-              ></el-input>
-            </td>
-            <td class="bg-td">分公司简称：</td>
-            <td>
-              <el-input
-                v-model.trim="addForm.M0010_COMPAY_SIMPNAME"
-                size="small"
-                maxlength="30"
-              ></el-input>
-            </td>
-          </tr>
-          <tr>
             <td class="bg-td">图片上传：</td>
             <td colspan="3">
             </td>
@@ -262,7 +232,7 @@
         <el-button @click="addShow = false">取 消</el-button>
         <el-button
           type="primary"
-          @click="submitForm('addRefForm')"
+          @click="addSaveFun('addRefForm')"
         >确 定</el-button>
       </div>
     </el-dialog>
@@ -333,24 +303,6 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-td"> 分公司全称：</td>
-            <td>
-              <el-input
-                v-model.trim="editForm.M0010_COMPAY_FULLNAME"
-                size="small"
-                maxlength="50"
-              ></el-input>
-            </td>
-            <td class="bg-td">分公司简称：</td>
-            <td>
-              <el-input
-                v-model.trim="editForm.M0010_COMPAY_SIMPNAME"
-                size="small"
-                maxlength="30"
-              ></el-input>
-            </td>
-          </tr>
-          <tr>
             <td class="bg-td">图片上传：</td>
             <td colspan="3">
             </td>
@@ -372,7 +324,7 @@
         class="dialog-footer"
       >
         <el-button @click="editShow = false">取 消</el-button>
-        <el-button type="primary">确 定</el-button>
+        <el-button type="primary" @click="editSaveFun">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 查看 -->
@@ -413,16 +365,6 @@
           </td>
         </tr>
         <tr>
-          <td class="bg-td"> 分公司全称：</td>
-          <td>
-            {{ infoForm.M0010_COMPAY_FULLNAME }}
-          </td>
-          <td class="bg-td">分公司简称：</td>
-          <td>
-            {{ infoForm.M0010_COMPAY_SIMPNAME}}
-          </td>
-        </tr>
-        <tr>
           <td class="bg-td">图片上传：</td>
           <td colspan="3">
           </td>
@@ -443,7 +385,7 @@
 export default {
   data () {
     return {
-      loading: false,
+      loading: true,
       addShow: false,
       infoShow: false,
       editShow: false,
@@ -451,56 +393,26 @@ export default {
       editForm: {},
       infoForm: {},
       rules: {},
-      tableData: [
-        {
-          M0010_LOAD_NAME: '铜旬段',
-          M0010_CURING_UNIT: '铜旬分公司',
-          M0010_START_PILE: 'K291+000',
-          M0010_END_PILE: 'K900+960',
-          M0010_COMPAY_FULLNAME: '陕西省高速公路建设集团公司铜旬分公司',
-          M0010_COMPAY_SIMPNAME: '铜旬分公司',
-          M0010_LOAD_PRECI: '34.96355213',
-          M0010_LOAD_LATI: '34.93254333',
-          M0010_LOAD_REMARK: '我是备注'
-        }
-      ],
-      options: [
-        {
-          value: '选项1',
-          label: '黄金糕'
-        },
-        {
-          value: '选项2',
-          label: '双皮奶'
-        },
-        {
-          value: '选项3',
-          label: '蚵仔煎'
-        },
-        {
-          value: '选项4',
-          label: '龙须面'
-        },
-        {
-          value: '选项5',
-          label: '北京烤鸭'
-        }
-      ],
-      jurisdiction: {
-        showCount: 10,
-        currentPage: 1
-      },
+      tableData: [],
+      showCount: 10,
+      currentPage: 1,
       total: 0,
-      selectList: []
+      searchMap: {
+        M0010_LOAD_NAME: ''
+      },
+      selectList: [],
+      listNameList: []
     }
   },
   methods: {
     // 分页
     sizeChange (val) {
-      this.jurisdiction.showCount = val
+      this.showCount = val
+      this.getLoadList()
     },
     currentChange (val) {
-      this.jurisdiction.currentPage = val
+      this.currentPage = val
+      this.getLoadList()
     },
     selectTable (selection) {
       this.selectList = selection
@@ -514,7 +426,20 @@ export default {
     },
     handleEdit (data) {
       this.editShow = true
-      this.editForm = Object.assign({}, data)
+      this.$api.post(
+        `/cycle/load/selectById?ID=${data.M0010_ID}`,
+        {},
+        null,
+        r => {
+          this.editForm = Object.assign({}, r.data)
+        }
+      )
+    },
+    // 请求select 的所属路段
+    getListNameList () {
+      this.$api.post('/cycle/load/listLoadName', {}, null, r => {
+        this.listNameList = r.data
+      })
     },
     addFun () {
       this.addShow = true
@@ -522,9 +447,86 @@ export default {
         this.$refs['addRefForm'].resetFields()
       })
     },
-    handleDelete (data) {},
+    reset () {
+      this.searchMap.M0010_LOAD_NAME = ''
+      this.getLoadList()
+    },
+    // 新增保存
+    addSaveFun () {
+      this.$api.post('/cycle/load/insert', this.addForm, null, r => {
+        this.$message.success('新增成功')
+        this.addShow = false
+        this.getLoadList()
+      })
+    },
+    //  管辖路段 列表
+    getLoadList () {
+      let _data = {
+        currentPage: this.currentPage,
+        showCount: this.showCount,
+        searchMap: this.searchMap
+      }
+      this.$api.post(`/cycle/load/listPage`, _data, null, r => {
+        this.loading = false
+        this.tableData = r.data.returnParam
+        this.total = r.data.totalResult
+      })
+    },
+    handleDelete (data) {
+      this.$confirm('确定要删除该条记录?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$api.post(
+          `/cycle/load/deleteById?ID=${data.M0010_ID}`,
+          {},
+          null,
+          r => {
+            this.$message.success('删除成功')
+            this.getLoadList()
+          }
+        )
+      })
+    },
+    // 修改保存
+    editSaveFun () {
+      this.$api.post(`/cycle//load/update`, this.editForm, null, r => {
+        this.$message.success('修改成功')
+        this.editShow = false
+        this.getLoadList()
+      })
+    },
     // 批量删除
-    delListFun () {}
+    delListFun () {
+      let _list = []
+      if (this.selectList.length > 0) {
+        for (let i = 0; i < this.selectList.length; i++) {
+          _list.push(this.selectList[i].M0010_ID)
+        }
+        this.$confirm('确定要删除这些记录?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$api.post(
+            `/cycle/load/deleteByIds?IDS=${_list}`,
+            {},
+            null,
+            r => {
+              this.$message.success('删除成功')
+              this.getLoadList()
+            }
+          )
+        })
+      } else {
+        this.$message.warning('请选择要删除的数据！')
+      }
+    }
+  },
+  created () {
+    this.getLoadList()
+    this.getListNameList()
   }
 }
 </script>

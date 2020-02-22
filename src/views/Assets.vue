@@ -17,19 +17,19 @@
         <el-form
           label-position="right"
           label-width="70px"
-          :model="assets"
+          :model="searchMap"
         >
           <el-col :span="5">
             <el-form-item label="资产类别">
               <el-select
-                v-model="assets.a"
+                v-model="searchMap.T0001_ID"
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in assetList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
+                  v-for="item in assetTypeList"
+                  :key="item.T0001_ID"
+                  :label="item.T0001_ASSETTYPE_NAME"
+                  :value="item.T0001_ID"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -37,7 +37,7 @@
           <el-col :span="5">
             <el-form-item label="起点桩号">
               <el-select
-                v-model="assets.code"
+                v-model="searchMap.code"
                 style="width:100%"
               >
                 <el-option
@@ -52,7 +52,7 @@
           <el-col :span="5">
             <el-form-item label="终点桩号">
               <el-select
-                v-model="assets.code1"
+                v-model="searchMap.code1"
                 style="width:100%"
               >
                 <el-option
@@ -68,8 +68,9 @@
             <el-form-item label="年份选择">
               <el-date-picker
                 style="width:100%"
-                v-model="assets.year"
+                v-model="searchMap.YEAR"
                 type="year"
+                value-format="yyyy"
               >
               </el-date-picker>
             </el-form-item>
@@ -78,7 +79,7 @@
             <el-form-item label="关键字">
               <el-input
                 placeholder="请输入关键字"
-                v-model="assets.a"
+                v-model="searchMap.SEARCH_KEY"
               >
               </el-input>
             </el-form-item>
@@ -86,8 +87,11 @@
         </el-form>
       </el-row>
       <div class="div-btn">
-        <el-button type="primary">搜索</el-button>
-        <el-button>重置</el-button>
+        <el-button
+          type="primary"
+          @click="getAssetList"
+        >搜索</el-button>
+        <el-button @click="reset">重置</el-button>
         <el-button
           type="primary"
           icon="el-icon-delete"
@@ -126,8 +130,9 @@
           >
           </el-table-column>
           <el-table-column
-            prop="T0001_ID"
+            prop="T0001_ASSETTYPE_NAME"
             label="资产类别"
+            show-overflow-tooltip
           >
           </el-table-column>
           <el-table-column
@@ -146,7 +151,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="M0010_ID"
+            prop="T0002_LOAD_NAME"
             label="所属路段"
           >
           </el-table-column>
@@ -163,6 +168,7 @@
           <el-table-column
             prop="T0002_ASSET_DATE"
             label="归属年份"
+            width="110"
           >
           </el-table-column>
           <el-table-column
@@ -193,9 +199,9 @@
           class="table-page"
           @size-change="sizeChange"
           @current-change="currentChange"
-          :current-page="assets.currentPage"
+          :current-page="currentPage"
           :page-sizes="[10, 50, 100]"
-          :page-size="assets.showCount"
+          :page-size="showCount"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
         ></el-pagination>
@@ -226,10 +232,10 @@
               size="small"
             >
               <el-option
-                v-for="item in assetList"
-                :key="item.code"
-                :label="item.name"
-                :value="item.code"
+                v-for="item in assetTypeList"
+                :key="item.T0001_ID"
+                :label="item.T0001_ASSETTYPE_NAME"
+                :value="item.T0001_ID"
               ></el-option>
             </el-select>
           </td>
@@ -238,16 +244,17 @@
           <td class="bg-td">所属路段：</td>
           <td>
             <el-select
-              v-model="addForm.M0010_ID"
+              v-model="addForm.T0002_LOAD_NAME"
               style="width:100%"
               size="small"
             >
               <el-option
-                v-for="item in assetList"
-                :key="item.code"
-                :label="item.name"
-                :value="item.code"
-              ></el-option>
+                v-for="(item,index ) in listNameList"
+                :key="index"
+                :label="item.M0010_LOAD_NAME"
+                :value="item.M0010_LOAD_NAME"
+              >
+              </el-option>
             </el-select>
           </td>
           <td> </td>
@@ -283,10 +290,11 @@
           <td>
             <el-date-picker
               v-model="addForm.T0002_ASSET_DATE"
-              type="year"
+              type="date"
               placeholder="选择年"
               style="width: 100%"
               size="small"
+              value-format="yyyy-MM-dd"
             >
             </el-date-picker>
           </td>
@@ -294,11 +302,7 @@
         <tr>
           <td class="bg-td">归属公司： </td>
           <td>
-            <el-input
-              v-model.trim="addForm.T0002_ASSET_COMPANY"
-              size="small"
-              maxlength="50"
-            ></el-input>
+            {{ addForm.T0002_ASSET_COMPANY }}
           </td>
           <td class="bg-td"> 所属养管公司： </td>
           <td>
@@ -366,7 +370,7 @@
         <el-button @click="addShow = false">取 消</el-button>
         <el-button
           type="primary"
-          @click="submitForm('ruleForm')"
+          @click="addSaveFun"
         >确 定</el-button>
       </div>
     </el-dialog>
@@ -382,7 +386,7 @@
           <td class="bg-td">资产名称：</td>
           <td>
             <el-input
-              v-model.trim="editShow.T0002_ASSET_NAME"
+              v-model.trim="editForm.T0002_ASSET_NAME"
               size="small"
               maxlength="50"
             ></el-input>
@@ -390,15 +394,15 @@
           <td class="bg-td">资产类别： </td>
           <td>
             <el-select
-              v-model="editShow.T0001_ID"
+              v-model="editForm.T0001_ID"
               style="width:100%"
               size="small"
             >
               <el-option
-                v-for="item in assetList"
-                :key="item.code"
-                :label="item.name"
-                :value="item.code"
+                v-for="item in assetTypeList"
+                :key="item.T0001_ID"
+                :label="item.T0001_ASSETTYPE_NAME"
+                :value="item.T0001_ID"
               ></el-option>
             </el-select>
           </td>
@@ -407,16 +411,17 @@
           <td class="bg-td">所属路段：</td>
           <td>
             <el-select
-              v-model="editShow.M0010_ID"
+              v-model="editForm.T0002_LOAD_NAME"
               style="width:100%"
               size="small"
             >
               <el-option
-                v-for="item in assetList"
-                :key="item.code"
-                :label="item.name"
-                :value="item.code"
-              ></el-option>
+                v-for="(item,index ) in listNameList"
+                :key="index"
+                :label="item.M0010_LOAD_NAME"
+                :value="item.M0010_LOAD_NAME"
+              >
+              </el-option>
             </el-select>
           </td>
           <td> </td>
@@ -426,7 +431,7 @@
           <td class="bg-td">起点桩号： </td>
           <td>
             <el-input
-              v-model.trim="editShow.T0002_START_PILE"
+              v-model.trim="editForm.T0002_START_PILE"
               size="small"
               maxlength="20"
             ></el-input>
@@ -434,7 +439,7 @@
           <td class="bg-td">终点桩号：</td>
           <td>
             <el-input
-              v-model.trim="editShow.T0002_END_PILE"
+              v-model.trim="editForm.T0002_END_PILE"
               size="small"
               maxlength="20"
             ></el-input>
@@ -444,18 +449,19 @@
           <td class="bg-td">数量： </td>
           <td>
             <el-input
-              v-model.trim="editShow.T0002_ASSET_AMOUNT"
+              v-model.trim="editForm.T0002_ASSET_AMOUNT"
               size="small"
             ></el-input>
           </td>
           <td class="bg-td">归属年份：</td>
           <td>
             <el-date-picker
-              v-model="editShow.T0002_ASSET_DATE"
-              type="year"
+              v-model="editForm.T0002_ASSET_DATE"
+              type="date"
               placeholder="选择年"
               style="width: 100%"
               size="small"
+              value-format="yyyy-MM-dd"
             >
             </el-date-picker>
           </td>
@@ -463,16 +469,12 @@
         <tr>
           <td class="bg-td">归属公司： </td>
           <td>
-            <el-input
-              v-model.trim="editShow.T0002_ASSET_COMPANY"
-              size="small"
-              maxlength="50"
-            ></el-input>
+            {{ editForm.T0002_ASSET_COMPANY }}
           </td>
           <td class="bg-td"> 所属养管公司： </td>
           <td>
             <el-input
-              v-model.trim="editShow.T0002_CURING_UNIT"
+              v-model.trim="editForm.T0002_CURING_UNIT"
               size="small"
               maxlength="50"
             ></el-input>
@@ -482,7 +484,7 @@
           <td class="bg-td">责任人： </td>
           <td>
             <el-input
-              v-model.trim="editShow.T0002_DUTY_PERSON"
+              v-model.trim="editForm.T0002_DUTY_PERSON"
               size="small"
               maxlength="20"
             ></el-input>
@@ -490,7 +492,7 @@
           <td class="bg-td"> 联系电话： </td>
           <td>
             <el-input
-              v-model.trim="editShow.T0002_TOUCH_TEL"
+              v-model.trim="editForm.T0002_TOUCH_TEL"
               size="small"
               maxlength="20"
             ></el-input>
@@ -500,14 +502,14 @@
           <td class="bg-td">经度： </td>
           <td>
             <el-input
-              v-model.trim="editShow.T0002_ASSET_PRECI"
+              v-model.trim="editForm.T0002_ASSET_PRECI"
               size="small"
             ></el-input>
           </td>
           <td class="bg-td"> 纬度： </td>
           <td>
             <el-input
-              v-model.trim="editShow.T0002_ASSET_LATI"
+              v-model.trim="editForm.T0002_ASSET_LATI"
               size="small"
             ></el-input>
           </td>
@@ -522,7 +524,7 @@
           <td colspan="3">
             <el-input
               type="textarea"
-              v-model="editShow.T0002_ASSET_REAMRK"
+              v-model="editForm.T0002_ASSET_REAMRK"
               maxlength="500"
             ></el-input>
           </td>
@@ -533,7 +535,10 @@
         class="dialog-footer"
       >
         <el-button @click="editShow = false">取 消</el-button>
-        <el-button type="primary">确 定</el-button>
+        <el-button
+          type="primary"
+          @click="editSaveFun"
+        >确 定</el-button>
       </div>
     </el-dialog>
     <!-- 查看 -->
@@ -546,17 +551,17 @@
         <tr>
           <td class="bg-td">资产名称：</td>
           <td>
-            {{ infoForm.T0002_ASSET_NAME}}
+            {{ infoForm.T0002_ASSET_NAME }}
           </td>
           <td class="bg-td">资产类别： </td>
           <td>
-            {{ infoForm.T0001_ID }}
+            {{ infoForm.T0001_ASSETTYPE_NAME }}
           </td>
         </tr>
         <tr>
           <td class="bg-td">所属路段：</td>
           <td>
-            {{ infoForm.M0010_ID }}
+            {{ infoForm.T0002_LOAD_NAME }}
           </td>
           <td> </td>
           <td> </td>
@@ -578,7 +583,7 @@
           </td>
           <td class="bg-td">归属年份：</td>
           <td>
-            {{ infoForm.T0002_ASSET_DATE}}
+            {{ infoForm.T0002_ASSET_DATE }}
           </td>
         </tr>
         <tr>
@@ -598,17 +603,17 @@
           </td>
           <td class="bg-td"> 联系电话： </td>
           <td>
-            {{ infoForm.T0002_TOUCH_TEL}}
+            {{ infoForm.T0002_TOUCH_TEL }}
           </td>
         </tr>
         <tr>
           <td class="bg-td">经度： </td>
           <td>
-            {{ infoForm.T0002_ASSET_PRECI}}
+            {{ infoForm.T0002_ASSET_PRECI }}
           </td>
           <td class="bg-td"> 纬度： </td>
           <td>
-            {{ infoForm.T0002_ASSET_LATI}}
+            {{ infoForm.T0002_ASSET_LATI }}
           </td>
         </tr>
         <tr>
@@ -636,40 +641,52 @@ export default {
   data () {
     return {
       assetList: [],
-      loading: false,
+      loading: true,
       addShow: false,
       editShow: false,
       infoShow: false,
       editForm: {},
-      addForm: {},
-      infoForm: {},
-      assets: {
-        showCount: 10,
-        currentPage: 1
+      addForm: {
+        T0002_ASSET_NAME: '',
+        T0001_ID: '',
+        T0002_LOAD_NAME: '',
+        T0002_START_PILE: '',
+        T0002_END_PILE: '',
+        T0002_ASSET_AMOUNT: '',
+        T0002_ASSET_DATE: '',
+        T0002_ASSET_COMPANY: '',
+        T0002_CURING_UNIT: '',
+        T0002_DUTY_PERSON: '',
+        T0002_TOUCH_TEL: '',
+        T0002_ASSET_PRECI: '',
+        T0002_ASSET_LATI: '',
+        T0002_ASSET_REAMRK: ''
       },
-      tableData: [
-        {
-          T0002_ASSET_NAME: '吕村收费站',
-          T0001_ID: '收费站',
-          T0002_START_PILE: 'K692+265',
-          T0002_END_PILE: 'K742+326',
-          T0002_ASSET_AMOUNT: '23',
-          M0010_ID: '铜旬段',
-          T0002_TECH_STATE: '三星级收费站',
-          T0002_ASSET_DATE: '2018'
-        }
-      ],
+      infoForm: {},
+      assets: {},
+      showCount: 10,
+      currentPage: 1,
       total: 0,
-      selectList: []
+      searchMap: {
+        T0001_ID: '',
+        YEAR: '',
+        SEARCH_KEY: ''
+      },
+      tableData: [],
+      selectList: [],
+      assetTypeList: [], // 资产类别
+      listNameList: [] // 所属路段
     }
   },
   methods: {
     // 分页
     sizeChange (val) {
-      this.assets.showCount = val
+      this.showCount = val
+      this.getAssetList()
     },
     currentChange (val) {
-      this.assets.currentPage = val
+      this.currentPage = val
+      this.getAssetList()
     },
     selectTable (selection) {
       this.selectList = selection
@@ -686,11 +703,113 @@ export default {
     },
     handleEdit (data) {
       this.editShow = true
-      this.editForm = Object.assign({}, data)
+      this.$api.post(
+        `/cycle/assetData/selectById?ID=${data.T0002_ID}`,
+        {},
+        null,
+        r => {
+          this.editForm = Object.assign({}, r.data)
+        }
+      )
     },
-    handleDelete (data) {},
+    // 获取资产类别 list
+    getAssetTypeList () {
+      this.$api.post(`/cycle/assetType/listAll`, {}, null, r => {
+        this.assetTypeList = r.data
+      })
+    },
+    // 请求select 的所属路段
+    getListNameList () {
+      this.$api.post('/cycle/load/listLoadName', {}, null, r => {
+        this.listNameList = r.data
+      })
+    },
+    // 资产信息list
+    getAssetList () {
+      let _data = {
+        currentPage: this.currentPage,
+        showCount: this.showCount,
+        searchMap: this.searchMap
+      }
+      this.$api.post(`/cycle/assetData/listPage`, _data, null, r => {
+        this.loading = false
+        this.tableData = r.data.returnParam
+        this.total = r.data.totalResult
+      })
+    },
+    // 新增保存
+    addSaveFun () {
+      this.$api.post(`/cycle/assetData/insert`, this.addForm, null, r => {
+        this.$message.success('新增成功')
+        this.addShow = false
+        this.getAssetList()
+      })
+    },
+    // 修改保存
+    editSaveFun () {
+      this.$api.post(`/cycle/assetData/update`, this.editForm, null, r => {
+        this.$message.success('修改成功')
+        this.editShow = false
+        this.getAssetList()
+      })
+    },
+    // 重置
+    reset () {
+      this.searchMap.T0001_ID = ''
+      this.searchMap.YEAR = ''
+      this.searchMap.SEARCH_KEY = ''
+      this.showCount = 10
+      this.currentPage = 1
+      this.getAssetList()
+    },
+    handleDelete (data) {
+      this.$confirm('确定要删除该条记录?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$api.post(
+          `/cycle/assetData/deleteById?ID=${data.T0002_ID}`,
+          {},
+          null,
+          r => {
+            this.$message.success('删除成功')
+            this.getAssetList()
+          }
+        )
+      })
+    },
     // 批量删除
-    delListFun () {}
+    delListFun () {
+      let _list = []
+      if (this.selectList.length > 0) {
+        for (let i = 0; i < this.selectList.length; i++) {
+          _list.push(this.selectList[i].T0002_ID)
+        }
+        this.$confirm('确定要删除这些记录?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$api.post(
+            `/cycle/assetData/deleteByIds?IDS=${_list}`,
+            {},
+            null,
+            r => {
+              this.$message.success('删除成功')
+              this.getAssetList()
+            }
+          )
+        })
+      } else {
+        this.$message.warning('请选择要删除的数据！')
+      }
+    }
+  },
+  created () {
+    this.getAssetTypeList()
+    this.getAssetList()
+    this.getListNameList()
   }
 }
 </script>

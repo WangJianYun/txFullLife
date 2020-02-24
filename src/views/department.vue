@@ -196,8 +196,9 @@ export default {
       this.condition.currentPage = pageIndex
       // let tabDatas = []
       this.$api.post('/cycle/departmentManagement/listPage', this.condition, null, r => {
-        // console.log(r)
+        console.log(r)
         this.dpData = r.data
+        this.totalData = r.data.length
       })
     },
     save () {

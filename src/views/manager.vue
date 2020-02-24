@@ -213,6 +213,7 @@ export default {
           }
         })
         this.dpData = r.data
+        this.totalData = r.data.length
       })
     },
     save () {

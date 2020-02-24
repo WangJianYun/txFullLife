@@ -142,6 +142,7 @@ export default {
       this.$api.post('/cycle/dutyManagement/listPage', this.condition, null, r => {
         console.log(r)
         this.dpData = r.data
+        this.totalData = r.data.length
       })
     },
     save () {

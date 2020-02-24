@@ -10,7 +10,7 @@
               <div class="ticon" style="font-size:50px;"><i class="el-icon-s-data"></i> </div>
               <div class="ttile">
                 <p style="width:100%;text-align:left;">累计入驻养护工区</p>
-                <p style="width:80%;text-align:right;"><span style="font-size:20px;display:inline-block;margin:0 10px;">5</span>家</p>
+                <p style="width:80%;text-align:right;"><span style="font-size:20px;display:inline-block;margin:0 10px;">{{rzyhgq}}</span>家</p>
               </div>
             </div>
           </el-col>
@@ -18,7 +18,7 @@
             <div class="ticon" style="font-size:50px;"><i class="el-icon-s-data"></i> </div>
             <div class="ttile">
               <p style="width:100%;text-align:left;">累计使用用户</p>
-              <p style="width:80%;text-align:right;"><span style="font-size:20px;display:inline-block;margin:0 10px;">58</span>名</p>
+              <p style="width:80%;text-align:right;"><span style="font-size:20px;display:inline-block;margin:0 10px;">{{ljyh}}</span>名</p>
             </div>
             </div>
           </el-col>
@@ -26,7 +26,7 @@
             <div class="ticon" style="font-size:50px;"><i class="el-icon-s-data"></i> </div>
             <div class="ttile">
               <p style="width:100%;text-align:left;">公路资产总计</p>
-              <p style="width:80%;text-align:right;"><span style="font-size:20px;display:inline-block;margin:0 10px;">256,368,266</span></p>
+              <p style="width:80%;text-align:right;"><span style="font-size:20px;display:inline-block;margin:0 10px;">{{glzc}}</span></p>
             </div>
             </div>
           </el-col>
@@ -34,7 +34,7 @@
             <div class="ticon" style="font-size:50px;"><i class="el-icon-s-data"></i> </div>
             <div class="ttile">
               <p style="width:100%;text-align:left;">日常费用详情<span style="font-size:14px;">（万元）</span></p>
-              <p style="width:80%;text-align:right;">收<span style="font-size:20px;display:inline-block;margin:0 10px;">25630</span></p>
+              <p style="width:80%;text-align:right;">收<span style="font-size:20px;display:inline-block;margin:0 10px;">{{rcfy}}</span></p>
             </div>
             </div>
           </el-col>
@@ -42,7 +42,7 @@
             <div class="ticon" style="font-size:50px;"><i class="el-icon-s-data"></i> </div>
             <div class="ttile">
               <p style="width:100%;text-align:left;">养护费用详情<span style="font-size:14px;">（万元）</span></p>
-              <p style="width:80%;text-align:right;">支<span style="font-size:20px;display:inline-block;margin:0 10px;">13250</span></p>
+              <p style="width:80%;text-align:right;">支<span style="font-size:20px;display:inline-block;margin:0 10px;">{{yhfy}}</span></p>
             </div>
             </div>
           </el-col>
@@ -158,16 +158,32 @@ export default {
   data () {
     return {
       assetsRange: '',
-      levelRange: ''
+      levelRange: '',
+      rzyhgq: '',
+      ljyh: '',
+      glzc: '',
+      rcfy: '',
+      yhfy: ''
     }
   },
   mounted () {
     this.loadChart()
+    this.loadSumData()
   },
   methods: {
+    loadSumData () {
+      this.$api.post('/cycle/bigData/getDataSum?M0018_ID=425428539089616896', {}, null, r => {
+        console.log(r)
+        this.rzyhgq = r[0].YHGQ
+        this.ljyh = r[0].RZYH
+        this.glzc = r[0].GLZC
+        this.rcfy = r[0].RCFY
+        this.yhfy = r[0].YHFY
+      })
+    },
     loadChart () {
-      let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
-      this.$api.post('/cycle/bigData/getAssetSumByType', {}, token, null, r => {
+      // let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
+      this.$api.post('/cycle/bigData/getAssetSumByType', {}, null, r => {
         let arr1 = []
         let arr2 = []
         r.forEach(element => {
@@ -218,7 +234,7 @@ export default {
           }]
         })
       })
-      this.$api.post('/cycle/bigData/getAssetSumByType', {}, token, null, r => {
+      this.$api.post('/cycle/bigData/getAssetSumByType', {}, null, r => {
         let arr2 = [['amount', 'product']]
         r.forEach(element => {
           let arr1 = [element.ASSET_AMOUNT, element.T0001_ASSETTYPE_NAME]
@@ -273,7 +289,7 @@ export default {
           ]
         })
       })
-      this.$api.post('/cycle/bigData/getMoneySumByCuring', {}, token, null, r => {
+      this.$api.post('/cycle/bigData/getMoneySumByCuring', {}, null, r => {
         let arr1 = [['product', '收入', '支出']]
         r.forEach(element => {
           let arr2 = [element.YEAR, element.INCOME_MONEY, element.TOCOME_MONEY]
@@ -313,7 +329,7 @@ export default {
           ]
         })
       })
-      this.$api.post('/cycle/bigData/getMoneySumByCost', {}, token, null, r => {
+      this.$api.post('/cycle/bigData/getMoneySumByCost', {}, null, r => {
         let arr1 = []
         let arr2 = []
         r.forEach(element => {
@@ -353,7 +369,7 @@ export default {
           }]
         })
       })
-      this.$api.post('/cycle/bigData/getCountByTech', { 'TYPE': 'QL' }, token, null, r => {
+      this.$api.post('/cycle/bigData/getCountByTech', { 'TYPE': 'QL' }, null, r => {
         let arr1 = []
         r.forEach(element => {
           arr1.push({ value: element.COUNT, name: element.T0006_TECHTYPE_NAME })
@@ -403,7 +419,7 @@ export default {
           ]
         })
       })
-      this.$api.post('/cycle/bigData/getCountByTech', { 'TYPE': 'SD' }, token, null, r => {
+      this.$api.post('/cycle/bigData/getCountByTech', { 'TYPE': 'SD' }, null, r => {
         let arr1 = []
         // console.log(r)
         r.forEach(element => {
@@ -447,7 +463,7 @@ export default {
           ]
         })
       })
-      this.$api.post('/cycle/bigData/getCountByTech', { 'TYPE': 'HD' }, token, null, r => {
+      this.$api.post('/cycle/bigData/getCountByTech', { 'TYPE': 'HD' }, null, r => {
         let arr1 = []
         // console.log(r)
         r.forEach(element => {

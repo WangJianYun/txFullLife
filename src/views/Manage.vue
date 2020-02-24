@@ -161,7 +161,7 @@ export default {
         { id: '13', name: '部门管理', icon: '', url: '/department', lvl: '2', parentId: '20' },
         { id: '14', name: '管理员', icon: '', url: '/manager', lvl: '2', parentId: '20' },
         { id: '15', name: '职务管理', icon: '', url: '/Position', lvl: '2', parentId: '20' },
-        // { id: '22', name: '权限配置', icon: '', url: '/Authority', lvl: '2', parentId: '20' },
+        { id: '22', name: '权限配置', icon: '', url: '/Authority', lvl: '2', parentId: '20' },
         { id: '21', name: '个人中心', icon: '', url: '7', lvl: '1', children: [] },
         { id: '23', name: '我的资料', icon: '', url: '/Personal', lvl: '2', parentId: '21' }
       ]

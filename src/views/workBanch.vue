@@ -532,7 +532,7 @@ export default {
             if (xhr.readyState === 4) {
               if (xhr.status === 200) {
                 let mkdt = JSON.parse(xhr.responseText)
-                console.log(mkdt)
+                // console.log(mkdt)
                 document.getElementById('mkDialog').style.display = 'block'
                 if (mkdt.ASSET_INFO.length === 0)mkdt.ASSET_INFO[0] = {}
                 if (mkdt.TECH_DATA.length === 0)mkdt.TECH_DATA[0] = {}
@@ -584,9 +584,9 @@ export default {
   },
   methods: {
     loadMarkers () {
-      let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
-      this.$api.post('/cycle/desktopData/getListAll', {}, token, null, r => {
-        // console.log(r.ASSET_List)
+      // let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
+      this.$api.post('/cycle/desktopData/getListAll', {}, null, r => {
+        // console.log(r)
         r.ASSET_List.forEach(function (item, index) {
           // console.log(item)
           if (item.T0002_ASSET_NAME.indexOf('加油站') > -1) {
@@ -641,10 +641,10 @@ export default {
     },
     changeMarkers () {
       // console.log(this.condition)
-      let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
+      // let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
       // this.condition.TokenId = token
-      this.$api.post('/cycle/desktopData/getListAll', this.condition, token, null, r => {
-        console.log(r.ASSET_List)
+      this.$api.post('/cycle/desktopData/getListAll', this.condition, null, r => {
+        // console.log(r.ASSET_List)
         r.ASSET_List.forEach(function (item, index) {
           // console.log(item)
           if (item.T0002_ASSET_NAME.indexOf('加油站') > -1) {
@@ -691,8 +691,8 @@ export default {
       this.imgUrl = ''
     },
     loadSelect () {
-      let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
-      this.$api.post('/cycle/assetData/listAll', {}, token, null, r => {
+      // let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
+      this.$api.post('/cycle/assetData/listAll', {}, null, r => {
         // console.log(r)
         let arr1 = []
         let arr2 = []
@@ -703,7 +703,7 @@ export default {
         this.startzhArr = arr1
         this.endzhArr = arr2
       })
-      this.$api.post('/cycle/assetType/listAll', {}, token, null, r => {
+      this.$api.post('/cycle/assetType/listAll', {}, null, r => {
         this.zctypeArr = r.data
         r.data.forEach((item, index) => {
           if (item.T0001_PID !== '0') {
@@ -713,9 +713,9 @@ export default {
       })
     },
     loadTableData () {
-      let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
+      // let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
       // console.log(token)
-      this.$api.post('/cycle/assetData/listPage', {}, token, null, r => {
+      this.$api.post('/cycle/assetData/listPage', {}, null, r => {
         // console.log(r.data.returnParam)
         r.data.returnParam.forEach((item, index) => {
           if (item.T0002_ASSET_NAME.indexOf('加油站') > -1) {
@@ -751,7 +751,7 @@ export default {
           tst.srcList.push(i.pic)
         })
       })
-      this.$api.post('/cycle/techData/listPage', {}, token, null, r => {
+      this.$api.post('/cycle/techData/listPage', {}, null, r => {
         // console.log(r)
         r.data.returnParam.forEach((item, index) => {
           if (!item.T0002_ASSET_NAME)item.T0002_ASSET_NAME = ''
@@ -765,7 +765,7 @@ export default {
         })
         this.techTable = r.data.returnParam.slice(0, 5)
       })
-      this.$api.post('/cycle/curingCost/listPage', {}, token, null, r => {
+      this.$api.post('/cycle/curingCost/listPage', {}, null, r => {
         // console.log(r)
         r.data.returnParam.forEach((item, index) => {
           if (!item.T0002_ASSET_NAME)item.T0002_ASSET_NAME = ''
@@ -785,7 +785,7 @@ export default {
         })
         this.dayliTable = r.data.returnParam.slice(0, 5)
       })
-      this.$api.post('/cycle/costBudget/listPage', {}, token, null, r => {
+      this.$api.post('/cycle/costBudget/listPage', {}, null, r => {
         // console.log(r)
         r.data.returnParam.forEach((item, index) => {
           if (!item.T0002_ASSET_NAME)item.T0002_ASSET_NAME = ''

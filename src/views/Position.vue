@@ -23,22 +23,22 @@
                     <template scope="scope"><span>{{scope.$index + 1}}</span></template>
                   </el-table-column>
                   <el-table-column
-                    prop="name"
+                    prop="M0015_DUTY_NAME"
                     label="职务名称"
                     align="center">
                   </el-table-column>
                   <el-table-column
-                    prop="option"
+                    prop="M0015_DUTY_REMARK"
                     label="描述"
                     align="center">
                   </el-table-column>
                   <el-table-column
-                    prop="maker"
+                    prop="M0015_CREATE_PERSON"
                     label="创建人"
                     align="center">
                   </el-table-column>
                   <el-table-column
-                    prop="makeTime"
+                    prop="M0015_CREATE_TIME"
                     label="创建时间"
                     align="center">
                   </el-table-column>
@@ -46,9 +46,9 @@
                     label="操作"
                     align="center">
                     <template slot-scope="scope">
-                      <el-button type="info" size="mini" @click="openDialog('look',scope.$index,scope.row)">查看</el-button>
-                      <el-button type="primary" size="mini" @click="openDialog('edit',scope.$index,scope.row)">编辑</el-button>
-                      <el-button type="danger" size="mini" @click="deleteRow(scope.$index,scope.row)">删除</el-button>
+                      <el-button type="info" size="mini" @click="openDialog('look',scope.row)">查看</el-button>
+                      <el-button type="primary" size="mini" @click="openDialog('edit',scope.row)">编辑</el-button>
+                      <el-button type="danger" size="mini" @click="deleteRow(scope.row)">删除</el-button>
                     </template>
                   </el-table-column>
 
@@ -72,11 +72,12 @@
                 <table class="add-table">
                   <tr>
                     <td class="bg-td">职务名称：</td>
-                    <td><el-input type="text" v-model="form.name" size="small"></el-input></td>
+                    <td><el-input type="text" v-model="form.M0015_DUTY_NAME" size="small" :disabled="islook"></el-input></td>
                     <td class="bg-td">是否激活：</td>
                     <td>
                       <el-switch
-                        v-model="form.switch"
+                        v-model="form.M0015_IS_AVTIVE"
+                         :disabled="islook"
                         active-color="#409eff"
                         inactive-color="#bbb">
                       </el-switch>
@@ -85,7 +86,7 @@
                   <tr>
                     <td class="bg-td">备注：</td>
                     <td colspan="3">
-                      <el-input type="textarea" rows="5" v-model="form.remark" size="small"></el-input>
+                      <el-input type="textarea" rows="5" v-model="form.M0015_DUTY_REMARK" size="small" :disabled="islook"></el-input>
                     </td>
                   </tr>
                 </table>
@@ -105,83 +106,110 @@ export default {
   data () {
     return {
       pageIndex: 1,
-      dpData: [
-        { name: 'blue', option: '1', maker: '1', makeTime: '2020-02-02' },
-        { name: 'red', option: '2', maker: '2', makeTime: '2020-02-02' },
-        { name: 'yellow', option: '3', maker: '3', makeTime: '2020-02-02' },
-        { name: 'green', option: '4', maker: '4', makeTime: '2020-02-02' }
-      ],
+      dpData: [],
       totalData: 3,
       condition: { currentPage: 1 },
       dialogName: '新增职务',
       disVisible: false,
+      islook: false,
       form: {
-        name: '',
-        switch: true,
-        remark: ''
+        M0015_DUTY_NAME: '',
+        M0015_IS_AVTIVE: true,
+        M0015_DUTY_REMARK: '',
+        M0015_CREATE_PERSON: '',
+        M0015_CREATE_TIME: ''
       }
     }
   },
+  mounted () {
+    this.refreshTable(1)
+    // this.loadSelect()
+    this.getDateTime()
+  },
   methods: {
+    getDateTime () {
+      let nDate = new Date()
+      let str = ''
+      str = nDate.getFullYear() + '-' + (nDate.getMonth() + 1) + '-' + nDate.getDate()
+      this.form.M0015_CREATE_TIME = str
+    },
     refreshTable (pageIndex) {
+      let token = JSON.parse(sessionStorage.getItem('currentUser'))
+      console.log(token)
       this.pageIndex = pageIndex
       this.condition.currentPage = pageIndex
       // let tabDatas = []
-      this.$api.post('disease/page/list', this.condition, null, r => {
-        // this.totalData = r.data.total
-        // tabDatas = r.data.list
-        // tabDatas.forEach(function (item, index) {
-        //   // console.log(item)
-        //   item.patrolTime = item.patrolTime.split(' ')[0]
-        //   if (!item.cost) {
-        //     item.cost = 0
-        //   }
-        //   if (!item.unit) {
-        //     item.unit = '通达养护公司'
-        //   }
-        //   if (!item.measuresStatus) {
-        //     item.measuresStatus = '0'
-        //   }
-        // })
-        // this.tableData = tabDatas
+      this.$api.post('/cycle/dutyManagement/listPage', this.condition, null, r => {
+        console.log(r)
+        this.dpData = r.data
       })
     },
     save () {
-
+      this.form.M0015_CREATE_PERSON = JSON.parse(sessionStorage.getItem('currentUser')).UserName
+      if (this.dialogType === 'new') {
+        this.$api.post('/cycle/dutyManagement/insert', this.form, '新增成功', r => {
+          this.closeDialog()
+        })
+      }
+      if (this.dialogType === 'edit') {
+        // console.log(this.form.image)
+        this.getDateTime()
+        this.$api.post('/cycle/dutyManagement/update', this.form, '编辑成功', r => {
+          this.closeDialog()
+        })
+      }
     },
-    openDialog (type, index, row) {
+    openDialog (type, row) {
       this.disVisible = true
-      // if (type.indexOf('add') > -1) {
-      //   this.form = {
-      //     name: '',
-      //     switch: true,
-      //     remark: ''
-      //   }
-      // } else {
-      //   this.form = row
-      //   this.form.department = ''
-      //   this.form.switch = false
-      // }
+      if (type === 'add') {
+        this.dialogName = '新增部门'
+        this.dialogType = 'new'
+      }
+      if (type === 'edit') {
+        if (row.M0015_IS_AVTIVE === 1) {
+          row.M0015_IS_AVTIVE = true
+        } else {
+          row.M0015_IS_AVTIVE = false
+        }
+        this.dialogName = '编辑部门'
+        this.form = row
+        this.dialogType = 'edit'
+      }
+      if (type === 'look') {
+        if (row.M0015_IS_AVTIVE === 1) {
+          row.M0015_IS_AVTIVE = true
+        } else {
+          row.M0015_IS_AVTIVE = false
+        }
+        this.dialogName = '查看部门'
+        this.form = row
+        this.islook = true
+      }
     },
     closeDialog () {
       this.disVisible = false
+      this.islook = false
       this.form = {
-        name: '',
-        switch: true,
-        remark: ''
+        M0015_DUTY_NAME: '',
+        M0015_IS_AVTIVE: true,
+        M0015_DUTY_REMARK: '',
+        M0015_CREATE_PERSON: '',
+        M0015_CREATE_TIME: ''
       }
+      this.refreshTable(1)
     },
-    deleteRow (index, row) {
-    //   alert(1)
+    deleteRow (row) {
+      // alert(1)
       // this.$api.post('', row.id, '删除成功', r => {})
+      console.log(row.M0016_ID)
       this.$confirm('确认删除？此操作不可取消', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        let form = {}
-        form.id = row.id
-        this.$api.post('', form, '删除成功', r => {
+        // let form = {}
+        // form.ID = row.M0016_ID
+        this.$api.post('/cycle/dutyManagement/deleteById?ID=' + row.M0015_ID, {}, '删除成功', r => {
           this.refreshTable(1)
         })
       })

@@ -34,12 +34,12 @@
                     align="center">
                   </el-table-column>
                   <el-table-column
-                    prop="M0016_ID"
+                    prop="DEPART_NAME"
                     label="归属机构"
                     align="center">
                   </el-table-column>
                   <el-table-column
-                    prop="M0015_ID"
+                    prop="DUTY_NAME"
                     label="职务"
                     width="100"
                     align="center">

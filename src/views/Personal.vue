@@ -13,27 +13,27 @@
                 <table class="perstable">
                     <tr>
                         <td class="bg-td">昵称：</td>
-                        <td><el-input type="text" v-model="form.nickName" :disabled="isEdit" size="small"></el-input></td>
+                        <td><el-input type="text" v-model="form.M0014_USER_CODE" :disabled="isEdit" size="small"></el-input></td>
                         <td class="bg-td">真实姓名：</td>
-                        <td><el-input type="text" v-model="form.name" :disabled="isEdit" size="small"></el-input></td>
+                        <td><el-input type="text" v-model="form.M0014_USER_NAME" :disabled="isEdit" size="small"></el-input></td>
                     </tr>
                     <tr>
                         <td class="bg-td">归属机构：</td>
-                        <td><el-input type="text" v-model="form.govment" :disabled="isEdit" size="small"></el-input></td>
+                        <td><el-input type="text" v-model="form.M0016_ID" :disabled="isEdit" size="small"></el-input></td>
                         <td class="bg-td">职务：</td>
-                        <td><el-input type="text" v-model="form.workName" :disabled="isEdit" size="small"></el-input></td>
+                        <td><el-input type="text" v-model="form.M0015_ID" :disabled="isEdit" size="small"></el-input></td>
                     </tr>
                     <tr>
                         <td class="bg-td">电子邮箱：</td>
-                        <td><el-input type="text" v-model="form.email" :disabled="isEdit" size="small"></el-input></td>
+                        <td><el-input type="text" v-model="form.M0014_USER_EMAIL" :disabled="isEdit" size="small"></el-input></td>
                         <td class="bg-td">手机号：</td>
-                        <td><el-input type="text" v-model="form.phone" :disabled="isEdit" size="small"></el-input></td>
+                        <td><el-input type="text" v-model="form.M0014_USER_TEL" :disabled="isEdit" size="small"></el-input></td>
                     </tr>
                     <tr>
                         <td class="bg-td">是否激活：</td>
                         <td>
                             <el-switch
-                            v-model="form.switch"
+                            v-model="form.M0014_IS_AVTIVE"
                             active-color="#409eff"
                              size="small"
                             inactive-color="#bbb">
@@ -44,7 +44,7 @@
                     </tr>
                     <tr>
                         <td class="bg-td">备注：</td>
-                        <td colspan="3"><el-input type="textarea" rows="5" v-model="form.remark" :disabled="isEdit" size="small"></el-input></td>
+                        <td colspan="3"><el-input type="textarea" rows="5" v-model="form.M0014_USER_REMARK" :disabled="isEdit" size="small"></el-input></td>
                     </tr>
                 </table>
             </el-col>
@@ -229,14 +229,14 @@ export default {
       isEdit: true,
       auths: ['查看', '新增', '修改', '删除', '批量删除', '锁定', '启用'],
       form: {
-        nickName: '',
-        name: '',
-        govment: '',
-        workName: '',
-        email: '',
-        phone: '',
-        switch: false,
-        remark: '',
+        M0014_USER_CODE: '',
+        M0014_USER_NAME: '',
+        M0016_ID: '',
+        M0015_ID: '',
+        M0014_USER_EMAIL: '',
+        M0014_USER_TEL: '',
+        M0014_IS_AVTIVE: false,
+        M0014_USER_REMARK: '',
         oldpswd: '',
         newpswd: '',
         confirmpswd: '',
@@ -257,7 +257,22 @@ export default {
       }
     }
   },
+  mounted () {
+    this.loadMsg()
+  },
   methods: {
+    loadMsg () {
+      let userId = JSON.parse(sessionStorage.getItem('currentUser')).UserId
+      this.$api.post('/cycle/userManagement/selectById?ID=' + userId, {}, null, r => {
+        console.log(r)
+        if (r.data.M0014_IS_AVTIVE === 1) {
+          r.data.M0014_IS_AVTIVE = true
+        } else {
+          r.data.M0014_IS_AVTIVE = false
+        }
+        this.form = r.data
+      })
+    },
     changeAuths (txt) {
       switch (txt) {
         case 'book':

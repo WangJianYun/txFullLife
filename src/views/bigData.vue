@@ -4,7 +4,7 @@
         <el-row>
           <span style="display:inline-block;padding:10px;border-bottom:1px solid #efefef;width:100%;margin-bottom:20px;">数据统计分析</span>
         </el-row>
-        <el-row :gutter="30">
+        <el-row :gutter="20">
           <el-col :span="4">
             <div class="topItem" style="background:rgb(114, 212, 223)">
               <div class="ticon" style="font-size:50px;"><i class="el-icon-s-data"></i> </div>
@@ -33,7 +33,7 @@
           <el-col :span="4"><div class="topItem" style="background:rgb(255, 204, 102)">
             <div class="ticon" style="font-size:50px;"><i class="el-icon-s-data"></i> </div>
             <div class="ttile">
-              <p style="width:100%;text-align:left;">日常费用详情<span style="font-size:14px;">（万元）</span></p>
+              <p style="width:100%;text-align:left;">日常费用详情<span style="font-size:13px;">（万元）</span></p>
               <p style="width:80%;text-align:right;">收<span style="font-size:20px;display:inline-block;margin:0 10px;">{{rcfy}}</span></p>
             </div>
             </div>
@@ -41,7 +41,7 @@
           <el-col :span="4"><div class="topItem" style="background:rgb(114, 212, 223)">
             <div class="ticon" style="font-size:50px;"><i class="el-icon-s-data"></i> </div>
             <div class="ttile">
-              <p style="width:100%;text-align:left;">养护费用详情<span style="font-size:14px;">（万元）</span></p>
+              <p style="width:100%;text-align:left;">养护费用详情<span style="font-size:13px;">（万元）</span></p>
               <p style="width:80%;text-align:right;">支<span style="font-size:20px;display:inline-block;margin:0 10px;">{{yhfy}}</span></p>
             </div>
             </div>
@@ -522,9 +522,17 @@ export default {
   #bigData .el-main{background: #fff;margin:15px 10px;}
   #bigData #topItems .el-col-4{width: 20%;}
   #bigData .topItem{width: 100%;height: 80px;background: #bbb;color: #fff;cursor: pointer;}
-  #bigData .topItem .ttile{width: 60%;float: left;}
+  #bigData .topItem .ttile{width: 65%;float: left;}
   #bigData .topItem .ttile p{line-height: 30px;margin:5px 0;font-size: 16px;}
-  #bigData .topItem .ticon{width: 40%;text-align: center;height: 80px;float: left;}
+  @media screen and (max-width: 1600px){
+     #bigData .topItem .ttile p{font-size: 15px;}
+  }
+  #bigData .topItem .ticon{width: 35%;text-align: center;height: 80px;float: left;}
+  @media screen and (max-width: 1400px){
+    #bigData .topItem .ttile{width: 70%;float: left;}
+    #bigData .topItem .ticon{width: 30%;}
+    #bigData .topItem .ttile p{font-size: 12px;}
+  }
   #bigData .more{float: right;}
   #bigData .itemTh{padding: 8px 0;border-bottom: 1px solid #eee;margin-bottom: 15px;}
   #bigData .el-icon-location{font-size: 20px;color: red;cursor: pointer;}

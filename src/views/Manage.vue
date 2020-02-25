@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-aside width="300px">
+    <el-aside>
       <el-scrollbar style="height:100%">
         <el-row class="title">
           <span>铜旬全生命周期管理平台</span>
@@ -245,6 +245,12 @@ export default {
   .el-aside {
     height:100%;
     background-color:#32323c;
+    width:300px;
+  }
+  @media screen and ( max-width: 1600px ){
+     .el-aside {
+      width:200px;
+    }
   }
   .el-scrollbar__wrap{
     overflow-x: hidden !important;

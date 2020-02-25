@@ -143,22 +143,28 @@
         </el-row>
       </el-main>
       <el-main>
-        <el-row style="margin-bottom:20px;">
-          <el-col :span="24">
-            资产类别
-            <el-select v-model="condition.ASSET_TYPE_ID" size="small">
-              <el-option v-for="item in zctypeArr" :key="item.T0001_ID" :value="item.T0001_ID" :label="item.T0001_ASSETTYPE_NAME"></el-option>
+        <el-row style="margin-bottom:20px;" :gutter="10">
+          <el-col :span="6">
+            <span class="mapSercLabel">资产类别</span>
+            <el-select v-model="condition.ASSET_TYPE_ID" size="small" style="width:70%">
+              <el-option v-for="item in zctypeArr" :key="item.T0001_ID"  :value="item.T0001_ID" :label="item.T0001_ASSETTYPE_NAME"></el-option>
             </el-select>
-            起点桩号
-            <el-select v-model="condition.START_PILE" size="small">
+          </el-col>
+          <el-col :span="6">
+            <span class="mapSercLabel">起点桩号</span>
+            <el-select v-model="condition.START_PILE" size="small"  style="width:70%">
               <el-option v-for="item in startzhArr" :key="item.$index" :value="item"  :label="item"></el-option>
             </el-select>
-            终点桩号
-            <el-select v-model="condition.END_PILE" size="small">
+          </el-col>
+          <el-col :span="6">
+            <span class="mapSercLabel">终点桩号</span>
+            <el-select v-model="condition.END_PILE" size="small" style="width:70%">
               <el-option v-for="item in endzhArr" :key="item.$index" :value="item"  :label="item"></el-option>
             </el-select>
-            归属年份
-            <el-select v-model="condition.YEAR" size="small">
+          </el-col>
+          <el-col :span="6">
+            <span class="mapSercLabel">归属年份</span>
+            <el-select v-model="condition.YEAR" size="small" style="width:50%">
               <el-option v-for="item in yearArr" :key="item.$index" :value="item"  :label="item"></el-option>
             </el-select>
             <el-button type="primary" size="small" @click="changeMarkers">搜</el-button>
@@ -522,7 +528,7 @@ export default {
           // 1.创建ajax对象(此处兼容性的创建)
           let xhr = new XMLHttpRequest()
           // 2.调用open方法（true----异步）
-          xhr.open('post', 'http://192.168.7.101:8800/cycle/desktopData/getInfoByAsset', true)
+          xhr.open('post', 'http://94.191.93.96:8800/cycle/desktopData/getInfoByAsset', true)
           // 3.发送数据
           xhr.setRequestHeader('content-type', 'application/json')
           xhr.setRequestHeader('TokenId', token)
@@ -823,6 +829,10 @@ export default {
   #workBanck #topItems .el-col-4{width: 20%;}
   #workBanck .topItem{width: 100%;height: 80px;background: #bbb;color: #fff;line-height: 80px;cursor: pointer;}
   #workBanck .topItem .ttile{width: 60%;text-align: left;font-size: 18px;float: left;}
+  @media screen and ( max-width: 1600px ){
+    #workBanck .topItem .ttile{width: 60%;text-align: left;font-size: 14px;float: left;}
+    #workBanck .mapSercLabel{font-size: 14px;}
+  }
   #workBanck .topItem .ticon{width: 40%;text-align: center;height: 80px;float: left;}
   #workBanck .more{float: right;}
   #workBanck .itemTh{padding: 8px 0;border-bottom: 1px solid #eee;margin-bottom: 15px;}
@@ -849,6 +859,9 @@ export default {
   #workBanck #assetsMap #astList td img{height: 20px;}
   #workBanck #mkDialog{width:100%;height:100%;background:rgba(0,0,0,0);position:absolute;left:0;top:0;z-index:999;transition: all 1s;display: none;}
   #workBanck #mkDialog #mkBox{width:38%;background:#fff;position:absolute;left:25%;top:80px;box-shadow: 0 0 5px #bbb;padding: 8px;}
+  @media screen and ( max-width: 1400px ){
+    #workBanck #mkDialog #mkBox{width: 58%;left:10%;}
+  }
   #workBanck #mkDialog #mkBox .close{position:absolute;right:5px;top:5px;cursor:pointer;}
   #workBanck #mkDialog #mkBox table{width: 100%;}
   #workBanck #mkDialog #mkBox table td.left{text-align: left;}

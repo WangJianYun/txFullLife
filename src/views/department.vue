@@ -26,42 +26,43 @@
                     <template scope="scope"><span>{{scope.$index + 1}}</span></template>
                   </el-table-column>
                   <el-table-column
-                    prop="name"
+                    prop="M0016_DEPART_NAME"
                     label="部门名称"
                     align="center">
                   </el-table-column>
                   <el-table-column
-                    prop="prevDepart"
+                    prop="DEPART_PARENT_NAME"
                     label="上级部门"
                     align="center">
                   </el-table-column>
                   <el-table-column
-                    prop="departManger"
+                    prop="M0016_SENIOR_USER"
                     label="部门高级管理员"
                     align="center">
                   </el-table-column>
                   <el-table-column
-                    prop="option"
+                    prop="M0016_DUTY_REMARK"
                     label="描述"
                     align="center">
                   </el-table-column>
                   <el-table-column
-                    prop="maker"
+                    prop="M0015_CREATE_PERSON"
                     label="创建人"
                     align="center">
                   </el-table-column>
                   <el-table-column
-                    prop="makeTime"
+                    prop="M0015_CREATE_TIME"
                     label="创建时间"
                     align="center">
                   </el-table-column>
                   <el-table-column
                     label="操作"
+                    width="220"
                     align="center">
                     <template slot-scope="scope">
-                      <el-button type="info" size="mini" @click="openDialog('look',scope.$index,scope.row)">查看</el-button>
-                      <el-button type="primary" size="mini" @click="openDialog('edit',scope.$index,scope.row)">编辑</el-button>
-                      <el-button type="danger" size="mini" @click="deleteRow(scope.$index,scope.row)">删除</el-button>
+                      <el-button type="info" size="mini" @click="openDialog('look',scope.row)">查看</el-button>
+                      <el-button type="primary" size="mini" @click="openDialog('edit',scope.row)">编辑</el-button>
+                      <el-button type="danger" size="mini" @click="deleteRow(scope.row)">删除</el-button>
                     </template>
                   </el-table-column>
 
@@ -86,18 +87,19 @@
                   <tr>
                     <td class="bg-td">选择部门归属：</td>
                     <td>
-                      <el-select v-model="form.department" placeholder="--- 请选择 ---" style="width:100%;" size="small">
-                          <el-option v-for="option in options" :key="option.value" :label="option.label" :value="option.value"></el-option>
+                      <el-select v-model="form.M0016_PID" placeholder="--- 请选择 ---" style="width:100%;" size="small" :disabled="islook">
+                          <el-option v-for="option in options" :key="option.M0016_ID" :label="option.M0016_DEPART_NAME" :value="option.M0016_ID"></el-option>
                       </el-select>
                     </td>
                     <td class="bg-td">部门名称：</td>
-                    <td><el-input type="text" v-model="form.name" size="small"></el-input></td>
+                    <td><el-input type="text" v-model="form.M0016_DEPART_NAME" size="small" :disabled="islook"></el-input></td>
                   </tr>
                   <tr>
                     <td class="bg-td">是否激活：</td>
                     <td colspan="3">
                       <el-switch
-                        v-model="form.switch"
+                        v-model="form.M0016_IS_AVTIVE"
+                         :disabled="islook"
                         active-color="#409eff"
                         inactive-color="#bbb">
                       </el-switch>
@@ -106,7 +108,7 @@
                   <tr>
                     <td class="bg-td">备注：</td>
                     <td colspan="3">
-                      <el-input type="textarea" rows="5" v-model="form.remark" size="small"></el-input>
+                      <el-input type="textarea" rows="5" v-model="form.M0016_DUTY_REMARK" size="small" :disabled="islook"></el-input>
                     </td>
                   </tr>
                 </table>
@@ -158,92 +160,130 @@ export default {
   data () {
     return {
       pageIndex: 1,
-      dpData: [
-        { name: 'blue', prevDepart: '1', departManger: '1', option: '1', maker: '1', makeTime: '2020-02-02' },
-        { name: 'red', prevDepart: '2', departManger: '2', option: '2', maker: '2', makeTime: '2020-02-02' },
-        { name: 'yellow', prevDepart: '3', departManger: '3', option: '3', maker: '3', makeTime: '2020-02-02' },
-        { name: 'green', prevDepart: '4', departManger: '4', option: '4', maker: '4', makeTime: '2020-02-02' }
-      ],
+      dpData: [],
       totalData: 3,
       condition: { currentPage: 1 },
       dialogName: '新增部门',
       disVisible: false,
-      options: [{ value: '1', label: '养护科' }, { value: '2', label: '工程科' }],
+      options: [],
+      islook: false,
+      dialogType: '',
       form: {
-        department: '',
-        name: '',
-        switch: true,
-        remark: ''
+        M0016_PID: '',
+        M0016_DEPART_NAME: '',
+        M0016_IS_AVTIVE: true,
+        M0016_DUTY_REMARK: '',
+        M0015_CREATE_PERSON: '',
+        M0015_CREATE_TIME: ''
       }
     }
   },
   mounted () {
-    this.save()
+    this.refreshTable(1)
+    this.loadSelect()
+    this.getDateTime()
   },
   methods: {
+    getDateTime () {
+      let nDate = new Date()
+      let str = ''
+      str = nDate.getFullYear() + '-' + (nDate.getMonth() + 1) + '-' + nDate.getDate()
+      this.form.M0015_CREATE_TIME = str
+    },
     refreshTable (pageIndex) {
+      // let token = JSON.parse(sessionStorage.getItem('currentUser'))
+      // console.log(token)
       this.pageIndex = pageIndex
       this.condition.currentPage = pageIndex
       // let tabDatas = []
-      this.$api.post('disease/page/list', this.condition, null, r => {
-        // this.totalData = r.data.total
-        // tabDatas = r.data.list
-        // tabDatas.forEach(function (item, index) {
-        //   // console.log(item)
-        //   item.patrolTime = item.patrolTime.split(' ')[0]
-        //   if (!item.cost) {
-        //     item.cost = 0
-        //   }
-        //   if (!item.unit) {
-        //     item.unit = '通达养护公司'
-        //   }
-        //   if (!item.measuresStatus) {
-        //     item.measuresStatus = '0'
-        //   }
-        // })
-        // this.tableData = tabDatas
+      this.$api.post('/cycle/departmentManagement/listPage', this.condition, null, r => {
+        console.log(r)
+        this.dpData = r.data
+        this.totalData = r.data.length
       })
     },
     save () {
-      console.log(sessionStorage.getItem('currentUser'))
+      if (this.form.M0016_PID === '') {
+        this.form.M0016_PID = '0'
+      }
+      this.form.M0015_CREATE_PERSON = JSON.parse(sessionStorage.getItem('currentUser')).UserName
+      if (this.dialogType === 'new') {
+        // console.log(this.form)
+        // if (this.form.M0016_IS_AVTIVE === true) {
+        //   this.form.M0016_IS_AVTIVE = 1
+        // } else {
+        //   this.form.M0016_IS_AVTIVE = 0
+        // }
+        this.$api.post('/cycle/departmentManagement/insert', this.form, '新增成功', r => {
+          this.closeDialog()
+        })
+      }
+      if (this.dialogType === 'edit') {
+        // console.log(this.form.image)
+        this.$api.post('/cycle/departmentManagement/update', this.form, '编辑成功', r => {
+          this.closeDialog()
+        })
+      }
     },
-    openDialog (type, index, row) {
+    openDialog (type, row) {
       this.disVisible = true
-      // if (type.indexOf('add') > -1) {
-      //   this.form = {
-      //     department: '',
-      //     name: '',
-      //     switch: true,
-      //     remark: ''
-      //   }
-      // } else {
-      //   this.form = row
-      //   this.form.department = ''
-      //   this.form.switch = false
-      // }
+      if (type === 'add') {
+        this.dialogName = '新增部门'
+        this.dialogType = 'new'
+      }
+      if (type === 'edit') {
+        if (row.M0016_IS_AVTIVE === 1) {
+          row.M0016_IS_AVTIVE = true
+        } else {
+          row.M0016_IS_AVTIVE = false
+        }
+        this.dialogName = '编辑部门'
+        this.form = row
+        this.dialogType = 'edit'
+      }
+      if (type === 'look') {
+        if (row.M0016_IS_AVTIVE === 1) {
+          row.M0016_IS_AVTIVE = true
+        } else {
+          row.M0016_IS_AVTIVE = false
+        }
+        this.dialogName = '查看部门'
+        this.form = row
+        this.islook = true
+      }
     },
     closeDialog () {
       this.disVisible = false
+      this.islook = false
       this.form = {
-        department: '',
-        name: '',
-        switch: true,
-        remark: ''
+        M0016_PID: '',
+        M0016_DEPART_NAME: '',
+        M0016_IS_AVTIVE: true,
+        M0016_DUTY_REMARK: '',
+        M0015_CREATE_PERSON: '',
+        M0015_CREATE_TIME: ''
       }
+      this.refreshTable(1)
     },
-    deleteRow (index, row) {
+    deleteRow (row) {
       // alert(1)
       // this.$api.post('', row.id, '删除成功', r => {})
+      console.log(row.M0016_ID)
       this.$confirm('确认删除？此操作不可取消', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        let form = {}
-        form.id = row.id
-        this.$api.post('', form, '删除成功', r => {
+        // let form = {}
+        // form.ID = row.M0016_ID
+        this.$api.post('/cycle/departmentManagement/deleteById?ID=' + row.M0016_ID, {}, '删除成功', r => {
           this.refreshTable(1)
         })
+      })
+    },
+    loadSelect () {
+      this.$api.post('/cycle/departmentManagement/listAll', {}, null, r => {
+        this.options = r.data
       })
     }
   }

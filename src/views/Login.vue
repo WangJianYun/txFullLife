@@ -48,6 +48,9 @@ export default {
         if (valid) {
           this.$api.post('/cycle/login/login', this.form, '登陆成功', r => {
             console.log(r)
+            if (r.msg !== 'success') {
+              alert(r.msg)
+            }
             sessionStorage.clear()
             sessionStorage.setItem('currentUser', JSON.stringify(r.data))
             sessionStorage['TokenId'] = r.data.TokenId

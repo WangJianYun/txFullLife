@@ -85,10 +85,10 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>1</td>
-                  <td>2018</td>
+                  <td class="fgsyy">1</td>
+                  <td class="fgssr">1</td>
+                  <td class="fgszc">1</td>
+                  <td class="fgsnf">2018</td>
                   <td><el-button type="primary" size="small">详细</el-button></td>
                 </tr>
               </tbody>
@@ -143,22 +143,28 @@
         </el-row>
       </el-main>
       <el-main>
-        <el-row style="margin-bottom:20px;">
-          <el-col :span="24">
-            资产类别
-            <el-select v-model="condition.ASSET_TYPE_ID" size="small">
-              <el-option v-for="item in zctypeArr" :key="item.T0001_ID" :value="item.T0001_ID" :label="item.T0001_ASSETTYPE_NAME"></el-option>
+        <el-row style="margin-bottom:20px;" :gutter="10">
+          <el-col :span="6">
+            <span class="mapSercLabel">资产类别</span>
+            <el-select v-model="condition.ASSET_TYPE_ID" size="small" style="width:70%">
+              <el-option v-for="item in zctypeArr" :key="item.T0001_ID"  :value="item.T0001_ID" :label="item.T0001_ASSETTYPE_NAME"></el-option>
             </el-select>
-            起点桩号
-            <el-select v-model="condition.START_PILE" size="small">
+          </el-col>
+          <el-col :span="6">
+            <span class="mapSercLabel">起点桩号</span>
+            <el-select v-model="condition.START_PILE" size="small"  style="width:70%">
               <el-option v-for="item in startzhArr" :key="item.$index" :value="item"  :label="item"></el-option>
             </el-select>
-            终点桩号
-            <el-select v-model="condition.END_PILE" size="small">
+          </el-col>
+          <el-col :span="6">
+            <span class="mapSercLabel">终点桩号</span>
+            <el-select v-model="condition.END_PILE" size="small" style="width:70%">
               <el-option v-for="item in endzhArr" :key="item.$index" :value="item"  :label="item"></el-option>
             </el-select>
-            归属年份
-            <el-select v-model="condition.YEAR" size="small">
+          </el-col>
+          <el-col :span="6">
+            <span class="mapSercLabel">归属年份</span>
+            <el-select v-model="condition.YEAR" size="small" style="width:50%">
               <el-option v-for="item in yearArr" :key="item.$index" :value="item"  :label="item"></el-option>
             </el-select>
             <el-button type="primary" size="small" @click="changeMarkers">搜</el-button>
@@ -181,7 +187,7 @@
                 :zoom="astZoom"
                 :center="astCenter" v-if="assAmap">
                 <el-amap-marker
-                  :vid="marker.T0002_ID"
+                  :vid="marker.vid"
                   v-for="marker in astMarkers"
                   :key="marker.T0002_ID"
                   :icon="marker.icon"
@@ -509,6 +515,45 @@ export default {
             document.getElementById('mkBox').getElementsByClassName('fgstb')[0].style.display = 'block'
             document.getElementById('fgsCost').style.display = 'block'
             document.getElementById('mkBox').getElementsByClassName('mkTitle')[0].innerText = '分公司'
+            let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
+            let id = data.vid
+            // 1.创建ajax对象(此处兼容性的创建)
+            let xhr = new XMLHttpRequest()
+            // 2.调用open方法（true----异步）
+            xhr.open('post', 'http://94.191.93.96:8800/cycle/desktopData/getInfoByCompany', true)
+            // 3.发送数据
+            xhr.setRequestHeader('content-type', 'application/json')
+            xhr.setRequestHeader('TokenId', token)
+            xhr.send(id)
+            xhr.onreadystatechange = function () {
+              if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                  let mkdt = JSON.parse(xhr.responseText)
+                  document.getElementById('mkDialog').style.display = 'block'
+                  console.log(mkdt)
+                  if (!mkdt.COMPANY_INFO[0].M0018_SIMPLE_NAME)mkdt.COMPANY_INFO[0].M0018_SIMPLE_NAME = ''
+                  if (!mkdt.COMPANY_INFO[0].M0008_START_PILE)mkdt.COMPANY_INFO[0].M0008_START_PILE = ''
+                  if (!mkdt.COMPANY_INFO[0].M0008_END_PILE)mkdt.COMPANY_INFO[0].M0008_END_PILE = ''
+                  if (!mkdt.COMPANY_INFO[0].M0018_COMPANY_PRECI)mkdt.COMPANY_INFO[0].M0018_COMPANY_PRECI = ''
+                  if (!mkdt.COMPANY_INFO[0].M0018_COMPANY_LATI)mkdt.COMPANY_INFO[0].M0018_COMPANY_LATI = ''
+                  if (!mkdt.COMPANY_INFO[0].M0018_COMPANY_REMARK)mkdt.COMPANY_INFO[0].M0018_COMPANY_REMARK = ''
+                  document.getElementById('mkBox').getElementsByClassName('jc')[0].innerText = mkdt.COMPANY_INFO[0].M0018_SIMPLE_NAME
+                  document.getElementById('mkBox').getElementsByClassName('fgszh')[0].innerText = mkdt.COMPANY_INFO[0].M0008_START_PILE + '~' + mkdt.COMPANY_INFO[0].M0008_END_PILE
+                  document.getElementById('mkBox').getElementsByClassName('fgslg')[0].innerText = mkdt.COMPANY_INFO[0].M0018_COMPANY_PRECI
+                  document.getElementById('mkBox').getElementsByClassName('fgslat')[0].innerText = mkdt.COMPANY_INFO[0].M0018_COMPANY_LATI
+                  document.getElementById('mkBox').getElementsByClassName('remark')[0].innerText = mkdt.COMPANY_INFO[0].M0018_COMPANY_REMARK
+                  // document.getElementById('mkBox').getElementsByClassName('fgsyy')[0].innerText = mkdt.COMPANY_INFO[0].M0018_COMPANY_REMARK
+                  // document.getElementById('mkBox').getElementsByClassName('fgssr')[0].innerText = mkdt.COMPANY_INFO[0].M0018_COMPANY_REMARK
+                  // document.getElementById('mkBox').getElementsByClassName('fgszc')[0].innerText = mkdt.COMPANY_INFO[0].M0018_COMPANY_REMARK
+                  // document.getElementById('mkBox').getElementsByClassName('fgsnf')[0].innerText = mkdt.COMPANY_INFO[0].M0018_COMPANY_REMARK
+                  let trs = ''
+                  mkdt.CURING_COST.forEach(element => {
+                    trs += '<tr><td>' + (element.INCOME_MONEY - element.TOCOME_MONEY) + '</td><td>' + element.INCOME_MONEY + '</td><td>' + element.TOCOME_MONEY + '</td><td>' + element.YEAR + '</td><td><button type="primary" class="el-button">详细</button></td></tr>'
+                  })
+                  document.getElementById('fgsCost').getElementsByTagName('tbody')[0].innerHTML = trs
+                }
+              }
+            }
           } else {
             document.getElementById('mkBox').getElementsByClassName('baseTb')[0].style.display = 'block'
             document.getElementById('techLevel').style.display = 'block'
@@ -516,53 +561,55 @@ export default {
             document.getElementById('yhCost').style.display = 'block'
             document.getElementById('mkBox').getElementsByClassName('fgstb')[0].style.display = 'none'
             document.getElementById('fgsCost').style.display = 'none'
-          }
-          let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
-          let id = data.vid
-          // 1.创建ajax对象(此处兼容性的创建)
-          let xhr = new XMLHttpRequest()
-          // 2.调用open方法（true----异步）
-          xhr.open('post', 'http://192.168.7.101:8800/cycle/desktopData/getInfoByAsset', true)
-          // 3.发送数据
-          xhr.setRequestHeader('content-type', 'application/json')
-          xhr.setRequestHeader('TokenId', token)
-          xhr.send(id)
-          // 4.请求状态改变事件
-          xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
-              if (xhr.status === 200) {
-                let mkdt = JSON.parse(xhr.responseText)
-                console.log(mkdt)
-                document.getElementById('mkDialog').style.display = 'block'
-                if (mkdt.ASSET_INFO.length === 0)mkdt.ASSET_INFO[0] = {}
-                if (mkdt.TECH_DATA.length === 0)mkdt.TECH_DATA[0] = {}
-                if (mkdt.CURING_COST.length === 0)mkdt.CURING_COST[0] = {}
-                if (mkdt.COST_BUDGET.length === 0)mkdt.COST_BUDGET[0] = {}
-                if (!mkdt.ASSET_INFO[0].T0002_ASSET_NAME)mkdt.ASSET_INFO[0].T0002_ASSET_NAME = ''
-                if (!mkdt.ASSET_INFO[0].T0002_START_PILE)mkdt.ASSET_INFO[0].T0002_START_PILE = ''
-                if (!mkdt.ASSET_INFO[0].T0002_ASSET_DATE)mkdt.ASSET_INFO[0].T0002_ASSET_DATE = ''
-                if (!mkdt.ASSET_INFO[0].T0002_LOAD_NAME)mkdt.ASSET_INFO[0].T0002_LOAD_NAME = ''
-                if (!mkdt.ASSET_INFO[0].T0002_CURING_UNIT)mkdt.ASSET_INFO[0].T0002_CURING_UNIT = ''
-                if (!mkdt.ASSET_INFO[0].T0002_DUTY_PERSON)mkdt.ASSET_INFO[0].T0002_DUTY_PERSON = ''
-                if (!mkdt.ASSET_INFO[0].T0002_TOUCH_TEL)mkdt.ASSET_INFO[0].T0002_TOUCH_TEL = ''
-                if (!mkdt.ASSET_INFO[0].T0002_ASSET_REAMRK)mkdt.ASSET_INFO[0].T0002_ASSET_REAMRK = ''
-                if (!mkdt.TECH_DATA[0].T0006_TECHTYPE_NAME)mkdt.TECH_DATA[0].T0006_TECHTYPE_NAME = ''
-                if (!mkdt.TECH_DATA[0].T0003_CHECK_UNIT)mkdt.TECH_DATA[0].T0003_CHECK_UNIT = ''
-                if (!mkdt.TECH_DATA[0].T0003_CHECK_TIME)mkdt.TECH_DATA[0].T0003_CHECK_TIME = ''
-                document.getElementById('mkBox').getElementsByClassName('mkTitle')[0].innerText = mkdt.ASSET_INFO[0].T0002_ASSET_NAME
-                document.getElementById('mkBox').getElementsByClassName('type')[0].innerText = mkdt.ASSET_INFO[0].T0002_ASSET_NAME
-                document.getElementById('mkBox').getElementsByClassName('seZh')[0].innerText = mkdt.ASSET_INFO[0].T0002_START_PILE
-                document.getElementById('mkBox').getElementsByClassName('year')[0].innerText = mkdt.ASSET_INFO[0].T0002_ASSET_DATE
-                document.getElementById('mkBox').getElementsByClassName('glgs')[0].innerText = mkdt.ASSET_INFO[0].T0002_LOAD_NAME
-                document.getElementById('mkBox').getElementsByClassName('ygdw')[0].innerText = mkdt.ASSET_INFO[0].T0002_CURING_UNIT
-                document.getElementById('mkBox').getElementsByClassName('zrr')[0].innerText = mkdt.ASSET_INFO[0].T0002_DUTY_PERSON
-                document.getElementById('mkBox').getElementsByClassName('phone')[0].innerText = mkdt.ASSET_INFO[0].T0002_TOUCH_TEL
-                document.getElementById('mkBox').getElementsByClassName('remark')[0].innerText = mkdt.ASSET_INFO[0].T0002_ASSET_REAMRK
-                document.getElementById('techLevel').getElementsByClassName('techlevel')[0].innerText = mkdt.TECH_DATA[0].T0006_TECHTYPE_NAME
-                document.getElementById('techLevel').getElementsByClassName('techcomp')[0].innerText = mkdt.TECH_DATA[0].T0003_CHECK_UNIT
-                document.getElementById('techLevel').getElementsByClassName('techtime')[0].innerText = mkdt.TECH_DATA[0].T0003_CHECK_TIME
-              } else {
-                alert('错误' + xhr.status)
+            // getInfoByCompany
+            let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
+            let id = data.vid
+            // 1.创建ajax对象(此处兼容性的创建)
+            let xhr = new XMLHttpRequest()
+            // 2.调用open方法（true----异步）
+            xhr.open('post', 'http://94.191.93.96:8800/cycle/desktopData/getInfoByAsset', true)
+            // 3.发送数据
+            xhr.setRequestHeader('content-type', 'application/json')
+            xhr.setRequestHeader('TokenId', token)
+            xhr.send(id)
+            // 4.请求状态改变事件
+            xhr.onreadystatechange = function () {
+              if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                  let mkdt = JSON.parse(xhr.responseText)
+                  // console.log(mkdt)
+                  document.getElementById('mkDialog').style.display = 'block'
+                  if (mkdt.ASSET_INFO.length === 0)mkdt.ASSET_INFO[0] = {}
+                  if (mkdt.TECH_DATA.length === 0)mkdt.TECH_DATA[0] = {}
+                  if (mkdt.CURING_COST.length === 0)mkdt.CURING_COST[0] = {}
+                  if (mkdt.COST_BUDGET.length === 0)mkdt.COST_BUDGET[0] = {}
+                  if (!mkdt.ASSET_INFO)mkdt.ASSET_INFO = []
+                  if (!mkdt.ASSET_INFO[0].T0002_ASSET_NAME)mkdt.ASSET_INFO[0].T0002_ASSET_NAME = ''
+                  if (!mkdt.ASSET_INFO[0].T0002_START_PILE)mkdt.ASSET_INFO[0].T0002_START_PILE = ''
+                  if (!mkdt.ASSET_INFO[0].T0002_ASSET_DATE)mkdt.ASSET_INFO[0].T0002_ASSET_DATE = ''
+                  if (!mkdt.ASSET_INFO[0].T0002_LOAD_NAME)mkdt.ASSET_INFO[0].T0002_LOAD_NAME = ''
+                  if (!mkdt.ASSET_INFO[0].T0002_CURING_UNIT)mkdt.ASSET_INFO[0].T0002_CURING_UNIT = ''
+                  if (!mkdt.ASSET_INFO[0].T0002_DUTY_PERSON)mkdt.ASSET_INFO[0].T0002_DUTY_PERSON = ''
+                  if (!mkdt.ASSET_INFO[0].T0002_TOUCH_TEL)mkdt.ASSET_INFO[0].T0002_TOUCH_TEL = ''
+                  if (!mkdt.ASSET_INFO[0].T0002_ASSET_REAMRK)mkdt.ASSET_INFO[0].T0002_ASSET_REAMRK = ''
+                  if (!mkdt.TECH_DATA[0].T0006_TECHTYPE_NAME)mkdt.TECH_DATA[0].T0006_TECHTYPE_NAME = ''
+                  if (!mkdt.TECH_DATA[0].T0003_CHECK_UNIT)mkdt.TECH_DATA[0].T0003_CHECK_UNIT = ''
+                  if (!mkdt.TECH_DATA[0].T0003_CHECK_TIME)mkdt.TECH_DATA[0].T0003_CHECK_TIME = ''
+                  document.getElementById('mkBox').getElementsByClassName('mkTitle')[0].innerText = mkdt.ASSET_INFO[0].T0002_ASSET_NAME
+                  document.getElementById('mkBox').getElementsByClassName('type')[0].innerText = mkdt.ASSET_INFO[0].T0002_ASSET_NAME
+                  document.getElementById('mkBox').getElementsByClassName('seZh')[0].innerText = mkdt.ASSET_INFO[0].T0002_START_PILE
+                  document.getElementById('mkBox').getElementsByClassName('year')[0].innerText = mkdt.ASSET_INFO[0].T0002_ASSET_DATE
+                  document.getElementById('mkBox').getElementsByClassName('glgs')[0].innerText = mkdt.ASSET_INFO[0].T0002_LOAD_NAME
+                  document.getElementById('mkBox').getElementsByClassName('ygdw')[0].innerText = mkdt.ASSET_INFO[0].T0002_CURING_UNIT
+                  document.getElementById('mkBox').getElementsByClassName('zrr')[0].innerText = mkdt.ASSET_INFO[0].T0002_DUTY_PERSON
+                  document.getElementById('mkBox').getElementsByClassName('phone')[0].innerText = mkdt.ASSET_INFO[0].T0002_TOUCH_TEL
+                  document.getElementById('mkBox').getElementsByClassName('remark')[0].innerText = mkdt.ASSET_INFO[0].T0002_ASSET_REAMRK
+                  document.getElementById('techLevel').getElementsByClassName('techlevel')[0].innerText = mkdt.TECH_DATA[0].T0006_TECHTYPE_NAME
+                  document.getElementById('techLevel').getElementsByClassName('techcomp')[0].innerText = mkdt.TECH_DATA[0].T0003_CHECK_UNIT
+                  document.getElementById('techLevel').getElementsByClassName('techtime')[0].innerText = mkdt.TECH_DATA[0].T0003_CHECK_TIME
+                } else {
+                  alert('错误' + xhr.status)
+                }
               }
             }
           }
@@ -584,9 +631,10 @@ export default {
   },
   methods: {
     loadMarkers () {
-      let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
-      this.$api.post('/cycle/desktopData/getListAll', {}, token, null, r => {
-        // console.log(r.ASSET_List)
+      // let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
+      this.$api.post('/cycle/desktopData/getListAll', {}, null, r => {
+        // console.log(r)
+        let marks = []
         r.ASSET_List.forEach(function (item, index) {
           // console.log(item)
           if (item.T0002_ASSET_NAME.indexOf('加油站') > -1) {
@@ -606,8 +654,19 @@ export default {
           }
           item.location = [item.T0002_ASSET_PRECI, item.T0002_ASSET_LATI]
           item.label = { content: item.T0002_ASSET_NAME, offset: [10, -20] }
+          item.vid = item.T0002_ID
+          marks.push(item)
         })
-        this.astMarkers = r.ASSET_List
+        r.COMPANY_List.forEach(function (item, index) {
+          // console.log(item)
+          // item.icon = require('../assets/addoil.png')
+          item.location = [item.M0018_COMPANY_PRECI, item.M0018_COMPANY_LATI]
+          item.label = { content: item.M0018_SIMPLE_NAME, offset: [10, -20] }
+          item.vid = item.M0018_ID
+          item.T0002_ASSET_NAME = item.M0018_SIMPLE_NAME
+          marks.push(item)
+        })
+        this.astMarkers = marks
       })
     },
     toBaseData () {
@@ -641,10 +700,10 @@ export default {
     },
     changeMarkers () {
       // console.log(this.condition)
-      let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
+      // let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
       // this.condition.TokenId = token
-      this.$api.post('/cycle/desktopData/getListAll', this.condition, token, null, r => {
-        console.log(r.ASSET_List)
+      this.$api.post('/cycle/desktopData/getListAll', this.condition, null, r => {
+        // console.log(r.ASSET_List)
         r.ASSET_List.forEach(function (item, index) {
           // console.log(item)
           if (item.T0002_ASSET_NAME.indexOf('加油站') > -1) {
@@ -691,8 +750,8 @@ export default {
       this.imgUrl = ''
     },
     loadSelect () {
-      let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
-      this.$api.post('/cycle/assetData/listAll', {}, token, null, r => {
+      // let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
+      this.$api.post('/cycle/assetData/listAll', {}, null, r => {
         // console.log(r)
         let arr1 = []
         let arr2 = []
@@ -703,7 +762,7 @@ export default {
         this.startzhArr = arr1
         this.endzhArr = arr2
       })
-      this.$api.post('/cycle/assetType/listAll', {}, token, null, r => {
+      this.$api.post('/cycle/assetType/listAll', {}, null, r => {
         this.zctypeArr = r.data
         r.data.forEach((item, index) => {
           if (item.T0001_PID !== '0') {
@@ -713,32 +772,37 @@ export default {
       })
     },
     loadTableData () {
-      let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
+      // let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
       // console.log(token)
-      this.$api.post('/cycle/assetData/listPage', {}, token, null, r => {
-        // console.log(r.data.returnParam)
+      this.$api.post('/cycle/assetData/listPage', {}, null, r => {
         r.data.returnParam.forEach((item, index) => {
-          if (item.T0002_ASSET_NAME.indexOf('加油站') > -1) {
-            item.pic = require('../assets/addoil.png')
-          } else if (item.T0002_ASSET_NAME.indexOf('桥') > -1) {
-            item.pic = require('../assets/bridge.png')
-          } else if (item.T0002_ASSET_NAME.indexOf('互通立交') > -1) {
-            item.pic = require('../assets/htlj.png')
-          } else if (item.T0002_ASSET_NAME.indexOf('收费站') > -1) {
-            item.pic = require('../assets/sfz.png')
-          } else if (item.T0002_ASSET_NAME.indexOf('隧道') > -1) {
-            item.pic = require('../assets/tenant.png')
-          } else if (item.T0002_ASSET_NAME.indexOf('涵洞') > -1) {
-            item.pic = require('../assets/tunnel.png')
-          } else {
+          // if (item.T0002_ASSET_NAME.indexOf('加油站') > -1) {
+          //   item.pic = require('../assets/addoil.png')
+          // } else if (item.T0002_ASSET_NAME.indexOf('桥') > -1) {
+          //   item.pic = require('../assets/bridge.png')
+          // } else if (item.T0002_ASSET_NAME.indexOf('互通立交') > -1) {
+          //   item.pic = require('../assets/htlj.png')
+          // } else if (item.T0002_ASSET_NAME.indexOf('收费站') > -1) {
+          //   item.pic = require('../assets/sfz.png')
+          // } else if (item.T0002_ASSET_NAME.indexOf('隧道') > -1) {
+          //   item.pic = require('../assets/tenant.png')
+          // } else if (item.T0002_ASSET_NAME.indexOf('涵洞') > -1) {
+          // item.pic = item.files[0].FILE_URL
+          // } else {
 
-          }
+          // }
           if (!item.T0002_START_PILE)item.T0002_START_PILE = ''
           if (!item.T0002_ASSET_NAME)item.T0002_ASSET_NAME = ''
           if (!item.T0002_ASSET_AMOUNT)item.T0002_ASSET_AMOUNT = ''
           if (!item.T0002_ASSET_DATE)item.T0002_ASSET_DATE = ''
           if (!item.T0002_ASSET_PRECI)item.T0002_ASSET_PRECI = ''
           if (!item.T0002_ASSET_LATI)item.T0002_ASSET_LATI = ''
+          if (item.files.length > 0) {
+            item.pic = item.files[0].FILE_URL
+            this.srcList.push(item.pic)
+          } else {
+            item.pic = ''
+          }
           item.zh = item.T0002_START_PILE
           item.name = item.T0002_ASSET_NAME
           item.num = item.T0002_ASSET_AMOUNT
@@ -746,26 +810,27 @@ export default {
           item.location = [item.T0002_ASSET_PRECI, item.T0002_ASSET_LATI]
         })
         this.zcTable = r.data.returnParam.slice(0, 5)
-        let tst = this
-        this.zcTable.forEach(function (i, n) {
-          tst.srcList.push(i.pic)
-        })
       })
-      this.$api.post('/cycle/techData/listPage', {}, token, null, r => {
+      this.$api.post('/cycle/techData/listPage', {}, null, r => {
         // console.log(r)
         r.data.returnParam.forEach((item, index) => {
           if (!item.T0002_ASSET_NAME)item.T0002_ASSET_NAME = ''
           if (!item.T0006_TECHTYPE_NAME)item.T0006_TECHTYPE_NAME = ''
           if (!item.T0003_CHECK_TIME)item.T0003_CHECK_TIME = ''
-          item.report = require('../assets/logo.png')
+          // item.report = require('../assets/logo.png')
           item.name = item.T0002_ASSET_NAME
           item.tech = item.T0006_TECHTYPE_NAME
           item.date = item.T0003_CHECK_TIME
           item.year = item.T0003_CHECK_TIME.split('-')[0]
+          if (item.files.length > 0) {
+            item.report = item.files[0].FILE_URL
+          } else {
+            item.report = ''
+          }
         })
         this.techTable = r.data.returnParam.slice(0, 5)
       })
-      this.$api.post('/cycle/curingCost/listPage', {}, token, null, r => {
+      this.$api.post('/cycle/curingCost/listPage', {}, null, r => {
         // console.log(r)
         r.data.returnParam.forEach((item, index) => {
           if (!item.T0002_ASSET_NAME)item.T0002_ASSET_NAME = ''
@@ -781,11 +846,16 @@ export default {
             item.expenditure = item.T0004_CURINGCOST_MONEY
           }
           item.date = item.T0004_CURINGCOST_TIME
-          item.bill = require('../assets/002.jpg')
+          // item.bill = require('../assets/002.jpg')
+          if (item.files.length > 0) {
+            item.bill = item.files[0].FILE_URL
+          } else {
+            item.bill = ''
+          }
         })
         this.dayliTable = r.data.returnParam.slice(0, 5)
       })
-      this.$api.post('/cycle/costBudget/listPage', {}, token, null, r => {
+      this.$api.post('/cycle/costBudget/listPage', {}, null, r => {
         // console.log(r)
         r.data.returnParam.forEach((item, index) => {
           if (!item.T0002_ASSET_NAME)item.T0002_ASSET_NAME = ''
@@ -809,7 +879,12 @@ export default {
               break
           }
           item.date = item.T0005_COSTBUDGET_TIME
-          item.bill = require('../assets/logo.png')
+          // item.bill = require('../assets/logo.png')
+          if (item.files.length > 0) {
+            item.bill = item.files[0].FILE_URL
+          } else {
+            item.bill = ''
+          }
         })
         this.conservTable = r.data.returnParam.slice(0, 5)
       })
@@ -823,6 +898,10 @@ export default {
   #workBanck #topItems .el-col-4{width: 20%;}
   #workBanck .topItem{width: 100%;height: 80px;background: #bbb;color: #fff;line-height: 80px;cursor: pointer;}
   #workBanck .topItem .ttile{width: 60%;text-align: left;font-size: 18px;float: left;}
+  @media screen and ( max-width: 1600px ){
+    #workBanck .topItem .ttile{width: 60%;text-align: left;font-size: 14px;float: left;}
+    #workBanck .mapSercLabel{font-size: 14px;}
+  }
   #workBanck .topItem .ticon{width: 40%;text-align: center;height: 80px;float: left;}
   #workBanck .more{float: right;}
   #workBanck .itemTh{padding: 8px 0;border-bottom: 1px solid #eee;margin-bottom: 15px;}
@@ -849,6 +928,9 @@ export default {
   #workBanck #assetsMap #astList td img{height: 20px;}
   #workBanck #mkDialog{width:100%;height:100%;background:rgba(0,0,0,0);position:absolute;left:0;top:0;z-index:999;transition: all 1s;display: none;}
   #workBanck #mkDialog #mkBox{width:38%;background:#fff;position:absolute;left:25%;top:80px;box-shadow: 0 0 5px #bbb;padding: 8px;}
+  @media screen and ( max-width: 1400px ){
+    #workBanck #mkDialog #mkBox{width: 58%;left:10%;}
+  }
   #workBanck #mkDialog #mkBox .close{position:absolute;right:5px;top:5px;cursor:pointer;}
   #workBanck #mkDialog #mkBox table{width: 100%;}
   #workBanck #mkDialog #mkBox table td.left{text-align: left;}
@@ -857,5 +939,9 @@ export default {
   #workBanck #mkDialog #mkBox .baseTb td.imgWrap img{height: 170px;}
   #workBanck #mkDialog #mkBox .fgstb td.imgWrap img{height: 100px;}
   #workBanck #mkDialog #mkBox .bdtable{width: 100%;border-top: 1px solid #bbb;border-left: 1px solid #bbb;border-collapse: collapse;margin-bottom: 20px;}
-  #workBanck #mkDialog #mkBox .bdtable th, #workBanck #mkDialog #mkBox .bdtable td{text-align: center;min-width: 100px;border-right: 1px solid #bbb;border-bottom: 1px solid #bbb;padding:5px 8px;font-size: 14px;}
+  #workBanck #mkDialog #mkBox .bdtable th, #workBanck #mkDialog #mkBox .bdtable td{text-align: center;border-right: 1px solid #bbb;border-bottom: 1px solid #bbb;padding:5px 8px;font-size: 14px;}
+  #techLevel th,#techLevel td{min-width: 133px;}
+  #dailyCost th,#dailyCost td{min-width: 101px;}
+  #yhCost th,#yhCost td{min-width: 100px;}
+  #fgsCost th,#fgsCost td{min-width: 100px;}
 </style>

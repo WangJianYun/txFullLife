@@ -183,16 +183,28 @@
           <el-table-column
             prop="T0004_CURINGCOST_TIME"
             label="费用发生时间"
+            width="120"
             show-overflow-tooltip
           >
           </el-table-column>
-          <el-table-column label="票据查看">
+          <el-table-column
+            label="票据查看"
+            align="center"
+            width="100"
+          >
             <template slot-scope="scope">
-              <el-button
-                type="primary"
-                size="mini"
-                @click="handleInfo(scope.row)"
-              >票据查看</el-button>
+              <el-image
+                style="width: 70px; height: 40px; line-height: 45px;"
+                :src="scope.row.pic"
+                :preview-src-list="scope.row.srcList"
+              >
+                <div
+                  slot="error"
+                  class="image-slot"
+                >
+                  无
+                </div>
+              </el-image>
             </template>
           </el-table-column>
           <el-table-column
@@ -966,12 +978,26 @@ export default {
       }
       this.$api.post(`/cycle/curingCost/listPage`, _data, null, r => {
         this.loading = false
+        for (let i = 0; i < r.data.returnParam.length; i++) {
+          if (r.data.returnParam[i].files.length > 0) {
+            r.data.returnParam[i].pic = r.data.returnParam[i].files[0].FILE_URL
+            r.data.returnParam[i].srcList = []
+            for (let k = 0; k < r.data.returnParam[i].files.length; k++) {
+              r.data.returnParam[i].srcList.push(
+                r.data.returnParam[i].files[k].FILE_URL
+              )
+            }
+          } else {
+            r.data.returnParam[i].pic = ''
+          }
+        }
         this.tableData = r.data.returnParam
         this.total = r.data.totalResult
       })
     },
     handleInfo (data) {
       this.infoShow = true
+      this.imageList = []
       this.$api.post(
         `/cycle/curingCost/selectById?ID=${data.T0004_ID}`,
         {},
@@ -990,6 +1016,7 @@ export default {
     },
     handleEdit (data) {
       this.imageUrl = ''
+      this.imageList = []
       this.dataParams.ID = data.T0004_ID
       this.editShow = true
       this.$api.post(
@@ -1078,6 +1105,7 @@ export default {
       param.append('TABLE_NAME', this.dataParams.TABLE_NAME)
       this.$api.post(`/cycle/fileInfo/uploadFile`, param, null, r => {
         this.$message.success('上传图片成功')
+        this.getCuringList()
         this.imageUrl = ''
         this.imageList.push(Object.assign({}, r.data[0]))
       })
@@ -1098,6 +1126,7 @@ export default {
           null,
           r => {
             this.$message.success('删除成功')
+            this.getCuringList()
             this.imageList = this.imageList.filter(item => {
               return item.M0013_ID !== data.M0013_ID
             })

@@ -156,9 +156,24 @@
           >
           </el-table-column>
           <el-table-column
-            prop="M0009_PILENUMBER_YEAR"
             label="图片"
+            align="center"
+            width="100"
           >
+            <template slot-scope="scope">
+              <el-image
+                style="width: 70px; height: 40px; line-height: 45px;"
+                :src="scope.row.pic"
+                :preview-src-list="scope.row.srcList"
+              >
+                <div
+                  slot="error"
+                  class="image-slot"
+                >
+                  无
+                </div>
+              </el-image>
+            </template>
           </el-table-column>
           <el-table-column
             prop="T0002_TECH_STATE"
@@ -988,6 +1003,7 @@ export default {
     },
     handleInfo (data) {
       this.infoShow = true
+      this.imageList = []
       this.$api.post(
         `/cycle/assetData/selectById?ID=${data.T0002_ID}`,
         {},
@@ -1001,6 +1017,7 @@ export default {
     handleEdit (data) {
       this.editShow = true
       this.imageUrl = ''
+      this.imageList = []
       this.dataParams.ID = data.T0002_ID
       this.$api.post(
         `/cycle/assetData/selectById?ID=${data.T0002_ID}`,
@@ -1045,6 +1062,19 @@ export default {
       }
       this.$api.post(`/cycle/assetData/listPage`, _data, null, r => {
         this.loading = false
+        for (let i = 0; i < r.data.returnParam.length; i++) {
+          if (r.data.returnParam[i].files.length > 0) {
+            r.data.returnParam[i].pic = r.data.returnParam[i].files[0].FILE_URL
+            r.data.returnParam[i].srcList = []
+            for (let k = 0; k < r.data.returnParam[i].files.length; k++) {
+              r.data.returnParam[i].srcList.push(
+                r.data.returnParam[i].files[k].FILE_URL
+              )
+            }
+          } else {
+            r.data.returnParam[i].pic = ''
+          }
+        }
         this.tableData = r.data.returnParam
         this.total = r.data.totalResult
       })
@@ -1125,6 +1155,7 @@ export default {
       this.$api.post(`/cycle/fileInfo/uploadFile`, param, null, r => {
         this.$message.success('上传图片成功')
         this.imageUrl = ''
+        this.getAssetList()
         this.imageList.push(Object.assign({}, r.data[0]))
       })
     },
@@ -1144,6 +1175,7 @@ export default {
           null,
           r => {
             this.$message.success('删除成功')
+            this.getAssetList()
             this.imageList = this.imageList.filter(item => {
               return item.M0013_ID !== data.M0013_ID
             })

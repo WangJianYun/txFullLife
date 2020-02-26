@@ -2,7 +2,7 @@ module.exports = {
   devServer: {
     open: true,
     host: '192.168.7.102',
-    port: 9007,
+    port: 8080,
     https: false,
     proxy: { // 配置跨域
       '/api': {

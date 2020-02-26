@@ -379,6 +379,53 @@
           <tr>
             <td class="bg-td">图片上传：</td>
             <td colspan="3">
+              <el-upload
+                class="avatar-uploader"
+                :headers="header"
+                accept="image/*"
+                name="image"
+                :on-change="imgChange"
+                action
+                :show-file-list="false"
+                :auto-upload="false"
+                style="display: inline"
+              >
+                <img
+                  v-if="imageUrl"
+                  :src="imageUrl"
+                  class="avatar"
+                />
+                <i
+                  v-else
+                  class="el-icon-plus avatar-uploader-icon"
+                ></i>
+              </el-upload>
+              <ul class="ul-img">
+                <li
+                  class="avatar-uploader"
+                  v-for="(item, index) in  imageList"
+                  :key="index"
+                >
+                  <img
+                    :src="item.FILE_URL"
+                    class="el-upload avatar"
+                  />
+                  <span class="actions-item">
+                    <span>
+                      <i
+                        class="el-icon-zoom-in"
+                        @click.stop="clickImgFun(item)"
+                      ></i>
+                    </span>
+                    <span>
+                      <i
+                        class="el-icon-delete"
+                        @click.stop="clickDeleteFun(item)"
+                      ></i>
+                    </span>
+                  </span>
+                </li>
+              </ul>
             </td>
           </tr>
           <tr>
@@ -401,7 +448,7 @@
         <el-button
           type="primary"
           @click="addSaveFun"
-        >确 定</el-button>
+        >保 存</el-button>
       </div>
     </el-dialog>
     <!-- 修改 -->
@@ -576,6 +623,53 @@
           <tr>
             <td class="bg-td">图片上传：</td>
             <td colspan="3">
+              <el-upload
+                class="avatar-uploader"
+                :headers="header"
+                accept="image/*"
+                name="image"
+                :on-change="imgChange"
+                action
+                :show-file-list="false"
+                :auto-upload="false"
+                style="display: inline"
+              >
+                <img
+                  v-if="imageUrl"
+                  :src="imageUrl"
+                  class="avatar"
+                />
+                <i
+                  v-else
+                  class="el-icon-plus avatar-uploader-icon"
+                ></i>
+              </el-upload>
+              <ul class="ul-img">
+                <li
+                  class="avatar-uploader"
+                  v-for="(item, index) in  imageList"
+                  :key="index"
+                >
+                  <img
+                    :src="item.FILE_URL"
+                    class="el-upload avatar"
+                  />
+                  <span class="actions-item">
+                    <span>
+                      <i
+                        class="el-icon-zoom-in"
+                        @click.stop="clickImgFun(item)"
+                      ></i>
+                    </span>
+                    <span>
+                      <i
+                        class="el-icon-delete"
+                        @click.stop="clickDeleteFun(item)"
+                      ></i>
+                    </span>
+                  </span>
+                </li>
+              </ul>
             </td>
           </tr>
           <tr>
@@ -598,7 +692,7 @@
         <el-button
           type="primary"
           @click="editSaveFun"
-        >确 定</el-button>
+        >保 存</el-button>
       </div>
     </el-dialog>
     <!-- 查看 -->
@@ -677,8 +771,28 @@
           </td>
         </tr>
         <tr>
-          <td class="bg-td">图片上传：</td>
+          <td class="bg-td">图片：</td>
           <td colspan="3">
+            <ul class="ul-img">
+              <li
+                class="avatar-uploader"
+                v-for="(item, index) in  imageList"
+                :key="index"
+              >
+                <img
+                  :src="item.FILE_URL"
+                  class="el-upload avatar"
+                />
+                <span class="actions-item">
+                  <span>
+                    <i
+                      class="el-icon-zoom-in"
+                      @click.stop="clickImgFun(item)"
+                    ></i>
+                  </span>
+                </span>
+              </li>
+            </ul>
           </td>
         </tr>
         <tr>
@@ -692,6 +806,28 @@
         slot="footer"
         class="dialog-footer"
       >
+      </div>
+    </el-dialog>
+    <!-- 图片预览 -->
+    <el-dialog
+      :visible.sync="imgShow"
+      title="图片预览"
+    >
+      <div style="text-align: center;">
+        <el-image :src="imgShowUrl">
+          <div
+            slot="placeholder"
+            class="image-slot"
+          >
+            加载中<span class="dot">...</span>
+          </div>
+          <div
+            slot="error"
+            class="image-slot"
+          >
+            <i class="el-icon-picture-outline"></i>
+          </div>
+        </el-image>
       </div>
     </el-dialog>
   </div>
@@ -716,6 +852,17 @@ export default {
       }
     }
     return {
+      imageList: [],
+      imgShow: false,
+      imgShowUrl: '', // 预览图片
+      imageUrl: '',
+      header: {
+        TokenId: sessionStorage.getItem('TokenId') // 上传文件token
+      },
+      dataParams: {
+        ID: '',
+        TABLE_NAME: 'ASSET_DATA'
+      },
       assetList: [],
       loading: true,
       addShow: false,
@@ -820,6 +967,9 @@ export default {
     },
     addFun () {
       this.addShow = true
+      this.imageUrl = ''
+      this.dataParams.ID = ''
+      this.imageList = []
       this.$nextTick(() => {
         this.$refs['addFormRef'].resetFields()
       })
@@ -830,7 +980,7 @@ export default {
         if (valid) {
           this.$api.post(`/cycle/assetData/insert`, this.addForm, null, r => {
             this.$message.success('新增成功')
-            this.addShow = false
+            this.dataParams.ID = r.data.T0002_ID
             this.getAssetList()
           })
         }
@@ -838,15 +988,26 @@ export default {
     },
     handleInfo (data) {
       this.infoShow = true
-      this.infoForm = Object.assign({}, data)
-    },
-    handleEdit (data) {
-      this.editShow = true
       this.$api.post(
         `/cycle/assetData/selectById?ID=${data.T0002_ID}`,
         {},
         null,
         r => {
+          this.imageList = r.data.files
+          this.infoForm = Object.assign({}, r.data)
+        }
+      )
+    },
+    handleEdit (data) {
+      this.editShow = true
+      this.imageUrl = ''
+      this.dataParams.ID = data.T0002_ID
+      this.$api.post(
+        `/cycle/assetData/selectById?ID=${data.T0002_ID}`,
+        {},
+        null,
+        r => {
+          this.imageList = r.data.files
           this.editForm = Object.assign({}, r.data)
         }
       )
@@ -941,6 +1102,54 @@ export default {
       } else {
         this.$message.warning('请选择要删除的数据！')
       }
+    },
+    // 文件状态改变
+    imgChange (file) {
+      if (this.dataParams.ID === '') {
+        this.$message.warning('请先增加资产信息')
+        return false
+      }
+      this.imageUrl = URL.createObjectURL(file.raw)
+      if (file.size > 5 * 1024 * 1024) {
+        this.$message.warning('上传图片不能超过 5MB')
+        return false
+      }
+      this.uploadImgFun(file)
+    },
+    // 上传文件
+    uploadImgFun (file) {
+      let param = new FormData()
+      param.append('files', file.raw)
+      param.append('ID', this.dataParams.ID)
+      param.append('TABLE_NAME', this.dataParams.TABLE_NAME)
+      this.$api.post(`/cycle/fileInfo/uploadFile`, param, null, r => {
+        this.$message.success('上传图片成功')
+        this.imageUrl = ''
+        this.imageList.push(Object.assign({}, r.data[0]))
+      })
+    },
+    clickImgFun (data) {
+      this.imgShowUrl = data.FILE_URL
+      this.imgShow = true
+    },
+    clickDeleteFun (data) {
+      this.$confirm('确定要删除该图片?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$api.post(
+          `/cycle/fileInfo/deleteById?ID=${data.M0013_ID}`,
+          {},
+          null,
+          r => {
+            this.$message.success('删除成功')
+            this.imageList = this.imageList.filter(item => {
+              return item.M0013_ID !== data.M0013_ID
+            })
+          }
+        )
+      })
     }
   },
   created () {
@@ -1006,6 +1215,69 @@ export default {
     .el-form-item {
       margin-bottom: 0;
     }
+  }
+  .ul-img {
+    display: inline;
+    list-style: none;
+    margin: 0;
+    margin-left: -40px;
+  }
+  .avatar-uploader {
+    display: inline-block;
+    margin-left: 10px;
+    position: relative;
+  }
+  .actions-item {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    cursor: default;
+    text-align: center;
+    color: #fff;
+    opacity: 0;
+    font-size: 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: opacity 0.3s;
+    line-height: 110px;
+    border-radius: 6px;
+    span {
+      display: inline-block;
+      cursor: pointer;
+    }
+    span + span {
+      margin-left: 15px;
+    }
+    i {
+      font-size: 24px;
+    }
+  }
+  .actions-item:hover {
+    opacity: 1;
+  }
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409eff;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 120px;
+    height: 120px;
+    line-height: 120px;
+    text-align: center;
+  }
+  .avatar {
+    width: 120px;
+    height: 120px;
+    display: block;
   }
 }
 </style>

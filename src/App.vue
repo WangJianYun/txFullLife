@@ -15,7 +15,7 @@ html,body,#app {
   margin: 0;
   padding: 0;
 }
-
+#app{min-width: 1600px;overflow-x: scroll;}
 // #nav {
 //   padding: 30px;
 

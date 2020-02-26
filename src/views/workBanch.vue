@@ -485,12 +485,13 @@ export default {
       portDialog: false,
       imgUrl: '',
       Assets: [
-        { id: '1', name: '加油站', src: require('../assets/addoil.png') },
-        { id: '2', name: '桥梁', src: require('../assets/bridge.png') },
-        { id: '3', name: '互通立交', src: require('../assets/htlj.png') },
-        { id: '4', name: '收费站', src: require('../assets/sfz.png') },
-        { id: '5', name: '隧道', src: require('../assets/tenant.png') },
-        { id: '6', name: '涵洞', src: require('../assets/tunnel.png') }
+        { id: '1', name: '分公司', src: require('../assets/fgs.jpg') },
+        { id: '2', name: '加油站', src: require('../assets/addoil.png') },
+        { id: '3', name: '桥梁', src: require('../assets/bridge.png') },
+        { id: '4', name: '互通立交', src: require('../assets/htlj.png') },
+        { id: '5', name: '收费站', src: require('../assets/sfz.png') },
+        { id: '6', name: '隧道', src: require('../assets/tenant.png') },
+        { id: '7', name: '涵洞', src: require('../assets/tunnel.png') }
       ],
       astMarkers: [],
       zctypeArr: [],
@@ -537,15 +538,16 @@ export default {
                   if (!mkdt.COMPANY_INFO[0].M0018_COMPANY_PRECI)mkdt.COMPANY_INFO[0].M0018_COMPANY_PRECI = ''
                   if (!mkdt.COMPANY_INFO[0].M0018_COMPANY_LATI)mkdt.COMPANY_INFO[0].M0018_COMPANY_LATI = ''
                   if (!mkdt.COMPANY_INFO[0].M0018_COMPANY_REMARK)mkdt.COMPANY_INFO[0].M0018_COMPANY_REMARK = ''
+                  if (mkdt.COMPANY_INFO[0].files.length > 0) {
+                    document.getElementsByClassName('fgstb')[0].getElementsByTagName('img')[0].setAttribute('src', mkdt.COMPANY_INFO[0].files[0].FILE_URL)
+                  } else {
+                    document.getElementsByClassName('fgstb')[0].getElementsByTagName('img')[0].setAttribute('src', '')
+                  }
                   document.getElementById('mkBox').getElementsByClassName('jc')[0].innerText = mkdt.COMPANY_INFO[0].M0018_SIMPLE_NAME
                   document.getElementById('mkBox').getElementsByClassName('fgszh')[0].innerText = mkdt.COMPANY_INFO[0].M0008_START_PILE + '~' + mkdt.COMPANY_INFO[0].M0008_END_PILE
                   document.getElementById('mkBox').getElementsByClassName('fgslg')[0].innerText = mkdt.COMPANY_INFO[0].M0018_COMPANY_PRECI
                   document.getElementById('mkBox').getElementsByClassName('fgslat')[0].innerText = mkdt.COMPANY_INFO[0].M0018_COMPANY_LATI
                   document.getElementById('mkBox').getElementsByClassName('remark')[0].innerText = mkdt.COMPANY_INFO[0].M0018_COMPANY_REMARK
-                  // document.getElementById('mkBox').getElementsByClassName('fgsyy')[0].innerText = mkdt.COMPANY_INFO[0].M0018_COMPANY_REMARK
-                  // document.getElementById('mkBox').getElementsByClassName('fgssr')[0].innerText = mkdt.COMPANY_INFO[0].M0018_COMPANY_REMARK
-                  // document.getElementById('mkBox').getElementsByClassName('fgszc')[0].innerText = mkdt.COMPANY_INFO[0].M0018_COMPANY_REMARK
-                  // document.getElementById('mkBox').getElementsByClassName('fgsnf')[0].innerText = mkdt.COMPANY_INFO[0].M0018_COMPANY_REMARK
                   let trs = ''
                   mkdt.CURING_COST.forEach(element => {
                     trs += '<tr><td>' + (element.INCOME_MONEY - element.TOCOME_MONEY) + '</td><td>' + element.INCOME_MONEY + '</td><td>' + element.TOCOME_MONEY + '</td><td>' + element.YEAR + '</td><td><button type="primary" class="el-button">详细</button></td></tr>'
@@ -577,7 +579,7 @@ export default {
               if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
                   let mkdt = JSON.parse(xhr.responseText)
-                  // console.log(mkdt)
+                  console.log(mkdt)
                   document.getElementById('mkDialog').style.display = 'block'
                   if (mkdt.ASSET_INFO.length === 0)mkdt.ASSET_INFO[0] = {}
                   if (mkdt.TECH_DATA.length === 0)mkdt.TECH_DATA[0] = {}
@@ -607,6 +609,11 @@ export default {
                   document.getElementById('techLevel').getElementsByClassName('techlevel')[0].innerText = mkdt.TECH_DATA[0].T0006_TECHTYPE_NAME
                   document.getElementById('techLevel').getElementsByClassName('techcomp')[0].innerText = mkdt.TECH_DATA[0].T0003_CHECK_UNIT
                   document.getElementById('techLevel').getElementsByClassName('techtime')[0].innerText = mkdt.TECH_DATA[0].T0003_CHECK_TIME
+                  // if (mkdt.ASSET_INFO[0].files.length > 0) {
+                  //   document.getElementsByClassName('baseTb')[0].getElementsByTagName('img')[0].setAttribute('src', mkdt.ASSET_INFO[0].files[0].FILE_URL)
+                  // } else {
+                  //   document.getElementsByClassName('baseTb')[0].getElementsByTagName('img')[0].setAttribute('src', '')
+                  // }
                 } else {
                   alert('错误' + xhr.status)
                 }
@@ -659,7 +666,7 @@ export default {
         })
         r.COMPANY_List.forEach(function (item, index) {
           // console.log(item)
-          // item.icon = require('../assets/addoil.png')
+          item.icon = require('../assets/fgs.jpg')
           item.location = [item.M0018_COMPANY_PRECI, item.M0018_COMPANY_LATI]
           item.label = { content: item.M0018_SIMPLE_NAME, offset: [10, -20] }
           item.vid = item.M0018_ID
@@ -894,6 +901,8 @@ export default {
 </script>
 <style>
   #workBanck{position: relative;}
+  .el-select-dropdown__wrap{margin-bottom: 0!important;}
+  .el-scrollbar__wrap{margin-bottom: 0!important;}
   #workBanck .el-main{background: #fff;margin:15px 10px;}
   #workBanck #topItems .el-col-4{width: 20%;}
   #workBanck .topItem{width: 100%;height: 80px;background: #bbb;color: #fff;line-height: 80px;cursor: pointer;}
@@ -911,7 +920,7 @@ export default {
     height: 500px;
   }
   #workBanck #assetsMap{position: relative;}
-  #workBanck #assetsMap #astList{position: absolute;top: 0px;right: 0px;z-index: 999;text-align: center;background: #fff;border-right: 1px solid #bbb;border-bottom: 1px solid #bbb;border-collapse:collapse;height: 400px;overflow-y: auto;min-width: 100px;}
+  #workBanck #assetsMap #astList{position: absolute;top: 0px;right: 0px;z-index: 999;text-align: center;background: #fff;border-right: 1px solid #bbb;border-bottom: 1px solid #bbb;border-collapse:collapse;height: 240px;overflow-y: auto;min-width: 100px;}
   #workBanck #assetsMap #astList::-webkit-scrollbar {
     width: 5px;
   }

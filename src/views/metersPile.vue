@@ -20,6 +20,7 @@
               <el-select
                 v-model="dataParam.M0010_LOAD_NAME"
                 style="width:100%"
+                @change="changeSelect"
               >
                 <el-option
                   v-for="item in loadList"
@@ -33,14 +34,14 @@
           <el-col :span="5">
             <el-form-item label="起点桩号">
               <el-select
-                v-model="dataParam.START_PILE"
+                v-model="dataParam.M0010_START_PILE"
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in assetList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
+                  v-for="item in pileList"
+                  :key="item.M0010_ID"
+                  :label="item.M0010_START_PILE"
+                  :value="item.M0010_START_PILE"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -48,14 +49,14 @@
           <el-col :span="5">
             <el-form-item label="终点桩号">
               <el-select
-                v-model="dataParam.END_PILE"
+                v-model="dataParam.M0010_END_PILE"
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in assetList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
+                  v-for="item in pileList"
+                  :key="item.M0010_ID"
+                  :label="item.M0010_END_PILE"
+                  :value="item.M0010_END_PILE"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -85,7 +86,7 @@
       <div class="div-btn">
         <el-button
           type="primary"
-          @click="getPileList"
+          @click="searchFun"
         >搜索</el-button>
         <el-button @click="reset">重置</el-button>
         <el-button
@@ -93,7 +94,14 @@
           icon="el-icon-delete"
           @click="delListFun"
         >批量删除</el-button>
-        <span class="serach-span"> 您的检索： <span> 无 </span> </span>
+        <span class="serach-span"> 您的检索：
+          <span v-show="!isSearch" > 无 </span>
+          <span> {{ searchData.M0010_LOAD_NAME }} </span>
+          <span> {{ searchData.M0010_START_PILE }} </span>
+          <span> {{ searchData.M0010_END_PILE }} </span>
+          <span> {{ searchData.YEAR }} </span>
+          <span> {{ searchData.SEARCH_KEY }} </span>
+        </span>
       </div>
       <div class="table-div">
         <el-table
@@ -504,7 +512,6 @@ export default {
       }
     }
     return {
-      assetList: [],
       loading: true,
       addShow: false,
       editShow: false,
@@ -555,24 +562,64 @@ export default {
       loadList: [],
       dataParam: {
         M0010_LOAD_NAME: '',
-        START_PILE: '',
-        END_PILE: '',
+        M0010_START_PILE: '',
+        M0010_END_PILE: '',
         YEAR: '',
         SEARCH_KEY: ''
       },
-      highspeedList: [] //
+      pileList: [], // 桩好数组
+      highspeedList: [], //
+      searchData: {
+        M0010_LOAD_NAME: '',
+        M0010_START_PILE: '',
+        M0010_END_PILE: '',
+        YEAR: '',
+        SEARCH_KEY: ''
+      },
+      isSearch: false
     }
   },
   methods: {
+    // 根据 所属路段 获取起点，终点桩号
+    changeSelect (val) {
+      this.searchData.M0010_LOAD_NAME = ''
+      this.searchData.M0010_START_PILE = ''
+      this.searchData.M0010_END_PILE = ''
+      let _data = {
+        searchMap: {
+          M0010_LOAD_NAME: val
+        }
+      }
+      this.$api.post('/cycle/load/listAll', _data, null, r => {
+        this.pileList = r.data
+      })
+    },
+    // 搜索
+    searchFun () {
+      this.isSearch = true
+      this.searchData.M0010_LOAD_NAME = this.dataParam.M0010_LOAD_NAME
+      this.searchData.M0010_START_PILE = this.dataParam.M0010_START_PILE
+      this.searchData.M0010_END_PILE = this.dataParam.M0010_END_PILE
+      this.searchData.YEAR = this.dataParam.YEAR
+      this.searchData.SEARCH_KEY = this.dataParam.SEARCH_KEY
+      this.getPileList()
+    },
     codeFmt (row) {
       return row.M0009_PILENUMBER_DREICT === '1' ? '上行线' : '下行线'
     },
     reset () {
       this.dataParam.M0010_LOAD_NAME = ''
-      this.dataParam.START_PILE = ''
-      this.dataParam.END_PILE = ''
+      this.dataParam.M0010_START_PILE = ''
+      this.dataParam.M0010_END_PILE = ''
       this.dataParam.YEAR = ''
       this.dataParam.SEARCH_KEY = ''
+      this.searchData.M0010_LOAD_NAME = ''
+      this.searchData.M0010_START_PILE = ''
+      this.searchData.M0010_END_PILE = ''
+      this.searchData.YEAR = ''
+      this.searchData.SEARCH_KEY = ''
+      this.isSearch = false
+      this.pileList = []
       this.getPileList()
     },
     // 分页
@@ -742,6 +789,9 @@ export default {
   }
   .serach-span {
     margin-left: 20px;
+    span+span{
+      margin-right: 10px;
+    }
   }
   .table-page {
     text-align: center;

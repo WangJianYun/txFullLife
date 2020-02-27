@@ -25,6 +25,7 @@
               <el-select
                 v-model="searchMap.T0001_ID"
                 style="width:100%"
+                @change="changeSelect"
               >
                 <el-option
                   v-for="item in assetTypeList"
@@ -57,10 +58,10 @@
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in assetList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
+                  v-for="item in pileList"
+                  :key="item.T0002_ID"
+                  :label="item.T0002_START_PILE"
+                  :value="item.T0002_START_PILE"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -72,10 +73,10 @@
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in assetList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
+                  v-for="item in pileList"
+                  :key="item.T0002_ID"
+                  :label="item.T0002_END_PILE"
+                  :value="item.T0002_END_PILE"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -261,6 +262,7 @@
               <el-select
                 v-model="addSearch.T0001_ID"
                 style="width:100%"
+                @change="addSearchChange"
               >
                 <el-option
                   v-for="item in assetTypeList"
@@ -278,10 +280,10 @@
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in assetTypeList"
-                  :key="item.T0001_ID"
-                  :label="item.T0001_ASSETTYPE_NAME"
-                  :value="item.T0001_ID"
+                  v-for="item in searchPileList"
+                  :key="item.T0002_ID"
+                  :label="item.T0002_START_PILE"
+                  :value="item.T0002_START_PILE"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -293,10 +295,10 @@
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in assetTypeList"
-                  :key="item.T0001_ID"
-                  :label="item.T0001_ASSETTYPE_NAME"
-                  :value="item.T0001_ID"
+                  v-for="item in searchPileList"
+                  :key="item.T0002_ID"
+                  :label="item.T0002_END_PILE"
+                  :value="item.T0002_END_PILE"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -479,6 +481,7 @@
               <el-select
                 v-model="addSearch.T0001_ID"
                 style="width:100%"
+                @change="addSearchChange"
               >
                 <el-option
                   v-for="item in assetTypeList"
@@ -496,10 +499,10 @@
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in assetTypeList"
-                  :key="item.T0001_ID"
-                  :label="item.T0001_ASSETTYPE_NAME"
-                  :value="item.T0001_ID"
+                  v-for="item in searchPileList"
+                  :key="item.T0002_ID"
+                  :label="item.T0002_START_PILE"
+                  :value="item.T0002_START_PILE"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -511,10 +514,10 @@
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in assetTypeList"
-                  :key="item.T0001_ID"
-                  :label="item.T0001_ASSETTYPE_NAME"
-                  :value="item.T0001_ID"
+                  v-for="item in searchPileList"
+                  :key="item.T0002_ID"
+                  :label="item.T0002_END_PILE"
+                  :value="item.T0002_END_PILE"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -866,10 +869,27 @@ export default {
           name: '支出',
           valve: 2
         }
-      ]
+      ],
+      pileList: [],
+      searchPileList: []
     }
   },
   methods: {
+    // 根据 资产类别 请求 起点 / 终点桩号
+    changeSelect (val) {
+      let _data = {
+        mapParam: {
+          T0001_ID: val
+        }
+      }
+      this.$api.post('/cycle/assetData/listAll', _data, null, r => {
+        this.pileList = r.data
+      })
+    },
+    // 搜索
+    searchFun () {
+      this.getCostBudgetList()
+    },
     // 收入
     incomeFmt (row) {
       if (row.T0004_CURINGCOST_TYPE === 1) {
@@ -911,10 +931,26 @@ export default {
         this.$refs['addFormRef'].resetFields()
       })
     },
+    // 新建 选中 资产类别
+    addSearchChange (val) {
+      let _data = {
+        mapParam: {
+          T0001_ID: val
+        }
+      }
+      this.addSearch.T0002_START_PILE = ''
+      this.addSearch.T0002_END_PILE = ''
+      this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
+        this.searchPileList = r.data
+      })
+      this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
+        this.assetDataList = r.data
+      })
+    },
     // 新建 / 修改 搜索
     addSearchFun () {
       let _data = {
-        searchMap: this.addSearch
+        mapParam: this.addSearch
       }
       this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
         this.assetDataList = r.data

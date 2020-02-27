@@ -24,6 +24,7 @@
               <el-select
                 v-model="searchMap.T0001_ID"
                 style="width:100%"
+                @change="changeSelect"
               >
                 <el-option
                   v-for="item in assetTypeList"
@@ -56,10 +57,10 @@
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in stationList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
+                  v-for="item in pileList"
+                  :key="item.T0002_ID"
+                  :label="item.T0002_START_PILE"
+                  :value="item.T0002_START_PILE"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -71,10 +72,10 @@
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in stationList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
+                  v-for="item in pileList"
+                  :key="item.T0002_ID"
+                  :label="item.T0002_END_PILE"
+                  :value="item.T0002_END_PILE"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -251,6 +252,7 @@
               <el-select
                 v-model="addSearch.T0001_ID"
                 style="width:100%"
+                @change="addSearchChange"
               >
                 <el-option
                   v-for="item in assetTypeList"
@@ -268,10 +270,10 @@
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in assetTypeList"
-                  :key="item.T0001_ID"
-                  :label="item.T0001_ASSETTYPE_NAME"
-                  :value="item.T0001_ID"
+                  v-for="item in searchPileList"
+                  :key="item.T0002_ID"
+                  :label="item.T0002_START_PILE"
+                  :value="item.T0002_START_PILE"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -283,10 +285,10 @@
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in assetTypeList"
-                  :key="item.T0001_ID"
-                  :label="item.T0001_ASSETTYPE_NAME"
-                  :value="item.T0001_ID"
+                  v-for="item in searchPileList"
+                  :key="item.T0002_ID"
+                  :label="item.T0002_END_PILE"
+                  :value="item.T0002_END_PILE"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -467,6 +469,7 @@
               <el-select
                 v-model="addSearch.T0001_ID"
                 style="width:100%"
+                @change="addSearchChange"
               >
                 <el-option
                   v-for="item in assetTypeList"
@@ -484,10 +487,10 @@
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in assetTypeList"
-                  :key="item.T0001_ID"
-                  :label="item.T0001_ASSETTYPE_NAME"
-                  :value="item.T0001_ID"
+                  v-for="item in searchPileList"
+                  :key="item.T0002_ID"
+                  :label="item.T0002_START_PILE"
+                  :value="item.T0002_START_PILE"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -499,10 +502,10 @@
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in assetTypeList"
-                  :key="item.T0001_ID"
-                  :label="item.T0001_ASSETTYPE_NAME"
-                  :value="item.T0001_ID"
+                  v-for="item in searchPileList"
+                  :key="item.T0002_ID"
+                  :label="item.T0002_END_PILE"
+                  :value="item.T0002_END_PILE"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -850,13 +853,40 @@ export default {
           name: '大修工程'
         }
       ],
-      stationList: [],
       tableData: [],
       assetTypeList: [], // 资产类别
-      assetDataList: []
+      assetDataList: [],
+      pileList: [], // 起点，终点桩号 list
+      searchPileList: [] // 新增/修改的 起点，终点桩号 list
     }
   },
   methods: {
+    // 根据 资产类别 请求 起点 / 终点桩号
+    changeSelect (val) {
+      let _data = {
+        mapParam: {
+          T0001_ID: val
+        }
+      }
+      this.$api.post('/cycle/assetData/listAll', _data, null, r => {
+        this.pileList = r.data
+      })
+    },
+    // 搜索
+    searchFun () {
+      this.getCostBudgetList()
+    },
+    reset () {
+      this.pileList = []
+      this.searchMap.T0001_ID = ''
+      this.searchMap.T0005_ENGIN_MAINT = ''
+      this.searchMap.T0005_START_TIME = ''
+      this.searchMap.T0005_END_TIME = ''
+      this.searchMap.time = []
+      this.showCount = 10
+      this.currentPage = 1
+      this.getAssetList()
+    },
     enginFmt (row) {
       for (let i = 0; i < this.projectList.length; i++) {
         if (this.projectList[i].code === row.T0005_ENGIN_MAINT) {
@@ -889,20 +919,26 @@ export default {
         this.$refs['addFormRef'].resetFields()
       })
     },
-    reset () {
-      this.searchMap.T0001_ID = ''
-      this.searchMap.T0005_ENGIN_MAINT = ''
-      this.searchMap.T0005_START_TIME = ''
-      this.searchMap.T0005_END_TIME = ''
-      this.searchMap.time = []
-      this.showCount = 10
-      this.currentPage = 1
-      this.getAssetList()
+    // 新建 选中 资产类别
+    addSearchChange (val) {
+      let _data = {
+        mapParam: {
+          T0001_ID: val
+        }
+      }
+      this.addSearch.T0002_START_PILE = ''
+      this.addSearch.T0002_END_PILE = ''
+      this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
+        this.searchPileList = r.data
+      })
+      this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
+        this.assetDataList = r.data
+      })
     },
     // 新建 / 修改 搜索
     addSearchFun () {
       let _data = {
-        searchMap: this.addSearch
+        mapParam: this.addSearch
       }
       this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
         this.assetDataList = r.data
@@ -910,6 +946,7 @@ export default {
     },
     // 新建/ 修改 重置
     addReset () {
+      this.searchPileList = []
       this.addSearch.T0001_ID = ''
       this.addSearch.SEARCH_KEY = ''
       this.addSearch.T0002_START_PILE = ''

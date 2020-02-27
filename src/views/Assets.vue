@@ -24,6 +24,7 @@
               <el-select
                 v-model="searchMap.T0001_ID"
                 style="width:100%"
+                @change="changeSelect"
               >
                 <el-option
                   v-for="item in assetTypeList"
@@ -41,10 +42,10 @@
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in assetList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
+                  v-for="item in pileList"
+                  :key="item.T0002_ID"
+                  :label="item.T0002_START_PILE"
+                  :value="item.T0002_START_PILE"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -56,10 +57,10 @@
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in assetList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
+                  v-for="item in pileList"
+                  :key="item.T0002_ID"
+                  :label="item.T0002_END_PILE"
+                  :value="item.T0002_END_PILE"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -89,7 +90,7 @@
       <div class="div-btn">
         <el-button
           type="primary"
-          @click="getAssetList"
+          @click="searchFun"
         >搜索</el-button>
         <el-button @click="reset">重置</el-button>
         <el-button
@@ -97,7 +98,14 @@
           icon="el-icon-delete"
           @click="delListFun"
         >批量删除</el-button>
-        <span class="serach-span"> 您的检索： <span> 无 </span> </span>
+        <span class="serach-span"> 您的检索：
+          <span v-show="!isSearch"> 无 </span>
+          <span> {{ searchData.T0001_ASSETTYPE_NAME }} </span>
+          <span> {{ searchData.T0002_START_PILE }} </span>
+          <span> {{ searchData.T0002_END_PILE }} </span>
+          <span> {{ searchData.YEAR }} </span>
+          <span> {{ searchData.SEARCH_KEY }} </span>
+        </span>
       </div>
       <div class="table-div">
         <el-table
@@ -878,7 +886,6 @@ export default {
         ID: '',
         TABLE_NAME: 'ASSET_DATA'
       },
-      assetList: [],
       loading: true,
       addShow: false,
       editShow: false,
@@ -961,10 +968,67 @@ export default {
       tableData: [],
       selectList: [],
       assetTypeList: [], // 资产类别
-      listNameList: [] // 所属路段
+      listNameList: [], // 所属路段
+      pileList: [], // 起点 / 终点桩号
+      isSearch: false, // 是否搜索
+      searchData: {
+        T0001_ASSETTYPE_NAME: '',
+        YEAR: '',
+        SEARCH_KEY: '',
+        T0002_START_PILE: '',
+        T0002_END_PILE: ''
+      }, // 搜索显示
+      T0001_ASSETTYPE_NAME: ''
     }
   },
   methods: {
+    // 根据 资产类别 请求 起点 / 终点桩号
+    changeSelect (val) {
+      this.searchData.T0001_ASSETTYPE_NAME = ''
+      this.searchData.T0002_START_PILE = ''
+      this.searchData.T0002_END_PILE = ''
+      let _obj = {}
+      _obj = this.assetTypeList.find(function (item) {
+        return item.T0001_ID === val
+      })
+      this.T0001_ASSETTYPE_NAME = _obj.T0001_ASSETTYPE_NAME
+      let _data = {
+        mapParam: {
+          T0001_ID: val
+        }
+      }
+      this.$api.post('/cycle/assetData/listAll', _data, null, r => {
+        this.pileList = r.data
+      })
+    },
+    // 搜索
+    searchFun () {
+      this.isSearch = true
+      this.searchData.T0001_ASSETTYPE_NAME = this.T0001_ASSETTYPE_NAME
+      this.searchData.T0002_START_PILE = this.searchMap.T0002_START_PILE
+      this.searchData.T0002_END_PILE = this.searchMap.T0002_END_PILE
+      this.searchData.YEAR = this.searchMap.YEAR
+      this.searchData.SEARCH_KEY = this.searchMap.SEARCH_KEY
+      this.getAssetList()
+    },
+    // 重置
+    reset () {
+      this.isSearch = false
+      this.pileList = []
+      this.searchData.T0001_ASSETTYPE_NAME = ''
+      this.searchData.T0002_START_PILE = ''
+      this.searchData.T0002_END_PILE = ''
+      this.searchData.YEAR = ''
+      this.searchData.SEARCH_KEY = ''
+      this.searchMap.T0001_ID = ''
+      this.searchMap.YEAR = ''
+      this.searchMap.SEARCH_KEY = ''
+      this.searchMap.T0002_START_PILE = ''
+      this.searchMap.T0002_END_PILE = ''
+      this.showCount = 10
+      this.currentPage = 1
+      this.getAssetList()
+    },
     // 分页
     sizeChange (val) {
       this.showCount = val
@@ -1078,17 +1142,6 @@ export default {
         this.tableData = r.data.returnParam
         this.total = r.data.totalResult
       })
-    },
-    // 重置
-    reset () {
-      this.searchMap.T0001_ID = ''
-      this.searchMap.YEAR = ''
-      this.searchMap.SEARCH_KEY = ''
-      this.searchMap.T0002_START_PILE = ''
-      this.searchMap.T0002_END_PILE = ''
-      this.showCount = 10
-      this.currentPage = 1
-      this.getAssetList()
     },
     handleDelete (data) {
       this.$confirm('确定要删除该条记录?', '提示', {
@@ -1215,6 +1268,9 @@ export default {
   }
   .serach-span {
     margin-left: 20px;
+    span + span {
+      margin-right: 10px;
+    }
   }
   .table-page {
     text-align: center;

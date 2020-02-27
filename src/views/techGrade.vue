@@ -24,6 +24,7 @@
               <el-select
                 v-model="searchMap.T0001_ID"
                 style="width:100%"
+                @change="changeSelect"
               >
                 <el-option
                   v-for="item in assetTypeList"
@@ -56,10 +57,10 @@
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in techTypeList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
+                  v-for="item in pileList"
+                  :key="item.T0002_ID"
+                  :label="item.T0002_START_PILE"
+                  :value="item.T0002_START_PILE"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -71,10 +72,10 @@
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in techTypeList"
-                  :key="item.code"
-                  :label="item.name"
-                  :value="item.code"
+                  v-for="item in pileList"
+                  :key="item.T0002_ID"
+                  :label="item.T0002_END_PILE"
+                  :value="item.T0002_END_PILE"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -94,7 +95,7 @@
       <div class="div-btn">
         <el-button
           type="primary"
-          @click="getTechDataList"
+          @click="searchFun"
         >搜索</el-button>
         <el-button @click="reset">重置</el-button>
         <el-button
@@ -102,7 +103,14 @@
           icon="el-icon-delete"
           @click="delListFun"
         >批量删除</el-button>
-        <span class="serach-span"> 您的检索： <span> 无 </span> </span>
+        <span class="serach-span"> 您的检索：
+          <span v-show="!isSearch"> 无 </span>
+          <!-- <span> {{ searchData.T0001_ASSETTYPE_NAME }} </span>
+          <span> {{ searchData.T0006_TECHTYPE_NAME }} </span>
+          <span> {{ searchData.T0002_START_PILE }} </span>
+          <span> {{ searchData.T0002_END_PILE }} </span>
+          <span> {{ searchData.YEAR }} </span> -->
+        </span>
       </div>
       <div class="table-div">
         <el-table
@@ -144,6 +152,14 @@
             prop="T0006_TECHTYPE_NAME"
             label="技术状况"
           >
+            <template slot-scope="scope">
+              <div v-if="scope.row.T0006_TECHTYPE_NAME == '五类'">
+                {{ scope.row.T0006_TECHTYPE_NAME }} <span class="wraning-span"> 危 </span>
+              </div>
+              <div v-else>
+                {{ scope.row.T0006_TECHTYPE_NAME }}
+              </div>
+            </template>
           </el-table-column>
           <el-table-column
             prop="T0003_CHECK_TIME"
@@ -236,6 +252,7 @@
               <el-select
                 v-model="addSearch.T0001_ID"
                 style="width:100%"
+                @change="addSearchChange"
               >
                 <el-option
                   v-for="item in assetTypeList"
@@ -253,10 +270,10 @@
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in assetTypeList"
-                  :key="item.T0001_ID"
-                  :label="item.T0001_ASSETTYPE_NAME"
-                  :value="item.T0001_ID"
+                  v-for="item in searchPileList"
+                  :key="item.T0002_ID"
+                  :label="item.T0002_START_PILE"
+                  :value="item.T0002_END_PILE"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -268,10 +285,10 @@
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in assetTypeList"
-                  :key="item.T0001_ID"
-                  :label="item.T0001_ASSETTYPE_NAME"
-                  :value="item.T0001_ID"
+                  v-for="item in searchPileList"
+                  :key="item.T0002_ID"
+                  :label="item.T0002_END_PILE"
+                  :value="item.T0002_END_PILE"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -324,7 +341,7 @@
                   size="small"
                 >
                   <el-option
-                    v-for="item in techTypeList"
+                    v-for="item in searchTechTypeList"
                     :key="item.T0006_ID"
                     :label="item.T0006_TECHTYPE_NAME"
                     :value="item.T0006_ID"
@@ -452,6 +469,7 @@
               <el-select
                 v-model="addSearch.T0001_ID"
                 style="width:100%"
+                @change="addSearchChange"
               >
                 <el-option
                   v-for="item in assetTypeList"
@@ -469,10 +487,10 @@
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in assetTypeList"
-                  :key="item.T0001_ID"
-                  :label="item.T0001_ASSETTYPE_NAME"
-                  :value="item.T0001_ID"
+                  v-for="item in searchPileList"
+                  :key="item.T0002_ID"
+                  :label="item.T0002_START_PILE"
+                  :value="item.T0002_END_PILE"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -484,10 +502,10 @@
                 style="width:100%"
               >
                 <el-option
-                  v-for="item in assetTypeList"
-                  :key="item.T0001_ID"
-                  :label="item.T0001_ASSETTYPE_NAME"
-                  :value="item.T0001_ID"
+                  v-for="item in searchPileList"
+                  :key="item.T0002_ID"
+                  :label="item.T0002_END_PILE"
+                  :value="item.T0002_END_PILE"
                 ></el-option>
               </el-select>
             </el-form-item>
@@ -811,10 +829,46 @@ export default {
       selectList: [],
       assetTypeList: [],
       assetDataList: [],
-      techTypeList: [] // 技术类别 list
+      techTypeList: [], // 技术类别 list
+      pileList: [], /// / 起点 / 终点桩号 list
+      searchPileList: [], // 新增/ 修改的 起点。终点 桩号 list
+      searchTechTypeList: [], //  新增/ 修改的资产等级
+      isSearch: false // 是否搜索
     }
   },
   methods: {
+    // 根据 资产类别 请求 起点 / 终点桩号
+    changeSelect (val) {
+      let _data = {
+        mapParam: {
+          T0001_ID: val
+        }
+      }
+      this.$api.post('/cycle/assetData/listAll', _data, null, r => {
+        this.pileList = r.data
+      })
+      this.$api.post(`/cycle/techType/listAll`, _data, null, r => {
+        this.techTypeList = r.data
+      })
+    },
+    // 搜索
+    searchFun () {
+      this.isSearch = true
+      this.getTechDataList()
+    },
+    // 重置
+    reset () {
+      this.pileList = []
+      this.searchMap.T0001_ID = ''
+      this.searchMap.YEAR = ''
+      this.searchMap.T0006_ID = ''
+      this.searchMap.T0002_START_PILE = ''
+      this.searchMap.T0002_END_PILE = ''
+      this.showCount = 10
+      this.currentPage = 1
+      this.getTechDataList()
+      this.getTechTypeList()
+    },
     // 分页
     sizeChange (val) {
       this.showCount = val
@@ -840,10 +894,29 @@ export default {
         this.$refs['addFormRef'].resetFields()
       })
     },
+    // 新建 选中 资产类别
+    addSearchChange (val) {
+      let _data = {
+        mapParam: {
+          T0001_ID: val
+        }
+      }
+      this.addSearch.T0002_START_PILE = ''
+      this.addSearch.T0002_END_PILE = ''
+      this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
+        this.searchPileList = r.data
+      })
+      this.$api.post(`/cycle/techType/listAll`, _data, null, r => {
+        this.searchTechTypeList = r.data
+      })
+      this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
+        this.assetDataList = r.data
+      })
+    },
     // 新建 / 修改 搜索
     addSearchFun () {
       let _data = {
-        searchMap: this.addSearch
+        mapParam: this.addSearch
       }
       this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
         this.assetDataList = r.data
@@ -851,6 +924,8 @@ export default {
     },
     // 新建/ 修改 重置
     addReset () {
+      this.searchPileList = []
+      this.searchTechTypeList = []
       this.addSearch.T0001_ID = ''
       this.addSearch.SEARCH_KEY = ''
       this.addSearch.T0002_START_PILE = ''
@@ -949,17 +1024,7 @@ export default {
         this.total = r.data.totalResult
       })
     },
-    // 重置
-    reset () {
-      this.searchMap.T0001_ID = ''
-      this.searchMap.YEAR = ''
-      this.searchMap.T0006_ID = ''
-      this.searchMap.T0002_START_PILE = ''
-      this.searchMap.T0002_END_PILE = ''
-      this.showCount = 10
-      this.currentPage = 1
-      this.getTechDataList()
-    },
+
     handleDelete (data) {
       this.$confirm('确定要删除该条记录?', '提示', {
         confirmButtonText: '确定',
@@ -1086,6 +1151,9 @@ export default {
   }
   .serach-span {
     margin-left: 20px;
+    span + span {
+      margin-right: 10px;
+    }
   }
   .table-page {
     text-align: center;
@@ -1111,6 +1179,12 @@ export default {
     td,
     th {
       text-align: center;
+    }
+    .wraning-span {
+      background: red;
+      color: #fff;
+      border-radius: 50%;
+      padding: 1px 4px;
     }
   }
   .dialog-div {

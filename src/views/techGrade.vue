@@ -154,7 +154,7 @@
           >
             <template slot-scope="scope">
               <div v-if="scope.row.T0006_TECHTYPE_NAME == '五类'">
-                {{ scope.row.T0006_TECHTYPE_NAME }} <span class="wraning-span"> 危 </span>
+                {{ scope.row.T0006_TECHTYPE_NAME }} <span class="error-span"> 危 </span>
               </div>
               <div v-else>
                 {{ scope.row.T0006_TECHTYPE_NAME }}
@@ -166,6 +166,13 @@
             label="检测时间"
             width="110"
           >
+          <template slot-scope="scope">
+              <div>
+                {{ scope.row.T0003_CHECK_TIME }}
+                <span class="wraning-span" v-if="scope.row.STATE == 1 "> 检 </span>
+                <span class="wraning-span" v-if="scope.row.STATE == 2 "> 警 </span>
+              </div>
+            </template>
           </el-table-column>
           <el-table-column
             prop="T0003_CHECK_UNIT"
@@ -1180,8 +1187,14 @@ export default {
     th {
       text-align: center;
     }
-    .wraning-span {
+    .error-span{
       background: red;
+      color: #fff;
+      border-radius: 50%;
+      padding: 1px 4px;
+    }
+    .wraning-span {
+      background: #FF9800;
       color: #fff;
       border-radius: 50%;
       padding: 1px 4px;

@@ -96,10 +96,10 @@
           </el-col>
         </el-form>
       </el-row>
-      <div>
+      <div class="div-btn">
         <el-button
           type="primary"
-          @click="getCuringList"
+          @click="searchFun"
         >搜索</el-button>
         <el-button @click="reset">重置</el-button>
         <el-button
@@ -107,7 +107,10 @@
           icon="el-icon-delete"
           @click="delListFun"
         >批量删除</el-button>
-        <span class="serach-span"> 您的检索： <span> 无 </span> </span>
+        <span class="serach-span"> 您的检索：
+          <span v-show="!isSearch"> 无 </span>
+          <span> {{searchVal}} </span>
+        </span>
       </div>
       <div class="table-div">
         <el-table
@@ -317,7 +320,10 @@
           </el-col>
         </el-form>
       </el-row>
-      <p> 您的检索： <span> 无 </span> </p>
+      <p> 您的检索：
+        <span v-show="!isAddSearch"> 无 </span>
+        <span> {{addSearchVal}} </span>
+      </p>
       <el-form
         :model="addForm"
         :rules="rules"
@@ -536,7 +542,9 @@
           </el-col>
         </el-form>
       </el-row>
-      <p> 您的检索： <span> 无 </span> </p>
+      <p> 您的检索：
+        <span v-show="!isAddSearch"> 无 </span>
+        <span> {{addSearchVal}} </span> </p>
       <el-form
         :model="editForm"
         :rules="rules"
@@ -871,24 +879,43 @@ export default {
         }
       ],
       pileList: [],
-      searchPileList: []
+      searchPileList: [],
+      isSearch: false,
+      searchVal: '',
+      addSearchVal: '', // 新建 修改搜索内容
+      isAddSearch: false // 新建 修改 是否搜索
     }
   },
   methods: {
     // 根据 资产类别 请求 起点 / 终点桩号
     changeSelect (val) {
       let _data = {
-        mapParam: {
-          T0001_ID: val
-        }
+        T0001_ID: val
       }
+      this.searchMap.T0002_START_PILE = ''
+      this.searchMap.T0002_END_PILE = ''
       this.$api.post('/cycle/assetData/listAll', _data, null, r => {
         this.pileList = r.data
       })
     },
     // 搜索
     searchFun () {
-      this.getCostBudgetList()
+      this.isSearch = true
+      this.getCuringList()
+    },
+    // 重置
+    reset () {
+      this.isSearch = false
+      this.searchMap.T0001_ID = ''
+      this.searchMap.T0004_CURINGCOST_TYPE = ''
+      this.searchMap.T0002_START_PILE = ''
+      this.searchMap.T0002_END_PILE = ''
+      this.searchMap.time = []
+      this.searchMap.START_TIME = ''
+      this.searchMap.END_TIME = ''
+      this.showCount = 10
+      this.currentPage = 1
+      this.getCuringList()
     },
     // 收入
     incomeFmt (row) {
@@ -915,12 +942,15 @@ export default {
       this.currentPage = val
       this.getCuringList()
     },
+    // table  选中
     selectTable (selection) {
       this.selectList = selection
     },
+    // table  选中
     selectAll (selection) {
       this.selectList = selection
     },
+    // 点击新建
     addFun () {
       this.imageUrl = ''
       this.dataParams.ID = ''
@@ -934,48 +964,32 @@ export default {
     // 新建 选中 资产类别
     addSearchChange (val) {
       let _data = {
-        mapParam: {
-          T0001_ID: val
-        }
+        T0001_ID: val
       }
       this.addSearch.T0002_START_PILE = ''
       this.addSearch.T0002_END_PILE = ''
       this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
         this.searchPileList = r.data
-      })
-      this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
         this.assetDataList = r.data
       })
     },
     // 新建 / 修改 搜索
     addSearchFun () {
-      let _data = {
-        mapParam: this.addSearch
-      }
-      this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
+      this.isAddSearch = true
+      this.$api.post(`/cycle/assetData/listAll`, this.addSearch, null, r => {
         this.assetDataList = r.data
+        this.addSearchVal = r.search_val
       })
     },
     // 新建/ 修改 重置
     addReset () {
+      this.addSearchVal = ''
+      this.isAddSearch = false
       this.addSearch.T0001_ID = ''
       this.addSearch.SEARCH_KEY = ''
       this.addSearch.T0002_START_PILE = ''
       this.addSearch.T0002_END_PILE = ''
       this.getAssetDataList()
-    },
-    // 重置
-    reset () {
-      this.searchMap.T0001_ID = ''
-      this.searchMap.T0004_CURINGCOST_TYPE = ''
-      this.searchMap.T0002_START_PILE = ''
-      this.searchMap.T0002_END_PILE = ''
-      this.searchMap.time = []
-      this.searchMap.START_TIME = ''
-      this.searchMap.END_TIME = ''
-      this.showCount = 10
-      this.currentPage = 1
-      this.getCuringList()
     },
     // 新增保存
     addSaveFun () {
@@ -1029,6 +1043,7 @@ export default {
         }
         this.tableData = r.data.returnParam
         this.total = r.data.totalResult
+        this.searchVal = r.search_val
       })
     },
     handleInfo (data) {
@@ -1050,7 +1065,9 @@ export default {
         }
       )
     },
+    // 点击修改
     handleEdit (data) {
+      this.addReset()
       this.imageUrl = ''
       this.imageList = []
       this.dataParams.ID = data.T0004_ID
@@ -1077,6 +1094,7 @@ export default {
         }
       })
     },
+    // 点击删除
     handleDelete (data) {
       this.$confirm('确定要删除该条记录?', '提示', {
         confirmButtonText: '确定',
@@ -1146,10 +1164,12 @@ export default {
         this.imageList.push(Object.assign({}, r.data[0]))
       })
     },
+    // 查看图片
     clickImgFun (data) {
       this.imgShowUrl = data.FILE_URL
       this.imgShow = true
     },
+    // 删除图片
     clickDeleteFun (data) {
       this.$confirm('确定要删除该图片?', '提示', {
         confirmButtonText: '确定',
@@ -1174,7 +1194,7 @@ export default {
   created () {
     this.getCuringList()
     this.getAssetTypeList()
-    this.getAssetDataList()
+    // this.getAssetDataList()
   }
 }
 </script>
@@ -1189,7 +1209,10 @@ export default {
     background: #fff;
     padding: 30px 20px;
     .el-form-item {
-      margin-bottom: 10px;
+      margin-bottom: 0;
+    }
+    .div-btn {
+      margin: 10px 0;
     }
     .table-div {
       .el-button--mini {

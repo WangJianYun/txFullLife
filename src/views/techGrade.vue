@@ -105,11 +105,7 @@
         >批量删除</el-button>
         <span class="serach-span"> 您的检索：
           <span v-show="!isSearch"> 无 </span>
-          <!-- <span> {{ searchData.T0001_ASSETTYPE_NAME }} </span>
-          <span> {{ searchData.T0006_TECHTYPE_NAME }} </span>
-          <span> {{ searchData.T0002_START_PILE }} </span>
-          <span> {{ searchData.T0002_END_PILE }} </span>
-          <span> {{ searchData.YEAR }} </span> -->
+          <span> {{searchVal}} </span>
         </span>
       </div>
       <div class="table-div">
@@ -166,11 +162,17 @@
             label="检测时间"
             width="110"
           >
-          <template slot-scope="scope">
+            <template slot-scope="scope">
               <div>
                 {{ scope.row.T0003_CHECK_TIME }}
-                <span class="wraning-span" v-if="scope.row.STATE == 1 "> 检 </span>
-                <span class="wraning-span" v-if="scope.row.STATE == 2 "> 警 </span>
+                <span
+                  class="wraning-span"
+                  v-if="scope.row.STATE == 1 "
+                > 检 </span>
+                <span
+                  class="wraning-span"
+                  v-if="scope.row.STATE == 2 "
+                > 警 </span>
               </div>
             </template>
           </el-table-column>
@@ -314,7 +316,8 @@
           </el-col>
         </el-form>
       </el-row>
-      <p> 您的检索： <span> 无 </span> </p>
+      <p> 您的检索： <span v-show="!isAddSearch"> 无 </span>
+        <span> {{addSearchVal}} </span></p>
       <el-form
         :model="addForm"
         :rules="rules"
@@ -531,7 +534,8 @@
           </el-col>
         </el-form>
       </el-row>
-      <p> 您的检索： <span> 无 </span> </p>
+      <p> 您的检索：<span v-show="!isAddSearch"> 无 </span>
+        <span> {{addSearchVal}} </span> </p>
       <el-form
         :model="editForm"
         :rules="rules"
@@ -840,17 +844,20 @@ export default {
       pileList: [], /// / 起点 / 终点桩号 list
       searchPileList: [], // 新增/ 修改的 起点。终点 桩号 list
       searchTechTypeList: [], //  新增/ 修改的资产等级
-      isSearch: false // 是否搜索
+      isSearch: false, // 是否搜索
+      searchVal: '', // 搜索内容
+      addSearchVal: '', // 新建 修改搜索内容
+      isAddSearch: false // 新建 修改 是否搜索
     }
   },
   methods: {
     // 根据 资产类别 请求 起点 / 终点桩号
     changeSelect (val) {
       let _data = {
-        mapParam: {
-          T0001_ID: val
-        }
+        T0001_ID: val
       }
+      this.searchMap.T0002_START_PILE = ''
+      this.searchMap.T0002_END_PILE = ''
       this.$api.post('/cycle/assetData/listAll', _data, null, r => {
         this.pileList = r.data
       })
@@ -904,33 +911,33 @@ export default {
     // 新建 选中 资产类别
     addSearchChange (val) {
       let _data = {
-        mapParam: {
-          T0001_ID: val
-        }
+        T0001_ID: val
       }
       this.addSearch.T0002_START_PILE = ''
       this.addSearch.T0002_END_PILE = ''
+      this.addSearch.T0006_ID = ''
+      // 选中 资产类别 查找对应 起点，终点桩号
       this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
         this.searchPileList = r.data
+        this.assetDataList = r.data
       })
+      // 选中 资产类别 查找对应 技术等级分类
       this.$api.post(`/cycle/techType/listAll`, _data, null, r => {
         this.searchTechTypeList = r.data
-      })
-      this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
-        this.assetDataList = r.data
       })
     },
     // 新建 / 修改 搜索
     addSearchFun () {
-      let _data = {
-        mapParam: this.addSearch
-      }
-      this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
+      this.isAddSearch = true
+      this.$api.post(`/cycle/assetData/listAll`, this.addSearch, null, r => {
         this.assetDataList = r.data
+        this.addSearchVal = r.search_val
       })
     },
     // 新建/ 修改 重置
     addReset () {
+      this.addSearchVal = ''
+      this.isAddSearch = false
       this.searchPileList = []
       this.searchTechTypeList = []
       this.addSearch.T0001_ID = ''
@@ -1129,7 +1136,7 @@ export default {
   created () {
     this.getAssetTypeList()
     this.getTechDataList()
-    this.getAssetDataList()
+    // this.getAssetDataList()
     this.getTechTypeList()
   }
 }
@@ -1187,14 +1194,14 @@ export default {
     th {
       text-align: center;
     }
-    .error-span{
+    .error-span {
       background: red;
       color: #fff;
       border-radius: 50%;
       padding: 1px 4px;
     }
     .wraning-span {
-      background: #FF9800;
+      background: #ff9800;
       color: #fff;
       border-radius: 50%;
       padding: 1px 4px;

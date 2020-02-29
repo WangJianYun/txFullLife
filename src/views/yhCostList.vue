@@ -96,7 +96,7 @@
           </el-col>
         </el-form>
       </el-row>
-      <div>
+      <div class="div-btn">
         <el-button
           type="primary"
           @click="getCostBudgetList"
@@ -107,7 +107,10 @@
           icon="el-icon-delete"
           @click="delListFun"
         >批量删除</el-button>
-        <span class="serach-span"> 您的检索： <span> 无 </span> </span>
+        <span class="serach-span"> 您的检索：
+          <span v-show="!isSearch"> 无 </span>
+          <span> {{searchVal}} </span>
+        </span>
       </div>
       <div class="table-div">
         <el-table
@@ -307,7 +310,8 @@
           </el-col>
         </el-form>
       </el-row>
-      <p> 您的检索： </p>
+      <p> 您的检索：<span v-show="!isAddSearch"> 无 </span>
+        <span> {{addSearchVal}} </span> </p>
       <el-form
         :model="addForm"
         :rules="rules"
@@ -524,7 +528,8 @@
           </el-col>
         </el-form>
       </el-row>
-      <p> 您的检索： </p>
+      <p> 您的检索： <span v-show="!isAddSearch"> 无 </span>
+        <span> {{addSearchVal}} </span> </p>
       <el-form
         :model="editForm"
         :rules="rules"
@@ -857,35 +862,43 @@ export default {
       assetTypeList: [], // 资产类别
       assetDataList: [],
       pileList: [], // 起点，终点桩号 list
-      searchPileList: [] // 新增/修改的 起点，终点桩号 list
+      searchPileList: [], // 新增/修改的 起点，终点桩号 list
+      searchVal: '', // 搜索内容
+      isSearch: false, // 列表是否搜索
+      addSearchVal: '', // 新建 修改搜索内容
+      isAddSearch: false // 新建 修改 是否搜索
     }
   },
   methods: {
     // 根据 资产类别 请求 起点 / 终点桩号
     changeSelect (val) {
       let _data = {
-        mapParam: {
-          T0001_ID: val
-        }
+        T0001_ID: val
       }
+      this.searchMap.T0002_START_PILE = ''
+      this.searchMap.T0002_END_PILE = ''
       this.$api.post('/cycle/assetData/listAll', _data, null, r => {
         this.pileList = r.data
       })
     },
     // 搜索
     searchFun () {
+      this.isSearch = true
       this.getCostBudgetList()
     },
     reset () {
+      this.isSearch = false
       this.pileList = []
       this.searchMap.T0001_ID = ''
       this.searchMap.T0005_ENGIN_MAINT = ''
       this.searchMap.T0005_START_TIME = ''
       this.searchMap.T0005_END_TIME = ''
+      this.searchMap.T0002_START_PILE = ''
+      this.searchMap.T0002_END_PILE = ''
       this.searchMap.time = []
       this.showCount = 10
       this.currentPage = 1
-      this.getAssetList()
+      this.getCostBudgetList()
     },
     enginFmt (row) {
       for (let i = 0; i < this.projectList.length; i++) {
@@ -922,30 +935,28 @@ export default {
     // 新建 选中 资产类别
     addSearchChange (val) {
       let _data = {
-        mapParam: {
-          T0001_ID: val
-        }
+        T0001_ID: val
       }
       this.addSearch.T0002_START_PILE = ''
       this.addSearch.T0002_END_PILE = ''
+      // 请求 资产类别 对应的 资产信息  和起点，终点桩号
       this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
         this.searchPileList = r.data
-      })
-      this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
         this.assetDataList = r.data
       })
     },
     // 新建 / 修改 搜索
     addSearchFun () {
-      let _data = {
-        mapParam: this.addSearch
-      }
-      this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
+      this.isAddSearch = true
+      this.$api.post(`/cycle/assetData/listAll`, this.addSearch, null, r => {
         this.assetDataList = r.data
+        this.addSearchVal = r.search_val
       })
     },
     // 新建/ 修改 重置
     addReset () {
+      this.addSearchVal = ''
+      this.isAddSearch = false
       this.searchPileList = []
       this.addSearch.T0001_ID = ''
       this.addSearch.SEARCH_KEY = ''
@@ -967,6 +978,7 @@ export default {
         }
       })
     },
+    // 点击查看
     handleInfo (data) {
       this.imageList = []
       this.infoShow = true
@@ -986,6 +998,7 @@ export default {
         }
       )
     },
+    // 点击修改
     handleEdit (data) {
       this.imageList = []
       this.imageUrl = ''
@@ -1061,6 +1074,7 @@ export default {
         }
         this.tableData = r.data.returnParam
         this.total = r.data.totalResult
+        this.searchVal = r.search_val
       })
     },
     handleDelete (data) {
@@ -1160,11 +1174,11 @@ export default {
   created () {
     this.getAssetTypeList()
     this.getCostBudgetList()
-    this.getAssetDataList()
+    // this.getAssetDataList()
   }
 }
 </script>
-<style scoped lang="scss">
+<style  lang="scss">
 #yhCostMap {
   .title-p {
     button {
@@ -1178,14 +1192,23 @@ export default {
   .content {
     background: #fff;
     padding: 30px 20px;
+    .el-form-item {
+      margin-bottom: 0;
+    }
+    .div-btn {
+      margin: 10px 0;
+    }
   }
   .serach-span {
     margin-left: 10px;
   }
   .table-div {
-    margin-top: 30px;
     .el-button--mini {
       padding: 4px 8px;
+    }
+    td,
+    th {
+      text-align: center;
     }
   }
   .add-table {

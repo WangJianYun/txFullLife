@@ -22,7 +22,6 @@
           <el-select
             v-model="searchMap.M0010_LOAD_NAME"
             placeholder="请选择"
-            @change="changeSelect"
           >
             <el-option
               v-for="(item,index ) in listNameList"
@@ -48,8 +47,8 @@
           @click="delListFun"
         >批量删除</el-button>
         <span class="serach-span"> 您的检索：
-          <span v-show=" searchData.M0010_LOAD_NAME ==''"> 无 </span>
-          <span v-show=" searchData.M0010_LOAD_NAME !=''">{{ searchMap.M0010_LOAD_NAME }} </span>
+          <span v-show="!isSearch"> 无 </span>
+          <span> {{searchVal}} </span>
         </span>
       </p>
       <div class="table-div">
@@ -571,10 +570,29 @@
 <script>
 export default {
   data () {
+    // 不能输入文本
     const validNoText = (rule, value, callback) => {
       let reg = new RegExp('[\\u4E00-\\u9FFF]+', 'g')
       if (reg.test(value)) {
         callback(new Error('不能输入文本'))
+      } else {
+        callback()
+      }
+    }
+    // 经度正则表达式（-180 至 180）
+    const validPreci = (rule, value, callback) => {
+      let reg = /^-?((0|1?[0-8]?[0-9]?)(([.][0-9]{1,10})?)|180(([.][0]{1,10})?))$/
+      if (!reg.test(value)) {
+        callback(new Error('请输入正确的经度'))
+      } else {
+        callback()
+      }
+    }
+    // 纬度正则表达式(-90 至 90)
+    const validLati = (rule, value, callback) => {
+      let reg = /^-?((0|[1-8]?[0-9]?)(([.][0-9]{1,10})?)|90(([.][0]{1,10})?))$/
+      if (!reg.test(value)) {
+        callback(new Error('请输入正确的纬度'))
       } else {
         callback()
       }
@@ -608,26 +626,26 @@ export default {
       infoForm: {},
       rules: {
         M0010_LOAD_NAME: [
-          { required: true, message: '请填写路段名称', trigger: 'change' }
+          { required: true, message: '请填写路段名称', trigger: 'blur' }
         ],
         M0010_CURING_UNIT: [
-          { required: true, message: '请填写养管单位名称', trigger: 'change' }
+          { required: true, message: '请填写养管单位名称', trigger: 'blur' }
         ],
         M0010_START_PILE: [
-          { required: true, message: '请填写起点桩号', trigger: 'change' },
+          { required: true, message: '请填写起点桩号', trigger: 'blur' },
           { validator: validNoText, trigger: 'blur' }
         ],
         M0010_END_PILE: [
-          { required: true, message: '请填写终点桩号', trigger: 'change' },
+          { required: true, message: '请填写终点桩号', trigger: 'blur' },
           { validator: validNoText, trigger: 'blur' }
         ],
         M0010_LOAD_PRECI: [
-          { required: true, message: '请填写经度', trigger: 'change' },
-          { validator: validNoText, trigger: 'blur' }
+          { required: true, message: '请填写经度', trigger: 'blur' },
+          { validator: validPreci, trigger: 'blur' }
         ],
         M0010_LOAD_LATI: [
-          { required: true, message: '请填写纬度', trigger: 'change' },
-          { validator: validNoText, trigger: 'blur' }
+          { required: true, message: '请填写纬度', trigger: 'blur' },
+          { validator: validLati, trigger: 'blur' }
         ]
       },
       tableData: [],
@@ -637,20 +655,22 @@ export default {
       searchMap: {
         M0010_LOAD_NAME: ''
       },
-      searchData: {
-        M0010_LOAD_NAME: ''
-      },
       selectList: [],
-      listNameList: []
+      listNameList: [],
+      isSearch: false, // 是否搜索
+      searchVal: '' // 搜索内容
     }
   },
   methods: {
-    changeSelect () {
-      this.searchData.M0010_LOAD_NAME = ''
-    },
     // 搜索
     searchFun () {
-      this.searchData.M0010_LOAD_NAME = this.searchMap.M0010_LOAD_NAME
+      this.isSearch = true
+      this.getLoadList()
+    },
+    // 重置
+    reset () {
+      this.isSearch = false
+      this.searchMap.M0010_LOAD_NAME = ''
       this.getLoadList()
     },
     // 分页
@@ -668,12 +688,14 @@ export default {
     selectAll (selection) {
       this.selectList = selection
     },
+    // 点击查看
     handleInfo (data) {
       this.imageList = []
       this.infoShow = true
       this.infoForm = Object.assign({}, data)
       this.imageList = data.files
     },
+    // 点击修改
     handleEdit (data) {
       this.imageList = []
       this.editShow = true
@@ -707,6 +729,7 @@ export default {
         this.listNameList = r.data
       })
     },
+    // 点击新增
     addFun () {
       this.addShow = true
       this.dataParams.ID = ''
@@ -728,11 +751,6 @@ export default {
           })
         }
       })
-    },
-    reset () {
-      this.searchMap.M0010_LOAD_NAME = ''
-      this.searchData.M0010_LOAD_NAME = ''
-      this.getLoadList()
     },
     //  管辖路段 列表
     getLoadList () {
@@ -758,8 +776,10 @@ export default {
         }
         this.tableData = r.data.returnParam
         this.total = r.data.totalResult
+        this.searchVal = r.search_val
       })
     },
+    // 点击删除
     handleDelete (data) {
       this.$confirm('确定要删除该条记录?', '提示', {
         confirmButtonText: '确定',

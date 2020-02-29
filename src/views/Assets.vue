@@ -100,11 +100,7 @@
         >批量删除</el-button>
         <span class="serach-span"> 您的检索：
           <span v-show="!isSearch"> 无 </span>
-          <span> {{ searchData.T0001_ASSETTYPE_NAME }} </span>
-          <span> {{ searchData.T0002_START_PILE }} </span>
-          <span> {{ searchData.T0002_END_PILE }} </span>
-          <span> {{ searchData.YEAR }} </span>
-          <span> {{ searchData.SEARCH_KEY }} </span>
+          <span>  {{searchVal}} </span>
         </span>
       </div>
       <div class="table-div">
@@ -874,6 +870,24 @@ export default {
         callback()
       }
     }
+    // 经度正则表达式（-180 至 180）
+    const validPreci = (rule, value, callback) => {
+      let reg = /^-?((0|1?[0-8]?[0-9]?)(([.][0-9]{1,10})?)|180(([.][0]{1,10})?))$/
+      if (!reg.test(value)) {
+        callback(new Error('请输入正确的经度'))
+      } else {
+        callback()
+      }
+    }
+    // 纬度正则表达式(-90 至 90)
+    const validLati = (rule, value, callback) => {
+      let reg = /^-?((0|[1-8]?[0-9]?)(([.][0-9]{1,10})?)|90(([.][0]{1,10})?))$/
+      if (!reg.test(value)) {
+        callback(new Error('请输入正确的纬度'))
+      } else {
+        callback()
+      }
+    }
     return {
       imageList: [],
       imgShow: false,
@@ -947,11 +961,11 @@ export default {
         ],
         T0002_ASSET_PRECI: [
           { required: true, message: '请填写经度', trigger: 'blur' },
-          { validator: validNoText, trigger: 'blur' }
+          { validator: validPreci, trigger: 'blur' }
         ],
         T0002_ASSET_LATI: [
           { required: true, message: '请填写纬度', trigger: 'blur' },
-          { validator: validNoText, trigger: 'blur' }
+          { validator: validLati, trigger: 'blur' }
         ]
       },
       infoForm: {},
@@ -971,32 +985,17 @@ export default {
       listNameList: [], // 所属路段
       pileList: [], // 起点 / 终点桩号
       isSearch: false, // 是否搜索
-      searchData: {
-        T0001_ASSETTYPE_NAME: '',
-        YEAR: '',
-        SEARCH_KEY: '',
-        T0002_START_PILE: '',
-        T0002_END_PILE: ''
-      }, // 搜索显示
-      T0001_ASSETTYPE_NAME: ''
+      searchVal: ''
     }
   },
   methods: {
     // 根据 资产类别 请求 起点 / 终点桩号
     changeSelect (val) {
-      this.searchData.T0001_ASSETTYPE_NAME = ''
-      this.searchData.T0002_START_PILE = ''
-      this.searchData.T0002_END_PILE = ''
-      let _obj = {}
-      _obj = this.assetTypeList.find(function (item) {
-        return item.T0001_ID === val
-      })
-      this.T0001_ASSETTYPE_NAME = _obj.T0001_ASSETTYPE_NAME
       let _data = {
-        mapParam: {
-          T0001_ID: val
-        }
+        T0001_ID: val
       }
+      this.searchMap.T0002_START_PILE = ''
+      this.searchMap.T0002_END_PILE = ''
       this.$api.post('/cycle/assetData/listAll', _data, null, r => {
         this.pileList = r.data
       })
@@ -1004,22 +1003,12 @@ export default {
     // 搜索
     searchFun () {
       this.isSearch = true
-      this.searchData.T0001_ASSETTYPE_NAME = this.T0001_ASSETTYPE_NAME
-      this.searchData.T0002_START_PILE = this.searchMap.T0002_START_PILE
-      this.searchData.T0002_END_PILE = this.searchMap.T0002_END_PILE
-      this.searchData.YEAR = this.searchMap.YEAR
-      this.searchData.SEARCH_KEY = this.searchMap.SEARCH_KEY
       this.getAssetList()
     },
     // 重置
     reset () {
       this.isSearch = false
       this.pileList = []
-      this.searchData.T0001_ASSETTYPE_NAME = ''
-      this.searchData.T0002_START_PILE = ''
-      this.searchData.T0002_END_PILE = ''
-      this.searchData.YEAR = ''
-      this.searchData.SEARCH_KEY = ''
       this.searchMap.T0001_ID = ''
       this.searchMap.YEAR = ''
       this.searchMap.SEARCH_KEY = ''
@@ -1141,6 +1130,7 @@ export default {
         }
         this.tableData = r.data.returnParam
         this.total = r.data.totalResult
+        this.searchVal = r.search_val
       })
     },
     handleDelete (data) {

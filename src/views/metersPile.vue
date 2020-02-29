@@ -95,12 +95,8 @@
           @click="delListFun"
         >批量删除</el-button>
         <span class="serach-span"> 您的检索：
-          <span v-show="!isSearch" > 无 </span>
-          <span> {{ searchData.M0010_LOAD_NAME }} </span>
-          <span> {{ searchData.M0010_START_PILE }} </span>
-          <span> {{ searchData.M0010_END_PILE }} </span>
-          <span> {{ searchData.YEAR }} </span>
-          <span> {{ searchData.SEARCH_KEY }} </span>
+          <span v-show="!isSearch"> 无 </span>
+          <span> {{searchVal}} </span>
         </span>
       </div>
       <div class="table-div">
@@ -511,6 +507,24 @@ export default {
         callback()
       }
     }
+    // 经度正则表达式（-180 至 180）
+    const validPreci = (rule, value, callback) => {
+      let reg = /^-?((0|1?[0-8]?[0-9]?)(([.][0-9]{1,10})?)|180(([.][0]{1,10})?))$/
+      if (!reg.test(value)) {
+        callback(new Error('请输入正确的经度'))
+      } else {
+        callback()
+      }
+    }
+    // 纬度正则表达式(-90 至 90)
+    const validLati = (rule, value, callback) => {
+      let reg = /^-?((0|[1-8]?[0-9]?)(([.][0-9]{1,10})?)|90(([.][0]{1,10})?))$/
+      if (!reg.test(value)) {
+        callback(new Error('请输入正确的纬度'))
+      } else {
+        callback()
+      }
+    }
     return {
       loading: true,
       addShow: false,
@@ -539,11 +553,11 @@ export default {
         ],
         M0009_PILENUMBER_PRECI: [
           { required: true, message: '请填写经度', trigger: 'change' },
-          { validator: validNoText, trigger: 'blur' }
+          { validator: validPreci, trigger: 'blur' }
         ],
         M0009_PILENUMBER_LATI: [
           { required: true, message: '请填写纬度', trigger: 'change' },
-          { validator: validNoText, trigger: 'blur' }
+          { validator: validLati, trigger: 'blur' }
         ],
         M0009_PILENUMBER_YEAR: [
           {
@@ -569,26 +583,15 @@ export default {
       },
       pileList: [], // 桩好数组
       highspeedList: [], //
-      searchData: {
-        M0010_LOAD_NAME: '',
-        M0010_START_PILE: '',
-        M0010_END_PILE: '',
-        YEAR: '',
-        SEARCH_KEY: ''
-      },
-      isSearch: false
+      isSearch: false,
+      searchVal: '' // 搜索内容
     }
   },
   methods: {
     // 根据 所属路段 获取起点，终点桩号
     changeSelect (val) {
-      this.searchData.M0010_LOAD_NAME = ''
-      this.searchData.M0010_START_PILE = ''
-      this.searchData.M0010_END_PILE = ''
       let _data = {
-        searchMap: {
-          M0010_LOAD_NAME: val
-        }
+        M0010_LOAD_NAME: val
       }
       this.$api.post('/cycle/load/listAll', _data, null, r => {
         this.pileList = r.data
@@ -597,27 +600,18 @@ export default {
     // 搜索
     searchFun () {
       this.isSearch = true
-      this.searchData.M0010_LOAD_NAME = this.dataParam.M0010_LOAD_NAME
-      this.searchData.M0010_START_PILE = this.dataParam.M0010_START_PILE
-      this.searchData.M0010_END_PILE = this.dataParam.M0010_END_PILE
-      this.searchData.YEAR = this.dataParam.YEAR
-      this.searchData.SEARCH_KEY = this.dataParam.SEARCH_KEY
       this.getPileList()
     },
     codeFmt (row) {
       return row.M0009_PILENUMBER_DREICT === '1' ? '上行线' : '下行线'
     },
+    // 重置
     reset () {
       this.dataParam.M0010_LOAD_NAME = ''
       this.dataParam.M0010_START_PILE = ''
       this.dataParam.M0010_END_PILE = ''
       this.dataParam.YEAR = ''
       this.dataParam.SEARCH_KEY = ''
-      this.searchData.M0010_LOAD_NAME = ''
-      this.searchData.M0010_START_PILE = ''
-      this.searchData.M0010_END_PILE = ''
-      this.searchData.YEAR = ''
-      this.searchData.SEARCH_KEY = ''
       this.isSearch = false
       this.pileList = []
       this.getPileList()
@@ -637,6 +631,7 @@ export default {
     selectAll (selection) {
       this.selectList = selection
     },
+    // 点击新增
     addFun () {
       this.addShow = true
       this.$nextTick(() => {
@@ -655,6 +650,7 @@ export default {
         }
       })
     },
+    // 点击查看
     handleInfo (data) {
       this.infoShow = true
       if (data.M0009_PILENUMBER_DREICT === 1) {
@@ -717,6 +713,7 @@ export default {
         this.loading = false
         this.tableData = r.data.returnParam
         this.total = r.data.totalResult
+        this.searchVal = r.search_val
       })
     },
     // 管辖路段接口
@@ -789,7 +786,7 @@ export default {
   }
   .serach-span {
     margin-left: 20px;
-    span+span{
+    span + span {
       margin-right: 10px;
     }
   }

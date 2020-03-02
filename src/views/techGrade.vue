@@ -16,7 +16,7 @@
       <el-row :gutter="10">
         <el-form
           label-position="right"
-          label-width="70px"
+          label-width="80px"
           :model="searchMap"
         >
           <el-col :span="5">
@@ -149,7 +149,7 @@
             label="技术状况"
           >
             <template slot-scope="scope">
-              <div v-if="scope.row.T0006_TECHTYPE_NAME == '五类'">
+              <div v-if="scope.row.T0006_TECHTYPE_NAME == '五类' || scope.row.T0006_TECHTYPE_NAME == '四类'">
                 {{ scope.row.T0006_TECHTYPE_NAME }} <span class="error-span"> 危 </span>
               </div>
               <div v-else>
@@ -160,7 +160,7 @@
           <el-table-column
             prop="T0003_CHECK_TIME"
             label="检测时间"
-            width="110"
+            width="120"
           >
             <template slot-scope="scope">
               <div>
@@ -253,7 +253,7 @@
       <el-row :gutter="10">
         <el-form
           label-position="right"
-          label-width="70px"
+          label-width="80px"
           :model="addSearch"
         >
           <el-col :span="5">
@@ -471,7 +471,7 @@
       <el-row :gutter="10">
         <el-form
           label-position="right"
-          label-width="70px"
+          label-width="80px"
           :model="addSearch"
         >
           <el-col :span="5">
@@ -1075,6 +1075,7 @@ export default {
             r => {
               this.$message.success('删除成功')
               this.getTechDataList()
+              this.selectList = []
             }
           )
         })
@@ -1156,7 +1157,7 @@ export default {
     }
     .table-div {
       .el-button--mini {
-        padding: 4px 8px;
+        padding: 4px 5px;
       }
     }
     .div-btn {

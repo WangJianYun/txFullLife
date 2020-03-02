@@ -1,10 +1,11 @@
 module.exports = {
   devServer: {
     open: true,
-    host: '192.168.7.102',
+    host: '192.168.1.100',
     port: 8080,
     https: false,
-    proxy: { // 配置跨域
+    proxy: {
+      // 配置跨域
       '/api': {
         target: 'http://94.191.93.96:8800', // 填写后台接口
         ws: true,
@@ -13,7 +14,6 @@ module.exports = {
           '^/api': '' // 请求的时候使用这个api就可以
         }
       }
-
     }
   }
 }

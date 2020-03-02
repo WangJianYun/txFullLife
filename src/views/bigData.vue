@@ -7,7 +7,7 @@
         <el-row :gutter="20">
           <el-col :span="4">
             <div class="topItem" style="background:rgb(114, 212, 223)">
-              <div class="ticon" style="font-size:50px;"><i class="el-icon-s-data"></i> </div>
+              <div class="ticon" style="font-size:50px;"><i class="el-icon-user-solid"></i> </div>
               <div class="ttile">
                 <p style="width:100%;text-align:left;">累计入驻养护工区</p>
                 <p style="width:80%;text-align:right;"><span style="font-size:20px;display:inline-block;margin:0 10px;">{{rzyhgq}}</span>家</p>
@@ -15,7 +15,7 @@
             </div>
           </el-col>
           <el-col :span="4"><div class="topItem" style="background:rgb(143, 199, 64)">
-            <div class="ticon" style="font-size:50px;"><i class="el-icon-s-data"></i> </div>
+            <div class="ticon" style="font-size:50px;"><i class="el-icon-user"></i> </div>
             <div class="ttile">
               <p style="width:100%;text-align:left;">累计使用用户</p>
               <p style="width:80%;text-align:right;"><span style="font-size:20px;display:inline-block;margin:0 10px;">{{ljyh}}</span>名</p>
@@ -31,7 +31,7 @@
             </div>
           </el-col>
           <el-col :span="4"><div class="topItem" style="background:rgb(255, 204, 102)">
-            <div class="ticon" style="font-size:50px;"><i class="el-icon-s-data"></i> </div>
+            <div class="ticon" style="font-size:50px;"><i class="ri-money-dollar-circle-fill"></i> </div>
             <div class="ttile">
               <p style="width:100%;text-align:left;">日常费用详情<span style="font-size:13px;">（万元）</span></p>
               <p style="width:80%;text-align:right;">收<span style="font-size:20px;display:inline-block;margin:0 10px;">{{rcfy}}</span></p>
@@ -39,7 +39,7 @@
             </div>
           </el-col>
           <el-col :span="4"><div class="topItem" style="background:rgb(114, 212, 223)">
-            <div class="ticon" style="font-size:50px;"><i class="el-icon-s-data"></i> </div>
+            <div class="ticon" style="font-size:50px;"><i class="ri-money-dollar-circle-fill"></i></div>
             <div class="ttile">
               <p style="width:100%;text-align:left;">养护费用详情<span style="font-size:13px;">（万元）</span></p>
               <p style="width:80%;text-align:right;">支<span style="font-size:20px;display:inline-block;margin:0 10px;">{{yhfy}}</span></p>
@@ -64,7 +64,7 @@
                 style="margin:0 10px;">
               </el-date-picker>
               <el-button type="primary" size="mini">搜</el-button>
-              <el-button type="info" class="more" size="mini">查看>></el-button>
+              <el-button type="info" class="more" size="mini" @click='checkRow'>查看>></el-button>
             </el-row>
             <el-row>
               <div id="roadChart" class="dataChart"></div>
@@ -75,7 +75,7 @@
           <el-main>
             <el-row class="itemTh">
               交通安全设施数据统计
-              <el-button type="info" class="more" size="mini">查看>></el-button>
+              <el-button type="info" class="more" size="mini" @click='checkSafe'>查看>></el-button>
             </el-row>
             <el-row>
               <div id="safeChart" class="dataChart"></div>
@@ -87,7 +87,7 @@
         <el-col :span="12"><el-main>
             <el-row class="itemTh">
               日常费用收支情况
-              <el-button type="info" class="more" size="mini">查看>></el-button>
+              <el-button type="info" class="more" size="mini" @click='checkDayCost'>查看>></el-button>
             </el-row>
             <el-row>
               <div id="dailyChart" class="dataChart"></div>
@@ -96,7 +96,7 @@
         <el-col :span="12"><el-main>
             <el-row class="itemTh">
               历年养护费用统计
-              <el-button type="info" class="more" size="mini">查看>></el-button>
+              <el-button type="info" class="more" size="mini" @click='checkYhcost'>查看>></el-button>
             </el-row>
             <el-row>
               <div id="yearsChart" class="dataChart"></div>
@@ -124,7 +124,7 @@
               <el-col :span="7">
                 <el-row class="itemTh">
                   桥梁技术等级检测数据
-                  <el-button type="info" class="more" size="mini">查看>></el-button>
+                  <el-button type="info" class="more" size="mini" @click='checkBridge'>查看>></el-button>
                 </el-row>
                 <el-row>
                   <div id="bridgeChart" class="dataChart"></div>
@@ -133,7 +133,7 @@
               <el-col :span="7">
                 <el-row class="itemTh">
                   隧道技术等级检测数据
-                  <el-button type="info" class="more" size="mini">查看>></el-button>
+                  <el-button type="info" class="more" size="mini" @click='checkTunnel'>查看>></el-button>
                 </el-row>
                 <el-row>
                   <div id="tunnelChart" class="dataChart"></div>
@@ -142,7 +142,7 @@
               <el-col :span="7">
                 <el-row class="itemTh">
                   涵洞技术等级检测数据
-                  <el-button type="info" class="more" size="mini">查看>></el-button>
+                  <el-button type="info" class="more" size="mini" @click='checkHole'>查看>></el-button>
                 </el-row>
                 <el-row>
                   <div id="culvertChart" class="dataChart"></div>
@@ -154,6 +154,7 @@
     </div>
 </template>
 <script>
+import 'remixicon/fonts/remixicon.css'
 export default {
   data () {
     return {
@@ -171,6 +172,33 @@ export default {
     this.loadSumData()
   },
   methods: {
+    // 公路资产数据统计查看
+    checkRow () {
+      this.$router.push('/Assets')
+    },
+    checkSafe () {
+      this.$router.push('/Assets')
+    },
+    // 日常费用查看
+    checkDayCost () {
+      this.$router.push('/dailyCost')
+    },
+    // 养护费用查看
+    checkYhcost () {
+      this.$router.push('/yhCostList')
+    },
+    // 桥梁技术等级检测数据
+    checkBridge () {
+      this.$router.push('/techGrade')
+    },
+    // 隧道技术等级检测数据
+    checkTunnel () {
+      this.$router.push('/techGrade')
+    },
+    // 涵洞技术等级检测数据
+    checkHole () {
+      this.$router.push('/techGrade')
+    },
     loadSumData () {
       this.$api.post('/cycle/bigData/getDataSum?M0018_ID=425428539089616896', {}, null, r => {
         console.log(r)
@@ -183,6 +211,7 @@ export default {
     },
     loadChart () {
       // let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
+      // 公路资产
       this.$api.post('/cycle/bigData/getAssetSumByType', {}, null, r => {
         let arr1 = []
         let arr2 = []
@@ -234,6 +263,7 @@ export default {
           }]
         })
       })
+      // 交通安全
       this.$api.post('/cycle/bigData/getAssetSumByType', {}, null, r => {
         let arr2 = [['amount', 'product']]
         r.forEach(element => {
@@ -289,6 +319,7 @@ export default {
           ]
         })
       })
+      // 日常费用
       this.$api.post('/cycle/bigData/getMoneySumByCuring', {}, null, r => {
         let arr1 = [['product', '收入', '支出']]
         r.forEach(element => {
@@ -329,6 +360,7 @@ export default {
           ]
         })
       })
+      // 历年养护费用
       this.$api.post('/cycle/bigData/getMoneySumByCost', {}, null, r => {
         let arr1 = []
         let arr2 = []
@@ -357,7 +389,17 @@ export default {
             data: arr1
           },
           yAxis: {
-            type: 'value'
+            type: 'value',
+            // 解决历年养护费用统计“Y轴”数字显示不全
+            axisLabel: {
+              margin: 2,
+              formatter: function (value, index) {
+                if (value >= 10000 && value < 10000000) { value = value / 10000 + '万' } else if (value >= 10000000) {
+                  value = value / 10000000 + '千万'
+                }
+                return value
+              }
+            }
           },
           series: [{
             name: '养护费用',
@@ -369,6 +411,7 @@ export default {
           }]
         })
       })
+      // 桥梁数据
       this.$api.post('/cycle/bigData/getCountByTech', { 'TYPE': 'QL' }, null, r => {
         let arr1 = []
         r.forEach(element => {
@@ -419,6 +462,7 @@ export default {
           ]
         })
       })
+      // 隧道数据
       this.$api.post('/cycle/bigData/getCountByTech', { 'TYPE': 'SD' }, null, r => {
         let arr1 = []
         // console.log(r)
@@ -463,6 +507,7 @@ export default {
           ]
         })
       })
+      // 涵洞数据
       this.$api.post('/cycle/bigData/getCountByTech', { 'TYPE': 'HD' }, null, r => {
         let arr1 = []
         // console.log(r)

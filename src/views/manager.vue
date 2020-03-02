@@ -96,19 +96,38 @@
         <el-row>
           <el-dialog :title="dialogName" id="disZbDialog" :fullscreen="false" :visible.sync="disVisible" width="60%" :before-close="closeDialog">
             <el-main>
-              <el-form :inline="true" ref="form" v-model="form" size="small" label-width="140px"  class="demo-form-inline">
+              <el-form :inline="true" ref="form" :rules="rules" :model="form" size="small" label-width="140px"
+                class="demo-form-inline">
                 <table class="add-table">
                   <tr>
                     <td class="bg-td">昵称：</td>
-                    <td><el-input type="text" v-model="form.M0014_SIMP_NAME" size="small" :disabled="islook"></el-input></td>
+                    <td>
+                    <el-form-item prop='M0014_SIMP_NAME'>
+                      <el-input type="text" v-model="form.M0014_SIMP_NAME"  :disabled="islook"></el-input>
+                    </el-form-item>
+                    </td>
+                    <!-- <td class="bg-td">昵称：</td>
+                    <td><el-input type="text" v-model="form.M0014_SIMP_NAME" size="small" :disabled="islook"></el-input></td> -->
                     <td class="bg-td">真实姓名：</td>
-                    <td><el-input type="text" v-model="form.M0014_USER_NAME" size="small" :disabled="islook"></el-input></td>
+                    <td>
+                       <el-form-item prop='M0014_USER_NAME'>
+                      <el-input type="text" v-model="form.M0014_USER_NAME" size="small" :disabled="islook"></el-input>
+                       </el-form-item>
+                    </td>
                   </tr>
                   <tr>
                     <td class="bg-td">密码：</td>
-                    <td><el-input type="password" v-model="form.M0014_PASS_WORD" size="small" :disabled="islook"></el-input></td>
+                    <td>
+                       <el-form-item prop='M0014_PASS_WORD'>
+                      <el-input type="password" v-model="form.M0014_PASS_WORD" size="small" :disabled="islook"></el-input>
+                       </el-form-item>
+                    </td>
                     <td class="bg-td">确认密码：</td>
-                    <td><el-input type="password" v-model="Expassword" size="small" :disabled="islook"></el-input></td>
+                    <td>
+                       <el-form-item prop='Expassword'>
+                      <el-input type="password" v-model="Expassword" size="small" :disabled="islook"></el-input>
+                      </el-form-item>
+                    </td>
                   </tr>
                   <tr>
                     <td class="bg-td">归属部门：</td>
@@ -126,9 +145,17 @@
                   </tr>
                   <tr>
                     <td class="bg-td">电子信箱：</td>
-                    <td><el-input type="email" v-model="form.M0014_USER_EMAIL" size="small" :disabled="islook"></el-input></td>
+                    <td>
+                       <el-form-item prop='M0014_USER_EMAIL'>
+                      <el-input type="email" v-model="form.M0014_USER_EMAIL" size="small" :disabled="islook"></el-input>
+                       </el-form-item>
+                    </td>
                     <td class="bg-td">手机号：</td>
-                    <td><el-input type="phone" v-model="form.M0014_USER_TEL" size="small" :disabled="islook"></el-input></td>
+                    <td>
+                       <el-form-item prop='M0014_USER_TEL'>
+                      <el-input type="phone" v-model="form.M0014_USER_TEL" size="small" :disabled="islook"></el-input>
+                       </el-form-item>
+                    </td>
                   </tr>
                   <tr>
                     <td class="bg-td">是否激活：</td>
@@ -154,7 +181,7 @@
             </el-main>
               <div slot="footer" class="dialog-footer">
                   <el-button type="primary" @click="save" size="small">提交</el-button>
-                  <el-button @click="closeDialog" size="small">重置</el-button>
+                  <el-button @click="resetDialog" size="small">重置</el-button>
               </div>
           </el-dialog>
         </el-row>
@@ -189,13 +216,48 @@ export default {
         M0014_USER_REMARK: ''
       },
       mechans: [],
-      positions: []
+      positions: [],
+      rules: {
+        M0014_SIMP_NAME: [
+          { required: true, message: '请输入昵称', trigger: 'blur' }
+        ],
+        M0014_USER_NAME: [
+          { required: true, message: '请输入真实姓名', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' },
+          {
+            required: true,
+            pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9.·-]+$/,
+            message: '姓名不支持特殊字符',
+            trigger: 'blur'
+          }
+        ],
+        M0014_PASS_WORD: [
+          { required: true, message: '请输入密码', trigger: 'blur' }
+        ],
+        Expassword: [
+          { required: true, message: '请确认密码', trigger: 'blur' }
+        ],
+        M0014_USER_EMAIL: [
+          { required: true, message: '请输入电子邮箱', trigger: 'blur' }
+        ],
+        M0014_USER_TEL: [
+          { required: true, message: '请输入电话号码', trigger: 'blur' }
+        ]
+      }
     }
   },
   mounted () {
     this.refreshTable(1)
     this.loadSelect()
   },
+  // watch: {
+  //   dialogFormVisible (val) {
+  //     !val && setTimeout(() => {
+  //       this.$refs['form'].resetFields()
+  //     }, 0)
+  //   }
+  // },
+
   methods: {
     refreshTable (pageIndex) {
       // let token = JSON.parse(sessionStorage.getItem('currentUser'))
@@ -217,39 +279,45 @@ export default {
       })
     },
     save () {
-      if (this.form.M0015_ID === '') {
-        this.form.M0015_ID = '0'
-      }
-      if (this.form.M0014_PASS_WORD === this.Expassword) {
-        this.form.M0014_USER_CODE = this.form.M0014_SIMP_NAME
-        if (this.dialogType === 'new') {
-        // console.log(this.form)
-          // if (this.form.M0014_IS_AVTIVE === true) {
-          //   this.form.M0014_IS_AVTIVE = 1
-          // } else {
-          //   this.form.M0014_IS_AVTIVE = 0
-          // }
-          this.$api.post('/cycle/userManagement/insert', this.form, '新增成功', r => {
-            this.closeDialog()
-          })
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          if (this.form.M0015_ID === '') {
+            this.form.M0015_ID = '0'
+          }
+          if (this.form.M0014_PASS_WORD === this.Expassword) {
+            this.form.M0014_USER_CODE = this.form.M0014_SIMP_NAME
+            if (this.dialogType === 'new') {
+              // console.log(this.form)
+              // if (this.form.M0014_IS_AVTIVE === true) {
+              // this.form.M0014_IS_AVTIVE = 1
+              // } else {
+              // this.form.M0014_IS_AVTIVE = 0
+              // }
+              this.$api.post('/cycle/userManagement/insert', this.form, '新增成功', r => {
+                this.closeDialog()
+              })
+            }
+            if (this.dialogType === 'edit') {
+              alert(1)
+              // console.log(this.form.image)
+              this.$api.post('/cycle/userManagement/update', this.form, '编辑成功', r => {
+                this.closeDialog()
+              })
+            }
+          } else {
+            alert('密码不一致')
+            return false
+          }
+        } else {
+          return false
         }
-        if (this.dialogType === 'edit') {
-          alert(1)
-          // console.log(this.form.image)
-          this.$api.post('/cycle/userManagement/update', this.form, '编辑成功', r => {
-            this.closeDialog()
-          })
-        }
-      } else {
-        alert('密码不一致')
-        return false
-      }
+      })
     },
     openDialog (type, row) {
       this.disVisible = true
       console.log(row)
       if (type === 'add') {
-        this.dialogName = '新增部门'
+        this.dialogName = '新增管理员'
         this.dialogType = 'new'
       }
       if (type === 'edit') {
@@ -276,6 +344,7 @@ export default {
       }
     },
     closeDialog () {
+      this.$refs['form'].resetFields()
       this.disVisible = false
       this.islook = false
       this.form = {
@@ -292,6 +361,9 @@ export default {
         M0014_USER_REMARK: ''
       }
       this.refreshTable(1)
+    },
+    resetDialog () {
+      this.$refs['form'].resetFields()
     },
     deleteRow (row) {
       // alert(1)
@@ -329,14 +401,18 @@ export default {
       border: 1px solid #dcdfe6;
       tr {
         border: 1px solid #dcdfe6;
+        height:60px;
         td {
           border: 1px solid #dcdfe6;
-          padding: 5px 10px;
+          padding: 5px 15px;
         }
       }
       .bg-td {
         background: #f0f0f0;
         text-align: center;
+      }
+      .el-form-item{
+        margin-bottom: 0;
       }
     }
   }

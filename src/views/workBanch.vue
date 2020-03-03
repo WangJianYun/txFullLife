@@ -135,11 +135,31 @@
         </div>
       <el-main id="topItems">
         <el-row :gutter="30">
-          <el-col :span="4"><div class="topItem" style="background:rgb(114, 212, 223)" @click="toBaseData"><div class="ticon" style="font-size:50px;"><i class="el-icon-s-data"></i> </div><div class="ttile">公路基础数据</div></div></el-col>
+          <el-col :span="4">
+            <div class="topItem" style="background:rgb(114, 212, 223)" @click="toBaseData">
+              <div class="ticon" style="font-size:50px;"><i class="ri-align-justify"></i> </div>
+              <div class="ttile">公路基础数据</div>
+            </div>
+          </el-col>
           <el-col :span="4"><div class="topItem" style="background:rgb(143, 199, 64)" @click="toAssets"><div class="ticon" style="font-size:50px;"><i class="el-icon-s-data"></i> </div><div class="ttile">公路资产数据</div></div></el-col>
-          <el-col :span="4"><div class="topItem" style="background:rgb(104, 204, 166)" @click="toTech"><div class="ticon" style="font-size:50px;"><i class="el-icon-s-data"></i> </div><div class="ttile">路产技术状况</div></div></el-col>
-          <el-col :span="4"><div class="topItem" style="background:rgb(255, 204, 102)" @click="toDayliCost"><div class="ticon" style="font-size:50px;"><i class="el-icon-s-data"></i> </div><div class="ttile">日常费用收支</div></div></el-col>
-          <el-col :span="4"><div class="topItem" style="background:rgb(114, 212, 223)" @click="toConsCost"><div class="ticon" style="font-size:50px;"><i class="el-icon-s-data"></i> </div><div class="ttile">养护费用管理</div></div></el-col>
+          <el-col :span="4">
+            <div class="topItem" style="background:rgb(104, 204, 166)" @click="toTech">
+              <div class="ticon" style="font-size:50px;"><i class="el-icon-s-operation"></i> </div>
+              <div class="ttile">路产技术状况</div>
+            </div>
+          </el-col>
+          <el-col :span="4">
+            <div class="topItem" style="background:rgb(255, 204, 102)" @click="toDayliCost">
+              <div class="ticon" style="font-size:50px;"><i class="ri-money-dollar-circle-fill"></i> </div>
+              <div class="ttile">日常费用收支</div>
+            </div>
+          </el-col>
+          <el-col :span="4">
+            <div class="topItem" style="background:rgb(114, 212, 223)" @click="toConsCost">
+              <div class="ticon" style="font-size:50px;"><i class="ri-money-dollar-circle-fill"></i> </div>
+              <div class="ttile">养护费用管理</div>
+            </div>
+          </el-col>
         </el-row>
       </el-main>
       <el-main>
@@ -466,6 +486,7 @@
     </div>
 </template>
 <script>
+import 'remixicon/fonts/remixicon.css'
 export default {
   data () {
     return {

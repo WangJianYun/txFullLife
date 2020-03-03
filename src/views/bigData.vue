@@ -63,7 +63,7 @@
                 end-placeholder="结束日期"
                 style="margin:0 10px;">
               </el-date-picker>
-              <el-button type="primary" size="mini">搜</el-button>
+              <el-button type="primary" size="mini" @click='getSerch'>搜</el-button>
               <el-button type="info" class="more" size="mini" @click='checkRow'>查看>></el-button>
             </el-row>
             <el-row>
@@ -199,6 +199,12 @@ export default {
     checkHole () {
       this.$router.push('/techGrade')
     },
+    getSerch () {
+      console.log(this.assetsRange)
+      if (this.assetsRange.length > 0) {
+
+      }
+    },
     loadSumData () {
       this.$api.post('/cycle/bigData/getDataSum?M0018_ID=425428539089616896', {}, null, r => {
         console.log(r)
@@ -215,6 +221,8 @@ export default {
       this.$api.post('/cycle/bigData/getAssetSumByType', {}, null, r => {
         let arr1 = []
         let arr2 = []
+        console.log(r)
+
         r.forEach(element => {
           arr1.push(element.T0001_ASSETTYPE_NAME)
           arr2.push(element.ASSET_AMOUNT)

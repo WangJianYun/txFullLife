@@ -17,7 +17,7 @@
       <el-row :gutter="10">
         <el-form
           label-position="right"
-          label-width="70px"
+          label-width="80px"
           :model="searchMap"
         >
           <el-col :span="4">
@@ -257,7 +257,7 @@
       <el-row :gutter="10">
         <el-form
           label-position="right"
-          label-width="70px"
+          label-width="80px"
           :model="addSearch"
         >
           <el-col :span="5">
@@ -479,7 +479,7 @@
       <el-row :gutter="10">
         <el-form
           label-position="right"
-          label-width="70px"
+          label-width="80px"
           :model="addSearch"
         >
           <el-col :span="5">
@@ -1131,6 +1131,7 @@ export default {
             r => {
               this.$message.success('删除成功')
               this.getCuringList()
+              this.selectList = []
             }
           )
         })
@@ -1216,7 +1217,7 @@ export default {
     }
     .table-div {
       .el-button--mini {
-        padding: 4px 8px;
+        padding: 4px 5px;
       }
     }
     .div-btn {

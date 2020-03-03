@@ -12,6 +12,11 @@
     </p>
     <div class="content">
       <el-row :gutter="10">
+        <el-form
+          label-position="right"
+          label-width="80px"
+          :model="searchMap"
+        >
         <el-form label-position="right"
                  label-width="70px"
                  :model="searchMap">
@@ -134,6 +139,11 @@
           <el-table-column prop="T0002_TECH_STATE"
                            label="技术状况">
           </el-table-column>
+          <el-table-column
+            prop="T0002_ASSET_DATE"
+            label="归属年份"
+            width="120"
+          >
           <el-table-column prop="T0002_ASSET_DATE"
                            label="归属年份"
                            width="110">
@@ -987,6 +997,7 @@ export default {
             r => {
               this.$message.success('删除成功')
               this.getAssetList()
+              this.selectList = []
             }
           )
         })
@@ -1067,7 +1078,7 @@ export default {
     }
     .table-div {
       .el-button--mini {
-        padding: 4px 8px;
+        padding: 4px 5px;
       }
     }
     .div-btn {

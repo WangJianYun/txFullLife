@@ -16,7 +16,7 @@
       <el-row :gutter="20">
         <el-form
           label-position="right"
-          label-width="70px"
+          label-width="80px"
           :model="searchMap"
         >
           <el-col :span="4">
@@ -99,7 +99,7 @@
       <div class="div-btn">
         <el-button
           type="primary"
-          @click="getCostBudgetList"
+          @click="searchFun"
         >搜索</el-button>
         <el-button @click="reset">重置</el-button>
         <el-button
@@ -109,7 +109,7 @@
         >批量删除</el-button>
         <span class="serach-span"> 您的检索：
           <span v-show="!isSearch"> 无 </span>
-          <span> {{searchVal}} </span>
+          <span > {{searchVal}} </span>
         </span>
       </div>
       <div class="table-div">
@@ -178,7 +178,7 @@
           <el-table-column
             prop="T0005_COSTBUDGET_TIME"
             label="费用发生时间"
-            width="110"
+            width="120"
           >
           </el-table-column>
           <el-table-column
@@ -247,7 +247,7 @@
       <el-row :gutter="10">
         <el-form
           label-position="right"
-          label-width="70px"
+          label-width="80px"
           :model="addSearch"
         >
           <el-col :span="5">
@@ -465,7 +465,7 @@
       <el-row :gutter="10">
         <el-form
           label-position="right"
-          label-width="70px"
+          label-width="80px"
           :model="addSearch"
         >
           <el-col :span="5">
@@ -886,6 +886,7 @@ export default {
       this.isSearch = true
       this.getCostBudgetList()
     },
+    // 重置
     reset () {
       this.isSearch = false
       this.pileList = []
@@ -1204,7 +1205,7 @@ export default {
   }
   .table-div {
     .el-button--mini {
-      padding: 4px 8px;
+      padding: 4px 5px;
     }
     td,
     th {

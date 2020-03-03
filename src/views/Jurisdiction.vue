@@ -15,7 +15,7 @@
     <div class="content">
       <el-form
         :model="searchMap"
-        label-width="70px"
+        label-width="80px"
         :inline="true"
       >
         <el-form-item label="所属路段">
@@ -817,6 +817,7 @@ export default {
             r => {
               this.$message.success('删除成功')
               this.getLoadList()
+              this.selectList = []
             }
           )
         })
@@ -936,7 +937,7 @@ export default {
     }
     .table-div {
       .el-button--mini {
-        padding: 4px 8px;
+        padding: 4px 5px;
       }
     }
   }

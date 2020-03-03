@@ -100,7 +100,7 @@
         >批量删除</el-button>
         <span class="serach-span"> 您的检索：
           <span v-show="!isSearch"> 无 </span>
-          <span>  {{searchVal}} </span>
+          <span> {{searchVal}} </span>
         </span>
       </div>
       <div class="table-div">
@@ -225,6 +225,33 @@
           :total="total"
         ></el-pagination>
       </div>
+      <table class="table-title add-table">
+        <tr>
+          <td
+            class="bg-td"
+            colspan="2"
+          > 技术等级小贴士 </td>
+        </tr>
+        <tr>
+          <td class="title-info"> 收费站等级 </td>
+          <td> 各收费站按星级标准区分：一星级收费站、二星级收费站、三星级收费站、四星级收费站、五星级收费站。 </td>
+        </tr>
+        <tr>
+          <td class="title-info"> 桥梁技术等级 </td>
+          <td>
+            <p>桥梁技术状况等级分为五类，分别为一类、二类、三类、四类、五类。 </p>
+            <p> （1）一类桥梁为全新状态，功能完善。（2）二类桥梁为有轻微缺损，对桥梁使用功能无影响。（3）三类桥梁为有中等缺损，尚能维持正常使用功能。（4）四类桥梁为主要构件有大的缺损，严重影响桥梁使用功能，或影响承载能力，不能保证正常使用。（5）五类桥梁为主要构件存在严重缺损，不能正常使用，危及桥梁安全，桥梁处于危险状态。</p>
+          </td>
+        </tr>
+        <tr>
+          <td class="title-info"> 隧道技术等级 </td>
+          <td> 隧道工程专业承包企业资质等级标准，是隧道工程专业承包企业资质分为一级、二级、三级。 </td>
+        </tr>
+        <tr>
+          <td class="title-info"> 涵洞技术等级 </td>
+          <td> 好、较好、较差、差、危险五类。 </td>
+        </tr>
+      </table>
     </div>
     <!-- 新建 -->
     <el-dialog
@@ -1240,6 +1267,15 @@ export default {
   .title-p {
     button {
       float: right;
+    }
+  }
+  .table-title {
+    margin-top: 25px;
+    font-size: 13px;
+    color: #666666;
+    .title-info {
+      width: 160px;
+      text-align: center;
     }
   }
   .content {

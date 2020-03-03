@@ -109,7 +109,7 @@
         >批量删除</el-button>
         <span class="serach-span"> 您的检索：
           <span v-show="!isSearch"> 无 </span>
-          <span > {{searchVal}} </span>
+          <span> {{searchVal}} </span>
         </span>
       </div>
       <div class="table-div">
@@ -436,10 +436,12 @@
           <tr>
             <td class="bg-td">费用况详情（备注）：</td>
             <td colspan="3">
-              <el-input
-                type="textarea"
-                v-model="addForm.T0005_COSTBUDGET_REMARK"
-              ></el-input>
+              <el-form-item prop="T0005_COSTBUDGET_REMARK">
+                <el-input
+                  type="textarea"
+                  v-model="addForm.T0005_COSTBUDGET_REMARK"
+                ></el-input>
+              </el-form-item>
             </td>
           </tr>
         </table>
@@ -452,7 +454,7 @@
         <el-button
           type="primary"
           @click="addSaveFun"
-        >确 定</el-button>
+        >保 存</el-button>
       </div>
     </el-dialog>
     <!-- 修改 -->
@@ -670,7 +672,7 @@
         <el-button
           type="primary"
           @click="editSaveFun"
-        >确 定</el-button>
+        >保 存</el-button>
       </div>
     </el-dialog>
     <!-- 查看 -->
@@ -1221,11 +1223,13 @@ export default {
       td {
         border: 1px solid #dcdfe6;
         padding: 15px 10px;
+        width: 280px;
       }
     }
     .bg-td {
       background: #f0f0f0;
       text-align: center;
+      width: 160px;
     }
   }
 }

@@ -314,7 +314,7 @@
         <el-button
           type="primary"
           @click="addSaveFun"
-        >确 定</el-button>
+        >保 存</el-button>
       </div>
     </el-dialog>
     <!-- 修改 -->
@@ -468,7 +468,7 @@
         <el-button
           type="primary"
           @click="editSaveFun"
-        >确 定</el-button>
+        >保 存</el-button>
       </div>
     </el-dialog>
     <!-- 查看 -->

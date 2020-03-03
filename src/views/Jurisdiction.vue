@@ -738,6 +738,10 @@ export default {
       this.$nextTick(() => {
         this.$refs['addFormRef'].resetFields()
       })
+      this.$api.post(`/cycle/utilData/getId`, {}, null, r => {
+        this.dataParams.ID = r.data
+        this.addForm.M0010_ID = r.data
+      })
     },
     // 新增保存
     addSaveFun () {
@@ -745,8 +749,7 @@ export default {
         if (valid) {
           this.$api.post('/cycle/load/insert', this.addForm, null, r => {
             this.$message.success('新增成功')
-            this.dataParams.ID = r.data.M0010_ID
-            // this.addShow = false
+            this.addShow = false
             this.getLoadList()
           })
         }

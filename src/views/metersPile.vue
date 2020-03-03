@@ -637,6 +637,9 @@ export default {
       this.$nextTick(() => {
         this.$refs['addFormRef'].resetFields()
       })
+      this.$api.post(`/cycle/utilData/getId`, {}, null, r => {
+        this.addForm.M0009_ID = r.data
+      })
     },
     // 添加保存
     addSaveFun () {

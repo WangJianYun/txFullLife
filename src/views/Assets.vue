@@ -6,9 +6,11 @@
   <div class="assets-wrap">
     <p class="title-p">
       <span style="display:inline-block;margin-bottom:20px;"> >> 资产列表管理 </span>
-      <el-button type="primary"
-                 icon="el-icon-plus"
-                 @click="addFun">添加资产</el-button>
+      <el-button
+        type="primary"
+        icon="el-icon-plus"
+        @click="addFun"
+      >添加资产</el-button>
     </p>
     <div class="content">
       <el-row :gutter="10">
@@ -17,161 +19,211 @@
           label-width="80px"
           :model="searchMap"
         >
-        <el-form label-position="right"
-                 label-width="70px"
-                 :model="searchMap">
           <el-col :span="5">
             <el-form-item label="资产类别">
-              <el-select v-model="searchMap.T0001_ID"
-                         style="width:100%"
-                         @change="changeSelect">
-                <el-option v-for="item in assetTypeList"
-                           :key="item.T0001_ID"
-                           :label="item.T0001_ASSETTYPE_NAME"
-                           :value="item.T0001_ID"></el-option>
+              <el-select
+                v-model="searchMap.T0001_ID"
+                style="width:100%"
+                @change="changeSelect"
+              >
+                <el-option
+                  v-for="item in assetTypeList"
+                  :key="item.T0001_ID"
+                  :label="item.T0001_ASSETTYPE_NAME"
+                  :value="item.T0001_ID"
+                ></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="5">
             <el-form-item label="起点桩号">
-              <el-select v-model="searchMap.T0002_START_PILE"
-                         style="width:100%">
-                <el-option v-for="item in pileList"
-                           :key="item.T0002_ID"
-                           :label="item.T0002_START_PILE"
-                           :value="item.T0002_START_PILE"></el-option>
+              <el-select
+                v-model="searchMap.T0002_START_PILE"
+                style="width:100%"
+              >
+                <el-option
+                  v-for="item in pileList"
+                  :key="item.T0002_ID"
+                  :label="item.T0002_START_PILE"
+                  :value="item.T0002_START_PILE"
+                ></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="5">
             <el-form-item label="终点桩号">
-              <el-select v-model="searchMap.T0002_END_PILE"
-                         style="width:100%">
-                <el-option v-for="item in pileList"
-                           :key="item.T0002_ID"
-                           :label="item.T0002_END_PILE"
-                           :value="item.T0002_END_PILE"></el-option>
+              <el-select
+                v-model="searchMap.T0002_END_PILE"
+                style="width:100%"
+              >
+                <el-option
+                  v-for="item in pileList"
+                  :key="item.T0002_ID"
+                  :label="item.T0002_END_PILE"
+                  :value="item.T0002_END_PILE"
+                ></el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="5">
             <el-form-item label="年份选择">
-              <el-date-picker style="width:100%"
-                              v-model="searchMap.YEAR"
-                              type="year"
-                              value-format="yyyy">
+              <el-date-picker
+                style="width:100%"
+                v-model="searchMap.YEAR"
+                type="year"
+                value-format="yyyy"
+              >
               </el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="4">
             <el-form-item label="关键字">
-              <el-input placeholder="请输入关键字"
-                        v-model="searchMap.SEARCH_KEY">
+              <el-input
+                placeholder="请输入关键字"
+                v-model="searchMap.SEARCH_KEY"
+              >
               </el-input>
             </el-form-item>
           </el-col>
         </el-form>
       </el-row>
       <div class="div-btn">
-        <el-button type="primary"
-                   @click="searchFun">搜索</el-button>
+        <el-button
+          type="primary"
+          @click="searchFun"
+        >搜索</el-button>
         <el-button @click="reset">重置</el-button>
-        <el-button type="primary"
-                   icon="el-icon-delete"
-                   @click="delListFun">批量删除</el-button>
+        <el-button
+          type="primary"
+          icon="el-icon-delete"
+          @click="delListFun"
+        >批量删除</el-button>
         <span class="serach-span"> 您的检索：
           <span v-show="!isSearch"> 无 </span>
           <span> {{searchVal}} </span>
         </span>
       </div>
       <div class="table-div">
-        <el-table v-loading.body="loading"
-                  :data="tableData"
-                  border
-                  style="width: 100%"
-                  highlight-current-row
-                  @select="selectTable"
-                  @select-all="selectAll"
-                  :header-cell-style="{background:'#f0f0f0'}">
+        <el-table
+          v-loading.body="loading"
+          :data="tableData"
+          border
+          style="width: 100%"
+          highlight-current-row
+          @select="selectTable"
+          @select-all="selectAll"
+          :header-cell-style="{background:'#f0f0f0'}"
+        >
           >
-          <el-table-column type="selection"
-                           width="40">
+          <el-table-column
+            type="selection"
+            width="40"
+          >
           </el-table-column>
-          <el-table-column label="序号"
-                           width="50"
-                           align="center">
+          <el-table-column
+            label="序号"
+            width="50"
+            align="center"
+          >
             <template scope="scope"><span>{{scope.$index + 1}}</span></template>
           </el-table-column>
-          <el-table-column prop="T0002_ASSET_NAME"
-                           label="资产名称"
-                           show-overflow-tooltip>
+          <el-table-column
+            prop="T0002_ASSET_NAME"
+            label="资产名称"
+            show-overflow-tooltip
+          >
           </el-table-column>
-          <el-table-column prop="T0001_ASSETTYPE_NAME"
-                           label="资产类别"
-                           show-overflow-tooltip>
+          <el-table-column
+            prop="T0001_ASSETTYPE_NAME"
+            label="资产类别"
+            show-overflow-tooltip
+          >
           </el-table-column>
-          <el-table-column prop="T0002_START_PILE"
-                           label="起点桩号">
+          <el-table-column
+            prop="T0002_START_PILE"
+            label="起点桩号"
+          >
           </el-table-column>
-          <el-table-column prop="T0002_END_PILE"
-                           label="终点桩号">
+          <el-table-column
+            prop="T0002_END_PILE"
+            label="终点桩号"
+          >
           </el-table-column>
-          <el-table-column prop="T0002_ASSET_AMOUNT"
-                           label="数量（个/座/片）">
+          <el-table-column
+            prop="T0002_ASSET_AMOUNT"
+            label="数量（个/座/片）"
+          >
           </el-table-column>
-          <el-table-column prop="T0002_LOAD_NAME"
-                           label="所属路段">
+          <el-table-column
+            prop="T0002_LOAD_NAME"
+            label="所属路段"
+          >
           </el-table-column>
-          <el-table-column label="图片"
-                           align="center"
-                           width="100">
+          <el-table-column
+            label="图片"
+            align="center"
+            width="100"
+          >
             <template slot-scope="scope">
-              <el-image style="width: 70px; height: 40px; line-height: 45px;"
-                        :src="scope.row.pic"
-                        :preview-src-list="scope.row.srcList">
-                <div slot="error"
-                     class="image-slot">
+              <el-image
+                style="width: 70px; height: 40px; line-height: 45px;"
+                :src="scope.row.pic"
+                :preview-src-list="scope.row.srcList"
+              >
+                <div
+                  slot="error"
+                  class="image-slot"
+                >
                   无
                 </div>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column prop="T0002_TECH_STATE"
-                           label="技术状况">
+          <el-table-column
+            prop="T0002_TECH_STATE"
+            label="技术状况"
+          >
           </el-table-column>
           <el-table-column
             prop="T0002_ASSET_DATE"
             label="归属年份"
             width="120"
           >
-          <el-table-column prop="T0002_ASSET_DATE"
-                           label="归属年份"
-                           width="110">
           </el-table-column>
-          <el-table-column fixed="right"
-                           width="170"
-                           label="操作">
+          <el-table-column
+            fixed="right"
+            width="170"
+            label="操作"
+          >
             <template slot-scope="scope">
-              <el-button type="info"
-                         size="mini"
-                         @click="handleInfo(scope.row)">查看</el-button>
-              <el-button type="primary"
-                         size="mini"
-                         @click="handleEdit(scope.row)">编辑</el-button>
-              <el-button type="danger"
-                         size="mini"
-                         @click="handleDelete(scope.row)">删除</el-button>
+              <el-button
+                type="info"
+                size="mini"
+                @click="handleInfo(scope.row)"
+              >查看</el-button>
+              <el-button
+                type="primary"
+                size="mini"
+                @click="handleEdit(scope.row)"
+              >编辑</el-button>
+              <el-button
+                type="danger"
+                size="mini"
+                @click="handleDelete(scope.row)"
+              >删除</el-button>
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination class="table-page"
-                       @size-change="sizeChange"
-                       @current-change="currentChange"
-                       :current-page="currentPage"
-                       :page-sizes="[10, 50, 100]"
-                       :page-size="showCount"
-                       layout="total, sizes, prev, pager, next, jumper"
-                       :total="total"></el-pagination>
+        <el-pagination
+          class="table-page"
+          @size-change="sizeChange"
+          @current-change="currentChange"
+          :current-page="currentPage"
+          :page-sizes="[10, 50, 100]"
+          :page-size="showCount"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+        ></el-pagination>
       </div>
       <table class="table-title add-table">
         <tr>
@@ -202,33 +254,43 @@
       </table>
     </div>
     <!-- 新建 -->
-    <el-dialog title=">> 增加资产"
-               :visible.sync="addShow"
-               :close-on-click-modal="false"
-               custom-class="dialog-div">
-      <el-form :model="addForm"
-               :rules="rules"
-               ref="addFormRef">
+    <el-dialog
+      title=">> 增加资产"
+      :visible.sync="addShow"
+      :close-on-click-modal="false"
+      custom-class="dialog-div"
+    >
+      <el-form
+        :model="addForm"
+        :rules="rules"
+        ref="addFormRef"
+      >
         <table class="add-table">
           <tr>
             <td class="bg-td">资产名称：</td>
             <td>
               <el-form-item prop="T0002_ASSET_NAME">
-                <el-input v-model.trim="addForm.T0002_ASSET_NAME"
-                          size="small"
-                          maxlength="50"></el-input>
+                <el-input
+                  v-model.trim="addForm.T0002_ASSET_NAME"
+                  size="small"
+                  maxlength="50"
+                ></el-input>
               </el-form-item>
             </td>
             <td class="bg-td">资产类别： </td>
             <td>
               <el-form-item prop="T0001_ID">
-                <el-select v-model="addForm.T0001_ID"
-                           style="width:100%"
-                           size="small">
-                  <el-option v-for="item in assetTypeList"
-                             :key="item.T0001_ID"
-                             :label="item.T0001_ASSETTYPE_NAME"
-                             :value="item.T0001_ID"></el-option>
+                <el-select
+                  v-model="addForm.T0001_ID"
+                  style="width:100%"
+                  size="small"
+                >
+                  <el-option
+                    v-for="item in assetTypeList"
+                    :key="item.T0001_ID"
+                    :label="item.T0001_ASSETTYPE_NAME"
+                    :value="item.T0001_ID"
+                  ></el-option>
                 </el-select>
               </el-form-item>
             </td>
@@ -237,13 +299,17 @@
             <td class="bg-td">所属路段：</td>
             <td>
               <el-form-item prop="T0002_LOAD_NAME">
-                <el-select v-model="addForm.T0002_LOAD_NAME"
-                           style="width:100%"
-                           size="small">
-                  <el-option v-for="(item,index ) in listNameList"
-                             :key="index"
-                             :label="item.M0010_LOAD_NAME"
-                             :value="item.M0010_LOAD_NAME">
+                <el-select
+                  v-model="addForm.T0002_LOAD_NAME"
+                  style="width:100%"
+                  size="small"
+                >
+                  <el-option
+                    v-for="(item,index ) in listNameList"
+                    :key="index"
+                    :label="item.M0010_LOAD_NAME"
+                    :value="item.M0010_LOAD_NAME"
+                  >
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -255,17 +321,21 @@
             <td class="bg-td">起点桩号： </td>
             <td>
               <el-form-item prop="T0002_START_PILE">
-                <el-input v-model.trim="addForm.T0002_START_PILE"
-                          size="small"
-                          maxlength="20"></el-input>
+                <el-input
+                  v-model.trim="addForm.T0002_START_PILE"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
               </el-form-item>
             </td>
             <td class="bg-td">终点桩号：</td>
             <td>
               <el-form-item prop="T0002_END_PILE">
-                <el-input v-model.trim="addForm.T0002_END_PILE"
-                          size="small"
-                          maxlength="20"></el-input>
+                <el-input
+                  v-model.trim="addForm.T0002_END_PILE"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
               </el-form-item>
             </td>
           </tr>
@@ -273,19 +343,23 @@
             <td class="bg-td">数量： </td>
             <td>
               <el-form-item prop="T0002_ASSET_AMOUNT">
-                <el-input v-model.trim="addForm.T0002_ASSET_AMOUNT"
-                          size="small"></el-input>
+                <el-input
+                  v-model.trim="addForm.T0002_ASSET_AMOUNT"
+                  size="small"
+                ></el-input>
               </el-form-item>
             </td>
             <td class="bg-td">归属年份：</td>
             <td>
               <el-form-item prop="T0002_ASSET_DATE">
-                <el-date-picker v-model="addForm.T0002_ASSET_DATE"
-                                type="date"
-                                placeholder="选择年"
-                                style="width: 100%"
-                                size="small"
-                                value-format="yyyy-MM-dd">
+                <el-date-picker
+                  v-model="addForm.T0002_ASSET_DATE"
+                  type="date"
+                  placeholder="选择年"
+                  style="width: 100%"
+                  size="small"
+                  value-format="yyyy-MM-dd"
+                >
                 </el-date-picker>
               </el-form-item>
             </td>
@@ -298,9 +372,11 @@
             <td class="bg-td"> 所属养管公司： </td>
             <td>
               <el-form-item prop="T0002_CURING_UNIT">
-                <el-input v-model.trim="addForm.T0002_CURING_UNIT"
-                          size="small"
-                          maxlength="50"></el-input>
+                <el-input
+                  v-model.trim="addForm.T0002_CURING_UNIT"
+                  size="small"
+                  maxlength="50"
+                ></el-input>
               </el-form-item>
             </td>
           </tr>
@@ -308,17 +384,21 @@
             <td class="bg-td">责任人： </td>
             <td>
               <el-form-item prop="T0002_DUTY_PERSON">
-                <el-input v-model.trim="addForm.T0002_DUTY_PERSON"
-                          size="small"
-                          maxlength="20"></el-input>
+                <el-input
+                  v-model.trim="addForm.T0002_DUTY_PERSON"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
               </el-form-item>
             </td>
             <td class="bg-td"> 联系电话： </td>
             <td>
               <el-form-item prop="T0002_TOUCH_TEL">
-                <el-input v-model.trim="addForm.T0002_TOUCH_TEL"
-                          size="small"
-                          maxlength="20"></el-input>
+                <el-input
+                  v-model.trim="addForm.T0002_TOUCH_TEL"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
               </el-form-item>
             </td>
           </tr>
@@ -326,50 +406,68 @@
             <td class="bg-td">经度： </td>
             <td>
               <el-form-item prop="T0002_ASSET_PRECI">
-                <el-input v-model.trim="addForm.T0002_ASSET_PRECI"
-                          size="small"></el-input>
+                <el-input
+                  v-model.trim="addForm.T0002_ASSET_PRECI"
+                  size="small"
+                ></el-input>
               </el-form-item>
             </td>
             <td class="bg-td"> 纬度： </td>
             <td>
               <el-form-item prop="T0002_ASSET_LATI">
-                <el-input v-model.trim="addForm.T0002_ASSET_LATI"
-                          size="small"></el-input>
+                <el-input
+                  v-model.trim="addForm.T0002_ASSET_LATI"
+                  size="small"
+                ></el-input>
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td class="bg-td">图片上传：</td>
             <td colspan="3">
-              <el-upload class="avatar-uploader"
-                         :headers="header"
-                         accept="image/*"
-                         name="image"
-                         :on-change="imgChange"
-                         action
-                         :show-file-list="false"
-                         :auto-upload="false"
-                         style="display: inline">
-                <img v-if="imageUrl"
-                     :src="imageUrl"
-                     class="avatar" />
-                <i v-else
-                   class="el-icon-plus avatar-uploader-icon"></i>
+              <el-upload
+                class="avatar-uploader"
+                :headers="header"
+                accept="image/*"
+                name="image"
+                :on-change="imgChange"
+                action
+                :show-file-list="false"
+                :auto-upload="false"
+                style="display: inline"
+              >
+                <img
+                  v-if="imageUrl"
+                  :src="imageUrl"
+                  class="avatar"
+                />
+                <i
+                  v-else
+                  class="el-icon-plus avatar-uploader-icon"
+                ></i>
               </el-upload>
               <ul class="ul-img">
-                <li class="avatar-uploader"
-                    v-for="(item, index) in  imageList"
-                    :key="index">
-                  <img :src="item.FILE_URL"
-                       class="el-upload avatar" />
+                <li
+                  class="avatar-uploader"
+                  v-for="(item, index) in  imageList"
+                  :key="index"
+                >
+                  <img
+                    :src="item.FILE_URL"
+                    class="el-upload avatar"
+                  />
                   <span class="actions-item">
                     <span>
-                      <i class="el-icon-zoom-in"
-                         @click.stop="clickImgFun(item)"></i>
+                      <i
+                        class="el-icon-zoom-in"
+                        @click.stop="clickImgFun(item)"
+                      ></i>
                     </span>
                     <span>
-                      <i class="el-icon-delete"
-                         @click.stop="clickDeleteFun(item)"></i>
+                      <i
+                        class="el-icon-delete"
+                        @click.stop="clickDeleteFun(item)"
+                      ></i>
                     </span>
                   </span>
                 </li>
@@ -379,48 +477,64 @@
           <tr>
             <td class="bg-td">费用况详情（备注）：</td>
             <td colspan="3">
-              <el-input type="textarea"
-                        v-model="addForm.T0002_ASSET_REAMRK"
-                        maxlength="500"></el-input>
+              <el-input
+                type="textarea"
+                v-model="addForm.T0002_ASSET_REAMRK"
+                maxlength="500"
+              ></el-input>
             </td>
           </tr>
         </table>
       </el-form>
-      <div slot="footer"
-           class="dialog-footer">
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="addShow = false">取 消</el-button>
-        <el-button type="primary"
-                   @click="addSaveFun">保 存</el-button>
+        <el-button
+          type="primary"
+          @click="addSaveFun"
+        >保 存</el-button>
       </div>
     </el-dialog>
     <!-- 修改 -->
-    <el-dialog title=">> 修改资产"
-               :visible.sync="editShow"
-               :close-on-click-modal="false"
-               custom-class="dialog-div">
-      <el-form :model="editForm"
-               :rules="rules"
-               ref="editFormRef">
+    <el-dialog
+      title=">> 修改资产"
+      :visible.sync="editShow"
+      :close-on-click-modal="false"
+      custom-class="dialog-div"
+    >
+      <el-form
+        :model="editForm"
+        :rules="rules"
+        ref="editFormRef"
+      >
         <table class="add-table">
           <tr>
             <td class="bg-td">资产名称：</td>
             <td>
               <el-form-item prop="T0002_ASSET_NAME">
-                <el-input v-model.trim="editForm.T0002_ASSET_NAME"
-                          size="small"
-                          maxlength="50"></el-input>
+                <el-input
+                  v-model.trim="editForm.T0002_ASSET_NAME"
+                  size="small"
+                  maxlength="50"
+                ></el-input>
               </el-form-item>
             </td>
             <td class="bg-td">资产类别： </td>
             <td>
               <el-form-item prop="T0001_ID">
-                <el-select v-model="editForm.T0001_ID"
-                           style="width:100%"
-                           size="small">
-                  <el-option v-for="item in assetTypeList"
-                             :key="item.T0001_ID"
-                             :label="item.T0001_ASSETTYPE_NAME"
-                             :value="item.T0001_ID"></el-option>
+                <el-select
+                  v-model="editForm.T0001_ID"
+                  style="width:100%"
+                  size="small"
+                >
+                  <el-option
+                    v-for="item in assetTypeList"
+                    :key="item.T0001_ID"
+                    :label="item.T0001_ASSETTYPE_NAME"
+                    :value="item.T0001_ID"
+                  ></el-option>
                 </el-select>
               </el-form-item>
             </td>
@@ -429,13 +543,17 @@
             <td class="bg-td">所属路段：</td>
             <td>
               <el-form-item prop="T0002_LOAD_NAME">
-                <el-select v-model="editForm.T0002_LOAD_NAME"
-                           style="width:100%"
-                           size="small">
-                  <el-option v-for="(item,index ) in listNameList"
-                             :key="index"
-                             :label="item.M0010_LOAD_NAME"
-                             :value="item.M0010_LOAD_NAME">
+                <el-select
+                  v-model="editForm.T0002_LOAD_NAME"
+                  style="width:100%"
+                  size="small"
+                >
+                  <el-option
+                    v-for="(item,index ) in listNameList"
+                    :key="index"
+                    :label="item.M0010_LOAD_NAME"
+                    :value="item.M0010_LOAD_NAME"
+                  >
                   </el-option>
                 </el-select>
               </el-form-item>
@@ -447,17 +565,21 @@
             <td class="bg-td">起点桩号： </td>
             <td>
               <el-form-item prop="T0002_START_PILE">
-                <el-input v-model.trim="editForm.T0002_START_PILE"
-                          size="small"
-                          maxlength="20"></el-input>
+                <el-input
+                  v-model.trim="editForm.T0002_START_PILE"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
               </el-form-item>
             </td>
             <td class="bg-td">终点桩号：</td>
             <td>
               <el-form-item prop="resource">
-                <el-input v-model.trim="editForm.T0002_END_PILE"
-                          size="small"
-                          maxlength="20"></el-input>
+                <el-input
+                  v-model.trim="editForm.T0002_END_PILE"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
               </el-form-item>
             </td>
           </tr>
@@ -465,19 +587,23 @@
             <td class="bg-td">数量： </td>
             <td>
               <el-form-item prop="T0002_ASSET_AMOUNT">
-                <el-input v-model.trim="editForm.T0002_ASSET_AMOUNT"
-                          size="small"></el-input>
+                <el-input
+                  v-model.trim="editForm.T0002_ASSET_AMOUNT"
+                  size="small"
+                ></el-input>
               </el-form-item>
             </td>
             <td class="bg-td">归属年份：</td>
             <td>
               <el-form-item prop="T0002_ASSET_DATE">
-                <el-date-picker v-model="editForm.T0002_ASSET_DATE"
-                                type="date"
-                                placeholder="选择年"
-                                style="width: 100%"
-                                size="small"
-                                value-format="yyyy-MM-dd">
+                <el-date-picker
+                  v-model="editForm.T0002_ASSET_DATE"
+                  type="date"
+                  placeholder="选择年"
+                  style="width: 100%"
+                  size="small"
+                  value-format="yyyy-MM-dd"
+                >
                 </el-date-picker>
               </el-form-item>
             </td>
@@ -490,9 +616,11 @@
             <td class="bg-td"> 所属养管公司： </td>
             <td>
               <el-form-item prop="T0002_CURING_UNIT">
-                <el-input v-model.trim="editForm.T0002_CURING_UNIT"
-                          size="small"
-                          maxlength="50"></el-input>
+                <el-input
+                  v-model.trim="editForm.T0002_CURING_UNIT"
+                  size="small"
+                  maxlength="50"
+                ></el-input>
               </el-form-item>
             </td>
           </tr>
@@ -500,17 +628,21 @@
             <td class="bg-td">责任人： </td>
             <td>
               <el-form-item prop="resource">
-                <el-input v-model.trim="editForm.T0002_DUTY_PERSON"
-                          size="small"
-                          maxlength="20"></el-input>
+                <el-input
+                  v-model.trim="editForm.T0002_DUTY_PERSON"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
               </el-form-item>
             </td>
             <td class="bg-td"> 联系电话： </td>
             <td>
               <el-form-item prop="T0002_TOUCH_TEL">
-                <el-input v-model.trim="editForm.T0002_TOUCH_TEL"
-                          size="small"
-                          maxlength="20"></el-input>
+                <el-input
+                  v-model.trim="editForm.T0002_TOUCH_TEL"
+                  size="small"
+                  maxlength="20"
+                ></el-input>
               </el-form-item>
             </td>
           </tr>
@@ -518,50 +650,68 @@
             <td class="bg-td">经度： </td>
             <td>
               <el-form-item prop="T0002_ASSET_PRECI">
-                <el-input v-model.trim="editForm.T0002_ASSET_PRECI"
-                          size="small"></el-input>
+                <el-input
+                  v-model.trim="editForm.T0002_ASSET_PRECI"
+                  size="small"
+                ></el-input>
               </el-form-item>
             </td>
             <td class="bg-td"> 纬度： </td>
             <td>
               <el-form-item prop="T0002_ASSET_LATI">
-                <el-input v-model.trim="editForm.T0002_ASSET_LATI"
-                          size="small"></el-input>
+                <el-input
+                  v-model.trim="editForm.T0002_ASSET_LATI"
+                  size="small"
+                ></el-input>
               </el-form-item>
             </td>
           </tr>
           <tr>
             <td class="bg-td">图片上传：</td>
             <td colspan="3">
-              <el-upload class="avatar-uploader"
-                         :headers="header"
-                         accept="image/*"
-                         name="image"
-                         :on-change="imgChange"
-                         action
-                         :show-file-list="false"
-                         :auto-upload="false"
-                         style="display: inline">
-                <img v-if="imageUrl"
-                     :src="imageUrl"
-                     class="avatar" />
-                <i v-else
-                   class="el-icon-plus avatar-uploader-icon"></i>
+              <el-upload
+                class="avatar-uploader"
+                :headers="header"
+                accept="image/*"
+                name="image"
+                :on-change="imgChange"
+                action
+                :show-file-list="false"
+                :auto-upload="false"
+                style="display: inline"
+              >
+                <img
+                  v-if="imageUrl"
+                  :src="imageUrl"
+                  class="avatar"
+                />
+                <i
+                  v-else
+                  class="el-icon-plus avatar-uploader-icon"
+                ></i>
               </el-upload>
               <ul class="ul-img">
-                <li class="avatar-uploader"
-                    v-for="(item, index) in  imageList"
-                    :key="index">
-                  <img :src="item.FILE_URL"
-                       class="el-upload avatar" />
+                <li
+                  class="avatar-uploader"
+                  v-for="(item, index) in  imageList"
+                  :key="index"
+                >
+                  <img
+                    :src="item.FILE_URL"
+                    class="el-upload avatar"
+                  />
                   <span class="actions-item">
                     <span>
-                      <i class="el-icon-zoom-in"
-                         @click.stop="clickImgFun(item)"></i>
+                      <i
+                        class="el-icon-zoom-in"
+                        @click.stop="clickImgFun(item)"
+                      ></i>
                     </span>
                     <span>
-                      <i class="el-icon-delete"
-                         @click.stop="clickDeleteFun(item)"></i>
+                      <i
+                        class="el-icon-delete"
+                        @click.stop="clickDeleteFun(item)"
+                      ></i>
                     </span>
                   </span>
                 </li>
@@ -571,24 +721,32 @@
           <tr>
             <td class="bg-td">费用况详情（备注）：</td>
             <td colspan="3">
-              <el-input type="textarea"
-                        v-model="editForm.T0002_ASSET_REAMRK"
-                        maxlength="500"></el-input>
+              <el-input
+                type="textarea"
+                v-model="editForm.T0002_ASSET_REAMRK"
+                maxlength="500"
+              ></el-input>
             </td>
           </tr>
         </table>
       </el-form>
-      <div slot="footer"
-           class="dialog-footer">
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
         <el-button @click="editShow = false">取 消</el-button>
-        <el-button type="primary"
-                   @click="editSaveFun">保 存</el-button>
+        <el-button
+          type="primary"
+          @click="editSaveFun"
+        >保 存</el-button>
       </div>
     </el-dialog>
     <!-- 查看 -->
-    <el-dialog title=">> 查看资产"
-               :visible.sync="infoShow"
-               custom-class="dialog-div">
+    <el-dialog
+      title=">> 查看资产"
+      :visible.sync="infoShow"
+      custom-class="dialog-div"
+    >
       <table class="add-table">
         <tr>
           <td class="bg-td">资产名称：</td>
@@ -662,15 +820,21 @@
           <td class="bg-td">图片：</td>
           <td colspan="3">
             <ul class="ul-img">
-              <li class="avatar-uploader"
-                  v-for="(item, index) in  imageList"
-                  :key="index">
-                <img :src="item.FILE_URL"
-                     class="el-upload avatar" />
+              <li
+                class="avatar-uploader"
+                v-for="(item, index) in  imageList"
+                :key="index"
+              >
+                <img
+                  :src="item.FILE_URL"
+                  class="el-upload avatar"
+                />
                 <span class="actions-item">
                   <span>
-                    <i class="el-icon-zoom-in"
-                       @click.stop="clickImgFun(item)"></i>
+                    <i
+                      class="el-icon-zoom-in"
+                      @click.stop="clickImgFun(item)"
+                    ></i>
                   </span>
                 </span>
               </li>
@@ -684,21 +848,29 @@
           </td>
         </tr>
       </table>
-      <div slot="footer"
-           class="dialog-footer">
+      <div
+        slot="footer"
+        class="dialog-footer"
+      >
       </div>
     </el-dialog>
     <!-- 图片预览 -->
-    <el-dialog :visible.sync="imgShow"
-               title="图片预览">
+    <el-dialog
+      :visible.sync="imgShow"
+      title="图片预览"
+    >
       <div style="text-align: center;">
         <el-image :src="imgShowUrl">
-          <div slot="placeholder"
-               class="image-slot">
+          <div
+            slot="placeholder"
+            class="image-slot"
+          >
             加载中<span class="dot">...</span>
           </div>
-          <div slot="error"
-               class="image-slot">
+          <div
+            slot="error"
+            class="image-slot"
+          >
             <i class="el-icon-picture-outline"></i>
           </div>
         </el-image>
@@ -896,6 +1068,10 @@ export default {
       this.$nextTick(() => {
         this.$refs['addFormRef'].resetFields()
       })
+      this.$api.post(`/cycle/utilData/getId`, {}, null, r => {
+        this.dataParams.ID = r.data
+        this.addForm.T0002_ID = r.data
+      })
     },
     // 新增保存
     addSaveFun () {
@@ -903,8 +1079,8 @@ export default {
         if (valid) {
           this.$api.post(`/cycle/assetData/insert`, this.addForm, null, r => {
             this.$message.success('新增成功')
-            this.dataParams.ID = r.data.T0002_ID
             this.getAssetList()
+            this.addShow = false
           })
         }
       })

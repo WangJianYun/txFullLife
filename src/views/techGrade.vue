@@ -933,6 +933,10 @@ export default {
       this.$nextTick(() => {
         this.$refs['addFormRef'].resetFields()
       })
+      this.$api.post(`/cycle/utilData/getId`, {}, null, r => {
+        this.dataParams.ID = r.data
+        this.addForm.T0003_ID = r.data
+      })
     },
     // 新建 选中 资产类别
     addSearchChange (val) {
@@ -979,7 +983,6 @@ export default {
           this.$api.post(`/cycle/techData/insert`, this.addForm, null, r => {
             this.$message.success('新增成功')
             this.addShow = false
-            this.dataParams.ID = r.data.T0003_ID
             this.getTechDataList()
           })
         }

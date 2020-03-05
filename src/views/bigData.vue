@@ -207,7 +207,7 @@ export default {
     },
     loadSumData () {
       this.$api.post('/cycle/bigData/getDataSum?M0018_ID=425428539089616896', {}, null, r => {
-        console.log(r)
+        // console.log(r)
         this.rzyhgq = r[0].YHGQ
         this.ljyh = r[0].RZYH
         this.glzc = r[0].GLZC
@@ -222,7 +222,6 @@ export default {
         let arr1 = []
         let arr2 = []
         console.log(r)
-
         r.forEach(element => {
           arr1.push(element.T0001_ASSETTYPE_NAME)
           arr2.push(element.ASSET_AMOUNT)

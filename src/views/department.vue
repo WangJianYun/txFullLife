@@ -46,12 +46,12 @@
                     align="center">
                   </el-table-column>
                   <el-table-column
-                    prop="M0015_CREATE_PERSON"
+                    prop="M0016_CREATE_PERSON"
                     label="创建人"
                     align="center">
                   </el-table-column>
                   <el-table-column
-                    prop="M0015_CREATE_TIME"
+                    prop="M0016_CREATE_TIME"
                     label="创建时间"
                     align="center">
                   </el-table-column>
@@ -82,14 +82,16 @@
         <el-row>
           <el-dialog :title="dialogName" id="disZbDialog" :fullscreen="false" :visible.sync="disVisible" width="60%" :before-close="closeDialog">
             <el-main>
-              <el-form :inline="true" ref="form" v-model="form" size="small" label-width="140px"  class="demo-form-inline">
+              <el-form :inline="true" ref="form" v-model="form" size="small" label-width="140px"  class="demo-ruleForm" :rules="rules">
                 <table class="add-table">
                   <tr>
                     <td class="bg-td">选择部门归属：</td>
                     <td>
+                      <el-form-item prop="M0016_PID">
                       <el-select v-model="form.M0016_PID" placeholder="--- 请选择 ---" style="width:100%;" size="small" :disabled="islook">
                           <el-option v-for="option in options" :key="option.M0016_ID" :label="option.M0016_DEPART_NAME" :value="option.M0016_ID"></el-option>
                       </el-select>
+                      </el-form-item>
                     </td>
                     <td class="bg-td">部门名称：</td>
                     <td><el-input type="text" v-model="form.M0016_DEPART_NAME" size="small" :disabled="islook"></el-input></td>
@@ -173,8 +175,13 @@ export default {
         M0016_DEPART_NAME: '',
         M0016_IS_AVTIVE: true,
         M0016_DUTY_REMARK: '',
-        M0015_CREATE_PERSON: '',
-        M0015_CREATE_TIME: ''
+        M0016_CREATE_PERSON: '',
+        M0016_CREATE_TIME: ''
+      },
+      rules: {
+        M0016_PID: [
+          { required: true, message: '请选择归属部门', trigger: 'blur' }
+        ]
       }
     }
   },
@@ -188,7 +195,7 @@ export default {
       let nDate = new Date()
       let str = ''
       str = nDate.getFullYear() + '-' + (nDate.getMonth() + 1) + '-' + nDate.getDate()
-      this.form.M0015_CREATE_TIME = str
+      this.form.M0016_CREATE_TIME = str
     },
     refreshTable (pageIndex) {
       // let token = JSON.parse(sessionStorage.getItem('currentUser'))
@@ -206,7 +213,7 @@ export default {
       if (this.form.M0016_PID === '') {
         this.form.M0016_PID = '0'
       }
-      this.form.M0015_CREATE_PERSON = JSON.parse(sessionStorage.getItem('currentUser')).UserName
+      this.form.M0016_CREATE_PERSON = JSON.parse(sessionStorage.getItem('currentUser')).UserName
       if (this.dialogType === 'new') {
         // console.log(this.form)
         // if (this.form.M0016_IS_AVTIVE === true) {
@@ -260,8 +267,8 @@ export default {
         M0016_DEPART_NAME: '',
         M0016_IS_AVTIVE: true,
         M0016_DUTY_REMARK: '',
-        M0015_CREATE_PERSON: '',
-        M0015_CREATE_TIME: ''
+        M0016_CREATE_PERSON: '',
+        M0016_CREATE_TIME: ''
       }
       this.refreshTable(1)
     },

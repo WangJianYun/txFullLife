@@ -132,15 +132,19 @@
                   <tr>
                     <td class="bg-td">归属部门：</td>
                     <td>
+                      <el-form-item prop="M0016_ID">
                         <el-select v-model="form.M0016_ID" size="small" style="width:100%;" :disabled="islook">
                             <el-option v-for="item in mechans" :key="item.M0016_ID" :label="item.M0016_DEPART_NAME" :value="item.M0016_ID"></el-option>
                         </el-select>
+                        </el-form-item>
                     </td>
                     <td class="bg-td">职务：</td>
                     <td>
+                      <el-form-item prop="M0015_ID">
                         <el-select v-model="form.M0015_ID" size="small" style="width:100%;" :disabled="islook">
                             <el-option v-for="item in positions" :key="item.M0015_ID" :label="item.M0015_DUTY_NAME" :value="item.M0015_ID"></el-option>
                         </el-select>
+                        </el-form-item>
                     </td>
                   </tr>
                   <tr>
@@ -242,6 +246,12 @@ export default {
         ],
         M0014_USER_TEL: [
           { required: true, message: '请输入电话号码', trigger: 'blur' }
+        ],
+        M0015_ID: [
+          { required: true, message: '请选择职务', trigger: 'blur' }
+        ],
+        M0016_ID: [
+          { required: true, message: '请选择归属部门', trigger: 'blur' }
         ]
       }
     }

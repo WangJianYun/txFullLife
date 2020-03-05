@@ -3,7 +3,7 @@
  * @Description：日常费用收支列表
  */
 <template>
-  <div class="dailycost-wrap">
+  <div id="dailycost">
     <p class="title-p">
       <span style="display:inline-block;margin-bottom:20px;"> >> 日常费用收支列表 </span>
       <el-button
@@ -84,7 +84,7 @@
           <el-col :span="8">
             <el-form-item label="起止日期">
               <el-date-picker
-                style="width:100%"
+                style="width:330px"
                 v-model="searchMap.time"
                 type="daterange"
                 range-separator="至"
@@ -973,6 +973,8 @@ export default {
       }
       this.addSearch.T0002_START_PILE = ''
       this.addSearch.T0002_END_PILE = ''
+      this.addForm.T0002_ID = ''
+      this.editForm.T0002_ID = ''
       this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
         this.searchPileList = r.data
         this.assetDataList = r.data
@@ -1205,7 +1207,7 @@ export default {
 }
 </script>
 <style lang="scss">
-.dailycost-wrap {
+#dailycost {
   .title-p {
     button {
       float: right;

@@ -499,10 +499,11 @@
 <script>
 export default {
   data () {
-    const validNoText = (rule, value, callback) => {
-      let reg = new RegExp('[\\u4E00-\\u9FFF]+', 'g')
-      if (reg.test(value)) {
-        callback(new Error('不能输入文本'))
+    // 起点终点桩号
+    const validPile = (rule, value, callback) => {
+      let reg = /[0-9a-zA-Z]|[+,-]/ // 固定
+      if (!reg.test(value)) {
+        callback(new Error('请输入正确桩号'))
       } else {
         callback()
       }
@@ -511,7 +512,7 @@ export default {
     const validPreci = (rule, value, callback) => {
       let reg = /^-?((0|1?[0-8]?[0-9]?)(([.][0-9]{1,10})?)|180(([.][0]{1,10})?))$/
       if (!reg.test(value)) {
-        callback(new Error('请输入正确的经度'))
+        callback(new Error('请输入正确的经度(-180 至 180)'))
       } else {
         callback()
       }
@@ -520,7 +521,7 @@ export default {
     const validLati = (rule, value, callback) => {
       let reg = /^-?((0|[1-8]?[0-9]?)(([.][0-9]{1,10})?)|90(([.][0]{1,10})?))$/
       if (!reg.test(value)) {
-        callback(new Error('请输入正确的纬度'))
+        callback(new Error('请输入正确的纬度(-90 至 90)'))
       } else {
         callback()
       }
@@ -549,7 +550,7 @@ export default {
         ],
         M0009_PILENUMBER_NAME: [
           { required: true, message: '请填写桩号', trigger: 'change' },
-          { validator: validNoText, trigger: 'blur' }
+          { validator: validPile, trigger: 'blur' }
         ],
         M0009_PILENUMBER_PRECI: [
           { required: true, message: '请填写经度', trigger: 'change' },

@@ -889,10 +889,21 @@ export default {
         callback()
       }
     }
-    const validNoText = (rule, value, callback) => {
-      let reg = new RegExp('[\\u4E00-\\u9FFF]+', 'g')
-      if (reg.test(value)) {
-        callback(new Error('不能输入文本'))
+    // 电话验证
+    const validTel = (rule, value, callback) => {
+      let regPhone = /^1[3456789]\d{9}$/ // 手机
+      // let regTel = /^((0\d{2,3}-\d{7,8})|(1{2}]\d{9}))$/ // 固定
+      if (!regPhone.test(value)) {
+        callback(new Error('请输入正确的联系电话'))
+      } else {
+        callback()
+      }
+    }
+    // 起点终点桩号
+    const validPile = (rule, value, callback) => {
+      let reg = /[0-9a-zA-Z]|[+,-]/ // 固定
+      if (!reg.test(value)) {
+        callback(new Error('请输入正确桩号'))
       } else {
         callback()
       }
@@ -901,7 +912,7 @@ export default {
     const validPreci = (rule, value, callback) => {
       let reg = /^-?((0|1?[0-8]?[0-9]?)(([.][0-9]{1,10})?)|180(([.][0]{1,10})?))$/
       if (!reg.test(value)) {
-        callback(new Error('请输入正确的经度'))
+        callback(new Error('请输入正确的经度(-180 至 180)'))
       } else {
         callback()
       }
@@ -910,7 +921,7 @@ export default {
     const validLati = (rule, value, callback) => {
       let reg = /^-?((0|[1-8]?[0-9]?)(([.][0-9]{1,10})?)|90(([.][0]{1,10})?))$/
       if (!reg.test(value)) {
-        callback(new Error('请输入正确的纬度'))
+        callback(new Error('请输入正确的纬度(-90 至 90)'))
       } else {
         callback()
       }
@@ -960,11 +971,11 @@ export default {
         ],
         T0002_START_PILE: [
           { required: true, message: '请填写起点桩号', trigger: 'blur' },
-          { validator: validNoText, trigger: 'blur' }
+          { validator: validPile, trigger: 'blur' }
         ],
         T0002_END_PILE: [
           { required: true, message: '请填写起点桩号', trigger: 'blur' },
-          { validator: validNoText, trigger: 'blur' }
+          { validator: validPile, trigger: 'blur' }
         ],
         T0002_ASSET_AMOUNT: [
           { required: true, message: '请填写数量', trigger: 'blur' },
@@ -984,7 +995,8 @@ export default {
           { required: true, message: '请填写责任人', trigger: 'blur' }
         ],
         T0002_TOUCH_TEL: [
-          { required: true, message: '请填写联系电话', trigger: 'blur' }
+          { required: true, message: '请填写联系电话', trigger: 'blur' },
+          { validator: validTel, trigger: 'blur' }
         ],
         T0002_ASSET_PRECI: [
           { required: true, message: '请填写经度', trigger: 'blur' },

@@ -140,6 +140,7 @@
         width="60%"
         :before-close="closeDialog"
       >
+        <!-- :destroy-on-close="true" -->
         <el-main>
           <el-form
             :inline="true"
@@ -185,47 +186,16 @@
             </table>
             <el-main id="authModel">
               <p style="margin: 80px 0 30px 0;">权限配置</p>
-              <span class="tabs">机构详情</span>
-              <table class="add-table authTable">
-                <thead>
-                  <tr>
-                    <th>序号</th>
-                    <th>模块名称</th>
-                    <th>权限节点</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>我的桌面</td>
-                    <td>
-                      <el-checkbox
-                        v-model="form.mytb"
-                        @change="changeAuths('book')"
-                      >查看</el-checkbox>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>大数据分析</td>
-                    <td>
-                      <el-checkbox
-                        v-model="form.bigdata"
-                        @change="changeAuths('bigdata')"
-                      >查看</el-checkbox>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
               <div
-                v-for="item of listPromision"
+                v-for="item of permisionListData"
                 :key="item.M0004_ID"
               >
-                <span
-                  class="tabs"
-                  v-text="item.M0004_NAME"
-                ></span>
-                <table class="add-table authTable">
+                <!-- <div v-show="item.M0004_LEVEL == 1"> -->
+                  <span
+                    class="tabs"
+                    v-text="item.M0004_NAME"
+                  ></span>
+                  <table class="add-table authTable">
                   <thead>
                     <tr>
                       <th>序号</th>
@@ -236,26 +206,31 @@
                   <tbody>
                     <tr
                       v-for="(child,index) of item.M0004_CHILD"
-                      :key="child.M0004_ID"
+                      :key="index"
                     >
                       <td v-text="index+1"></td>
-                      <td v-text="child.M0004_NAME"></td>
+                      <td class="chakan">
+                        <el-checkbox v-model="child.M0004_CHECKED" @change="changeCheck(child)">{{child.M0004_NAME}}</el-checkbox>
+                        <!-- <el-checkbox v-model="child.M0004_CHECKED"></el-checkbox>  @change="handleCheckAllChange" :indeterminate="isIndeterminate"-->
+                      </td>
                       <td>
                         <el-checkbox-group
-                          v-model="tableForm[child.M0004_ID]"
-                          @change="changeAuths(child.M0004_ID)"
+                          v-model="child.tableForm"
+                          @change="changeAuths(child)"
                         >
                           <el-checkbox
                             v-for="item1 of child.M0004_CHILD"
                             :key="item1.$index"
                             :label="item1.M0004_NAME"
+                            :disabled="islook"
                           ></el-checkbox>
                         </el-checkbox-group>
                       </td>
                     </tr>
                   </tbody>
                 </table>
-              </div>
+                </div>
+              <!-- </div> -->
             </el-main>
           </el-form>
         </el-main>
@@ -356,20 +331,7 @@ export default {
         M0004_LEVEL: 1,
         M0005_STATE: '',
         M0004_CHILD: []
-        // yhCostIn: [],
-        // yhCostXq: [],
-        // dayCostIn: [],
-        // dayCostXq: [],
-        // techLevel: [],
-        // assetList: [],
-        // meters: [],
-        // highway: [],
-        // department: [],
-        // position: [],
-        // manager: [],
-        // authority: []
       },
-      tableForm: {},
       listPromision: [],
       permisionListData: [],
       itemID: '',
@@ -383,105 +345,146 @@ export default {
       NAMESarr: [],
       diff: {},
       M0003ID: '',
+      M0001_ID_UPDATE: '',
       tip: '新增成功',
-      idArr: []
+      idArr: [],
+      M0005ID: '',
+      updateData: {},
+      updateID: '',
+      checked: false
     }
   },
   mounted () {
     this.refreshTable(1)
   },
   methods: {
-    // 查找子节点
+    // 分级查找子节点
     findChild (currentItem, list) {
       currentItem.M0004_CHILD = []
+      // eslint-disable-next-line no-unneeded-ternary
+      currentItem.M0004_CHECKED = (currentItem.M0005_STATE === '1' || currentItem.M0005_STATE === 1) ? true : false
       list.forEach(v => {
         if (currentItem.M0004_ID === v.M0004_PID) {
-          if (v.M0004_LEVEL === 2) {
-            this.tableForm[v.M0004_ID] = []
-          }
-          if (v.M0004_LEVEL !== 3) {
+          if (v.M0004_LEVEL !== 3 && v.M0004_LEVEL !== '3' && !v.M0004_CHILD) {
             this.findChild(v, list)
           }
           currentItem.M0004_CHILD.push(v)
         }
       })
     },
-    getPermission () {
-      this.$api.post('/cycle/roleGroupManagement/getPermission', null, null, r => {
-        // console.log(r)
-        this.permisionListData = r.data
-        console.log(this.permisionListData)
-        this.listPromision = r.data.filter(v => v.M0004_LEVEL === 1)
-        this.listPromision.forEach(v => {
+    setTableForm (send) {
+      this.listPromision = []
+      this.permisionListData.forEach(v => {
+        if (v.M0004_CHILD && v.M0004_CHILD.length > 0) {
+          v.M0004_CHILD.forEach(v1 => {
+            if (!send) {
+              v1.tableForm = []
+            }
+            if (v1.M0004_CHILD && v1.M0004_CHILD.length > 0) {
+              v1.M0004_CHILD.forEach(v2 => {
+                if (!send && (v2.M0005_STATE === '1' || v2.M0005_STATE === 1)) {
+                  v1.tableForm.push(v2.M0004_NAME)
+                }
+                v2.M0005_STATE = v1.tableForm.includes(v2.M0004_NAME) ? 1 : 0
+                v1.M0005_STATE = v1.tableForm.length > 0 ? 1 : 0
+                v1.M0004_CHECKED = !!v1.M0005_STATE
+                v.M0005_STATE = v1.M0005_STATE
+                this.listPromision.push(v2)
+              })
+            }
+            this.listPromision.push(v1)
+          })
+          this.listPromision.push(v)
+        }
+      })
+      console.log(this.permisionListData)
+      // this.permisionListData = [...this.permisionListData]
+    },
+    getPermission (id) {
+      const path = `/cycle/roleGroupManagement/${id ? ('getPermissionByRoleId?ID=' + id) : 'getPermission'}`
+      this.$api.post(path, null, null, r => {
+        this.permisionListData = r.data.filter(v => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1)
+        this.permisionListData.forEach(v => {
           this.findChild(v, r.data)
         })
-        console.log(this.tableForm)
+        this.setTableForm()
       })
     },
     refreshTable (pageIndex) {
       this.pageIndex = pageIndex
       this.condition.currentPage = pageIndex
       this.$api.post('/cycle/roleGroupManagement/listPage', this.condition, null, r => {
-        // console.log(r)
         this.dpData = r.data
         this.totalData = r.data.length
       })
     },
     save () {
+      this.setTableForm(true)
+      this.itemData = {
+        M0003_DATA_STATE: this.form.M0003_DATA_STATE ? 1 : 0,
+        M0003_DISP_NAME: this.form.M0003_DISP_NAME,
+        M0001_ID_UPDATE: JSON.parse(sessionStorage.getItem('currentUser')).UserMap.CM_M0001_ID,
+        M0003_NAME: this.form.M0003_NAME
+      }
+      this.data = {
+        'mapParam': this.itemData,
+        'permissionList': this.listPromision
+        // 'permissionList': this.listPromision
+      }
       if (this.dialogType === 'add') {
-        // console.log(this.dpData)
-        // console.log(this.permisionListData)
-        this.dpData.forEach(item => {
-          // console.log(item)
-          this.itemData = item
-        })
-        this.data = {
-          'mapParam': this.itemData,
-          'permissionList': this.permisionListData
-        }
-        console.log(this.data)
+        this.itemData.CREATOR = JSON.parse(sessionStorage.getItem('currentUser')).UserName
+        this.itemData.M0001_ID_CREATE = JSON.parse(sessionStorage.getItem('currentUser')).UserMap.CM_M0001_ID
+        this.data.mapParam = this.itemData
         this.$api.post('/cycle/roleGroupManagement/insert', this.data, '新增成功', r => {
-          // console.log(r)
           this.closeDialog()
           this.refreshTable(1)
         })
       }
       if (this.dialogType === 'edit') {
-        this.$api.post('/cycle/roleGroupManagement/getPermissionByRoleId?ID=' + this.itemID, {}, '编辑成功', r => {
-          console.log(r)
+        this.data.mapParam = { ...this.updateData, ...this.itemData }
+        this.$api.post('/cycle/roleGroupManagement/updateSelective', this.data, '修改成功', r => {
           this.closeDialog()
           this.refreshTable(1)
         })
       }
     },
+    changeCheck (child) {
+      console.log(child)
+      if (child.M0004_CHECKED) {
+        child.tableForm = ['查询', '删除', '修改', '添加']
+      } else {
+        child.tableForm = []
+      }
+    },
     openDialog (type, index, row) {
+      console.log(row)
       this.disVisible = true
       this.managerDialog = false
       this.checkMans = false
       if (type === 'add') {
         this.dialogName = '新增权限组'
-        // this.form = {
-        // M0003_NAME: '',
-        // M0003_DATA_STATE: false,
-        // M0003_DISP_NAME: '',
-        // }
         this.dialogType = 'add'
         this.getPermission()
       }
       if (type === 'edit') {
         this.dialogName = '编辑权限组'
-        console.log(row)
-        // console.log(this.form)
         this.form = row
+        this.updateData = row
+        this.updateID = row.M0003_ID
+        // eslint-disable-next-line no-unneeded-ternary
+        this.form.M0003_DATA_STATE = (this.form.M0003_DATA_STATE === 1 ? true : false)
         this.dialogType = 'edit'
-        this.getPermission()
+        this.getPermission(row.M0003_ID)
       }
       if (type === 'look') {
         this.dialogName = '查看权限组'
         this.form = row
         this.islook = true
-        this.getPermission()
+        this.getPermission(row.M0003_ID)
       }
+    },
+    changeAuths (currets) {
+      this.setTableForm(true)
     },
     closeDialog () {
       this.disVisible = false
@@ -500,23 +503,8 @@ export default {
         M0004_LEVEL: 1,
         M0005_STATE: '',
         M0004_CHILD: []
-        // mytb: true,
-        // bigdata: false,
-        // yhCostIn: [],
-        // yhCostXq: [],
-        // dayCostIn: [],
-        // dayCostXq: [],
-        // techLevel: [],
-        // assetList: [],
-        // meters: [],
-        // highway: [],
-        // department: [],
-        // position: [],
-        // manager: [],
-        // authority: [],
-        // sunny: []
       }
-      this.listPromision = []
+      this.data = ''
     },
     deleteRow (index, row) {
       this.$confirm('确认删除？此操作不可取消', '提示', {
@@ -531,39 +519,7 @@ export default {
         console.log(err)
       })
     },
-    changeAuths (id) {
-      console.log(id)
-      console.log(this.tableForm)
-      this.form = Object.assign({}, this.form)
 
-      let currets = {}
-      this.permisionListData.forEach(v => {
-        if (v.M0004_ID === id) {
-          currets = v
-        }
-      })
-      this.permisionListData.forEach(v => {
-        if (currets.M0004_ID === v.M0004_ID || currets.M0004_PID === v.M0004_ID) {
-          v.M0004_STATE = (this.tableForm[currets.M0004_ID].length > 0) ? 1 : 0
-        }
-        if (v.M0004_PID === currets.M0004_ID) {
-          v.M0004_STATE = this.tableForm[currets.M0004_ID].includes(v.M0004_NAME) ? 1 : 0
-        }
-      })
-      // this.$nextTick(() => {
-      //   this.$set(this.form, this.form[id])
-      //   // this.form = Object.assign({}, this.form)
-      // })
-      // this.listPromision.forEach(item1 => {
-      //   item1.M0004_CHILD.forEach(item2 => {
-      //     item2.M0004_CHILD.forEach(item3 => {
-      //       // if (item3.M0004_ID) {}
-      //       console.log(item3)
-      //       this.idArr.push(item3.M0004_ID)
-      //     })
-      //   })
-      // })
-    },
     addManager (id) {
       this.managerDialog = true
       this.checkMans = false
@@ -576,10 +532,8 @@ export default {
         this.manList = r.data
         this.manList.forEach(item => {
           this.mans.push(item)// 成员
-          // console.log(item.STATE)
           if (item.STATE === '1') {
             this.everyManager.push(item.NAME)// 选中状态成员
-            console.log(this.everyManager)
           }
         })
       })
@@ -694,6 +648,10 @@ export default {
       background: #f0f0f0;
       text-align: center;
     }
+  }
+  .chakan{
+    font-weight: 700;
+    font-size: 16px;
   }
 }
 </style>

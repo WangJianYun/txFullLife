@@ -1259,7 +1259,6 @@ export default {
     display: inline;
     list-style: none;
     margin: 0;
-    margin-left: -40px;
   }
   .avatar-uploader {
     display: inline-block;

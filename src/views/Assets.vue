@@ -191,6 +191,18 @@
           >
           </el-table-column>
           <el-table-column
+            label="地图位置"
+            width="80"
+          >
+            <template slot-scope="scope">
+              <i
+                class="el-icon-location"
+                @click="locationFun(scope.row)"
+                style="font-size: 30px;color: red; cursor: pointer;"
+              ></i>
+            </template>
+          </el-table-column>
+          <el-table-column
             fixed="right"
             width="170"
             label="操作"
@@ -876,6 +888,27 @@
         </el-image>
       </div>
     </el-dialog>
+    <!-- 地图 -->
+    <el-dialog
+      :visible.sync="mapShow"
+      custom-class="dialog-div"
+      title="地图位置"
+    >
+      <div style="height: 400px;">
+        <el-amap
+          vid="amapDiv"
+          :center="mapData.position"
+          :zoom="mapData.zoom"
+          class="amap-demo"
+        >
+          <el-amap-marker
+            vid="component-marker"
+            :position="mapData.position"
+            :content-render="mapData.contentRender"
+          ></el-amap-marker>
+        </el-amap>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -927,6 +960,21 @@ export default {
       }
     }
     return {
+      mapShow: false, // 地图是否显示
+      mapData: {
+        zoom: 12, // 当前地图缩放比列
+        position: [],
+        title: [],
+        contentRender: (h, instance) => {
+          return h(
+            'div',
+            {
+              style: { background: '#80cbc4', whiteSpace: 'nowrap' }
+            },
+            this.mapData.title
+          )
+        }
+      },
       imageList: [],
       imgShow: false,
       imgShowUrl: '', // 预览图片
@@ -1028,6 +1076,13 @@ export default {
     }
   },
   methods: {
+    // 点击地图
+    locationFun (data) {
+      this.mapData.title = []
+      this.mapShow = true
+      this.mapData.position = [data.T0002_ASSET_PRECI, data.T0002_ASSET_LATI]
+      this.mapData.title.push(data.T0002_ASSET_NAME)
+    },
     // 根据 资产类别 请求 起点 / 终点桩号
     changeSelect (val) {
       let _data = {
@@ -1351,7 +1406,6 @@ export default {
     display: inline;
     list-style: none;
     margin: 0;
-    margin-left: -40px;
   }
   .avatar-uploader {
     display: inline-block;

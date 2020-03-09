@@ -1213,6 +1213,9 @@ export default {
       float: right;
     }
   }
+  .el-range-separator{
+    width: 25px;
+  }
   .content {
     background: #fff;
     padding: 30px 20px;

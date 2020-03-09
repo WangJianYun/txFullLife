@@ -6,10 +6,8 @@ import bigData from '../views/bigData.vue'
 import workBanch from '../views/workBanch.vue'
 import yhCostList from '../views/yhCostList.vue'
 import dailyCost from '../views/dailyCost.vue'
-import techStatus from '../views/techStatus.vue'
 import techGrade from '../views/techGrade.vue'
 import Assets from '../views/Assets.vue'
-import assetsClass from '../views/assetsClass.vue'
 import metersPile from '../views/metersPile.vue'
 import Jurisdiction from '../views/Jurisdiction.vue'
 import highway from '../views/highway.vue'
@@ -37,7 +35,7 @@ const routes = [{
   component: Manage,
   children: [{
     path: '/workBanch',
-    name: '工作台',
+    name: '我的桌面',
     component: workBanch
   }, {
     path: '/bigData',
@@ -45,64 +43,56 @@ const routes = [{
     component: bigData
   }]
 }, {
-  path: '/Manage',
-  name: 'Manage',
+  path: '/yhCost',
+  name: '养护费用',
   component: Manage,
   children: [{
     path: '/yhCostList',
-    name: '养护费用管理',
+    name: '费用列表',
     component: yhCostList
   }]
 
 }, {
-  path: '/Manage',
-  name: 'Manage',
+  path: '/dailyCost',
+  name: '日常费用',
   component: Manage,
   children: [{
-    path: '/dailyCost',
-    name: '日常费用收支管理',
+    path: '/dailyCostList',
+    name: '费用列表',
     component: dailyCost
   }]
 
 }, {
-  path: '/Manage',
-  name: 'Manage',
+  path: '/techGrade',
+  name: '资产技术等级',
   component: Manage,
   children: [{
-    path: '/techStatus',
-    name: '路产技术状况',
-    component: techStatus
-  }, {
-    path: '/techGrade',
-    name: '路产技术等级',
+    path: '/techGradeList',
+    name: '资产技术等级列表',
     component: techGrade
   }]
 
 }, {
-  path: '/Manage',
-  name: 'Manage',
+  path: '/Assets',
+  name: '公路资产',
   component: Manage,
   children: [{
-    path: '/Assets',
-    name: '公路资产管理',
+    path: '/AssetsList',
+    name: '资产列表',
     component: Assets
-  }, {
-    path: '/assetsClass',
-    name: '公路资产类别管理',
-    component: assetsClass
   }]
 
 }, {
-  path: '/Manage',
-  name: 'Manage',
+  path: '/metersPile',
+  name: '基础数据',
   component: Manage,
   children: [{
-    path: '/metersPile',
-    name: '百米桩管理',
+    path: '/metersPileList',
+    name: '百米桩号列表',
     component: metersPile
   }, {
     path: '/Jurisdiction',
-    name: '分公司管辖路段',
+    name: '管辖路段列表',
     component: Jurisdiction
   }, {
     path: '/highway',
@@ -111,34 +101,34 @@ const routes = [{
   }]
 
 }, {
-  path: '/Manage',
-  name: 'Manage',
+  path: '/SystemConfig',
+  name: '系统配置',
   component: Manage,
   children: [{
     path: '/department',
-    name: '部门管理',
+    name: '部门列表',
     component: department
   }, {
     path: '/manager',
-    name: '管理员管理',
+    name: '管理员列表',
     component: manager
   }, {
     path: '/Position',
-    name: '职务管理',
+    name: '职务列表',
     component: Position
   }, {
     path: '/Authority',
-    name: '权限配置',
+    name: '权限组配置',
     component: Authority
   }]
 
 }, {
-  path: '/Manage',
-  name: 'Manage',
+  path: '/Personal',
+  name: '个人中心',
   component: Manage,
   children: [{
-    path: '/Personal',
-    name: '个人中心',
+    path: '/PersonalInfo',
+    name: '我的资料',
     component: Personal
   }]
 

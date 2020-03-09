@@ -29,27 +29,27 @@
             @select="handleSelect"
             :collapse="false"
           >
-            <label v-for="item in this.menuOptions" :key="item.url">
-              <el-submenu :index="item.url">
-                <template v-if="item.children">
+            <label v-for="item in menulist1" :key="item.$index">
+              <el-submenu :index="item.M0004_URL">
+                <template v-if="item.M0004_CHILD.length > 0 && !['我的桌面', '大数据分析'].includes(item.M0004_NAME)">
                   <template slot="title" style="width:50%;text-align:left;">
                     <i :class="item.icon"></i>
-                    <span style="font-size:16px;">{{ item.name }}</span>
+                    <span style="font-size:16px;">{{ item.M0004_NAME }}</span>
                   </template>
                   <el-menu-item
-                    :index="subItem.url"
-                    v-for="subItem in item.children"
-                    :key="subItem.url"
+                    :index="subItem.M0004_URL"
+                    v-for="subItem in item.M0004_CHILD"
+                    :key="subItem.$index"
                     style="font-size:14px;"
                   >
                     <span style="margin-left:50px"></span>
-                    {{ subItem.name }}
+                    {{ subItem.M0004_NAME }}
                   </el-menu-item>
                 </template>
                 <template slot="title" v-else>
-                  <el-menu-item :index="item.url">
+                  <el-menu-item :index="item.M0004_URL">
                     <i :class="item.icon"></i>
-                    <span style="font-size:16px;">{{ item.name }}</span>
+                    <span style="font-size:16px;">{{ item.M0004_NAME }}</span>
                   </el-menu-item>
                 </template>
               </el-submenu>
@@ -107,27 +107,42 @@
 </template>
 
 <script>
+// eslint-disable-next-line no-unused-vars
+import router from '../router/index.js'
 export default {
   data () {
     return {
+      form: {
+        userName: 'admin',
+        password: '1'
+      },
       menuOptions: [],
       defaultActiveMenu: '',
       currentTime: '', // 获取当前时
       currentUserImg: '',
-      currentUser: []
+      currentUser: [],
+      menuList: [],
+      routes: [],
+      pathBox: [],
+      pathitem: '',
+      menulist1: [],
+      menulist2: []
     }
   },
   mounted () {
+    this.routes = router.options.routes
     this.getMenu()
     this.timer()
     this.changeActive()
     // this.defaultActiveMenu = '/workBanch'
-
     if (sessionStorage.getItem('currentUser').TokenId === null) {
       this.$router.push('/')
     }
     this.currentUser = JSON.parse(sessionStorage.getItem('currentUser'))
     // this.currentUserImg = 'api' + this.currentUser.avatarUrl
+  },
+  created () {
+
   },
   methods: {
     timer () {
@@ -153,10 +168,38 @@ export default {
       //   })
     },
     handleSelect (key) {
-      // console.log(key)
+      console.log(key)
       if (this.$route.path !== key) {
         this.$router.push({ path: key })
       }
+    },
+    findKid (currentItem, list, pItem = {}) {
+      currentItem.M0004_CHILD = []
+      if (!currentItem.M0004_URL && (currentItem.M0004_LEVEL !== 3 || currentItem.M0004_LEVEL !== '3')) {
+        currentItem.M0004_URL = this.findPath(currentItem.M0004_NAME, pItem.M0004_NAME, this.routes)
+      }
+      list.forEach(v => {
+        if (currentItem.M0004_ID === v.M0004_PID) {
+          if (v.M0004_LEVEL !== 3 && v.M0004_LEVEL !== '3' && !v.M0004_CHILD) {
+            this.findKid(v, list, currentItem)
+          }
+          currentItem.M0004_CHILD.push(v)
+        }
+      })
+    },
+    findPath (name, pName, list, listName) {
+      let result = ''
+      for (const rt of list) {
+        if (name === rt.name && (!pName || pName === listName)) {
+          result = rt.path
+          break
+        } else {
+          if (rt.children && !result) {
+            result = this.findPath(name, pName, rt.children, rt.name)
+          }
+        }
+      }
+      return result
     },
     getMenu () {
       let menuData = [
@@ -325,32 +368,57 @@ export default {
           parentId: '21'
         }
       ]
-      // this.$api.post('sys/res/by/user/list', [], null, r => {
-      menuData.forEach(val => {
-        if (val.lvl === '1') {
-          this.menuOptions.push({
-            id: val.id,
-            name: val.name,
-            icon: val.icon,
-            url: val.url
+      this.$api.post('/cycle/login/login', this.form, null, r => {
+        // console.log(r)
+        this.menuList = r.data.menuList
+        this.menulist1 = r.data.menuList.filter(v => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1)
+        // this.menulist2 = r.data.menuList.filter(v => v.M0004_LEVEL === '2' || v.M0004_LEVEL === 2)
+        try {
+          this.menulist1.forEach(v => {
+            this.findKid(v, this.menuList)
           })
+          // console.log(this.routes)
+          // this.menulist1.forEach(v => {
+          //   v.M0004_URL = this.findPath(v.M0004_NAME, this.routes)
+          // })
+        } catch (error) {
+          console.log(error)
+        }
+        console.log(this.menulist1)
+        // })
+        // {
+        //     id: '1',
+        //     name: '我的桌面',
+        //     icon: '',
+        //     url: '/workBanch',
+        //     lvl: '1',
+        //     children: [],
+        //     isNotFinal: false
+        //   },
+        console.log(this.menulist1)
+        // this.menulist1.forEach(val => {
+        //   this.menuOptions.push({
+        //     id: val.M0004_ID,
+        //     name: val.M0004_NAME,
+        //     icon: '',
+        //     url: val.M0004_URL
+        //   })
+        // })
+        // this.menuOptions.forEach(val => {
+        // /* 获取根节点下的所有子节点 使用getChild方法 */
+        //   let childList = this.findChild(val.id, menuData)
+        //   if (childList.length !== 0) {
+        //     val.children = childList
+        //   }
+        // })
+        for (let key in menuData) {
+          if (menuData[key].isNotFinal === false) {
+            this.defaultActiveMenu = menuData[key].url
+            this.$router.push(this.defaultActiveMenu)
+            break
+          }
         }
       })
-      this.menuOptions.forEach(val => {
-        /* 获取根节点下的所有子节点 使用getChild方法 */
-        let childList = this.findChild(val.id, menuData)
-        if (childList.length !== 0) {
-          val.children = childList
-        }
-      })
-      for (let key in menuData) {
-        if (menuData[key].isNotFinal === false) {
-          this.defaultActiveMenu = menuData[key].url
-          this.$router.push(this.defaultActiveMenu)
-          break
-        }
-      }
-      // })
     },
     findChild (id, allRes) {
       let childList = []

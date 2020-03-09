@@ -210,7 +210,7 @@
                     >
                       <td v-text="index+1"></td>
                       <td class="chakan">
-                        <el-checkbox v-model="child.M0004_CHECKED" @change="changeCheck(child)">{{child.M0004_NAME}}</el-checkbox>
+                        <el-checkbox v-model="child.M0004_CHECKED" @change="changeCheck(child)" :disabled="islook">{{child.M0004_NAME}}</el-checkbox>
                         <!-- <el-checkbox v-model="child.M0004_CHECKED"></el-checkbox>  @change="handleCheckAllChange" :indeterminate="isIndeterminate"-->
                       </td>
                       <td>
@@ -373,6 +373,7 @@ export default {
       })
     },
     setTableForm (send) {
+      // 无send表示发送前，有send表示发送后
       this.listPromision = []
       this.permisionListData.forEach(v => {
         if (v.M0004_CHILD && v.M0004_CHILD.length > 0) {
@@ -380,6 +381,13 @@ export default {
             if (!send) {
               v1.tableForm = []
             }
+            // 如果是我的桌面和大数据分析时选中的状态
+            // if (!v.M0004_NAME === '我的桌面' && !v.M0004_NAME === '大数据分析') {
+            //   v1.M0005_STATE = v1.tableForm.length > 0 ? 1 : 0
+            // } else {
+            //   v1.M0005_STATE = v1.M0004_CHECKED ? 1 : 0
+            // }
+            // 如果有第三级
             if (v1.M0004_CHILD && v1.M0004_CHILD.length > 0) {
               v1.M0004_CHILD.forEach(v2 => {
                 if (!send && (v2.M0005_STATE === '1' || v2.M0005_STATE === 1)) {
@@ -449,7 +457,7 @@ export default {
       }
     },
     changeCheck (child) {
-      console.log(child)
+      // console.log(child)
       if (child.M0004_CHECKED) {
         child.tableForm = ['查询', '删除', '修改', '添加']
       } else {
@@ -457,7 +465,7 @@ export default {
       }
     },
     openDialog (type, index, row) {
-      console.log(row)
+      // console.log(row)
       this.disVisible = true
       this.managerDialog = false
       this.checkMans = false

@@ -39,7 +39,8 @@ export default {
         password: [
           { required: true, message: '请输入密码', trigger: 'blur' }
         ]
-      }
+      },
+      menuData: []
     }
   },
   methods: {
@@ -48,13 +49,23 @@ export default {
         if (valid) {
           this.$api.post('/cycle/login/login', this.form, '登陆成功', r => {
             console.log(r)
+            this.menuData = r.data.menuList.filter(v => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1)
+            // this.menuData = r.data.menuList
+            console.log(this.menuData)
             if (r.msg !== 'success') {
               alert(r.msg)
             }
             sessionStorage.clear()
             sessionStorage.setItem('currentUser', JSON.stringify(r.data))
             sessionStorage['TokenId'] = r.data.TokenId
-            this.$router.push('/workBanch')
+            // this.$router.push('/workBanch')
+            // this.$router.push(`/Manage/${this.menuData}`)
+            this.$router.push({
+              path: '/Manage',
+              query: {
+                menu: this.menuData
+              }
+            })
           })
         } else {
           return false

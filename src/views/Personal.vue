@@ -89,134 +89,28 @@
             <el-col :span="18" :offset="3">
                 <el-main id="authModel">
                     <p style="margin: 0 0 30px 0;">权限范围</p>
-                    <span class="tabs">机构详情</span>
+                    <div v-for="item of permisionListData"
+                         :key="item.index">
+                    <span class="tabs">{{item.M0004_NAME}}</span>
                     <table class="perstable authTable">
                         <thead><tr><th>序号</th><th>模块名称</th><th>权限节点</th></tr></thead>
                         <tbody>
-                            <tr><td>1</td><td>我的桌面</td><td><el-checkbox v-model="form.mytb" @change="changeAuths('book')">查看</el-checkbox></td></tr>
-                            <tr><td>2</td><td>大数据分析</td><td><el-checkbox v-model="form.bigdata" @change="changeAuths('bigdata')">查看</el-checkbox></td></tr>
-                        </tbody>
-                    </table>
-                    <span class="tabs">养护费用</span>
-                    <table class="perstable authTable">
-                        <thead><tr><th>序号</th><th>模块名称</th><th>权限节点</th></tr></thead>
-                        <tbody>
-                            <tr><td>1</td><td>费用录入</td>
+                            <tr v-for="(child,index) of item.M0004_CHILD"
+                               :key="index">
+                                <td v-text="index+1">1</td>
+                                <td>{{child.M0004_NAME}}</td>
                                 <td>
-                                    <el-checkbox-group v-model="form.yhCostIn" @change="changeAuths('yhcostin')">
-                                        <el-checkbox v-for="item in auths" :key="item.$index" :label="item"></el-checkbox>
-                                    </el-checkbox-group>
-                                </td>
-                            </tr>
-                            <tr><td>2</td><td>费用详情</td>
-                                <td>
-                                    <el-checkbox-group v-model="form.yhCostXq">
-                                        <el-checkbox v-for="item in auths" :key="item.$index" :label="item"></el-checkbox>
+                                    <el-checkbox-group v-model="child.tableForm"
+                                      @change="changeAuths(child)">
+                                        <el-checkbox v-for="item1 in child.M0004_CHILD" :key="item1.$index"
+                            :label="item1.M0004_NAME"
+                            :disabled="islook"></el-checkbox>
                                     </el-checkbox-group>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                    <span class="tabs">日常费用</span>
-                    <table class="perstable authTable">
-                        <thead><tr><th>序号</th><th>模块名称</th><th>权限节点</th></tr></thead>
-                        <tbody>
-                            <tr><td>1</td><td>费用录入</td>
-                                <td>
-                                    <el-checkbox-group v-model="form.dayCostIn" @change="changeAuths('yhcostin')">
-                                        <el-checkbox v-for="item in auths" :key="item.$index" :label="item"></el-checkbox>
-                                    </el-checkbox-group>
-                                </td>
-                            </tr>
-                            <tr><td>2</td><td>费用详情</td>
-                                <td>
-                                    <el-checkbox-group v-model="form.dayCostXq">
-                                        <el-checkbox v-for="item in auths" :key="item.$index" :label="item"></el-checkbox>
-                                    </el-checkbox-group>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <span class="tabs">资产技术等级</span>
-                    <table class="perstable authTable">
-                        <thead><tr><th>序号</th><th>模块名称</th><th>权限节点</th></tr></thead>
-                        <tbody>
-                            <tr><td>1</td><td>资产技术等级列表</td>
-                                <td>
-                                    <el-checkbox-group v-model="form.techLevel" @change="changeAuths('yhcostin')">
-                                        <el-checkbox v-for="item in auths" :key="item.$index" :label="item"></el-checkbox>
-                                    </el-checkbox-group>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <span class="tabs">公路资产</span>
-                    <table class="perstable authTable">
-                        <thead><tr><th>序号</th><th>模块名称</th><th>权限节点</th></tr></thead>
-                        <tbody>
-                            <tr><td>1</td><td>资产列表</td>
-                                <td>
-                                    <el-checkbox-group v-model="form.assetList" @change="changeAuths('yhcostin')">
-                                        <el-checkbox v-for="item in auths" :key="item.$index" :label="item"></el-checkbox>
-                                    </el-checkbox-group>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <span class="tabs">基础数据</span>
-                    <table class="perstable authTable">
-                        <thead><tr><th>序号</th><th>模块名称</th><th>权限节点</th></tr></thead>
-                        <tbody>
-                            <tr><td>1</td><td>百米桩号</td>
-                                <td>
-                                    <el-checkbox-group v-model="form.meters" @change="changeAuths('yhcostin')">
-                                        <el-checkbox v-for="item in auths" :key="item.$index" :label="item"></el-checkbox>
-                                    </el-checkbox-group>
-                                </td>
-                            </tr>
-                            <tr><td>2</td><td>管辖路段</td>
-                                <td>
-                                    <el-checkbox-group v-model="form.highway">
-                                        <el-checkbox v-for="item in auths" :key="item.$index" :label="item"></el-checkbox>
-                                    </el-checkbox-group>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <span class="tabs">系统配置</span>
-                    <table class="perstable authTable">
-                        <thead><tr><th>序号</th><th>模块名称</th><th>权限节点</th></tr></thead>
-                        <tbody>
-                            <tr><td>1</td><td>部门管理</td>
-                                <td>
-                                    <el-checkbox-group v-model="form.department" @change="changeAuths('yhcostin')">
-                                        <el-checkbox v-for="item in auths" :key="item.$index" :label="item"></el-checkbox>
-                                    </el-checkbox-group>
-                                </td>
-                            </tr>
-                            <tr><td>2</td><td>职务管理</td>
-                                <td>
-                                    <el-checkbox-group v-model="form.position">
-                                        <el-checkbox v-for="item in auths" :key="item.$index" :label="item"></el-checkbox>
-                                    </el-checkbox-group>
-                                </td>
-                            </tr>
-                            <tr><td>3</td><td>管理员管理</td>
-                                <td>
-                                    <el-checkbox-group v-model="form.manager">
-                                        <el-checkbox v-for="item in auths" :key="item.$index" :label="item"></el-checkbox>
-                                    </el-checkbox-group>
-                                </td>
-                            </tr>
-                            <tr><td>4</td><td>权限组配置</td>
-                                <td>
-                                    <el-checkbox-group v-model="form.authority">
-                                        <el-checkbox v-for="item in auths" :key="item.$index" :label="item"></el-checkbox>
-                                    </el-checkbox-group>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    </div>
                 </el-main>
             </el-col>
         </el-row>
@@ -254,13 +148,81 @@ export default {
         position: [],
         manager: [],
         authority: []
-      }
+      },
+      permisionListData: [],
+      islook: true,
+      tokenID: ''
     }
   },
   mounted () {
     this.loadMsg()
+    this.getPermission()
   },
   methods: {
+    findChild (currentItem, list) {
+      currentItem.M0004_CHILD = []
+      // eslint-disable-next-line no-unneeded-ternary
+      currentItem.M0004_CHECKED = (currentItem.M0005_STATE === '1' || currentItem.M0005_STATE === 1) ? true : false
+      list.forEach(v => {
+        if (currentItem.M0004_ID === v.M0004_PID) {
+          if (v.M0004_LEVEL !== 3 && v.M0004_LEVEL !== '3' && !v.M0004_CHILD) {
+            this.findChild(v, list)
+          }
+          currentItem.M0004_CHILD.push(v)
+        }
+      })
+    },
+    getPermission (id) {
+      this.tokenID = sessionStorage.getItem('TokenId')
+      console.log(this.tokenID)
+      this.$api.post('/cycle/roleGroupManagement/getPermissionByTokenId?TokenId=' + this.tokenID, null, null, r => {
+        this.permisionListData = r.data.filter(v => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1)
+        this.permisionListData.forEach(v => {
+          this.findChild(v, r.data)
+        })
+        this.setTableForm()
+      })
+      console.log(this.permisionListData)
+    },
+    setTableForm (send) {
+      // 无send表示发送前，有send表示发送后
+      this.listPromision = []
+      this.permisionListData.forEach(v => {
+        if (v.M0004_CHILD && v.M0004_CHILD.length > 0) {
+          v.M0004_CHILD.forEach(v1 => {
+            if (!send) {
+              v1.tableForm = []
+            }
+            // 如果是我的桌面和大数据分析时选中的状态
+            // if (!v.M0004_NAME === '我的桌面' && !v.M0004_NAME === '大数据分析') {
+            //   v1.M0005_STATE = v1.tableForm.length > 0 ? 1 : 0
+            // } else {
+            //   v1.M0005_STATE = v1.M0004_CHECKED ? 1 : 0
+            // }
+            // 如果有第三级
+            if (v1.M0004_CHILD && v1.M0004_CHILD.length > 0) {
+              v1.M0004_CHILD.forEach(v2 => {
+                if (!send && (v2.M0005_STATE === '1' || v2.M0005_STATE === 1)) {
+                  v1.tableForm.push(v2.M0004_NAME)
+                }
+                v2.M0005_STATE = v1.tableForm.includes(v2.M0004_NAME) ? 1 : 0
+                v1.M0005_STATE = v1.tableForm.length > 0 ? 1 : 0
+                v1.M0004_CHECKED = !!v1.M0005_STATE
+                v.M0005_STATE = v1.M0005_STATE
+                this.listPromision.push(v2)
+              })
+            }
+            this.listPromision.push(v1)
+          })
+          this.listPromision.push(v)
+        }
+      })
+      console.log(this.permisionListData)
+      // this.permisionListData = [...this.permisionListData]
+    },
+    changeAuths (currets) {
+      this.setTableForm(true)
+    },
     loadMsg () {
       let userId = JSON.parse(sessionStorage.getItem('currentUser')).UserId
       this.$api.post('/cycle/userManagement/selectById?ID=' + userId, {}, null, r => {
@@ -272,20 +234,20 @@ export default {
         }
         this.form = r.data
       })
-    },
-    changeAuths (txt) {
-      switch (txt) {
-        case 'book':
-          console.log(this.form.mytb)
-          break
-        case 'bigdata':
-          console.log(this.form.bigdata)
-          break
-        case 'yhcostin':
-          console.log(this.form.yhCostIn)
-          break
-      }
     }
+    // changeAuths (txt) {
+    //   switch (txt) {
+    //     case 'book':
+    //       console.log(this.form.mytb)
+    //       break
+    //     case 'bigdata':
+    //       console.log(this.form.bigdata)
+    //       break
+    //     case 'yhcostin':
+    //       console.log(this.form.yhCostIn)
+    //       break
+    //   }
+    // }
   }
 }
 </script>

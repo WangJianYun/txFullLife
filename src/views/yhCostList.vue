@@ -946,6 +946,8 @@ export default {
       }
       this.addSearch.T0002_START_PILE = ''
       this.addSearch.T0002_END_PILE = ''
+      this.addForm.T0002_ID = ''
+      this.editForm.T0002_ID = ''
       // 请求 资产类别 对应的 资产信息  和起点，终点桩号
       this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
         this.searchPileList = r.data
@@ -1245,6 +1247,9 @@ export default {
     .el-form-item {
       margin-bottom: 0;
     }
+  }
+  .el-range-separator{
+    width: 25px;
   }
   .ul-img {
     display: inline;

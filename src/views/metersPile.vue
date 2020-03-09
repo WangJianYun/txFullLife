@@ -503,7 +503,7 @@ export default {
     const validPile = (rule, value, callback) => {
       let reg = /[0-9a-zA-Z]|[+,-]/ // 固定
       if (!reg.test(value)) {
-        callback(new Error('请输入正确桩号'))
+        callback(new Error('桩号只能输入英文，数字，+，-'))
       } else {
         callback()
       }

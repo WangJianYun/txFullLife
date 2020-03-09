@@ -40,7 +40,7 @@
           <el-button @click="reset">重置</el-button>
         </el-form-item>
       </el-form>
-      <p>
+      <p class="div-btn">
         <el-button
           type="primary"
           icon="el-icon-delete"
@@ -892,6 +892,9 @@ export default {
     list-style: none;
     margin: 0;
   }
+  .div-btn {
+      margin: 10px 0;
+    }
   .avatar-uploader {
     display: inline-block;
     margin-left: 10px;

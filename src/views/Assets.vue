@@ -1072,7 +1072,7 @@ export default {
       listNameList: [], // 所属路段
       pileList: [], // 起点 / 终点桩号
       isSearch: false, // 是否搜索
-      searchVal: ''
+      searchVal: '' // 显示搜索内容
     }
   },
   methods: {

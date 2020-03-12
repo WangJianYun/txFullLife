@@ -45,7 +45,7 @@
                     align="center">
                   </el-table-column>
                   <el-table-column
-                    prop=""
+                    prop="ROLEGROUP_NAME"
                     label="归属权限组"
                     align="center">
                   </el-table-column>
@@ -65,6 +65,7 @@
                     <template slot-scope="scope">
                       <el-switch
                         v-model="scope.row.M0014_IS_AVTIVE"
+                        disabled
                         active-color="#409eff"
                         inactive-color="#bbb">
                       </el-switch>
@@ -84,15 +85,26 @@
             </el-col>
         </el-row>
         <el-row class="list-pagination-row">
-            <el-pagination
+            <!-- <el-pagination
                     @current-change="refreshTable"
                     layout="total, prev, pager, next"
                     :total="totalData"
                     :current-page.sync="pageIndex"
                     :page-size="this.preSetPageSize"
-            ></el-pagination>
+            ></el-pagination> -->
+            <el-pagination
+                class="table-page"
+                @size-change="sizeChange"
+                @current-change="currentChange"
+                :current-page="currentPage"
+                :page-sizes="[10, 50, 100]"
+                :page-size="showCount"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total"
+        ></el-pagination>
         </el-row>
         </el-main>
+        <!-- 管理员添加 -->
         <el-row>
           <el-dialog :title="dialogName" id="disZbDialog" :fullscreen="false" :visible.sync="disVisible" width="60%" :before-close="closeDialog">
             <el-main>
@@ -201,8 +213,9 @@ export default {
         { nickname: 'blue', realname: '1', mechanism: '1', position: '1', rights: '1', phone: '13333333333', email: '123@321.com', switch: true },
         { nickname: 'red', realname: '1', mechanism: '1', position: '1', rights: '1', phone: '15665656565', email: '23@43.com', switch: false }
       ],
-      totalData: 3,
-      condition: { currentPage: 1 },
+      currentPage: 1,
+      showCount: 10,
+      total: 0,
       dialogName: '新增管理员',
       disVisible: false,
       islook: false,
@@ -228,30 +241,30 @@ export default {
         M0014_USER_NAME: [
           { required: true, message: '请输入真实姓名', trigger: 'blur' },
           { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' },
-          {
-            required: true,
-            pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9.·-]+$/,
-            message: '姓名不支持特殊字符',
-            trigger: 'blur'
-          }
+          // { pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9.·-]+$/, message: '姓名不支持特殊字符', trigger: 'blur' }
+          { pattern: /^[\u4E00-\u9FA5]+$/, message: '用户名只能为中文' }
         ],
         M0014_PASS_WORD: [
-          { required: true, message: '请输入密码', trigger: 'blur' }
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 6, max: 30, message: '长度在 6 到 30 个字符' },
+          { pattern: /^(\w){6,20}$/, message: '只能输入6-20个字母、数字、下划线' }
         ],
-        Expassword: [
-          { required: true, message: '请确认密码', trigger: 'blur' }
-        ],
+        // Expassword: [
+        //   { required: true, message: '请确认密码', trigger: 'blur' }
+        // ],
         M0014_USER_EMAIL: [
-          { required: true, message: '请输入电子邮箱', trigger: 'blur' }
+          { required: true, message: '请输入电子邮箱', trigger: 'blur' },
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
         ],
         M0014_USER_TEL: [
-          { required: true, message: '请输入电话号码', trigger: 'blur' }
+          { required: true, message: '请输入电话号码', trigger: 'blur' },
+          { pattern: /^1[3|4|5|7|8][0-9]\d{8}$/, message: '请输入11位手机号码', trigger: 'blur' }
         ],
         M0015_ID: [
-          { required: true, message: '请选择职务', trigger: 'blur' }
+          { required: true, message: '请选择职务' }
         ],
         M0016_ID: [
-          { required: true, message: '请选择归属部门', trigger: 'blur' }
+          { required: true, message: '请选择归属部门' }
         ]
       }
     }
@@ -269,23 +282,33 @@ export default {
   // },
 
   methods: {
-    refreshTable (pageIndex) {
-      // let token = JSON.parse(sessionStorage.getItem('currentUser'))
-      // console.log(token)
-      this.pageIndex = pageIndex
-      this.condition.currentPage = pageIndex
+    // 分页
+    sizeChange (val) {
+      this.showCount = val
+      this.refreshTable()
+    },
+    currentChange (val) {
+      this.currentPage = val
+      this.refreshTable()
+    },
+    refreshTable () {
+      // eslint-disable-next-line no-unused-vars
+      let _data = {
+        currentPage: this.currentPage,
+        showCount: this.showCount
+      }
       // let tabDatas = []
-      this.$api.post('/cycle/userManagement/listPage', this.condition, null, r => {
+      this.$api.post('/cycle/userManagement/listPage', _data, null, r => {
         // console.log(r)
-        r.data.forEach(element => {
+        r.data.returnParam.forEach(element => {
           if (element.M0014_IS_AVTIVE === 1) {
             element.M0014_IS_AVTIVE = true
           } else {
             element.M0014_IS_AVTIVE = false
           }
         })
-        this.dpData = r.data
-        this.totalData = r.data.length
+        this.dpData = r.data.returnParam
+        this.total = r.data.totalResult
       })
     },
     save () {
@@ -309,7 +332,6 @@ export default {
             }
             if (this.dialogType === 'edit') {
               alert(1)
-              // console.log(this.form.image)
               this.$api.post('/cycle/userManagement/update', this.form, '编辑成功', r => {
                 this.closeDialog()
               })
@@ -357,23 +379,12 @@ export default {
       this.$refs['form'].resetFields()
       this.disVisible = false
       this.islook = false
-      this.form = {
-        M0014_USER_CODE: '',
-        M0014_SIMP_NAME: '',
-        M0014_USER_NAME: '',
-        M0014_PASS_WORD: '',
-        expassword: '',
-        M0016_ID: '',
-        M0015_ID: '',
-        M0014_USER_EMAIL: '',
-        M0014_USER_TEL: '',
-        M0014_IS_AVTIVE: true,
-        M0014_USER_REMARK: ''
-      }
+      this.form = {}
       this.refreshTable(1)
     },
     resetDialog () {
       this.$refs['form'].resetFields()
+      this.closeDialog()
     },
     deleteRow (row) {
       // alert(1)
@@ -425,5 +436,9 @@ export default {
         margin-bottom: 0;
       }
     }
+     .table-page {
+    text-align: center;
+    margin-top: 10px;
+  }
   }
 </style>

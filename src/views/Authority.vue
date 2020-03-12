@@ -122,12 +122,22 @@
         </el-col>
       </el-row>
       <el-row class="list-pagination-row">
-        <el-pagination
+        <!-- <el-pagination
           @current-change="refreshTable"
           layout="total, prev, pager, next"
           :total="totalData"
           :current-page.sync="pageIndex"
           :page-size="this.preSetPageSize"
+        ></el-pagination> -->
+         <el-pagination
+                class="table-page"
+                @size-change="sizeChange"
+                @current-change="currentChange"
+                :current-page="currentPage"
+                :page-sizes="[10, 50, 100]"
+                :page-size="showCount"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total"
         ></el-pagination>
       </el-row>
     </el-main>
@@ -305,6 +315,9 @@ export default {
       pageIndex: 1,
       dpData: [],
       totalData: 3,
+      currentPage: 1,
+      showCount: 10,
+      total: 0,
       islook: false,
       condition: { currentPage: 1 },
       dialogName: '新增权限组',
@@ -358,6 +371,15 @@ export default {
     this.refreshTable(1)
   },
   methods: {
+    // 分页
+    sizeChange (val) {
+      this.showCount = val
+      this.refreshTable()
+    },
+    currentChange (val) {
+      this.currentPage = val
+      this.refreshTable()
+    },
     // 分级查找子节点
     findChild (currentItem, list) {
       currentItem.M0004_CHILD = []
@@ -419,11 +441,14 @@ export default {
       })
     },
     refreshTable (pageIndex) {
-      this.pageIndex = pageIndex
-      this.condition.currentPage = pageIndex
-      this.$api.post('/cycle/roleGroupManagement/listPage', this.condition, null, r => {
-        this.dpData = r.data
-        this.totalData = r.data.length
+      // eslint-disable-next-line no-unused-vars
+      let _data = {
+        currentPage: this.currentPage,
+        showCount: this.showCount
+      }
+      this.$api.post('/cycle/roleGroupManagement/listPage', _data, null, r => {
+        this.dpData = r.data.returnParam
+        this.total = r.data.totalResult
       })
     },
     save () {
@@ -445,14 +470,14 @@ export default {
         this.data.mapParam = this.itemData
         this.$api.post('/cycle/roleGroupManagement/insert', this.data, '新增成功', r => {
           this.closeDialog()
-          this.refreshTable(1)
+          this.refreshTable()
         })
       }
       if (this.dialogType === 'edit') {
         this.data.mapParam = { ...this.updateData, ...this.itemData }
         this.$api.post('/cycle/roleGroupManagement/updateSelective', this.data, '修改成功', r => {
           this.closeDialog()
-          this.refreshTable(1)
+          this.refreshTable()
         })
       }
     },
@@ -497,21 +522,7 @@ export default {
     closeDialog () {
       this.disVisible = false
       this.islook = false
-      this.form = {
-        M0003_NAME: '',
-        M0003_DATA_STATE: false,
-        M0003_DISP_NAME: '',
-        mytb: true,
-        bigdata: false,
-        M0004_ID: '',
-        M0004_NAME: '',
-        M0004_TYPE: '',
-        M0004_STATE: '',
-        M0004_PID: '',
-        M0004_LEVEL: 1,
-        M0005_STATE: '',
-        M0004_CHILD: []
-      }
+      this.form = {}
       this.data = ''
     },
     deleteRow (index, row) {
@@ -660,6 +671,10 @@ export default {
   .chakan{
     font-weight: 700;
     font-size: 16px;
+  }
+  .table-page {
+    text-align: center;
+    margin-top: 10px;
   }
 }
 </style>

@@ -56,13 +56,23 @@
             </el-col>
         </el-row>
         <el-row class="list-pagination-row">
-            <el-pagination
+            <!-- <el-pagination
                     @current-change="refreshTable"
                     layout="total, prev, pager, next"
                     :total="totalData"
                     :current-page.sync="pageIndex"
                     :page-size="this.preSetPageSize"
-            ></el-pagination>
+            ></el-pagination> -->
+            <el-pagination
+                class="table-page"
+                @size-change="sizeChange"
+                @current-change="currentChange"
+                :current-page="currentPage"
+                :page-sizes="[10, 50, 100]"
+                :page-size="showCount"
+                layout="total, sizes, prev, pager, next, jumper"
+                :total="total"
+        ></el-pagination>
         </el-row>
         </el-main>
         <el-row>
@@ -105,10 +115,11 @@
 export default {
   data () {
     return {
-      pageIndex: 1,
       dpData: [],
       totalData: 3,
-      condition: { currentPage: 1 },
+      currentPage: 1,
+      showCount: 10,
+      total: 0,
       dialogName: '新增职务',
       disVisible: false,
       islook: false,
@@ -127,28 +138,43 @@ export default {
     this.getDateTime()
   },
   methods: {
+    // 分页
+    sizeChange (val) {
+      this.showCount = val
+      this.getCuringList()
+    },
+    currentChange (val) {
+      this.currentPage = val
+      this.getCuringList()
+    },
     getDateTime () {
       let nDate = new Date()
       let str = ''
       str = nDate.getFullYear() + '-' + (nDate.getMonth() + 1) + '-' + nDate.getDate()
       this.form.M0015_CREATE_TIME = str
     },
-    refreshTable (pageIndex) {
-      let token = JSON.parse(sessionStorage.getItem('currentUser'))
-      console.log(token)
-      this.pageIndex = pageIndex
-      this.condition.currentPage = pageIndex
+    refreshTable () {
+      // let token = JSON.parse(sessionStorage.getItem('currentUser'))
+      // console.log(token)
+      // eslint-disable-next-line no-unused-vars
+      let _data = {
+        currentPage: this.currentPage,
+        showCount: this.showCount
+      }
       // let tabDatas = []
-      this.$api.post('/cycle/dutyManagement/listPage', this.condition, null, r => {
+      this.$api.post('/cycle/dutyManagement/listPage', _data, null, r => {
         console.log(r)
-        this.dpData = r.data
-        this.totalData = r.data.length
+        this.dpData = r.data.returnParam
+        this.total = r.data.totalResult
+        // console.log(this.dpData)
       })
     },
     save () {
+      this.form.M0018_ID = sessionStorage.getItem('id')
       this.form.M0015_CREATE_PERSON = JSON.parse(sessionStorage.getItem('currentUser')).UserName
       if (this.dialogType === 'new') {
         this.$api.post('/cycle/dutyManagement/insert', this.form, '新增成功', r => {
+          console.log(r)
           this.closeDialog()
         })
       }
@@ -195,7 +221,8 @@ export default {
         M0015_IS_AVTIVE: true,
         M0015_DUTY_REMARK: '',
         M0015_CREATE_PERSON: '',
-        M0015_CREATE_TIME: ''
+        M0015_CREATE_TIME: '',
+        M0018_ID: ''
       }
       this.refreshTable(1)
     },
@@ -237,5 +264,9 @@ export default {
         text-align: center;
       }
     }
+    .table-page {
+    text-align: center;
+    margin-top: 10px;
+  }
   }
 </style>

@@ -14,6 +14,7 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" style="width:100%" @click="onSubmit">登录</el-button>
+            <span class="msg">{{msg}}</span>
           </el-form-item>
         </el-form>
       </div>
@@ -40,7 +41,9 @@ export default {
           { required: true, message: '请输入密码', trigger: 'blur' }
         ]
       },
-      menuData: []
+      menuData: [],
+      menuData1: [],
+      msg: ''
     }
   },
   methods: {
@@ -49,23 +52,26 @@ export default {
         if (valid) {
           this.$api.post('/cycle/login/login', this.form, '登陆成功', r => {
             console.log(r)
-            this.menuData = r.data.menuList.filter(v => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1)
-            // this.menuData = r.data.menuList
-            console.log(this.menuData)
             if (r.msg !== 'success') {
               alert(r.msg)
             }
+            this.menuData = JSON.stringify(r.data.menuList)
+            // eslint-disable-next-line no-eval
+            console.log(this.menuData)
             sessionStorage.clear()
+            sessionStorage.setItem('id', r.data.M0018_ID)
             sessionStorage.setItem('currentUser', JSON.stringify(r.data))
             sessionStorage['TokenId'] = r.data.TokenId
             // this.$router.push('/workBanch')
-            // this.$router.push(`/Manage/${this.menuData}`)
             this.$router.push({
-              path: '/Manage',
-              query: {
-                menu: this.menuData
-              }
+              path: `/Manage/${this.menuData}`
             })
+            // this.$router.push({
+            //   path: '/Manage',
+            //   query: {
+            //     menu: this.menuData
+            //   }
+            // })
           })
         } else {
           return false
@@ -123,4 +129,5 @@ export default {
   background-color: #FFFFFF;
 }
 .login-container-footer{width: 100%;text-align: center;color: #fff;font-size: 14px;position: fixed;bottom: 10px;}
+.msg{color:red}
 </style>

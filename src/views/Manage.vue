@@ -31,7 +31,9 @@
           >
             <label v-for="item in menulist1" :key="item.$index">
               <el-submenu :index="item.M0004_URL">
-                <template v-if="item.M0004_CHILD.length > 0 && !['我的桌面', '大数据分析'].includes(item.M0004_NAME)">
+                <!-- <el-submenu :index="item.M0004_URL" v-if="item.M0005_STATE==='1'||item.M0005_STATE===1"> -->
+                <template
+                  v-if="item.M0004_CHILD.length > 0 &&!['我的桌面', '大数据分析'].includes(item.M0004_NAME)">
                   <template slot="title" style="width:50%;text-align:left;">
                     <i :class="item.icon"></i>
                     <span style="font-size:16px;">{{ item.M0004_NAME }}</span>
@@ -42,8 +44,10 @@
                     :key="subItem.$index"
                     style="font-size:14px;"
                   >
-                    <span style="margin-left:50px"></span>
-                    {{ subItem.M0004_NAME }}
+                    <span style="margin-left:50px">{{
+                      subItem.M0004_NAME
+                    }}</span>
+                    <!-- <span style="margin-left:50px" v-if="subItem.M0005_STATE==='1'||subItem.M0005_STATE===1">{{ subItem.M0004_NAME }}</span> -->
                   </el-menu-item>
                 </template>
                 <template slot="title" v-else>
@@ -84,7 +88,7 @@
           <el-col :span="12">
             <div class="weather" style="text-align:right;">
               <iframe
-                width="220"
+                width="300"
                 scrolling="no"
                 height="22"
                 frameborder="0"
@@ -108,7 +112,7 @@
 
 <script>
 // eslint-disable-next-line no-unused-vars
-import router from '../router/index.js'
+import { routes1, routes2 } from '../router/index.js'
 export default {
   data () {
     return {
@@ -130,7 +134,11 @@ export default {
     }
   },
   mounted () {
-    this.routes = router.options.routes
+    console.log(routes1)
+    this.routes = routes1
+    // this.routes1 = router.options.routes
+    // console.log(this.$route.params.menu)
+
     this.getMenu()
     this.timer()
     this.changeActive()
@@ -139,11 +147,8 @@ export default {
       this.$router.push('/')
     }
     this.currentUser = JSON.parse(sessionStorage.getItem('currentUser'))
-    // this.currentUserImg = 'api' + this.currentUser.avatarUrl
   },
-  created () {
-
-  },
+  created () {},
   methods: {
     timer () {
       let that = this
@@ -175,8 +180,15 @@ export default {
     },
     findKid (currentItem, list, pItem = {}) {
       currentItem.M0004_CHILD = []
-      if (!currentItem.M0004_URL && (currentItem.M0004_LEVEL !== 3 || currentItem.M0004_LEVEL !== '3')) {
-        currentItem.M0004_URL = this.findPath(currentItem.M0004_NAME, pItem.M0004_NAME, this.routes)
+      if (
+        !currentItem.M0004_URL &&
+        (currentItem.M0004_LEVEL !== 3 || currentItem.M0004_LEVEL !== '3')
+      ) {
+        currentItem.M0004_URL = this.findPath(
+          currentItem.M0004_NAME,
+          pItem.M0004_NAME,
+          this.routes
+        )
       }
       list.forEach(v => {
         if (currentItem.M0004_ID === v.M0004_PID) {
@@ -202,6 +214,7 @@ export default {
       return result
     },
     getMenu () {
+      // 写死的菜单
       let menuData = [
         {
           id: '1',
@@ -368,57 +381,62 @@ export default {
           parentId: '21'
         }
       ]
-      this.$api.post('/cycle/login/login', this.form, null, r => {
-        // console.log(r)
-        this.menuList = r.data.menuList
-        this.menulist1 = r.data.menuList.filter(v => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1)
-        // this.menulist2 = r.data.menuList.filter(v => v.M0004_LEVEL === '2' || v.M0004_LEVEL === 2)
-        try {
-          this.menulist1.forEach(v => {
-            this.findKid(v, this.menuList)
-          })
-          // console.log(this.routes)
-          // this.menulist1.forEach(v => {
-          //   v.M0004_URL = this.findPath(v.M0004_NAME, this.routes)
-          // })
-        } catch (error) {
-          console.log(error)
+      // this.$api.post('/cycle/login/login', this.form, null, r => {
+      // console.log(r)
+      // this.menuList = r.data.menuList
+      // this.menulist1 = r.data.menuList.filter(v => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1)
+      console.log(this.routes)
+      this.menuList = JSON.parse(this.$route.params.menu)
+      this.menulist1 = this.menuList.filter(
+        v => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1
+      )
+      // list.forEach((ele, index) => {
+      //   if (ele.name === '我的桌面') {
+      //     ele.url = '/allBanch'
+      //   }
+      // })
+      // this.menuList.forEach(v => {
+      //   this.routes.forEach(vt => {
+      //     if (v.M0004_NAME === this.routes.name) {
+      //       // eslint-disable-next-line no-unused-expressions
+      //       v.M0004_URL === '/对应的path'
+      //     }
+      //   })
+      // })
+      console.log(this.menuList)
+      console.log(this.menuList1)
+
+      try {
+        this.menulist1.forEach(v => {
+          this.findKid(v, this.menuList)
+        })
+      } catch (error) {
+        console.log(error)
+      }
+
+      // this.menulist1.forEach(val => {
+      //   this.menuOptions.push({
+      //     id: val.M0004_ID,
+      //     name: val.M0004_NAME,
+      //     icon: '',
+      //     url: val.M0004_URL
+      //   })
+      // })
+      // this.menuOptions.forEach(val => {
+      // /* 获取根节点下的所有子节点 使用getChild方法 */
+      //   let childList = this.findChild(val.id, menuData)
+      //   if (childList.length !== 0) {
+      //     val.children = childList
+      //   }
+      // })
+      for (let key in menuData) {
+        if (menuData[key].isNotFinal === false) {
+          this.defaultActiveMenu = menuData[key].url
+          this.$router.push(this.defaultActiveMenu)
+          break
         }
-        console.log(this.menulist1)
-        // })
-        // {
-        //     id: '1',
-        //     name: '我的桌面',
-        //     icon: '',
-        //     url: '/workBanch',
-        //     lvl: '1',
-        //     children: [],
-        //     isNotFinal: false
-        //   },
-        console.log(this.menulist1)
-        // this.menulist1.forEach(val => {
-        //   this.menuOptions.push({
-        //     id: val.M0004_ID,
-        //     name: val.M0004_NAME,
-        //     icon: '',
-        //     url: val.M0004_URL
-        //   })
-        // })
-        // this.menuOptions.forEach(val => {
-        // /* 获取根节点下的所有子节点 使用getChild方法 */
-        //   let childList = this.findChild(val.id, menuData)
-        //   if (childList.length !== 0) {
-        //     val.children = childList
-        //   }
-        // })
-        for (let key in menuData) {
-          if (menuData[key].isNotFinal === false) {
-            this.defaultActiveMenu = menuData[key].url
-            this.$router.push(this.defaultActiveMenu)
-            break
-          }
-        }
-      })
+      }
+      // })
     },
     findChild (id, allRes) {
       let childList = []

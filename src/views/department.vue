@@ -231,10 +231,12 @@ export default {
       this.form.M0016_CREATE_TIME = str
     },
     refreshTable () {
+      this.form.M0018_ID = sessionStorage.getItem('id')
       // eslint-disable-next-line no-unused-vars
       let _data = {
         currentPage: this.currentPage,
-        showCount: this.showCount
+        showCount: this.showCount,
+        searchMap: { 'M0018_ID': this.form.M0018_ID }
       }
       this.$api.post('/cycle/departmentManagement/listPage', _data, null, r => {
         console.log(r)
@@ -263,6 +265,7 @@ export default {
             })
           }
           if (this.dialogType === 'edit') {
+            console.log(this.form)
             this.$api.post('/cycle/departmentManagement/update', this.form, '编辑成功', r => {
               this.closeDialog()
               this.refreshTable()
@@ -274,6 +277,7 @@ export default {
       })
     },
     openDialog (type, row) {
+      console.log(row)
       this.refreshTable()
       this.disVisible = true
       if (type === 'add') {
@@ -285,6 +289,10 @@ export default {
           row.M0016_IS_AVTIVE = true
         } else {
           row.M0016_IS_AVTIVE = false
+        }
+        // 判断选择框内是否返回了0,如果是0就为空
+        if (row.M0016_PID === '0' || row.M0016_PID === 0) {
+          row.M0016_PID = ''
         }
         this.dialogName = '编辑部门'
         this.form = row
@@ -332,7 +340,7 @@ export default {
       })
     },
     loadSelect () {
-      this.$api.post('/cycle/departmentManagement/listAll', {}, null, r => {
+      this.$api.post('/cycle/departmentManagement/listAll', { 'M0018_ID': this.form.M0018_ID }, null, r => {
         this.options = r.data
       })
     }

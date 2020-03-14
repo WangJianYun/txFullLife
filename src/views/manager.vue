@@ -131,7 +131,7 @@
                     <td class="bg-td">密码：</td>
                     <td>
                        <el-form-item prop='M0014_PASS_WORD'>
-                      <el-input type="password" v-model="form.M0014_PASS_WORD" size="small" :disabled="islook"></el-input>
+                          <el-input type="password" v-model="form.M0014_PASS_WORD" size="small" :disabled="islook" show-password></el-input>
                        </el-form-item>
                     </td>
                     <td class="bg-td">确认密码：</td>
@@ -227,10 +227,16 @@ export default {
         M0014_PASS_WORD: '',
         M0016_ID: '',
         M0015_ID: '',
+        M0014_ID: '',
         M0014_USER_EMAIL: '',
         M0014_USER_TEL: '',
         M0014_IS_AVTIVE: true,
-        M0014_USER_REMARK: ''
+        M0014_USER_REMARK: '',
+        M0018_ID: '',
+        M0016_DEPART_NAME: '',
+        M0015_DEPART_NAME: '',
+        M0016_ID_PRE: '',
+        M0015_ID_PRE: ''
       },
       mechans: [],
       positions: [],
@@ -246,26 +252,26 @@ export default {
         ],
         M0014_PASS_WORD: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 6, max: 30, message: '长度在 6 到 30 个字符' },
-          { pattern: /^(\w){6,20}$/, message: '只能输入6-20个字母、数字、下划线' }
+          { min: 6, max: 50, message: '长度在 6 到 50 个字符' },
+          { pattern: /^(\w){6,50}$/, message: '只能输入6-50个字母、数字、下划线' }
         ],
         // Expassword: [
         //   { required: true, message: '请确认密码', trigger: 'blur' }
         // ],
         M0014_USER_EMAIL: [
           { required: true, message: '请输入电子邮箱', trigger: 'blur' },
-          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
         ],
         M0014_USER_TEL: [
           { required: true, message: '请输入电话号码', trigger: 'blur' },
           { pattern: /^1[3|4|5|7|8][0-9]\d{8}$/, message: '请输入11位手机号码', trigger: 'blur' }
-        ],
-        M0015_ID: [
-          { required: true, message: '请选择职务' }
-        ],
-        M0016_ID: [
-          { required: true, message: '请选择归属部门' }
         ]
+        // M0015_ID: [
+        //   { required: true, message: '请选择职务' }
+        // ],
+        // M0016_ID: [
+        //   { required: true, message: '请选择归属部门' }
+        // ]
       }
     }
   },
@@ -273,14 +279,6 @@ export default {
     this.refreshTable(1)
     this.loadSelect()
   },
-  // watch: {
-  //   dialogFormVisible (val) {
-  //     !val && setTimeout(() => {
-  //       this.$refs['form'].resetFields()
-  //     }, 0)
-  //   }
-  // },
-
   methods: {
     // 分页
     sizeChange (val) {
@@ -292,10 +290,12 @@ export default {
       this.refreshTable()
     },
     refreshTable () {
+      this.form.M0018_ID = sessionStorage.getItem('id')
       // eslint-disable-next-line no-unused-vars
       let _data = {
         currentPage: this.currentPage,
-        showCount: this.showCount
+        showCount: this.showCount,
+        searchMap: { 'M0018_ID': this.form.M0018_ID }
       }
       // let tabDatas = []
       this.$api.post('/cycle/userManagement/listPage', _data, null, r => {
@@ -312,11 +312,15 @@ export default {
       })
     },
     save () {
+      this.form.M0018_ID = sessionStorage.getItem('id')
+      if (this.form.M0016_ID === '') {
+        this.form.M0016_ID = '0'
+      }
+      if (this.form.M0015_ID === '') {
+        this.form.M0015_ID = '0'
+      }
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          if (this.form.M0015_ID === '') {
-            this.form.M0015_ID = '0'
-          }
           if (this.form.M0014_PASS_WORD === this.Expassword) {
             this.form.M0014_USER_CODE = this.form.M0014_SIMP_NAME
             if (this.dialogType === 'new') {
@@ -331,7 +335,14 @@ export default {
               })
             }
             if (this.dialogType === 'edit') {
-              alert(1)
+              this.form.M0016_ID = this.form.M0016_ID_PRE
+              this.form.M0015_ID = this.form.M0015_ID_PRE
+              if (this.form.M0016_ID === '') {
+                this.form.M0016_ID = '0'
+              }
+              if (this.form.M0015_ID === '') {
+                this.form.M0015_ID = '0'
+              }
               this.$api.post('/cycle/userManagement/update', this.form, '编辑成功', r => {
                 this.closeDialog()
               })
@@ -359,9 +370,22 @@ export default {
         } else {
           row.M0014_IS_AVTIVE = false
         }
-        this.dialogName = '编辑部门'
+        // 判断选择框内是否返回了0,如果是0就为空
+        if (row.M0016_ID === '0' || row.M0016_PID === 0) {
+          row.M0016_ID = ''
+        }
+        if (row.M0015_ID === '0' || row.M0016_PID === 0) {
+          row.M0015_ID = ''
+        }
+        this.dialogName = '编辑管理员'
         this.form = row
         this.dialogType = 'edit'
+        // 把M0016_ID和M0015_ID存起来
+        this.form.M0016_ID_PRE = this.form.M0016_ID
+        this.form.M0015_ID_PRE = this.form.M0015_ID
+        // 解决编辑的时候展示的是ID,而不是名字
+        this.form.M0016_ID = row.DEPART_NAME
+        this.form.M0015_ID = row.DUTY_NAME
       }
       if (type === 'look') {
         this.Expassword = row.M0014_PASS_WORD
@@ -403,10 +427,10 @@ export default {
       })
     },
     loadSelect () {
-      this.$api.post('/cycle/departmentManagement/listAll', {}, null, r => {
+      this.$api.post('/cycle/departmentManagement/listAll', { 'M0018_ID': this.form.M0018_ID }, null, r => {
         this.mechans = r.data
       })
-      this.$api.post('/cycle/dutyManagement/listAll', {}, null, r => {
+      this.$api.post('/cycle/dutyManagement/listAll', { 'M0018_ID': this.form.M0018_ID }, null, r => {
         this.positions = r.data
       })
     }

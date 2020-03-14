@@ -334,8 +334,6 @@ export default {
         M0003_NAME: '',
         M0003_DATA_STATE: false,
         M0003_DISP_NAME: '',
-        mytb: true,
-        bigdata: false,
         M0004_ID: '',
         M0004_NAME: '',
         M0004_TYPE: '',
@@ -343,7 +341,8 @@ export default {
         M0004_PID: '',
         M0004_LEVEL: 1,
         M0005_STATE: '',
-        M0004_CHILD: []
+        M0004_CHILD: [],
+        M0018_ID: ''
       },
       listPromision: [],
       permisionListData: [],
@@ -432,7 +431,7 @@ export default {
     },
     getPermission (id) {
       const path = `/cycle/roleGroupManagement/${id ? ('getPermissionByRoleId?ID=' + id) : 'getPermission'}`
-      this.$api.post(path, null, null, r => {
+      this.$api.post(path, { 'M0018_ID': this.form.M0018_ID }, null, r => {
         this.permisionListData = r.data.filter(v => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1)
         this.permisionListData.forEach(v => {
           this.findChild(v, r.data)
@@ -441,10 +440,12 @@ export default {
       })
     },
     refreshTable (pageIndex) {
+      this.form.M0018_ID = sessionStorage.getItem('id')
       // eslint-disable-next-line no-unused-vars
       let _data = {
         currentPage: this.currentPage,
-        showCount: this.showCount
+        showCount: this.showCount,
+        searchMap: { 'M0018_ID': this.form.M0018_ID }
       }
       this.$api.post('/cycle/roleGroupManagement/listPage', _data, null, r => {
         this.dpData = r.data.returnParam
@@ -452,6 +453,7 @@ export default {
       })
     },
     save () {
+      this.form.M0018_ID = sessionStorage.getItem('id')
       this.setTableForm(true)
       this.itemData = {
         M0003_DATA_STATE: this.form.M0003_DATA_STATE ? 1 : 0,
@@ -577,6 +579,7 @@ export default {
         }
       })
       this.diff['M0003_ID'] = this.M0003ID
+      this.diff['M0018_ID'] = sessionStorage.getItem('id')
       if (this.diff.STATE === 0) {
         this.tip = '取消成功'
       } else {
@@ -629,7 +632,7 @@ export default {
   }
   #checkMans {
     position: absolute;
-    width: 200px;
+    width: 250px;
     box-shadow: 0 0 5px #bbb;
     padding: 16px 0 16px 16px;
     background-color: #fff;

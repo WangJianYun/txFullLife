@@ -19,9 +19,9 @@
                     </tr>
                     <tr>
                         <td class="bg-td">归属机构：</td>
-                        <td><el-input type="text" v-model="form.M0016_ID" :disabled="isEdit" size="small"></el-input></td>
+                        <td><el-input type="text" v-model="form.DEPART_NAME" :disabled="isEdit" size="small"></el-input></td>
                         <td class="bg-td">职务：</td>
-                        <td><el-input type="text" v-model="form.M0015_ID" :disabled="isEdit" size="small"></el-input></td>
+                        <td><el-input type="text" v-model="form.DUTY_NAME" :disabled="isEdit" size="small"></el-input></td>
                     </tr>
                     <tr>
                         <td class="bg-td">电子邮箱：</td>
@@ -30,7 +30,7 @@
                         <td><el-input type="text" v-model="form.M0014_USER_TEL" :disabled="isEdit" size="small"></el-input></td>
                     </tr>
                     <tr>
-                        <td class="bg-td">是否激活：</td>
+                        <td class="bg-td" :disabled="isEdit">是否激活：</td>
                         <td>
                             <el-switch
                             v-model="form.M0014_IS_AVTIVE"
@@ -59,24 +59,24 @@
                 <table class="perstable">
                     <tr>
                         <td>账户名：</td>
-                        <td><el-input type="text" v-model="form.nickName" :disabled="isEdit" size="small"></el-input></td>
+                        <td><el-input type="text" v-model="form.nickName" size="small"></el-input></td>
                     </tr>
                     <tr>
                         <td>原始密码：</td>
-                        <td><el-input type="password" v-model="form.oldpswd" :disabled="isEdit" size="small"></el-input></td>
+                        <td><el-input type="password" v-model="form.oldpswd" size="small"></el-input></td>
                     </tr>
                     <tr>
                         <td>新密码：</td>
-                        <td><el-input type="password" v-model="form.newpswd" :disabled="isEdit" size="small"></el-input></td>
+                        <td><el-input type="password" v-model="form.newpswd" size="small"></el-input></td>
                     </tr>
                     <tr>
                         <td>再次确认密码：</td>
-                        <td><el-input type="password" v-model="form.confirmpswd" :disabled="isEdit" size="small"></el-input></td>
+                        <td><el-input type="password" v-model="form.confirmpswd" size="small"></el-input></td>
                     </tr>
                 </table>
                 <div style="text-align:center;margin-top:20px;">
-                    <el-button type="primary" size="small">提交</el-button>
-                    <el-button size="small">取消</el-button>
+                    <el-button type="primary" size="small" @click="save">提交</el-button>
+                    <el-button size="small" @click="cancel">取消</el-button>
                 </div>
             </el-col>
         </el-row>
@@ -117,6 +117,7 @@
     </div>
 </template>
 <script>
+import { Message } from 'element-ui'
 export default {
   data () {
     return {
@@ -147,11 +148,15 @@ export default {
         department: [],
         position: [],
         manager: [],
-        authority: []
+        authority: [],
+        M0018_ID: ''
       },
       permisionListData: [],
       islook: true,
-      tokenID: ''
+      tokenID: '',
+      userId: '',
+      tip: ''
+
     }
   },
   mounted () {
@@ -172,61 +177,42 @@ export default {
         }
       })
     },
-    getPermission (id) {
-      this.tokenID = sessionStorage.getItem('TokenId')
-      console.log(this.tokenID)
-      this.$api.post('/cycle/roleGroupManagement/getPermissionByTokenId?TokenId=' + this.tokenID, null, null, r => {
+    getPermission () {
+      this.form.M0018_ID = sessionStorage.getItem('id')
+      this.$api.post('/cycle/roleGroupManagement/getPermission', { 'M0018_ID': this.form.M0018_ID }, null, r => {
         this.permisionListData = r.data.filter(v => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1)
         this.permisionListData.forEach(v => {
           this.findChild(v, r.data)
         })
-        this.setTableForm()
       })
-      console.log(this.permisionListData)
     },
-    setTableForm (send) {
-      // 无send表示发送前，有send表示发送后
-      this.listPromision = []
-      this.permisionListData.forEach(v => {
-        if (v.M0004_CHILD && v.M0004_CHILD.length > 0) {
-          v.M0004_CHILD.forEach(v1 => {
-            if (!send) {
-              v1.tableForm = []
-            }
-            // 如果是我的桌面和大数据分析时选中的状态
-            // if (!v.M0004_NAME === '我的桌面' && !v.M0004_NAME === '大数据分析') {
-            //   v1.M0005_STATE = v1.tableForm.length > 0 ? 1 : 0
-            // } else {
-            //   v1.M0005_STATE = v1.M0004_CHECKED ? 1 : 0
-            // }
-            // 如果有第三级
-            if (v1.M0004_CHILD && v1.M0004_CHILD.length > 0) {
-              v1.M0004_CHILD.forEach(v2 => {
-                if (!send && (v2.M0005_STATE === '1' || v2.M0005_STATE === 1)) {
-                  v1.tableForm.push(v2.M0004_NAME)
-                }
-                v2.M0005_STATE = v1.tableForm.includes(v2.M0004_NAME) ? 1 : 0
-                v1.M0005_STATE = v1.tableForm.length > 0 ? 1 : 0
-                v1.M0004_CHECKED = !!v1.M0005_STATE
-                v.M0005_STATE = v1.M0005_STATE
-                this.listPromision.push(v2)
-              })
-            }
-            this.listPromision.push(v1)
-          })
-          this.listPromision.push(v)
-        }
+    save () {
+      this.userId = JSON.parse(sessionStorage.getItem('currentUser')).UserId
+      this.$api.post('/cycle/userManagement/updatePassword?userId=' + this.userId + '&oldPassword=' + this.form.oldpswd + '&newPassword=' + this.form.newpswd, {}, null, r => {
+        this.$nextTick(() => {
+          if (r.msg === 'success') {
+            Message({
+              showClose: true,
+              message: '修改成功',
+              type: 'success'
+            })
+          } else {
+            Message({
+              showClose: true,
+              message: '密码错误',
+              type: 'success'
+            })
+          }
+        })
+        this.cancel()
       })
-      console.log(this.permisionListData)
-      // this.permisionListData = [...this.permisionListData]
     },
-    changeAuths (currets) {
-      this.setTableForm(true)
+    cancel () {
+      this.form = {}
     },
     loadMsg () {
       let userId = JSON.parse(sessionStorage.getItem('currentUser')).UserId
       this.$api.post('/cycle/userManagement/selectById?ID=' + userId, {}, null, r => {
-        console.log(r)
         if (r.data.M0014_IS_AVTIVE === 1) {
           r.data.M0014_IS_AVTIVE = true
         } else {
@@ -235,19 +221,6 @@ export default {
         this.form = r.data
       })
     }
-    // changeAuths (txt) {
-    //   switch (txt) {
-    //     case 'book':
-    //       console.log(this.form.mytb)
-    //       break
-    //     case 'bigdata':
-    //       console.log(this.form.bigdata)
-    //       break
-    //     case 'yhcostin':
-    //       console.log(this.form.yhCostIn)
-    //       break
-    //   }
-    // }
   }
 }
 </script>

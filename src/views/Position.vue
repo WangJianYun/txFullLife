@@ -75,14 +75,19 @@
         ></el-pagination>
         </el-row>
         </el-main>
+        <!-- 添加职务 -->
         <el-row>
           <el-dialog :title="dialogName" id="disZbDialog" :fullscreen="false" :visible.sync="disVisible" width="60%" :before-close="closeDialog">
             <el-main>
-              <el-form :inline="true" ref="form" v-model="form" size="small" label-width="140px"  class="demo-form-inline">
+              <el-form :inline="true" ref="form" :rules="rules" :model="form" size="small" label-width="140px"  class="demo-form-inline">
                 <table class="add-table">
                   <tr>
                     <td class="bg-td">职务名称：</td>
-                    <td><el-input type="text" v-model="form.M0015_DUTY_NAME" size="small" :disabled="islook"></el-input></td>
+                    <td>
+                      <el-form-item prop='M0015_DUTY_NAME'>
+                      <el-input type="text" v-model="form.M0015_DUTY_NAME" size="small" :disabled="islook"></el-input>
+                      </el-form-item>
+                    </td>
                     <td class="bg-td">是否激活：</td>
                     <td>
                       <el-switch
@@ -128,7 +133,13 @@ export default {
         M0015_IS_AVTIVE: true,
         M0015_DUTY_REMARK: '',
         M0015_CREATE_PERSON: '',
-        M0015_CREATE_TIME: ''
+        M0015_CREATE_TIME: '',
+        M0018_ID: ''
+      },
+      rules: {
+        M0015_DUTY_NAME: [
+          { required: true, message: '请输入职务名称', trigger: 'blur' }
+        ]
       }
     }
   },
@@ -154,12 +165,14 @@ export default {
       this.form.M0015_CREATE_TIME = str
     },
     refreshTable () {
+      this.form.M0018_ID = sessionStorage.getItem('id')
       // let token = JSON.parse(sessionStorage.getItem('currentUser'))
       // console.log(token)
       // eslint-disable-next-line no-unused-vars
       let _data = {
         currentPage: this.currentPage,
-        showCount: this.showCount
+        showCount: this.showCount,
+        searchMap: { 'M0018_ID': this.form.M0018_ID }
       }
       // let tabDatas = []
       this.$api.post('/cycle/dutyManagement/listPage', _data, null, r => {
@@ -172,19 +185,25 @@ export default {
     save () {
       this.form.M0018_ID = sessionStorage.getItem('id')
       this.form.M0015_CREATE_PERSON = JSON.parse(sessionStorage.getItem('currentUser')).UserName
-      if (this.dialogType === 'new') {
-        this.$api.post('/cycle/dutyManagement/insert', this.form, '新增成功', r => {
-          console.log(r)
-          this.closeDialog()
-        })
-      }
-      if (this.dialogType === 'edit') {
-        // console.log(this.form.image)
-        this.getDateTime()
-        this.$api.post('/cycle/dutyManagement/update', this.form, '编辑成功', r => {
-          this.closeDialog()
-        })
-      }
+      this.$refs['form'].validate(v => {
+        if (v) {
+          if (this.dialogType === 'new') {
+            this.$api.post('/cycle/dutyManagement/insert', this.form, '新增成功', r => {
+              console.log(r)
+              this.closeDialog()
+            })
+          }
+          if (this.dialogType === 'edit') {
+            // console.log(this.form.image)
+            this.getDateTime()
+            this.$api.post('/cycle/dutyManagement/update', this.form, '编辑成功', r => {
+              this.closeDialog()
+            })
+          }
+        } else {
+          return false
+        }
+      })
     },
     openDialog (type, row) {
       this.disVisible = true

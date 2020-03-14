@@ -3,7 +3,7 @@
     <el-aside>
       <el-scrollbar style="height:100%">
         <el-row class="title">
-          <span>铜旬全生命周期管理平台</span>
+          <span>高速公路全生命周期管理平台</span>
         </el-row>
         <el-row>
           <div class="userBack">
@@ -30,8 +30,8 @@
             :collapse="false"
           >
             <label v-for="item in menulist1" :key="item.$index">
-              <el-submenu :index="item.M0004_URL">
-                <!-- <el-submenu :index="item.M0004_URL" v-if="item.M0005_STATE==='1'||item.M0005_STATE===1"> -->
+              <!-- <el-submenu :index="item.M0004_URL"> -->
+                <el-submenu :index="item.M0004_URL" v-if="item.M0005_STATE==='1'||item.M0005_STATE===1">
                 <template
                   v-if="item.M0004_CHILD.length > 0 &&!['我的桌面', '大数据分析'].includes(item.M0004_NAME)">
                   <template slot="title" style="width:50%;text-align:left;">
@@ -44,10 +44,8 @@
                     :key="subItem.$index"
                     style="font-size:14px;"
                   >
-                    <span style="margin-left:50px">{{
-                      subItem.M0004_NAME
-                    }}</span>
-                    <!-- <span style="margin-left:50px" v-if="subItem.M0005_STATE==='1'||subItem.M0005_STATE===1">{{ subItem.M0004_NAME }}</span> -->
+                    <!-- <span style="margin-left:50px">{{ subItem.M0004_NAME }}</span> -->
+                    <span style="margin-left:50px" v-if="subItem.M0005_STATE==='1'||subItem.M0005_STATE===1">{{ subItem.M0004_NAME }}</span>
                   </el-menu-item>
                 </template>
                 <template slot="title" v-else>
@@ -67,7 +65,7 @@
         <el-row>
           <el-col :span="18">
             <span
-              >欢迎光临铜旬全生命周期管理平台，当前时间：{{ currentTime }}</span
+              >欢迎光临高速公路全生命周期管理平台，当前时间：{{ currentTime }}</span
             >
           </el-col>
           <el-col :span="6" class="tools">
@@ -134,11 +132,6 @@ export default {
     }
   },
   mounted () {
-    console.log(routes1)
-    this.routes = routes1
-    // this.routes1 = router.options.routes
-    // console.log(this.$route.params.menu)
-
     this.getMenu()
     this.timer()
     this.changeActive()
@@ -173,7 +166,6 @@ export default {
       //   })
     },
     handleSelect (key) {
-      console.log(key)
       if (this.$route.path !== key) {
         this.$router.push({ path: key })
       }
@@ -215,205 +207,62 @@ export default {
     },
     getMenu () {
       // 写死的菜单
-      let menuData = [
-        {
-          id: '1',
-          name: '我的桌面',
-          icon: '',
-          url: '/workBanch',
-          lvl: '1',
-          children: [],
-          isNotFinal: false
-        },
-        {
-          id: '2',
-          name: '大数据分析',
-          icon: '',
-          url: '/bigData',
-          lvl: '1',
-          children: []
-        },
-        {
-          id: '3',
-          name: '养护费用',
-          icon: '',
-          url: '1',
-          lvl: '1',
-          children: []
-        },
-        {
-          id: '4',
-          name: '费用列表',
-          icon: '',
-          url: '/yhCostList',
-          lvl: '2',
-          parentId: '3'
-        },
-        {
-          id: '16',
-          name: '日常费用',
-          icon: '',
-          url: '2',
-          lvl: '1',
-          children: []
-        },
-        {
-          id: '5',
-          name: '费用列表',
-          icon: '',
-          url: '/dailyCost',
-          lvl: '2',
-          parentId: '16'
-        },
-        {
-          id: '17',
-          name: '资产技术等级',
-          icon: '',
-          url: '3',
-          lvl: '1',
-          children: []
-        },
-        {
-          id: '7',
-          name: '资产技术等级列表',
-          icon: '',
-          url: '/techGrade',
-          lvl: '2',
-          parentId: '17'
-        },
-        // { id: '6', name: '状况管理', icon: '', url: '/techStatus', lvl: '2', parentId: '17' },
-        {
-          id: '18',
-          name: '公路资产',
-          icon: '',
-          url: '4',
-          lvl: '1',
-          children: []
-        },
-        {
-          id: '8',
-          name: '资产管理',
-          icon: '',
-          url: '/Assets',
-          lvl: '2',
-          parentId: '18'
-        },
-        // { id: '9', name: '类别管理', icon: '', url: '/assetsClass', lvl: '2', parentId: '18' },
-        {
-          id: '19',
-          name: '基础数据',
-          icon: '',
-          url: '5',
-          lvl: '1',
-          children: []
-        },
-        {
-          id: '10',
-          name: '百米桩',
-          icon: '',
-          url: '/metersPile',
-          lvl: '2',
-          parentId: '19'
-        },
-        {
-          id: '11',
-          name: '管辖路段',
-          icon: '',
-          url: '/Jurisdiction',
-          lvl: '2',
-          parentId: '19'
-        },
-        // { id: '12', name: '高速管理', icon: '', url: '/highway', lvl: '2', parentId: '19' },
-        {
-          id: '20',
-          name: '系统配置',
-          icon: '',
-          url: '6',
-          lvl: '1',
-          children: []
-        },
-        {
-          id: '13',
-          name: '部门管理',
-          icon: '',
-          url: '/department',
-          lvl: '2',
-          parentId: '20'
-        },
-        {
-          id: '14',
-          name: '管理员',
-          icon: '',
-          url: '/manager',
-          lvl: '2',
-          parentId: '20'
-        },
-        {
-          id: '15',
-          name: '职务管理',
-          icon: '',
-          url: '/Position',
-          lvl: '2',
-          parentId: '20'
-        },
-        {
-          id: '22',
-          name: '权限配置',
-          icon: '',
-          url: '/Authority',
-          lvl: '2',
-          parentId: '20'
-        },
-        {
-          id: '21',
-          name: '个人中心',
-          icon: '',
-          url: '7',
-          lvl: '1',
-          children: []
-        },
-        {
-          id: '23',
-          name: '我的资料',
-          icon: '',
-          url: '/Personal',
-          lvl: '2',
-          parentId: '21'
-        }
-      ]
-      // this.$api.post('/cycle/login/login', this.form, null, r => {
-      // console.log(r)
-      // this.menuList = r.data.menuList
-      // this.menulist1 = r.data.menuList.filter(v => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1)
-      console.log(this.routes)
+      // let menuData = [
+      //   { id: '1', name: '我的桌面', icon: '', url: '/workBanch', lvl: '1', children: [], isNotFinal: false },
+      //   { id: '2', name: '大数据分析', icon: '', url: '/bigData', lvl: '1', children: [] },
+      //   { id: '3', name: '养护费用', icon: '', url: '1', lvl: '1', children: [] },
+      //   { id: '4', name: '费用列表', icon: '', url: '/yhCostList', lvl: '2', parentId: '3' },
+      //   { id: '16', name: '日常费用', icon: '', url: '2', lvl: '1', children: [] },
+      //   { id: '5', name: '费用列表', icon: '', url: '/dailyCost', lvl: '2', parentId: '16' },
+      //   { id: '17', name: '资产技术等级', icon: '', url: '3', lvl: '1', children: [] },
+      //   { id: '7', name: '资产技术等级列表', icon: '', url: '/techGrade', lvl: '2', parentId: '17' },
+      //   // { id: '6', name: '状况管理', icon: '', url: '/techStatus', lvl: '2', parentId: '17' },
+      //   { id: '18', name: '公路资产', icon: '', url: '4', lvl: '1', children: [] },
+      //   { id: '8', name: '资产管理', icon: '', url: '/Assets', lvl: '2', parentId: '18' },
+      //   // { id: '9', name: '类别管理', icon: '', url: '/assetsClass', lvl: '2', parentId: '18' },
+      //   { id: '19', name: '基础数据', icon: '', url: '5', lvl: '1', children: [] },
+      //   { id: '10', name: '百米桩', icon: '', url: '/metersPile', lvl: '2', parentId: '19' },
+      //   { id: '11', name: '管辖路段', icon: '', url: '/Jurisdiction', lvl: '2', parentId: '19' },
+      //   { id: '12', name: '高速管理', icon: '', url: '/highway', lvl: '2', parentId: '19' },
+      //   { id: '20', name: '系统配置', icon: '', url: '6', lvl: '1', children: [] },
+      //   { id: '13', name: '部门管理', icon: '', url: '/department', lvl: '2', parentId: '20' },
+      //   { id: '14', name: '管理员', icon: '', url: '/manager', lvl: '2', parentId: '20' },
+      //   { id: '15', name: '职务管理', icon: '', url: '/Position', lvl: '2', parentId: '20' },
+      //   { id: '22', name: '权限配置', icon: '', url: '/Authority', lvl: '2', parentId: '20' },
+      //   { id: '21', name: '个人中心', icon: '', url: '7', lvl: '1', children: [] },
+      //   { id: '23', name: '我的资料', icon: '', url: '/Personal', lvl: '2', parentId: '21' }
+      // ]
       this.menuList = JSON.parse(this.$route.params.menu)
       this.menulist1 = this.menuList.filter(
         v => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1
       )
-      // list.forEach((ele, index) => {
-      //   if (ele.name === '我的桌面') {
-      //     ele.url = '/allBanch'
-      //   }
-      // })
-      // this.menuList.forEach(v => {
-      //   this.routes.forEach(vt => {
-      //     if (v.M0004_NAME === this.routes.name) {
-      //       // eslint-disable-next-line no-unused-expressions
-      //       v.M0004_URL === '/对应的path'
-      //     }
-      //   })
-      // })
-      console.log(this.menuList)
-      console.log(this.menuList1)
-
+      // 根据menuType来判断是集团公司还是分公司菜单
+      if (parseInt(this.$route.params.menuType) === 1) { // 分公司
+        this.routes = routes1
+      }
+      if (parseInt(this.$route.params.menuType) === 0) { // 集团公司
+        this.routes = routes2
+      }
       try {
         this.menulist1.forEach(v => {
           this.findKid(v, this.menuList)
         })
+        console.log(this.menulist1)
+        for (const v of this.menulist1) {
+          if (v.M0005_STATE === 1 || v.M0005_STATE === '1') {
+            // this.$router.push((v.M0004_CHILD && v.M0004_CHILD.length > 0) ? v.M0004_CHILD[0].M0004_URL : v.M0004_URL)
+            if (v.M0004_CHILD && v.M0004_CHILD.length > 0 && v.M0004_CHILD[0].M0004_URL) {
+              this.$router.push(v.M0004_CHILD[0].M0004_URL)
+            } else {
+              // eslint-disable-next-line no-unused-expressions
+              v.M0004_URL ? this.$router.push(v.M0004_URL) : ''
+            }
+            break
+          }
+        }
       } catch (error) {
         console.log(error)
       }
-
       // this.menulist1.forEach(val => {
       //   this.menuOptions.push({
       //     id: val.M0004_ID,
@@ -429,13 +278,16 @@ export default {
       //     val.children = childList
       //   }
       // })
-      for (let key in menuData) {
-        if (menuData[key].isNotFinal === false) {
-          this.defaultActiveMenu = menuData[key].url
-          this.$router.push(this.defaultActiveMenu)
-          break
-        }
-      }
+      // 设置默认路由
+      // for (let key in menuData) {
+      //   console.log(menuData[key])
+      //   if (menuData[key].isNotFinal === false) {
+      //     this.defaultActiveMenu = menuData[key].url
+      //     this.$router.push(this.defaultActiveMenu)
+      //     break
+      //   }
+      // }
+      // console.log(this.defaultActiveMenu)
       // })
     },
     findChild (id, allRes) {

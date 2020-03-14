@@ -2,7 +2,7 @@
   <div class="login-container">
     <div class="login-header"></div>
     <div class="container">
-      <div class="login-container-title">铜旬分公司全生命周期管理系统</div>
+      <div class="login-container-title">高速公路全生命周期管理平台</div>
       <div class="login-container-form">
         <h2>欢迎您，请登录</h2>
         <el-form :model="form" ref="form" :rules="rules" class="login-form" @keyup.enter.native="onSubmit">
@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { Message } from 'element-ui'
 export default {
   data () {
     return {
@@ -43,7 +44,8 @@ export default {
       },
       menuData: [],
       menuData1: [],
-      msg: ''
+      msg: '',
+      menuType: ''
     }
   },
   methods: {
@@ -52,19 +54,33 @@ export default {
         if (valid) {
           this.$api.post('/cycle/login/login', this.form, '登陆成功', r => {
             console.log(r)
-            if (r.msg !== 'success') {
-              alert(r.msg)
-            }
+            this.$nextTick(() => {
+              if (r.msg === 'success') {
+                Message({
+                  showClose: true,
+                  message: '登录成功',
+                  type: 'success'
+                })
+              } else {
+                Message({
+                  showClose: true,
+                  message: r.msg,
+                  type: 'success'
+                })
+              }
+            })
             this.menuData = JSON.stringify(r.data.menuList)
+            this.menuType = JSON.stringify(r.data.menuType)
+            // this.menuData = JSON.stringify(r.data)
             // eslint-disable-next-line no-eval
-            console.log(this.menuData)
+            // console.log(this.menuData)
             sessionStorage.clear()
             sessionStorage.setItem('id', r.data.M0018_ID)
             sessionStorage.setItem('currentUser', JSON.stringify(r.data))
             sessionStorage['TokenId'] = r.data.TokenId
             // this.$router.push('/workBanch')
             this.$router.push({
-              path: `/Manage/${this.menuData}`
+              path: `/Manage/${this.menuData}/${this.menuType}`
             })
             // this.$router.push({
             //   path: '/Manage',

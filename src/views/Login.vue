@@ -9,18 +9,20 @@
           <el-form-item prop="userName" label="用户名">
             <el-input v-model="form.userName" placeholder="用户名" style="width:100%"></el-input>
           </el-form-item>
+          <span class="icon1 icon">*</span>
           <el-form-item prop="password" label="密码">
             <el-input type="password" placeholder="密码" style="width:100%" v-model="form.password"></el-input>
           </el-form-item>
+          <span class="icon2 icon">*</span>
           <el-form-item>
-            <el-button type="primary" style="width:100%" @click="onSubmit">登录</el-button>
+            <el-button type="primary" style="width:100%" @click="onSubmit" :loading="isload" :disabled="isdisabled">登录</el-button>
             <span class="msg">{{msg}}</span>
           </el-form-item>
         </el-form>
       </div>
     </div>
     <div class="login-container-footer">
-      版权所有：陕西省高速集团公司铜旬分公司
+      版权所有：陕西省高速集团公司
     </div>
   </div>
 </template>
@@ -45,15 +47,18 @@ export default {
       menuData: [],
       menuData1: [],
       msg: '',
-      menuType: ''
+      menuType: '',
+      isload: false,
+      isdisabled: false
     }
   },
   methods: {
     onSubmit () {
+      this.isload = true
+      this.isdisabled = true
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.$api.post('/cycle/login/login', this.form, '登陆成功', r => {
-            console.log(r)
             this.$nextTick(() => {
               if (r.msg === 'success') {
                 Message({
@@ -78,6 +83,7 @@ export default {
             sessionStorage.setItem('id', r.data.M0018_ID)
             sessionStorage.setItem('currentUser', JSON.stringify(r.data))
             sessionStorage['TokenId'] = r.data.TokenId
+            // sessionStorage.setItem('TokenId', r.data.TokenId)
             // this.$router.push('/workBanch')
             this.$router.push({
               path: `/Manage/${this.menuData}/${this.menuType}`
@@ -144,6 +150,7 @@ export default {
   min-height:200px;
   background-color: #FFFFFF;
 }
-.login-container-footer{width: 100%;text-align: center;color: #fff;font-size: 14px;position: fixed;bottom: 10px;}
+.login-container-footer{width: 100%;text-align: center;color: #fff;font-size: 14px;margin-top: 100px;}
 .msg{color:red}
+.icon{color:red;position: relative;left:170px;top:-50px}
 </style>

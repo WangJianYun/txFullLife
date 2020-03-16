@@ -3,7 +3,7 @@
     <el-aside>
       <el-scrollbar style="height:100%">
         <el-row class="title">
-          <span>高速公路全生命周期管理平台</span>
+          <span>全生命周期管理平台</span>
         </el-row>
         <el-row>
           <div class="userBack">
@@ -391,9 +391,10 @@ export default {
     font-size:12px;
   }
   .userDesc{
-    padding-top:10px;
+    padding:10px;
     height:40px;
     text-align:center;
+    margin-bottom:20px;
   }
   .local{
     width:100%;

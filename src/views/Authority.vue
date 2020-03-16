@@ -155,7 +155,8 @@
           <el-form
             :inline="true"
             ref="form"
-            v-model="form"
+            :rules="rules"
+            :model="form"
             size="small"
             class="demo-form-inline"
           >
@@ -163,12 +164,14 @@
               <tr>
                 <td class="bg-td">权限组名称：</td>
                 <td>
+                  <el-form-item prop='M0003_NAME'>
                   <el-input
                     type="text"
                     v-model="form.M0003_NAME"
                     size="small"
                     :disabled="islook"
                   ></el-input>
+                  </el-form-item>
                 </td>
                 <td class="bg-td">是否激活：</td>
                 <td>
@@ -363,7 +366,12 @@ export default {
       M0005ID: '',
       updateData: {},
       updateID: '',
-      checked: false
+      checked: false,
+      rules: {
+        M0003_NAME: [
+          { required: true, message: '请输入权限组名称', trigger: 'blur' }
+        ]
+      }
     }
   },
   mounted () {
@@ -466,22 +474,28 @@ export default {
         'permissionList': this.listPromision
         // 'permissionList': this.listPromision
       }
-      if (this.dialogType === 'add') {
-        this.itemData.CREATOR = JSON.parse(sessionStorage.getItem('currentUser')).UserName
-        this.itemData.M0001_ID_CREATE = JSON.parse(sessionStorage.getItem('currentUser')).UserMap.CM_M0001_ID
-        this.data.mapParam = this.itemData
-        this.$api.post('/cycle/roleGroupManagement/insert', this.data, '新增成功', r => {
-          this.closeDialog()
-          this.refreshTable()
-        })
-      }
-      if (this.dialogType === 'edit') {
-        this.data.mapParam = { ...this.updateData, ...this.itemData }
-        this.$api.post('/cycle/roleGroupManagement/updateSelective', this.data, '修改成功', r => {
-          this.closeDialog()
-          this.refreshTable()
-        })
-      }
+      this.$refs['form'].validate(v => {
+        if (v) {
+          if (this.dialogType === 'add') {
+            this.itemData.CREATOR = JSON.parse(sessionStorage.getItem('currentUser')).UserName
+            this.itemData.M0001_ID_CREATE = JSON.parse(sessionStorage.getItem('currentUser')).UserMap.CM_M0001_ID
+            this.data.mapParam = this.itemData
+            this.$api.post('/cycle/roleGroupManagement/insert', this.data, '新增成功', r => {
+              this.closeDialog()
+              this.refreshTable()
+            })
+          }
+          if (this.dialogType === 'edit') {
+            this.data.mapParam = { ...this.updateData, ...this.itemData }
+            this.$api.post('/cycle/roleGroupManagement/updateSelective', this.data, '修改成功', r => {
+              this.closeDialog()
+              this.refreshTable()
+            })
+          }
+        } else {
+          return false
+        }
+      })
     },
     changeCheck (child) {
       // console.log(child)
@@ -522,6 +536,7 @@ export default {
       this.setTableForm(true)
     },
     closeDialog () {
+      this.$refs['form'].resetFields()
       this.disVisible = false
       this.islook = false
       this.form = {}
@@ -662,14 +677,17 @@ export default {
       td,
       th {
         border: 1px solid #dcdfe6;
-        padding: 5px 10px;
-        text-align: center;
+        padding: 15px 10px !important;
+        text-align: left !important;
       }
     }
     .bg-td {
       background: #f0f0f0;
       text-align: center;
     }
+    .el-form-item{
+        margin-bottom: 0;
+      }
   }
   .chakan{
     font-weight: 700;

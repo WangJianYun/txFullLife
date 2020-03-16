@@ -264,6 +264,7 @@
                     align="center">
                     <template slot-scope="scope">
                       <el-image
+                        v-if="scope.row.pic.length>0"
                         style="width: 27px; height: 27px"
                         :src="scope.row.pic"
                         :preview-src-list="srcList">
@@ -279,7 +280,7 @@
                     label="位置"
                     align="center">
                     <template slot-scope="scope">
-                      <i class="el-icon-location" @click="openDialog(scope.row.location,scope.row.name,scope.row.pic)"></i>
+                      <i class="el-icon-location" @click="openDialog(scope.row)"></i>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -451,8 +452,7 @@
         </el-col>
       </el-row>
       <el-row>
-        <el-dialog  title="位置查看" :visible.sync="locationDialog" width="60%" :before-close="closeLoclDialog">
-          <!-- <el-main> -->
+        <!-- <el-dialog  title="位置查看" :visible.sync="locationDialog" width="60%" :before-close="closeLoclDialog">
             <el-row>
               <div id="localMap">
                 <div class="amap-wrapper">
@@ -469,8 +469,27 @@
                 </div>
               </div>
             </el-row>
-          <!-- </el-main> -->
-        </el-dialog>
+        </el-dialog> -->
+        <el-dialog
+      :visible.sync="mapShow"
+      custom-class="dialog-div"
+      title="地图位置"
+    >
+      <div style="height: 400px;">
+        <el-amap
+          vid="amapDiv"
+          :center="mapData.position"
+          :zoom="mapData.zoom"
+          class="amap-demo"
+        >
+          <el-amap-marker
+            vid="component-marker"
+            :position="mapData.position"
+            :content-render="mapData.contentRender"
+          ></el-amap-marker>
+        </el-amap>
+      </div>
+    </el-dialog>
       </el-row>
       <el-row>
         <el-dialog  :title="portName" :visible.sync="portDialog" width="60%" :before-close="closeImgDialog">
@@ -487,9 +506,25 @@
 </template>
 <script>
 import 'remixicon/fonts/remixicon.css'
+import { Message } from 'element-ui'
 export default {
   data () {
     return {
+      mapShow: false, // 地图是否显示
+      mapData: {
+        zoom: 12, // 当前地图缩放比列
+        position: [],
+        title: [],
+        contentRender: (h, instance) => {
+          return h(
+            'div',
+            {
+              style: { background: '#80cbc4', whiteSpace: 'nowrap' }
+            },
+            this.mapData.title
+          )
+        }
+      },
       astZoom: 12,
       astCenter: [108.860159, 34.978],
       locationDialog: false,
@@ -699,32 +734,37 @@ export default {
     },
     toBaseData () {
       this.$bus.$emit('changeActMenu', '/metersPile')
-      this.$router.push('/metersPile')
+      this.$router.push('/metersPileList')
     },
     toAssets () {
       this.$bus.$emit('changeActMenu', '/Assets')
-      this.$router.push('/Assets')
+      this.$router.push('/AssetsList')
     },
     toTech () {
       this.$bus.$emit('changeActMenu', '/techGrade')
-      this.$router.push('/techGrade')
+      this.$router.push('/techGradeList')
     },
     toDayliCost () {
       this.$bus.$emit('changeActMenu', '/dailyCost')
-      this.$router.push('/dailyCost')
+      this.$router.push('/dailyCostList')
     },
     toConsCost () {
       this.$bus.$emit('changeActMenu', '/yhCostList')
       this.$router.push('/yhCostList')
     },
-    openDialog (local, name, icon) {
-      this.locationDialog = true
-      this.loclCenter = local
-      this.loclicon = icon
-      this.loclabel = {
-        content: name,
-        offset: [10, -20]
-      }
+    // 位置信息
+    openDialog (data) {
+      // this.locationDialog = true
+      // this.loclCenter = local
+      // this.loclicon = icon
+      // this.loclabel = {
+      //   content: name,
+      //   offset: [10, -20]
+      // }
+      this.mapData.title = []
+      this.mapShow = true
+      this.mapData.position = [data.T0002_ASSET_PRECI, data.T0002_ASSET_LATI]
+      this.mapData.title.push(data.T0002_ASSET_NAME)
     },
     changeMarkers () {
       // console.log(this.condition)
@@ -759,8 +799,17 @@ export default {
       document.getElementById('mkDialog').style.display = 'none'
     },
     imgDialog (img) {
-      this.portDialog = true
-      this.imgUrl = img
+      console.log(img)
+      if (img) {
+        this.portDialog = true
+        this.imgUrl = img
+      } else {
+        Message({
+          showClose: true,
+          message: '无票据报告信息!!!',
+          type: 'warning'
+        })
+      }
     },
     closeLoclDialog () {
       this.locationDialog = false
@@ -803,6 +852,7 @@ export default {
       // let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
       // console.log(token)
       this.$api.post('/cycle/assetData/listPage', {}, null, r => {
+        console.log(r.data.returnParam)
         r.data.returnParam.forEach((item, index) => {
           // if (item.T0002_ASSET_NAME.indexOf('加油站') > -1) {
           //   item.pic = require('../assets/addoil.png')
@@ -974,4 +1024,5 @@ export default {
   #dailyCost th,#dailyCost td{min-width: 101px;}
   #yhCost th,#yhCost td{min-width: 100px;}
   #fgsCost th,#fgsCost td{min-width: 100px;}
+  .el-table .cell{text-overflow:clip !important}
 </style>

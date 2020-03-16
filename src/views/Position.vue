@@ -275,7 +275,10 @@ export default {
         border: 1px solid #dcdfe6;
         td {
           border: 1px solid #dcdfe6;
-          padding: 5px 10px;
+          padding: 15px 15px !important;
+          .el-form-item{
+            margin-bottom: 0 !important;
+          }
         }
       }
       .bg-td {

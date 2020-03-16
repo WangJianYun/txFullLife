@@ -358,9 +358,9 @@ export default {
         border: 1px solid #dcdfe6;
         td {
           border: 1px solid #dcdfe6;
-          padding: 5px 10px;
+          padding: 15px 15px !important;
           .el-form-item{
-            margin-bottom: 20px;
+            margin-bottom: 0 !important;
           }
         }
       }
@@ -373,5 +373,6 @@ export default {
     text-align: center;
     margin-top: 10px;
   }
+  .el-table{font-size: 12px;}
   }
 </style>

@@ -313,14 +313,14 @@ export default {
     },
     save () {
       this.form.M0018_ID = sessionStorage.getItem('id')
-      if (this.form.M0016_ID === '') {
-        this.form.M0016_ID = '0'
-      }
-      if (this.form.M0015_ID === '') {
-        this.form.M0015_ID = '0'
-      }
       this.$refs['form'].validate((valid) => {
         if (valid) {
+          if (this.form.M0016_ID === '') {
+            this.form.M0016_ID = '0'
+          }
+          if (this.form.M0015_ID === '') {
+            this.form.M0015_ID = '0'
+          }
           if (this.form.M0014_PASS_WORD === this.Expassword) {
             this.form.M0014_USER_CODE = this.form.M0014_SIMP_NAME
             if (this.dialogType === 'new') {
@@ -449,7 +449,7 @@ export default {
         height:60px;
         td {
           border: 1px solid #dcdfe6;
-          padding: 5px 15px;
+          padding: 15px 15px;
         }
       }
       .bg-td {

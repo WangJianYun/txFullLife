@@ -174,14 +174,15 @@ export default {
   methods: {
     // 公路资产数据统计查看
     checkRow () {
-      this.$router.push('/Assets')
+      this.$router.push('/AssetsList')
     },
+    // 交通安全设施数据统计查看
     checkSafe () {
-      this.$router.push('/Assets')
+      this.$router.push('/AssetsList')
     },
     // 日常费用查看
     checkDayCost () {
-      this.$router.push('/dailyCost')
+      this.$router.push('/dailyCostList')
     },
     // 养护费用查看
     checkYhcost () {
@@ -189,15 +190,15 @@ export default {
     },
     // 桥梁技术等级检测数据
     checkBridge () {
-      this.$router.push('/techGrade')
+      this.$router.push('/techGradeList')
     },
     // 隧道技术等级检测数据
     checkTunnel () {
-      this.$router.push('/techGrade')
+      this.$router.push('/techGradeList')
     },
     // 涵洞技术等级检测数据
     checkHole () {
-      this.$router.push('/techGrade')
+      this.$router.push('/techGradeList')
     },
     getSerch () {
       console.log(this.assetsRange)
@@ -207,7 +208,7 @@ export default {
     },
     loadSumData () {
       this.$api.post('/cycle/bigData/getDataSum?M0018_ID=425428539089616896', {}, null, r => {
-        // console.log(r)
+        console.log(r)
         this.rzyhgq = r[0].YHGQ
         this.ljyh = r[0].RZYH
         this.glzc = r[0].GLZC
@@ -271,7 +272,8 @@ export default {
         })
       })
       // 交通安全
-      this.$api.post('/cycle/bigData/getAssetSumByType', {}, null, r => {
+      // this.$api.post('/cycle/bigData/getAssetSumByType', {}, null, r => {
+      this.$api.post('/cycle/bigData/getAmountSumByAqType', {}, null, r => {
         let arr2 = [['amount', 'product']]
         r.forEach(element => {
           let arr1 = [element.ASSET_AMOUNT, element.T0001_ASSETTYPE_NAME]
@@ -290,7 +292,7 @@ export default {
             source: arr2
           },
           grid: {
-            left: '25%',
+            left: '32%',
             top: '0',
             right: '5%',
             bottom: '0'
@@ -358,7 +360,7 @@ export default {
           // to a column of dataset.source by default.
           series: [
             { type: 'bar',
-              barGap: '-50%',
+              // barGap: '-50%',
               itemStyle: { color: 'rgb(164,205,238)' },
               barWidth: 30 },
             { type: 'bar',
@@ -429,7 +431,7 @@ export default {
         myChart6.setOption({
           tooltip: {
             trigger: 'item',
-            formatter: '{a} <br/>{b} : {c} ({d}%)'
+            formatter: '{a} <br/>{b} : {c} 个'
           },
           series: [
             {
@@ -449,7 +451,7 @@ export default {
                 normal: {
                   // 每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
                   color: function (params) {
-                    var colorList = ['rgb(164,205,238)', 'rgb(42,170,227)', 'rgb(25,46,94)', 'rgb(195,229,235)']
+                    var colorList = ['rgb(46,150,179)', 'rgb(255,202,93)', 'rgb(223,42,54)', 'rgb(254,145,46)', 'rgb(231,70,87)']
                     return colorList[params.dataIndex]
                   }
                 }
@@ -481,7 +483,7 @@ export default {
         myChart7.setOption({
           tooltip: {
             trigger: 'item',
-            formatter: '{a} <br/>{b} : {c} ({d}%)'
+            formatter: '{a} <br/>{b} : {c} 个'
           },
           series: [
             {
@@ -494,14 +496,14 @@ export default {
                 normal: {
                   // 每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
                   color: function (params) {
-                    var colorList = ['rgb(164,205,238)', 'rgb(42,170,227)', 'rgb(25,46,94)']
+                    var colorList = ['rgb(255,202,93)', 'rgb(100,208,220)', 'rgb(277,72,86)']
                     return colorList[params.dataIndex]
                   }
                 }
               },
               label: {
                 normal: {
-                  formatter: '{b}{value|{c}}座',
+                  formatter: '{b}{value|{c}}个',
                   rich: {
                     value: {
                       fontSize: 20
@@ -541,7 +543,7 @@ export default {
               minSize: '0%',
               maxSize: '80%',
               // height: {totalHeight} - y - y2,
-              sort: 'descending',
+              sort: 'ascending',
               gap: 2,
               label: {
                 normal: {
@@ -593,4 +595,7 @@ export default {
     height: 500px;
   }
   #bigData .dataChart{height: 300px;}
+  .el-range-separator{
+    width: 25px !important;
+  }
 </style>

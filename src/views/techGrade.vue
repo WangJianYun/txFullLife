@@ -874,11 +874,11 @@
         <el-table-column
           label="检测报告"
           align="center"
-          width="100"
+          width="80"
         >
           <template slot-scope="scope">
             <el-image
-              style="width: 70px; height: 40px; line-height: 45px;"
+              style="width: 50px; height: 18px"
               :src="scope.row.pic"
               :preview-src-list="scope.row.srcList"
             >

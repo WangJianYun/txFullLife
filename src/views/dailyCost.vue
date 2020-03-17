@@ -195,11 +195,11 @@
           <el-table-column
             label="票据查看"
             align="center"
-            width="100"
+            width="80"
           >
             <template slot-scope="scope">
               <el-image
-                style="width: 70px; height: 40px; line-height: 45px;"
+                style="width: 50px; height: 18px"
                 :src="scope.row.pic"
                 :preview-src-list="scope.row.srcList"
               >
@@ -888,6 +888,12 @@ export default {
     }
   },
   methods: {
+    // 请求所有的起点 / 终点桩号
+    assetDataFun () {
+      this.$api.post('/cycle/assetData/listAll', {}, null, r => {
+        this.pileList = r.data
+      })
+    },
     // 根据 资产类别 请求 起点 / 终点桩号
     changeSelect (val) {
       let _data = {
@@ -964,6 +970,9 @@ export default {
       this.$api.post(`/cycle/utilData/getId`, {}, null, r => {
         this.dataParams.ID = r.data
         this.addForm.T0004_ID = r.data
+      })
+      this.$api.post('/cycle/assetData/listAll', {}, null, r => {
+        this.searchPileList = r.data
       })
     },
     // 新建 选中 资产类别
@@ -1074,6 +1083,9 @@ export default {
     },
     // 点击修改
     handleEdit (data) {
+      this.$api.post('/cycle/assetData/listAll', {}, null, r => {
+        this.searchPileList = r.data
+      })
       this.addReset()
       this.imageUrl = ''
       this.imageList = []
@@ -1202,7 +1214,7 @@ export default {
   created () {
     this.getCuringList()
     this.getAssetTypeList()
-    // this.getAssetDataList()
+    this.assetDataFun()
   }
 }
 </script>

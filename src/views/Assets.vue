@@ -162,11 +162,11 @@
           <el-table-column
             label="图片"
             align="center"
-            width="100"
+            width="80"
           >
             <template slot-scope="scope">
               <el-image
-                style="width: 70px; height: 40px; line-height: 45px;"
+                style="width: 50px; height: 18px"
                 :src="scope.row.pic"
                 :preview-src-list="scope.row.srcList"
               >
@@ -1076,6 +1076,12 @@ export default {
     }
   },
   methods: {
+    // 请求所有的起点 / 终点桩号
+    assetDataFun () {
+      this.$api.post('/cycle/assetData/listAll', {}, null, r => {
+        this.pileList = r.data
+      })
+    },
     // 点击地图
     locationFun (data) {
       this.mapData.title = []
@@ -1330,6 +1336,7 @@ export default {
     this.getAssetTypeList()
     this.getAssetList()
     this.getListNameList()
+    this.assetDataFun()
   }
 }
 </script>

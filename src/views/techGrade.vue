@@ -149,10 +149,18 @@
             label="技术状况"
           >
             <template slot-scope="scope">
-              <div v-if="scope.row.T0006_TECHTYPE_NAME == '五类' || scope.row.T0006_TECHTYPE_NAME == '四类'">
+              <div
+                @click="clickTypeFun(scope.row)"
+                style="cursor: pointer;"
+                v-if="scope.row.T0006_TECHTYPE_NAME == '五类' || scope.row.T0006_TECHTYPE_NAME == '四类'"
+              >
                 {{ scope.row.T0006_TECHTYPE_NAME }} <span class="error-span"> 危 </span>
               </div>
-              <div v-else>
+              <div
+                v-else
+                @click="clickTypeFun(scope.row)"
+                style="cursor: pointer;"
+              >
                 {{ scope.row.T0006_TECHTYPE_NAME }}
               </div>
             </template>
@@ -181,11 +189,11 @@
           <el-table-column
             label="检测报告"
             align="center"
-            width="100"
+            width="80"
           >
             <template slot-scope="scope">
               <el-image
-                style="width: 70px; height: 40px; line-height: 45px;"
+                style="width: 50px; height: 18px"
                 :src="scope.row.pic"
                 :preview-src-list="scope.row.srcList"
               >
@@ -231,9 +239,9 @@
           class="table-page"
           @size-change="sizeChange"
           @current-change="currentChange"
-          :current-page="techgrade.currentPage"
+          :current-page="currentPage"
           :page-sizes="[10, 50, 100]"
-          :page-size="techgrade.showCount"
+          :page-size="showCount"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
         ></el-pagination>
@@ -374,6 +382,7 @@
                   v-model="addForm.T0006_ID"
                   style="width:100%"
                   size="small"
+                  v-if="searchTechTypeList.length > 0 "
                 >
                   <el-option
                     v-for="item in searchTechTypeList"
@@ -592,9 +601,10 @@
                   v-model="editForm.T0006_ID"
                   style="width:100%"
                   size="small"
+                  v-if="searchTechTypeList.length > 0 "
                 >
                   <el-option
-                    v-for="item in techTypeList"
+                    v-for="item in searchTechTypeList"
                     :key="item.T0006_ID"
                     :label="item.T0006_TECHTYPE_NAME"
                     :value="item.T0006_ID"
@@ -792,6 +802,112 @@
         </el-image>
       </div>
     </el-dialog>
+    <!-- 查看资产历年技术检测信息 -->
+    <el-dialog
+      :visible.sync="typeShow"
+      title="资产历年技术检测信息"
+      :close-on-click-modal="false"
+      custom-class="dialog-div"
+    >
+      <el-table
+        v-loading.body="typeLoading"
+        :data="tableTypeData"
+        border
+        style="width: 100%"
+        highlight-current-row
+        :header-cell-style="{background:'#f0f0f0'}"
+      >
+        >
+        <el-table-column
+          label="序号"
+          width="50"
+          align="center"
+        >
+          <template scope="scope"><span>{{scope.$index + 1}}</span></template>
+        </el-table-column>
+        <el-table-column
+          prop="T0002_ASSET_NAME"
+          label="资产名称"
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column
+          prop="T0001_ASSETTYPE_NAME"
+          label="资产类别"
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column
+          prop="T0006_TECHTYPE_NAME"
+          label="技术状况"
+        >
+          <template slot-scope="scope">
+            <div v-if="scope.row.T0006_TECHTYPE_NAME == '五类' || scope.row.T0006_TECHTYPE_NAME == '四类'">
+              {{ scope.row.T0006_TECHTYPE_NAME }} <span class="error-span"> 危 </span>
+            </div>
+            <div v-else>
+              {{ scope.row.T0006_TECHTYPE_NAME }}
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="T0003_CHECK_TIME"
+          label="检测时间"
+          width="140"
+        >
+          <template slot-scope="scope">
+            <div>
+              {{ scope.row.T0003_CHECK_TIME }}
+              <span
+                class="wraning-span"
+                v-if="scope.row.STATE == 1 "
+              > 检 </span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="T0003_CHECK_UNIT"
+          label="检测单位"
+          show-overflow-tooltip
+        >
+        </el-table-column>
+        <el-table-column
+          label="检测报告"
+          align="center"
+          width="100"
+        >
+          <template slot-scope="scope">
+            <el-image
+              style="width: 70px; height: 40px; line-height: 45px;"
+              :src="scope.row.pic"
+              :preview-src-list="scope.row.srcList"
+            >
+              <div
+                slot="error"
+                class="image-slot"
+              >
+                无
+              </div>
+            </el-image>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="T0002_LOAD_NAME"
+          label="所属路段"
+        >
+        </el-table-column>
+      </el-table>
+      <el-pagination
+        class="table-page"
+        @size-change="sizeTypeChange"
+        @current-change="currentTypeChange"
+        :current-page="TypeCurrentPage"
+        :page-sizes="[10, 50, 100]"
+        :page-size="TypeShowCount"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="typeTotal"
+      ></el-pagination>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -800,6 +916,13 @@ export default {
     return {
       imageList: [],
       imgShow: false,
+      typeShow: false,
+      typeLoading: true,
+      typeData: {},
+      tableTypeData: [],
+      typeTotal: 0,
+      TypeShowCount: 10,
+      TypeCurrentPage: 1,
       imgShowUrl: '', // 预览图片
       imageUrl: '',
       header: {
@@ -876,6 +999,12 @@ export default {
     }
   },
   methods: {
+    // 请求所有的起点 / 终点桩号
+    assetDataFun () {
+      this.$api.post('/cycle/assetData/listAll', {}, null, r => {
+        this.pileList = r.data
+      })
+    },
     // 根据 资产类别 请求 起点 / 终点桩号
     changeSelect (val) {
       let _data = {
@@ -897,6 +1026,7 @@ export default {
     },
     // 重置
     reset () {
+      this.searchVal = ''
       this.isSearch = false
       this.pileList = []
       this.searchMap.T0001_ID = ''
@@ -907,7 +1037,6 @@ export default {
       this.showCount = 10
       this.currentPage = 1
       this.getTechDataList()
-      this.getTechTypeList()
     },
     // 分页
     sizeChange (val) {
@@ -936,6 +1065,9 @@ export default {
       this.$api.post(`/cycle/utilData/getId`, {}, null, r => {
         this.dataParams.ID = r.data
         this.addForm.T0003_ID = r.data
+      })
+      this.$api.post('/cycle/assetData/listAll', {}, null, r => {
+        this.searchPileList = r.data
       })
     },
     // 新建 选中 资产类别
@@ -998,6 +1130,9 @@ export default {
     },
     // 点击修改
     handleEdit (data) {
+      this.$api.post('/cycle/assetData/listAll', {}, null, r => {
+        this.searchPileList = r.data
+      })
       this.getAssetDataList()
       this.imageList = []
       this.imageUrl = ''
@@ -1010,6 +1145,10 @@ export default {
         r => {
           this.imageList = r.data.files
           this.editForm = Object.assign({}, r.data)
+          let _data = {
+            T0001_ID: r.data.T0001_ID
+          }
+          this.getTechTypeList(_data)
         }
       )
     },
@@ -1039,9 +1178,9 @@ export default {
       })
     },
     // 技术类别 select
-    getTechTypeList () {
-      this.$api.post(`/cycle/techType/listAll`, {}, null, r => {
-        this.techTypeList = r.data
+    getTechTypeList (data) {
+      this.$api.post(`/cycle/techType/listAll`, data, null, r => {
+        this.searchTechTypeList = r.data
       })
     },
     // 获取资产技术等级list
@@ -1068,6 +1207,7 @@ export default {
         }
         this.tableData = r.data.returnParam
         this.total = r.data.totalResult
+        this.searchVal = r.search_val
       })
     },
 
@@ -1164,13 +1304,53 @@ export default {
           }
         )
       })
+    },
+    // 查询检测报告列表
+    clickTypeFun (data) {
+      this.typeData.T0002_ID = data.T0002_ID
+      this.typeData.T0002_ASSET_NAME = data.T0002_ASSET_NAME
+      this.typeShow = true
+      this.typeListFun()
+    },
+    typeListFun () {
+      let _data = {
+        currentPage: this.TypeCurrentPage,
+        showCount: this.TypeShowCount,
+        searchMap: this.typeData
+      }
+      this.$api.post(`/cycle/techData/listPage`, _data, null, r => {
+        this.typeLoading = false
+        for (let i = 0; i < r.data.returnParam.length; i++) {
+          if (r.data.returnParam[i].files.length > 0) {
+            r.data.returnParam[i].pic = r.data.returnParam[i].files[0].FILE_URL
+            r.data.returnParam[i].srcList = []
+            for (let k = 0; k < r.data.returnParam[i].files.length; k++) {
+              r.data.returnParam[i].srcList.push(
+                r.data.returnParam[i].files[k].FILE_URL
+              )
+            }
+          } else {
+            r.data.returnParam[i].pic = ''
+          }
+        }
+        this.tableTypeData = r.data.returnParam
+        this.typeTotal = r.data.totalResult
+      })
+    },
+    // 分页
+    sizeTypeChange (val) {
+      this.TypeShowCount = val
+      this.typeListFun()
+    },
+    currentTypeChange (val) {
+      this.TypeCurrentPage = val
+      this.typeListFun()
     }
   },
   created () {
     this.getAssetTypeList()
     this.getTechDataList()
-    // this.getAssetDataList()
-    this.getTechTypeList()
+    this.assetDataFun()
   }
 }
 </script>

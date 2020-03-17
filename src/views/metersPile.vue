@@ -589,6 +589,12 @@ export default {
     }
   },
   methods: {
+    // 请求所有的起点 / 终点桩号
+    assetDataFun () {
+      this.$api.post('/cycle/load/listAll', {}, null, r => {
+        this.pileList = r.data
+      })
+    },
     // 根据 所属路段 获取起点，终点桩号
     changeSelect (val) {
       let _data = {
@@ -764,6 +770,7 @@ export default {
     this.getHighspeedList()
     this.getLoadList()
     this.getPileList()
+    this.assetDataFun()
   }
 }
 </script>

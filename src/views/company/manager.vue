@@ -440,6 +440,9 @@ export default {
 <style lang="scss">
   #manager{
     #tableWrap{background: #fff;margin-top: 20px;}
+    .el-button--mini {
+    padding: 4px 5px;
+    }
     .add-table {
       width: 100%;
       border-collapse: collapse;

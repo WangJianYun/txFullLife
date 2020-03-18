@@ -8,7 +8,7 @@ module.exports = {
       // 配置跨域
       '/api': {
         target: 'http://94.191.93.96:8800', // 填写后台接口
-        // target: 'http://192.168.7.105:8800', // 填写后台接口
+        // target: 'http://192.168.7.105:8800', // 孙旭接口
         ws: true,
         changOrigin: true, // 允许跨域
         pathRewrite: {

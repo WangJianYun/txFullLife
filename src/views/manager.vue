@@ -115,7 +115,7 @@
                     <td class="bg-td">昵称：</td>
                     <td>
                     <el-form-item prop='M0014_SIMP_NAME'>
-                      <el-input type="text" v-model="form.M0014_SIMP_NAME"  :disabled="islook"></el-input>
+                      <el-input type="text" v-model="form.M0014_SIMP_NAME"  :disabled="islook" @change="isHaveName"></el-input>
                     </el-form-item>
                     </td>
                     <!-- <td class="bg-td">昵称：</td>
@@ -311,6 +311,15 @@ export default {
         this.total = r.data.totalResult
       })
     },
+    isHaveName () {
+      this.$api.post('/cycle/userManagement/isExist?userName=' + this.form.M0014_SIMP_NAME, {}, null, r => {
+        console.log(r)
+        if (r.data === true) {
+          this.$message.warning('用户名已存在，请重新输入')
+          this.form.M0014_SIMP_NAME = ''
+        }
+      })
+    },
     save () {
       this.form.M0018_ID = sessionStorage.getItem('id')
       this.$refs['form'].validate((valid) => {
@@ -440,6 +449,9 @@ export default {
 <style lang="scss">
   #manager{
     #tableWrap{background: #fff;margin-top: 20px;}
+    .el-button--mini {
+    padding: 4px 5px;
+    }
     .add-table {
       width: 100%;
       border-collapse: collapse;

@@ -58,7 +58,7 @@ export default {
       this.isdisabled = true
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          this.$api.post('/cycle/login/login', this.form, '登陆成功', r => {
+          this.$api.post('/cycle/login/login', this.form, null, r => {
             this.$nextTick(() => {
               if (r.msg === 'success') {
                 Message({
@@ -70,8 +70,10 @@ export default {
                 Message({
                   showClose: true,
                   message: r.msg,
-                  type: 'success'
+                  type: 'warning'
                 })
+                this.isload = false
+                this.isdisabled = false
               }
             })
             this.menuData = JSON.stringify(r.data.menuList)
@@ -152,5 +154,5 @@ export default {
 }
 .login-container-footer{width: 100%;text-align: center;color: #fff;font-size: 14px;margin-top: 100px;}
 .msg{color:red}
-.icon{color:red;position: relative;left:170px;top:-50px}
+.icon{color:red;position: relative;left:140px;top:-50px}
 </style>

@@ -438,6 +438,7 @@ export default {
       editForm: {},
       addForm: {},
       infoForm: {},
+      totalData: 3,
       tableData: [
         {
           M0008_HIGHSPEED_NAME: '连云港－霍尔果斯高速公路',
@@ -451,6 +452,20 @@ export default {
           M0008_END_PILE: 'K900+960'
         }
       ],
+      form: {
+        M0018_ID: '',
+        M0008_HIGHSPEED_REMARK: '',
+        M0008_START_PILE: '',
+        M0008_HIGHSPEED_KILO: '',
+        M0008_HIGHSPEED_ABBR: '',
+        M0008_HIGHSPEED_NUM: '',
+        M0008_IS_ACTIVE: 1,
+        M0008_ID: '',
+        M0008_HIGHSPEED_NAME: '',
+        M0008_END_POINT: '',
+        M0008_START_POINT: '',
+        M0008_END_PILE: ''
+      },
       higway: {
         showCount: 10,
         currentPage: 1
@@ -458,6 +473,9 @@ export default {
       total: 0,
       selectList: []
     }
+  },
+  mounted () {
+    this.refreshTable()
   },
   methods: {
     // 分页
@@ -472,6 +490,20 @@ export default {
     },
     selectAll (selection) {
       this.selectList = selection
+    },
+    refreshTable () {
+      this.form.M0018_ID = sessionStorage.getItem('id')
+      // eslint-disable-next-line no-unused-vars
+      let _data = {
+        currentPage: this.higway.currentPage,
+        showCount: this.higway.showCount,
+        searchMap: { 'M0018_ID': this.form.M0018_ID }
+      }
+      this.$api.post('/cycle/highspeed/listPage', _data, null, r => {
+        console.log(r)
+        this.dpData = r.data.returnParam
+        this.total = r.data.totalResult
+      })
     },
     addFun () {
       this.addShow = true

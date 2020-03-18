@@ -4,9 +4,9 @@
             <el-col :span="4">
                 <span style="font-size:20px;">>> 我的资料</span>
             </el-col>
-            <el-col :span="20" style="text-align:right;padding-right:30px;">
+            <!-- <el-col :span="20" style="text-align:right;padding-right:30px;">
                 <span style="cursor:pointer;color:#444;font-size:15px;" icon="el-icon-plus" @click="openDialog('add')"><i class="el-icon-edit-outline"></i> 编辑</span>
-            </el-col>
+            </el-col> -->
         </el-row>
         <el-row class="tbWrap">
             <el-col :span="18" :offset="3">
@@ -31,7 +31,7 @@
                     </tr>
                     <tr>
                         <td class="bg-td" :disabled="isEdit">是否激活：</td>
-                        <td>
+                        <td style='text-align:left'>
                             <el-switch
                             v-model="form.M0014_IS_AVTIVE"
                             active-color="#409eff"
@@ -55,7 +55,7 @@
             </el-col>
         </el-row>
         <el-row class="tbWrap">
-            <el-col :span="6" :offset="3">
+            <el-col :span="10" :offset="3">
                 <table class="perstable">
                     <tr>
                         <td>账户名：</td>
@@ -98,7 +98,10 @@
                             <tr v-for="(child,index) of item.M0004_CHILD"
                                :key="index">
                                 <td v-text="index+1">1</td>
-                                <td>{{child.M0004_NAME}}</td>
+                                <td class="chakan">
+                        <el-checkbox v-model="child.M0004_CHECKED" @change="changeCheck(child)" :disabled="islook">{{child.M0004_NAME}}</el-checkbox>
+                        <!-- <el-checkbox v-model="child.M0004_CHECKED"></el-checkbox>  @change="handleCheckAllChange" :indeterminate="isIndeterminate"-->
+                      </td>
                                 <td>
                                     <el-checkbox-group v-model="child.tableForm"
                                       @change="changeAuths(child)">
@@ -179,6 +182,13 @@ export default {
     },
     getPermission () {
       this.form.M0018_ID = sessionStorage.getItem('id')
+      // this.userId = JSON.parse(sessionStorage.getItem('currentUser')).UserId
+      // this.$api.post('/cycle/roleGroupManagement/getPermissionByRoleId?ID=' + this.userId, {}, null, r => {
+      //   this.permisionListData = r.data.filter(v => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1)
+      //   this.permisionListData.forEach(v => {
+      //     this.findChild(v, r.data)
+      //   })
+      // })
       this.$api.post('/cycle/roleGroupManagement/getPermission', { 'M0018_ID': this.form.M0018_ID }, null, r => {
         this.permisionListData = r.data.filter(v => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1)
         this.permisionListData.forEach(v => {

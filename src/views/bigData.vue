@@ -201,9 +201,10 @@ export default {
       this.$router.push('/techGradeList')
     },
     getSerch () {
+      // 公路资产接口里没有时间
       console.log(this.assetsRange)
       if (this.assetsRange.length > 0) {
-
+        this.loadChart()
       }
     },
     loadSumData () {
@@ -496,7 +497,7 @@ export default {
                 normal: {
                   // 每个柱子的颜色即为colorList数组里的每一项，如果柱子数目多于colorList的长度，则柱子颜色循环使用该数组
                   color: function (params) {
-                    var colorList = ['rgb(255,202,93)', 'rgb(100,208,220)', 'rgb(277,72,86)']
+                    var colorList = ['rgb(255,202,93)', 'rgb(100,208,220)', 'rgb(277,72,86)', 'rgb(254,145,46)', 'rgb(231,70,87)']
                     return colorList[params.dataIndex]
                   }
                 }

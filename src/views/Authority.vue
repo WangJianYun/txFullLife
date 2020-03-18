@@ -45,12 +45,10 @@
               <template slot-scope="scope">
                 <table style="width:100%;height:100%;">
                   <tr>
-                    <td style="max-width:100px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;">
+                    <td style="max-width:100px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;border-bottom:none;padding:0;border-right:none;padding-right:10px">
                       <span v-text="scope.row.NAMES"></span>
-                      <!-- <span v-for="item in scope.row.names" :key="item.code">{{item.code}}({{(item.name)}})、</span> -->
                     </td>
-                    <td style="width:160px;">
-                      <!-- <el-button type="danger" size="mini" v-if="scope.row.num>0" @click="checkMangers(scope.row.names)">查看<span class="num">{{scope.row.num}}</span></el-button> -->
+                    <td style="width:160px;border-bottom:none;padding:0;border-right:none">
                       <el-button
                         type="danger"
                         size="mini"
@@ -72,15 +70,15 @@
               label="状态"
               align="center"
             >
-              <!-- <template slot-scope="scope"> -->
+              <template slot-scope="scope">
                 <el-switch
-                  v-model="value1"
+                  v-model="scope.row.isBlue"
                   active-color="#409eff"
                   inactive-color="#bbb"
                   disabled
                 >
                 </el-switch>
-              <!-- </template> -->
+              </template>
             </el-table-column>
             <el-table-column
               prop='CREATOR'
@@ -122,13 +120,6 @@
         </el-col>
       </el-row>
       <el-row class="list-pagination-row">
-        <!-- <el-pagination
-          @current-change="refreshTable"
-          layout="total, prev, pager, next"
-          :total="totalData"
-          :current-page.sync="pageIndex"
-          :page-size="this.preSetPageSize"
-        ></el-pagination> -->
          <el-pagination
                 class="table-page"
                 @size-change="sizeChange"
@@ -211,8 +202,8 @@
                   <table class="add-table authTable">
                   <thead>
                     <tr>
-                      <th>序号</th>
-                      <th>模块名称</th>
+                      <th width='10%'>序号</th>
+                      <th width='40%'>模块名称</th>
                       <th>权限节点</th>
                     </tr>
                   </thead>
@@ -314,7 +305,7 @@
 export default {
   data () {
     return {
-      value1: true,
+      // isBlue: false,
       pageIndex: 1,
       dpData: [],
       totalData: 3,
@@ -410,13 +401,6 @@ export default {
             if (!send) {
               v1.tableForm = []
             }
-            // 如果是我的桌面和大数据分析时选中的状态
-            // if (!v.M0004_NAME === '我的桌面' && !v.M0004_NAME === '大数据分析') {
-            //   v1.M0005_STATE = v1.tableForm.length > 0 ? 1 : 0
-            // } else {
-            //   v1.M0005_STATE = v1.M0004_CHECKED ? 1 : 0
-            // }
-            // 如果有第三级
             if (v1.M0004_CHILD && v1.M0004_CHILD.length > 0) {
               v1.M0004_CHILD.forEach(v2 => {
                 if (!send && (v2.M0005_STATE === '1' || v2.M0005_STATE === 1)) {
@@ -434,8 +418,6 @@ export default {
           this.listPromision.push(v)
         }
       })
-      console.log(this.permisionListData)
-      // this.permisionListData = [...this.permisionListData]
     },
     getPermission (id) {
       const path = `/cycle/roleGroupManagement/${id ? ('getPermissionByRoleId?ID=' + id) : 'getPermission'}`
@@ -457,6 +439,10 @@ export default {
       }
       this.$api.post('/cycle/roleGroupManagement/listPage', _data, null, r => {
         this.dpData = r.data.returnParam
+        this.dpData.forEach(v => {
+          v.isBlue = !!((v.M0003_DATA_STATE === '1' || v.M0003_DATA_STATE === 1))
+        })
+        console.log(this.dpData)
         this.total = r.data.totalResult
       })
     },
@@ -464,7 +450,7 @@ export default {
       this.form.M0018_ID = sessionStorage.getItem('id')
       this.setTableForm(true)
       this.itemData = {
-        M0003_DATA_STATE: this.form.M0003_DATA_STATE ? 1 : 0,
+        M0003_DATA_STATE: this.form.M0003_DATA_STATE === true ? 1 : 0,
         M0003_DISP_NAME: this.form.M0003_DISP_NAME,
         M0001_ID_UPDATE: JSON.parse(sessionStorage.getItem('currentUser')).UserMap.CM_M0001_ID,
         M0003_NAME: this.form.M0003_NAME
@@ -472,7 +458,6 @@ export default {
       this.data = {
         'mapParam': this.itemData,
         'permissionList': this.listPromision
-        // 'permissionList': this.listPromision
       }
       this.$refs['form'].validate(v => {
         if (v) {
@@ -521,14 +506,19 @@ export default {
         this.updateData = row
         this.updateID = row.M0003_ID
         // eslint-disable-next-line no-unneeded-ternary
-        this.form.M0003_DATA_STATE = (this.form.M0003_DATA_STATE === 1 ? true : false)
+        // this.form.M0003_DATA_STATE = (this.form.M0003_DATA_STATE === 1 ? true : false)
+        this.form.M0003_DATA_STATE = row.isBlue
         this.dialogType = 'edit'
         this.getPermission(row.M0003_ID)
       }
       if (type === 'look') {
         this.dialogName = '查看权限组'
         this.form = row
+        // eslint-disable-next-line no-unneeded-ternary
+        // this.form.M0003_DATA_STATE = (this.form.M0003_DATA_STATE === 1 ? true : false)
+        this.form.M0003_DATA_STATE = row.isBlue
         this.islook = true
+
         this.getPermission(row.M0003_ID)
       }
     },
@@ -668,6 +658,9 @@ export default {
   .authTable {
     margin: 20px 0 30px 0;
   }
+  .el-button--mini {
+    padding: 4px 5px;
+    }
   .add-table {
     width: 100%;
     border-collapse: collapse;

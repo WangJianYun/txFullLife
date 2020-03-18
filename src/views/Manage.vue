@@ -30,12 +30,12 @@
             :collapse="false"
           >
             <label v-for="item in menulist1" :key="item.$index">
-              <!-- <el-submenu :index="item.M0004_URL"> -->
+               <!-- <i class="ri-home-4-fill" v-if="item.M0004_NAME==='我的桌面' || item.M0004_NAME==='大数据分析'"></i> -->
                 <el-submenu :index="item.M0004_URL" v-if="item.M0005_STATE==='1'||item.M0005_STATE===1">
-                <template
-                  v-if="item.M0004_CHILD.length > 0 &&!['我的桌面', '大数据分析'].includes(item.M0004_NAME)">
+
+                <template v-if="item.M0004_CHILD.length > 0 &&!['我的桌面', '大数据分析'].includes(item.M0004_NAME)">
                   <template slot="title" style="width:50%;text-align:left;">
-                    <i :class="item.icon"></i>
+                    <i class="ri-user-fill" style='font-size:25px;color:white;margin-right:10px'></i>
                     <span style="font-size:16px;">{{ item.M0004_NAME }}</span>
                   </template>
                   <el-menu-item
@@ -45,12 +45,12 @@
                     style="font-size:14px;"
                   >
                     <!-- <span style="margin-left:50px">{{ subItem.M0004_NAME }}</span> -->
-                    <span style="margin-left:50px" v-if="subItem.M0005_STATE==='1'||subItem.M0005_STATE===1">{{ subItem.M0004_NAME }}</span>
+                    <span v-if="subItem.M0005_STATE==='1'||subItem.M0005_STATE===1">{{ subItem.M0004_NAME }}</span>
                   </el-menu-item>
                 </template>
                 <template slot="title" v-else>
                   <el-menu-item :index="item.M0004_URL">
-                    <i :class="item.icon"></i>
+                    <i class="ri-home-4-fill" style='font-size:25px;color:white;margin-right:10px' v-if="item.M0004_NAME==='我的桌面' || item.M0004_NAME==='大数据分析'"></i>
                     <span style="font-size:16px;">{{ item.M0004_NAME }}</span>
                   </el-menu-item>
                 </template>
@@ -110,6 +110,7 @@
 
 <script>
 // eslint-disable-next-line no-unused-vars
+import 'remixicon/fonts/remixicon.css'
 import { routes1, routes2 } from '../router/index.js'
 export default {
   data () {
@@ -329,7 +330,7 @@ export default {
 }
 </script>
 
-<sytle scoped lang="less">
+<style>
   .el-container{
     width:100%;
     height:100%;
@@ -365,16 +366,13 @@ export default {
     text-align:center;
     border-right: solid 0px !important;
   }
-  // .el-submenu__title{
-  //   font-size:16px !important;
-  // }
   .el-submenu .el-menu-item{
     border-top:1px solid #44444A;
     border-bottom:1px solid #44444A;
     font-size:14px;
   }
   .el-menu-item.is-active {
-    background-color: #1FB5AC !important;
+    background-color: rgba(0, 0, 0, .4) !important;
     color:#ffffff !important;
   }
   .userBack{
@@ -409,4 +407,15 @@ export default {
   .tools{
     text-align:right;
   }
-</sytle>
+  .el-submenu .el-menu-item {
+    border-top: none;
+    border-bottom: none;
+    padding:0 !important;
+
+}
+.el-menu{
+  text-align:left;
+  margin-left:55px !important;
+}
+
+</style>

@@ -8,7 +8,7 @@
                 归属上级公司：<span class="preDepartment">铜旬分公司</span>
             </el-col>
             <el-col :span="12" style="text-align:right;padding-right:30px;">
-                <el-button type="primary" icon="el-icon-plus" @click="openDialog('add')">添加部门</el-button>
+                <el-button type="primary" icon="el-icon-plus" @click="openDialog('add')" v-if="addState===1 || addState==='1'">添加部门</el-button>
             </el-col>
         </el-row>
         <el-main id="tableWrap">
@@ -62,9 +62,9 @@
                     width="220"
                     align="center">
                     <template slot-scope="scope">
-                      <el-button type="info" size="mini" @click="openDialog('look',scope.row)">查看</el-button>
-                      <el-button type="primary" size="mini" @click="openDialog('edit',scope.row)">编辑</el-button>
-                      <el-button type="danger" size="mini" @click="deleteRow(scope.row)">删除</el-button>
+                      <el-button type="info" size="mini" @click="openDialog('look',scope.row)" v-if="lookState===1 || lookState==='1'">查看</el-button>
+                      <el-button type="primary" size="mini" @click="openDialog('edit',scope.row)" v-if="editState===1 || editState==='1'">编辑</el-button>
+                      <el-button type="danger" size="mini" @click="deleteRow(scope.row)" v-if="delState===1 || delState==='1'">删除</el-button>
                     </template>
                   </el-table-column>
 
@@ -179,13 +179,20 @@ export default {
         ]
       },
       rowSpanArr: [],
-      position: ''
+      position: '',
+      menuList: [],
+      menuList1: [],
+      lookState: '',
+      addState: '',
+      editState: '',
+      delState: ''
     }
   },
   mounted () {
     this.refreshTable()
     this.loadSelect()
     this.getDateTime()
+    this.getState()
   },
   methods: {
     // 分页
@@ -230,6 +237,48 @@ export default {
       str = nDate.getFullYear() + '-' + (nDate.getMonth() + 1) + '-' + nDate.getDate()
       this.form.M0016_CREATE_TIME = str
     },
+    findChild (currentItem, list) {
+      currentItem.M0004_CHILD = []
+      // eslint-disable-next-line no-unneeded-ternary
+      currentItem.M0004_CHECKED = (currentItem.M0005_STATE === '1' || currentItem.M0005_STATE === 1) ? true : false
+      list.forEach(v => {
+        if (currentItem.M0004_ID === v.M0004_PID) {
+          if (v.M0004_LEVEL !== 3 && v.M0004_LEVEL !== '3' && !v.M0004_CHILD) {
+            this.findChild(v, list)
+          }
+          currentItem.M0004_CHILD.push(v)
+        }
+      })
+    },
+    // 获取增删改查状态
+    getState () {
+      this.menuList = JSON.parse(sessionStorage.getItem('currentUser')).menuList
+      this.menuList1 = this.menuList.filter(v => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1)
+      this.menuList1.forEach(v => {
+        this.findChild(v, this.menuList)
+        if (v.M0004_NAME === '系统配置') {
+          v.M0004_CHILD.forEach(v1 => {
+            if (v1.M0004_NAME === '部门列表') {
+              v1.M0004_CHILD.forEach(v2 => {
+                if (v2.M0004_NAME === '查询') {
+                  this.lookState = v2.M0005_STATE
+                }
+                if (v2.M0004_NAME === '添加') {
+                  this.addState = v2.M0005_STATE
+                }
+                if (v2.M0004_NAME === '修改') {
+                  this.editState = v2.M0005_STATE
+                }
+                if (v2.M0004_NAME === '删除') {
+                  this.delState = v2.M0005_STATE
+                }
+              })
+            }
+          })
+        }
+      })
+      console.log(this.menuList1)
+    },
     refreshTable () {
       this.form.M0018_ID = sessionStorage.getItem('id')
       // eslint-disable-next-line no-unused-vars
@@ -239,7 +288,6 @@ export default {
         searchMap: { 'M0018_ID': this.form.M0018_ID }
       }
       this.$api.post('/cycle/departmentManagement/listPage', _data, null, r => {
-        console.log(r)
         this.dpData = r.data.returnParam
         this.total = r.data.totalResult
         this.getRowSpan()
@@ -350,6 +398,9 @@ export default {
 <style lang="scss">
   #department{
     #tableWrap{background: #fff;margin-top: 20px;}
+    .el-button--mini {
+    padding: 4px 5px;
+    }
     .add-table {
       width: 100%;
       border-collapse: collapse;

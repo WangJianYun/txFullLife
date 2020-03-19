@@ -58,10 +58,10 @@
           icon="el-icon-delete"
           @click="delListFun"
         >批量删除</el-button>
-        <!-- <span class="serach-span"> 您的检索：
+        <span class="serach-span"> 您的检索：
           <span v-show="!isSearch"> 无 </span>
           <span> {{searchVal}} </span>
-        </span> -->
+        </span>
       </div>
       <div class="table-div">
         <el-table
@@ -640,9 +640,6 @@ export default {
       loading: true,
       addShow: false,
       lookShow: false,
-      editShow: false,
-      infoShow: false,
-      editForm: {},
       form: {
         M0018_USER_EMAIL: '',
         M0018_COMPANY_REMARK: '',
@@ -700,7 +697,6 @@ export default {
           { validator: validLati, trigger: 'blur' }
         ]
       },
-      infoForm: {},
       showCount: 10,
       currentPage: 1,
       total: 0,
@@ -728,7 +724,9 @@ export default {
         showCount: this.showCount,
         searchMap: this.searchMap
       }
+      console.log(_data)
       this.$api.post('/cycle/companyManager/listPage', _data, null, r => {
+        console.log(r)
         this.loading = false
         this.tableData = r.data.returnParam
         this.total = r.data.totalResult
@@ -761,6 +759,7 @@ export default {
     },
     // 列表页
     getAssetList () {
+      // this.searchMap.M0018_ID = sessionStorage.getItem('id')
       let _data = {
         currentPage: this.currentPage,
         showCount: this.showCount,
@@ -918,7 +917,7 @@ export default {
       let _list = []
       if (this.selectList.length > 0) {
         for (let i = 0; i < this.selectList.length; i++) {
-          _list.push(this.selectList[i].T0002_ID)
+          _list.push(this.selectList[i].M0018_ID)
         }
         this.$confirm('确定要删除这些记录?', '提示', {
           confirmButtonText: '确定',
@@ -926,7 +925,7 @@ export default {
           type: 'warning'
         }).then(() => {
           this.$api.post(
-            `/cycle/assetData/deleteByIds?IDS=${_list}`,
+            `/cycle/companyManager/deleteByIds?IDS=${_list}`,
             {},
             null,
             r => {

@@ -8,7 +8,7 @@
       <el-button
         type="primary"
         icon="el-icon-plus"
-        @click="addFun"
+        @click="openDialog('add')"
       >增加高速</el-button>
     </p>
     <div class="content">
@@ -24,18 +24,18 @@
           </span>
           <el-input
             placeholder="请输入内容"
-            v-model="higway.a"
+            v-model="SEARCH_KEY"
             style="width:240px"
           >
           </el-input>
-          <el-button type="primary">搜索</el-button>
-          <el-button>重置</el-button>
+          <el-button type="primary" @click="searchFun">搜索</el-button>
+          <el-button @click="reset">重置</el-button>
         </p>
       </div>
       <div class="table-div">
         <el-table
           v-loading.body="loading"
-          :data="tableData"
+          :data="dpData"
           border
           style="width: 100%"
           highlight-current-row
@@ -88,11 +88,6 @@
           >
           </el-table-column>
           <el-table-column
-            prop="M0008_IS_ACTIVE"
-            label="是否激活"
-          >
-          </el-table-column>
-          <el-table-column
             prop="M0008_START_PILE"
             label="起点桩号"
           >
@@ -111,17 +106,17 @@
               <el-button
                 type="info"
                 size="mini"
-                @click="handleInfo(scope.row)"
+                @click="openDialog('look',scope.row)"
               >查看</el-button>
               <el-button
                 type="primary"
                 size="mini"
-                @click="handleEdit(scope.row)"
+                @click="openDialog('edit',scope.row)"
               >编辑</el-button>
               <el-button
                 type="danger"
                 size="mini"
-                @click="handleDelete(scope.row)"
+                @click="deleteRow(scope.row)"
               >删除</el-button>
             </template>
           </el-table-column>
@@ -140,27 +135,33 @@
     </div>
     <!-- 新建 -->
     <el-dialog
-      title=">> 增加高速信息"
+      :title="dialogName"
       :visible.sync="addShow"
-      :close-on-click-modal="false"
+       :before-close="closeDialog"
       custom-class="dialog-div"
     >
+    <el-form
+        :model="form"
+        ref="form"
+      >
       <table class="add-table">
         <tr>
           <td class="bg-td">高速名称：</td>
           <td>
             <el-input
-              v-model.trim="addForm.words"
+              v-model.trim="form.M0008_HIGHSPEED_NAME"
               size="small"
               maxlength="50"
+              :disabled="islook"
             ></el-input>
           </td>
           <td class="bg-td">简称： </td>
           <td>
             <el-input
-              v-model.trim="addForm.words"
+              v-model.trim="form.M0008_HIGHSPEED_ABBR"
               size="small"
               maxlength="30"
+              :disabled="islook"
             ></el-input>
           </td>
         </tr>
@@ -168,16 +169,18 @@
           <td class="bg-td">编号： </td>
           <td>
             <el-input
-              v-model.trim="addForm.words"
+              v-model.trim="form.M0008_HIGHSPEED_NUM"
               size="small"
               maxlength="20"
+              :disabled="islook"
             ></el-input>
           </td>
           <td class="bg-td">里程（公里）：</td>
           <td>
             <el-input
-              v-model.trim="addForm.words"
+              v-model.trim="form.M0008_HIGHSPEED_KILO"
               size="small"
+              :disabled="islook"
             ></el-input>
           </td>
         </tr>
@@ -185,17 +188,19 @@
           <td class="bg-td">起点： </td>
           <td>
             <el-input
-              v-model.trim="addForm.words"
+              v-model.trim="form.M0008_START_POINT"
               size="small"
               maxlength="30"
+              :disabled="islook"
             ></el-input>
           </td>
           <td class="bg-td">终点：</td>
           <td>
             <el-input
-              v-model.trim="addForm.words"
+              v-model.trim="form.M0008_END_POINT"
               size="small"
               maxlength="30"
+              :disabled="islook"
             ></el-input>
           </td>
         </tr>
@@ -203,17 +208,19 @@
           <td class="bg-td">起点桩号： </td>
           <td>
             <el-input
-              v-model.trim="addForm.words"
+              v-model.trim="form.M0008_START_PILE"
               size="small"
               maxlength="20"
+              :disabled="islook"
             ></el-input>
           </td>
           <td class="bg-td">终点桩号：</td>
           <td>
             <el-input
-              v-model.trim="addForm.words"
+              v-model.trim="form.M0008_END_PILE"
               size="small"
               maxlength="20"
+              :disabled="islook"
             ></el-input>
           </td>
         </tr>
@@ -221,9 +228,10 @@
           <td class="bg-td">是否激活：</td>
           <td colspan="3">
             <el-switch
-              v-model="addForm.M0008_IS_ACTIVE"
+              v-model="form.M0008_IS_ACTIVE"
               active-color="#2196f3"
               inactive-color="#dddddd"
+              :disabled="islook"
             >
             </el-switch>
           </td>
@@ -233,196 +241,21 @@
           <td colspan="3">
             <el-input
               type="textarea"
-              v-model="addForm.desc"
+              :rows="6"
+              v-model="form.M0008_HIGHSPEED_REMARK"
               maxlength="500"
+              :disabled="islook"
             ></el-input>
           </td>
         </tr>
       </table>
+      </el-form>
       <div
         slot="footer"
         class="dialog-footer"
       >
-        <el-button @click="addShow = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="submitForm('ruleForm')"
-        >确 定</el-button>
-      </div>
-    </el-dialog>
-    <!-- 修改 -->
-    <el-dialog
-      title=">> 修改高速信息"
-      :visible.sync="editShow"
-      :close-on-click-modal="false"
-      custom-class="dialog-div"
-    >
-      <table class="add-table">
-        <tr>
-          <td class="bg-td">高速名称：</td>
-          <td>
-            <el-input
-              v-model.trim="editForm.M0008_HIGHSPEED_NAME"
-              size="small"
-              maxlength="50"
-            ></el-input>
-          </td>
-          <td class="bg-td">简称： </td>
-          <td>
-            <el-input
-              v-model.trim="editForm.M0008_HIGHSPEED_ABBR"
-              size="small"
-              maxlength="30"
-            ></el-input>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">编号： </td>
-          <td>
-            <el-input
-              v-model.trim="editForm.M0008_HIGHSPEED_NUM"
-              size="small"
-              maxlength="20"
-            ></el-input>
-          </td>
-          <td class="bg-td">里程（公里）：</td>
-          <td>
-            <el-input
-              v-model.trim="editForm.M0008_HIGHSPEED_KILO"
-              size="small"
-            ></el-input>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">起点： </td>
-          <td>
-            <el-input
-              v-model.trim="editForm.M0008_START_POINT"
-              size="small"
-              maxlength="30"
-            ></el-input>
-          </td>
-          <td class="bg-td">终点：</td>
-          <td>
-            <el-input
-              v-model.trim="editForm.M0008_END_POINT"
-              size="small"
-              maxlength="30"
-            ></el-input>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">起点桩号： </td>
-          <td>
-            <el-input
-              v-model.trim="editForm.M0008_START_PILE"
-              size="small"
-              maxlength="20"
-            ></el-input>
-          </td>
-          <td class="bg-td">终点桩号：</td>
-          <td>
-            <el-input
-              v-model.trim="editForm.M0008_END_PILE"
-              size="small"
-              maxlength="20"
-            ></el-input>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">是否激活：</td>
-          <td colspan="3">
-            <el-switch
-              v-model="editForm.M0008_IS_ACTIVE"
-              active-color="#2196f3"
-              inactive-color="#dddddd"
-            >
-            </el-switch>
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">费用况详情（备注）：</td>
-          <td colspan="3">
-            <el-input
-              type="textarea"
-              v-model="editForm.M0008_HIGHSPEED_REMARK"
-              maxlength="500"
-            ></el-input>
-          </td>
-        </tr>
-      </table>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button @click="addShow = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="submitForm('ruleForm')"
-        >确 定</el-button>
-      </div>
-    </el-dialog>
-    <!-- 查看 -->
-    <el-dialog
-      title=">> 查看高速信息"
-      :visible.sync="infoShow"
-      custom-class="dialog-div"
-    >
-      <table class="add-table">
-        <tr>
-          <td class="bg-td">高速名称：</td>
-          <td>
-            {{ infoForm.M0008_HIGHSPEED_NAME }}
-          </td>
-          <td class="bg-td">简称： </td>
-          <td>
-            {{ infoForm.M0008_HIGHSPEED_ABBR }}
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">编号： </td>
-          <td>
-            {{ infoForm.M0008_HIGHSPEED_NUM }}
-          </td>
-          <td class="bg-td">里程（公里）：</td>
-          <td>
-            {{ infoForm.M0008_HIGHSPEED_KILO }}
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">起点： </td>
-          <td>
-            {{ infoForm.M0008_START_POINT }}
-          </td>
-          <td class="bg-td">终点：</td>
-          <td>
-            {{ infoForm.M0008_END_POINT }}
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">起点桩号： </td>
-          <td>
-            {{ infoForm.M0008_START_PILE }}
-          </td>
-          <td class="bg-td">终点桩号：</td>
-          <td>
-            {{ infoForm.M0008_END_PILE }}
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">是否激活：</td>
-          <td colspan="3">
-            {{ infoForm.M0008_IS_ACTIVE }}
-          </td>
-        </tr>
-        <tr>
-          <td class="bg-td">费用况详情（备注）：</td>
-          <td colspan="3">
-            {{ infoForm.M0008_HIGHSPEED_REMARK }}
-          </td>
-        </tr>
-      </table>
-      <div slot="footer">
+        <el-button type="primary" @click="save">保 存</el-button>
+        <el-button @click="resetDialog">取 消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -431,6 +264,7 @@
 export default {
   data () {
     return {
+      dialogName: '新增高速',
       loading: false,
       addShow: false,
       editShow: false,
@@ -439,19 +273,8 @@ export default {
       addForm: {},
       infoForm: {},
       totalData: 3,
-      tableData: [
-        {
-          M0008_HIGHSPEED_NAME: '连云港－霍尔果斯高速公路',
-          M0008_HIGHSPEED_ABBR: '连霍高速',
-          M0008_HIGHSPEED_NUM: 'G30',
-          M0008_START_POINT: '连云港',
-          M0008_END_POINT: '霍尔果斯',
-          M0008_HIGHSPEED_KILO: '4395',
-          M0008_IS_ACTIVE: true,
-          M0008_START_PILE: 'K291+000',
-          M0008_END_PILE: 'K900+960'
-        }
-      ],
+      dpData: [],
+      SEARCH_KEY: '',
       form: {
         M0018_ID: '',
         M0008_HIGHSPEED_REMARK: '',
@@ -464,20 +287,46 @@ export default {
         M0008_HIGHSPEED_NAME: '',
         M0008_END_POINT: '',
         M0008_START_POINT: '',
-        M0008_END_PILE: ''
+        M0008_END_PILE: '',
+        isBlue: true
       },
       higway: {
         showCount: 10,
         currentPage: 1
       },
       total: 0,
-      selectList: []
+      selectList: [],
+      islook: false
     }
   },
   mounted () {
     this.refreshTable()
   },
   methods: {
+    // 搜索
+    searchFun () {
+      let _data = {
+        currentPage: this.higway.currentPage,
+        showCount: this.higway.showCount,
+        searchMap: { 'SEARCH_KEY': this.SEARCH_KEY }
+      }
+      console.log(_data)
+      this.$api.post('/cycle/highspeed/listPage', _data, null, r => {
+        console.log(r)
+        this.loading = false
+        this.dpData = r.data.returnParam
+        this.total = r.data.totalResult
+        // this.searchVal = r.search_val
+      })
+    },
+    // 重置
+    reset () {
+      this.isSearch = false
+      this.SEARCH_KEY = ''
+      this.showCount = 10
+      this.currentPage = 1
+      this.refreshTable()
+    },
     // 分页
     sizeChange (val) {
       this.higway.showCount = val
@@ -504,6 +353,77 @@ export default {
         this.dpData = r.data.returnParam
         this.total = r.data.totalResult
       })
+    },
+    closeDialog () {
+      // this.$refs['form'].resetFields()
+      this.addShow = false
+      this.islook = false
+      this.form = {}
+      this.refreshTable()
+    },
+    resetDialog () {
+      this.addShow = false
+      // this.$refs['form'].resetFields()
+      this.closeDialog()
+    },
+    openDialog (type, row) {
+      console.log(row)
+      this.imageUrl = ''
+      this.imageList = []
+      if (type === 'add') {
+        this.addShow = true
+        this.dialogName = '新增高速'
+        this.form.M0008_IS_ACTIVE = this.form.isBlue
+        this.dialogType = 'new'
+        this.$api.post(`/cycle/utilData/getId`, {}, null, r => {
+          this.form.M0008_ID = r.data
+        })
+      }
+      if (type === 'edit') {
+        this.addShow = true
+        this.dialogName = '编辑高速'
+        this.form = row
+        this.form.isBlue = !!((this.form.M0008_IS_ACTIVE === '1' || this.form.M0008_IS_ACTIVE === 1))
+        this.dialogType = 'edit'
+      }
+      if (type === 'look') {
+        this.addShow = true
+        this.dialogName = '查看高速'
+        this.form = row
+        this.islook = true
+      }
+    },
+    save () {
+      this.form.M0018_ID = sessionStorage.getItem('id')
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          if (this.dialogType === 'new') {
+            console.log(this.form)
+            this.$api.post('/cycle/highspeed/insert', this.form, '新增成功', r => {
+              this.closeDialog()
+            })
+          }
+          if (this.dialogType === 'edit') {
+            this.form.M0008_IS_ACTIVE = this.form.isBlue ? 1 : 0
+            this.$api.post('/cycle/highspeed/update', this.form, '编辑成功', r => {
+              this.closeDialog()
+            })
+          }
+        } else {
+          return false
+        }
+      })
+    },
+    deleteRow (row) {
+      this.$confirm('确认删除？此操作不可取消', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$api.post('/cycle/highspeed/deleteById?ID=' + row.M0008_ID, {}, '删除成功', r => {
+          this.refreshTable()
+        })
+      }).catch(() => {})
     },
     addFun () {
       this.addShow = true

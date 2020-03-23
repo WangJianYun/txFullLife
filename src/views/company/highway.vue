@@ -142,86 +142,103 @@
     >
     <el-form
         :model="form"
+        :rules="rules"
         ref="form"
       >
       <table class="add-table">
         <tr>
           <td class="bg-td">高速名称：</td>
           <td>
+            <el-form-item prop="M0008_HIGHSPEED_NAME">
             <el-input
               v-model.trim="form.M0008_HIGHSPEED_NAME"
               size="small"
               maxlength="50"
               :disabled="islook"
             ></el-input>
+            </el-form-item>
           </td>
           <td class="bg-td">简称： </td>
           <td>
+            <el-form-item prop="M0008_HIGHSPEED_ABBR">
             <el-input
               v-model.trim="form.M0008_HIGHSPEED_ABBR"
               size="small"
               maxlength="30"
               :disabled="islook"
             ></el-input>
+            </el-form-item>
           </td>
         </tr>
         <tr>
           <td class="bg-td">编号： </td>
           <td>
+            <el-form-item prop="M0008_HIGHSPEED_NUM">
             <el-input
               v-model.trim="form.M0008_HIGHSPEED_NUM"
               size="small"
               maxlength="20"
               :disabled="islook"
             ></el-input>
+            </el-form-item>
           </td>
           <td class="bg-td">里程（公里）：</td>
           <td>
+            <el-form-item prop="M0008_HIGHSPEED_KILO">
             <el-input
-              v-model.trim="form.M0008_HIGHSPEED_KILO"
+              v-model.number="form.M0008_HIGHSPEED_KILO"
               size="small"
               :disabled="islook"
             ></el-input>
+            </el-form-item>
           </td>
         </tr>
         <tr>
           <td class="bg-td">起点： </td>
           <td>
+            <el-form-item prop="M0008_START_POINT">
             <el-input
               v-model.trim="form.M0008_START_POINT"
               size="small"
               maxlength="30"
               :disabled="islook"
             ></el-input>
+            </el-form-item>
           </td>
           <td class="bg-td">终点：</td>
           <td>
+            <el-form-item prop="M0008_END_POINT">
             <el-input
               v-model.trim="form.M0008_END_POINT"
               size="small"
               maxlength="30"
               :disabled="islook"
             ></el-input>
+            </el-form-item>
           </td>
         </tr>
         <tr>
           <td class="bg-td">起点桩号： </td>
           <td>
+            <el-form-item prop="M0008_START_PILE">
             <el-input
               v-model.trim="form.M0008_START_PILE"
               size="small"
               maxlength="20"
               :disabled="islook"
             ></el-input>
+            </el-form-item>
           </td>
           <td class="bg-td">终点桩号：</td>
           <td>
+            <el-form-item prop="M0008_END_PILE">
             <el-input
               v-model.trim="form.M0008_END_PILE"
               size="small"
               maxlength="20"
               :disabled="islook"
             ></el-input>
+            </el-form-item>
           </td>
         </tr>
         <tr>
@@ -263,6 +280,16 @@
 <script>
 export default {
   data () {
+    // 起点终点桩号
+    // eslint-disable-next-line no-unused-vars
+    const validPile = (rule, value, callback) => {
+      let reg = /[0-9a-zA-Z]|[+,-]/ // 固定
+      if (!reg.test(value)) {
+        callback(new Error('桩号只能输入英文，数字，+，-'))
+      } else {
+        callback()
+      }
+    }
     return {
       dialogName: '新增高速',
       loading: false,
@@ -289,6 +316,37 @@ export default {
         M0008_START_POINT: '',
         M0008_END_PILE: '',
         isBlue: true
+      },
+      rules: {
+        M0008_HIGHSPEED_NAME: [
+          { required: true, message: '请填写高速名称', trigger: 'blur' },
+          { pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9.·-]+$/, message: '高速名称不支持特殊字符', trigger: 'blur' }
+        ],
+        M0008_HIGHSPEED_ABBR: [
+          { required: true, message: '请填写高速简称', trigger: 'blur' }
+        ],
+        M0008_HIGHSPEED_NUM: [
+          { required: true, message: '请填写高速编号', trigger: 'blur' },
+          { pattern: /[0-9a-zA-Z]/, message: '高速编号只能为字母和数字', trigger: 'blur' }
+        ],
+        M0008_HIGHSPEED_KILO: [
+          { required: true, message: '请填写高速里程', trigger: 'blur' },
+          { type: 'number', message: '高速里程必须为数字值' }
+        ],
+        M0008_START_POINT: [
+          { required: true, message: '请填写高速起点', trigger: 'blur' }
+        ],
+        M0008_END_POINT: [
+          { required: true, message: '请填写高速终点', trigger: 'blur' }
+        ],
+        M0008_START_PILE: [
+          { required: true, message: '请填写高速起点桩号', trigger: 'blur' },
+          { validator: validPile, trigger: 'blur' }
+        ],
+        M0008_END_PILE: [
+          { required: true, message: '请填写高速终点桩号', trigger: 'blur' },
+          { validator: validPile, trigger: 'blur' }
+        ]
       },
       higway: {
         showCount: 10,
@@ -425,20 +483,33 @@ export default {
         })
       }).catch(() => {})
     },
-    addFun () {
-      this.addShow = true
-    },
-    handleInfo (data) {
-      this.infoShow = true
-      this.infoForm = Object.assign({}, data)
-    },
-    handleEdit (data) {
-      this.editShow = true
-      this.editForm = Object.assign({}, data)
-    },
-    handleDelete (data) {},
     // 批量删除
-    delListFun () {}
+    delListFun () {
+      let _list = []
+      if (this.selectList.length > 0) {
+        for (let i = 0; i < this.selectList.length; i++) {
+          _list.push(this.selectList[i].M0008_ID)
+        }
+        this.$confirm('确定要删除这些记录?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$api.post(
+            `/cycle/highspeed/deleteByIds?IDS=${_list}`,
+            {},
+            null,
+            r => {
+              this.$message.success('删除成功')
+              this.refreshTable()
+              this.selectList = []
+            }
+          )
+        })
+      } else {
+        this.$message.warning('请选择要删除的数据！')
+      }
+    }
   }
 }
 </script>

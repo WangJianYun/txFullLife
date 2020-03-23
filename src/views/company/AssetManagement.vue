@@ -8,7 +8,7 @@
       <el-button
         type="primary"
         icon="el-icon-plus"
-        @click="addFun"
+        @click="openDialog('add')"
       >增加资产类别</el-button>
     </p>
     <div class="content">
@@ -22,7 +22,7 @@
       <div class="table-div">
         <el-table
           v-loading.body="loading"
-          :data="tableData"
+          :data="assetData"
           border
           style="width: 100%"
           highlight-current-row
@@ -44,42 +44,42 @@
             <template scope="scope"><span>{{scope.$index + 1}}</span></template>
           </el-table-column>
           <el-table-column
-            prop="main"
+            prop="T0001_ASSETTYPE_NAME"
             label="主类别"
             show-overflow-tooltip
             align="center"
           >
           </el-table-column>
           <el-table-column
-            prop="son"
+            prop="T0001_CHILD"
             label="从属子类别"
             align="center"
           >
           <template slot-scope="scope">
-           <div class="button_box" v-for="(item,index) of scope.row.son" :key="index">
-              <span class="tip">{{item}}</span>
-              <div class="buttons" v-if="scope.row.son.length>0">
+           <div class="button_box" v-for="(item,index) of scope.row.T0001_CHILD" :key="index">
+              <span class="tip">{{item.T0001_ASSETTYPE_NAME}}</span>
+              <div class="buttons" v-if="scope.row.T0001_CHILD.length>0">
                 <el-button
                 type="info"
                 size="mini"
-                @click="handleInfo(scope.row)"
+                @click="openDialog('look',item)"
               >查看</el-button>
               <el-button
                 type="primary"
                 size="mini"
-                @click="handleEdit(scope.row)"
+                @click="openDialog('edit',item)"
               >编辑</el-button>
               <el-button
                 type="danger"
                 size="mini"
-                @click="handleDelete(scope.row)"
+                @click="deleteRow(item)"
               >删除</el-button>
               </div>
            </div>
             </template>
           </el-table-column>
           <el-table-column
-            prop="desc"
+            prop="T0001_ASSETYPE_REMARK"
             label="备注"
             align="center"
           >
@@ -94,56 +94,63 @@
               <el-button
                 type="info"
                 size="mini"
-                @click="handleInfo(scope.row)"
+                @click="openDialog('look',scope.row)"
               >查看</el-button>
               <el-button
                 type="primary"
                 size="mini"
-                @click="handleEdit(scope.row)"
+                @click="openDialog('edit',scope.row)"
               >编辑</el-button>
               <el-button
                 type="danger"
                 size="mini"
-                @click="handleDelete(scope.row)"
+                @click="deleteRow(scope.row)"
               >删除</el-button>
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination
+        <!-- <el-pagination
           class="table-page"
-          @size-change="sizeChange"
           @current-change="currentChange"
           :current-page="higway.currentPage"
+          @size-change="sizeChange"
           :page-sizes="[10, 50, 100]"
           :page-size="higway.showCount"
           layout="total, sizes, prev, pager, next, jumper"
           :total="total"
-        ></el-pagination>
+        ></el-pagination> -->
       </div>
     </div>
     <!-- 新建 -->
     <el-dialog
-      title=">> 增加资产类别"
+      :title="dialogName"
       :visible.sync="addShow"
-      :close-on-click-modal="false"
+       :before-close="closeDialog"
       custom-class="dialog-div"
     >
+    <el-form
+        :model="form"
+        :rules="rules"
+        ref="form"
+      >
       <table class="add-table">
         <tr>
           <td class="bg-td">请选择类别</td>
           <td>
-            <el-select v-model="value" placeholder="请选择">
+            <el-select v-model="form.T0001_PID" placeholder="请选择" :disabled="isChoose">
               <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
+                v-for="(item,index ) in assetData"
+                :key="index"
+                :label="item.T0001_ASSETTYPE_NAME"
+                :value="item.T0001_ID">
               </el-option>
             </el-select>
           </td>
           <td class="bg-td">类别名称</td>
             <td>
-              <el-input v-model.trim="addForm.words" size="small" maxlength="30" ></el-input>
+              <el-form-item prop="T0001_ASSETTYPE_NAME">
+              <el-input v-model.trim="form.T0001_ASSETTYPE_NAME" size="small" maxlength="30" :disabled="islook"></el-input>
+              </el-form-item>
             </td>
         <tr>
           <td class="bg-td">备注</td>
@@ -151,115 +158,20 @@
             <el-input
               type="textarea"
               :rows="10"
-              v-model="addForm.desc"
+              v-model="form.T0001_ASSETYPE_REMARK"
+              :disabled="islook"
               maxlength="2000"
             ></el-input>
           </td>
         </tr>
       </table>
+       </el-form>
       <div
         slot="footer"
         class="dialog-footer"
       >
-        <el-button @click="addShow = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="submitForm('ruleForm')"
-        >确 定</el-button>
-      </div>
-    </el-dialog>
-    <!-- 修改 -->
-    <el-dialog
-      title=">> 修改资产类别"
-      :visible.sync="editShow"
-      :close-on-click-modal="false"
-      custom-class="dialog-div"
-    >
-      <table class="add-table">
-        <tr>
-          <td class="bg-td">请选择类别</td>
-          <td>
-            <el-select v-model="value" placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </td>
-          <td class="bg-td">类别名称</td>
-            <td>
-              <el-input v-model.trim="editForm.words" size="small" maxlength="30" ></el-input>
-            </td>
-        <tr>
-          <td class="bg-td">备注</td>
-          <td colspan="10">
-            <el-input
-              type="textarea"
-              :rows="10"
-              v-model="editForm.desc"
-              maxlength="2000"
-            ></el-input>
-          </td>
-        </tr>
-      </table>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button @click="editShow = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="submitForm('ruleForm')"
-        >确 定</el-button>
-      </div>
-    </el-dialog>
-    <!-- 查看 -->
-    <el-dialog
-      title=">> 查看资产类别"
-      :visible.sync="infoShow"
-      :close-on-click-modal="false"
-      custom-class="dialog-div"
-    >
-      <table class="add-table">
-        <tr>
-          <td class="bg-td">请选择类别</td>
-          <td>
-            <el-select v-model="value" placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
-          </td>
-          <td class="bg-td">类别名称</td>
-            <td>
-              <el-input v-model.trim="infoForm.words" size="small" maxlength="30" ></el-input>
-            </td>
-        <tr>
-          <td class="bg-td">备注</td>
-          <td colspan="10">
-            <el-input
-              type="textarea"
-              :rows="10"
-              v-model="infoShow.desc"
-              maxlength="2000"
-            ></el-input>
-          </td>
-        </tr>
-      </table>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
-        <el-button @click="infoShow = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="submitForm('ruleForm')"
-        >确 定</el-button>
+        <el-button type="primary" @click="save">保 存</el-button>
+        <el-button @click="resetDialog">取 消</el-button>
       </div>
     </el-dialog>
   </div>
@@ -268,6 +180,7 @@
 export default {
   data () {
     return {
+      dialogName: '新增高速',
       loading: false,
       addShow: false,
       editShow: false,
@@ -275,52 +188,35 @@ export default {
       editForm: {},
       addForm: {},
       infoForm: {},
-      tableData: [
-        {
-          main: '交通安全设施',
-          son: ['装饰型排水沟', '混合型排水沟', '功能型排水沟'],
-          desc: '无'
-        },
-        {
-          main: '排水沟',
-          son: '',
-          desc: '无'
-        },
-        {
-          main: '标志牌',
-          son: '',
-          desc: '无'
-        },
-        {
-          main: '桥梁',
-          son: ['特大桥', '大桥', '中桥', '小桥'],
-          desc: '无'
-        }
-      ],
+      dpData: [],
+      assetData: [],
+      islook: false,
+      isChoose: false,
+      form: {
+        M0018_ID: '',
+        T0001_ID: '',
+        T0001_ASSETTYPE_NAME: '',
+        T0001_PID: '',
+        T0001_ASSETYPE_REMARK: ''
+      },
+      rules: {
+        T0001_ASSETTYPE_NAME: [
+          { required: true, message: '请输入类别名称', trigger: 'blur' }
+        ]
+      },
       higway: {
         showCount: 10,
         currentPage: 1
       },
       total: 0,
       selectList: [],
-      options: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
-      value: ''
+      mainData: [],
+      options: []
     }
+  },
+  mounted () {
+    this.refreshTable()
+    this.getAllData()
   },
   methods: {
     // 分页
@@ -336,6 +232,131 @@ export default {
     selectAll (selection) {
       this.selectList = selection
     },
+
+    // 数据整理出子集
+    findChild (currentItem, list) {
+      currentItem.T0001_CHILD = []
+      // eslint-disable-next-line no-unneeded-ternary
+      list.forEach(v => {
+        if (currentItem.T0001_ID === v.T0001_PID) {
+          currentItem.T0001_CHILD.push(v)
+        }
+      })
+    },
+    // 列表
+    refreshTable (pageIndex) {
+      this.form.M0018_ID = sessionStorage.getItem('id')
+      // eslint-disable-next-line no-unused-vars
+      // let _data = {
+      //   currentPage: this.higway.currentPage,
+      //   showCount: this.higway.showCount,
+      //   searchMap: { 'M0018_ID': this.form.M0018_ID }
+      // }
+      this.$api.post('/cycle/assetType/listAll', { 'M0018_ID': this.form.M0018_ID }, null, r => {
+        this.assetData = r.data.filter(v => v.T0001_PID === '0' || v.T0001_PID === 0)
+        this.assetData.forEach(v => {
+          this.findChild(v, r.data)
+        })
+        this.total = this.assetData.length
+      })
+    },
+    // 选择框的数据
+    getAllData () {
+      this.$api.post('/cycle/assetType/listAll', { 'M0018_ID': this.form.M0018_ID }, null, r => {
+        this.mainData = r.data.filter(v => v.T0001_PID === '0' || v.T0001_PID === 0) // 选择框的数据
+      })
+    },
+    // 关闭弹窗
+    closeDialog () {
+      this.$refs['form'].resetFields()
+      this.addShow = false
+      this.islook = false
+      this.isChoose = false
+      this.form = {}
+      this.refreshTable()
+    },
+    resetDialog () {
+      this.addShow = false
+      this.$refs['form'].resetFields()
+      this.closeDialog()
+    },
+    openDialog (type, row) {
+      if (type === 'add') {
+        this.addShow = true
+        this.dialogName = '新增资产类别'
+        this.dialogType = 'new'
+        this.$api.post(`/cycle/utilData/getId`, {}, null, r => {
+          this.form.T0001_ID = r.data
+        })
+      }
+      if (type === 'edit') {
+        if (row.T0001_PID === '0' || row.T0001_PID === 0) {
+          row.T0001_PID = ''
+          this.isChoose = true
+        }
+        this.addShow = true
+        this.dialogName = '编辑资产类别'
+        this.form = row
+        this.dialogType = 'edit'
+      }
+      if (type === 'look') {
+        if (row.T0001_PID === '0' || row.T0001_PID === 0) {
+          row.T0001_PID = ''
+        }
+        this.addShow = true
+        this.dialogName = '查看资产类别'
+        this.form = row
+        this.islook = true
+        this.isChoose = true
+        this.dialogType = 'look'
+      }
+    },
+    save () {
+      this.form.M0018_ID = sessionStorage.getItem('id')
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          if (this.dialogType === 'new') {
+            // 选择框为空，则传0给后端
+            if (this.form.T0001_PID === '') {
+              this.form.T0001_PID = '0'
+            }
+            console.log(this.form)
+            this.$api.post('/cycle/assetType/insert', this.form, '新增成功', r => {
+              this.closeDialog()
+            })
+          }
+          if (this.dialogType === 'edit') {
+            if (this.form.T0001_PID === '') {
+              this.form.T0001_PID = '0'
+            }
+            this.$api.post('/cycle/assetType/update', this.form, '编辑成功', r => {
+              this.closeDialog()
+            })
+          }
+          if (this.dialogType === 'look') {
+            this.addShow = false
+            this.islook = false
+            this.isChoose = false
+            this.form = {}
+            this.refreshTable()
+          }
+        } else {
+          return false
+        }
+      })
+    },
+    deleteRow (row) {
+      console.log(row)
+      this.$confirm('确认删除？此操作不可取消', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$api.post('/cycle/assetType/deleteById?ID=' + row.T0001_ID, {}, '删除成功', r => {
+          this.refreshTable()
+        })
+      }).catch(() => {})
+    },
     addFun () {
       this.addShow = true
     },
@@ -349,7 +370,32 @@ export default {
     },
     handleDelete (data) {},
     // 批量删除
-    delListFun () {}
+    delListFun () {
+      let _list = []
+      if (this.selectList.length > 0) {
+        for (let i = 0; i < this.selectList.length; i++) {
+          _list.push(this.selectList[i].T0001_ID)
+        }
+        this.$confirm('确定要删除这些记录?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$api.post(
+            `/cycle/assetType/deleteByIds?IDS=${_list}`,
+            {},
+            null,
+            r => {
+              this.$message.success('删除成功')
+              this.refreshTable()
+              this.selectList = []
+            }
+          )
+        })
+      } else {
+        this.$message.warning('请选择要删除的数据！')
+      }
+    }
   }
 }
 </script>
@@ -391,7 +437,10 @@ export default {
       border: 1px solid #dcdfe6;
       td {
         border: 1px solid #dcdfe6;
-        padding: 10px;
+        padding: 15px 15px !important;
+          .el-form-item{
+            margin-bottom: 0 !important;
+          }
       }
     }
     .bg-td {
@@ -408,17 +457,14 @@ export default {
     text-align: start;
     position: relative;
   }
-  .tip{
-    width:60%;
+  .higway-wrap .tip{
+    width:auto;
     display: inline-block;
     text-align: center;
-    // float: left;
+    padding-left:10%;
   }
   .buttons{
-    // float: right;
-    position:absolute;
-    top:-2px;
-    left:250px;
+    float: right;
   }
 }
 </style>

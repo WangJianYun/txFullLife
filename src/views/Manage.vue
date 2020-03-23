@@ -129,7 +129,8 @@ export default {
       pathBox: [],
       pathitem: '',
       menulist1: [],
-      menulist2: []
+      menulist2: [],
+      menuType: ''
     }
   },
   mounted () {
@@ -142,7 +143,8 @@ export default {
     }
     this.currentUser = JSON.parse(sessionStorage.getItem('currentUser'))
   },
-  created () {},
+  created () {
+  },
   methods: {
     timer () {
       let that = this
@@ -233,22 +235,24 @@ export default {
       //   { id: '21', name: '个人中心', icon: '', url: '7', lvl: '1', children: [] },
       //   { id: '23', name: '我的资料', icon: '', url: '/Personal', lvl: '2', parentId: '21' }
       // ]
-      this.menuList = JSON.parse(this.$route.params.menu)
-      this.menulist1 = this.menuList.filter(
-        v => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1
-      )
+      this.menuList = JSON.parse(sessionStorage.getItem('menuData'))
+      this.menuType = sessionStorage.getItem('menuType')
+      // this.$api.post('/cycle/roleGroupManagement/getMenuList', { 'M0018_ID': sessionStorage.getItem('id') }, '成功', r => {
+      //   this.menuList = r.data
       // 根据menuType来判断是集团公司还是分公司菜单
-      if (parseInt(this.$route.params.menuType) === 1) { // 分公司
+      this.menulist1 = this.menuList.filter(v => {
+        return v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1
+      })
+      if (parseInt(this.menuType) === 1) { // 分公司
         this.routes = routes1
       }
-      if (parseInt(this.$route.params.menuType) === 0) { // 集团公司
+      if (parseInt(this.menuType) === 0) { // 集团公司
         this.routes = routes2
       }
       try {
         this.menulist1.forEach(v => {
           this.findKid(v, this.menuList)
         })
-        console.log(this.menulist1)
         for (const v of this.menulist1) {
           if (v.M0005_STATE === 1 || v.M0005_STATE === '1') {
             // this.$router.push((v.M0004_CHILD && v.M0004_CHILD.length > 0) ? v.M0004_CHILD[0].M0004_URL : v.M0004_URL)
@@ -264,6 +268,8 @@ export default {
       } catch (error) {
         console.log(error)
       }
+      // })
+
       // this.menulist1.forEach(val => {
       //   this.menuOptions.push({
       //     id: val.M0004_ID,
@@ -290,32 +296,6 @@ export default {
       // }
       // console.log(this.defaultActiveMenu)
       // })
-    },
-    findChild (id, allRes) {
-      let childList = []
-      allRes.forEach(val => {
-        if (val.parentId === id) {
-          childList.push({
-            id: val.id,
-            name: val.name,
-            icon: val.icon,
-            url: val.url
-          })
-        }
-      })
-      // 递归
-      childList.forEach(val => {
-        let list = this.findChild(val.id, allRes)
-        if (list.length !== 0) {
-          val.children = list
-        }
-      })
-
-      // 如果节点下没有子节点，返回一个空List（递归退出）
-      if (childList.length === 0) {
-        return []
-      }
-      return childList
     },
     changeActive () {
       let that = this

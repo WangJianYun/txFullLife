@@ -85,10 +85,12 @@ export default {
             sessionStorage.setItem('id', r.data.M0018_ID)
             sessionStorage.setItem('currentUser', JSON.stringify(r.data))
             sessionStorage['TokenId'] = r.data.TokenId
-            // sessionStorage.setItem('TokenId', r.data.TokenId)
+            sessionStorage.setItem('menuData', this.menuData)
+            sessionStorage.setItem('menuType', this.menuType)
             // this.$router.push('/workBanch')
             this.$router.push({
-              path: `/Manage/${this.menuData}/${this.menuType}`
+              // path: `/Manage/${this.menuData}/${this.menuType}`
+              path: '/Manage'
             })
             // this.$router.push({
             //   path: '/Manage',

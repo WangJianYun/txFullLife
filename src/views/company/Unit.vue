@@ -661,7 +661,8 @@ export default {
       },
       rules: {
         M0018_COMPANY_NAME: [
-          { required: true, message: '请填写单位名称', trigger: 'blur' }
+          { required: true, message: '请填写单位名称', trigger: 'blur' },
+          { pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9.·-]+$/, message: '单位名称不支持特殊字符', trigger: 'blur' }
         ],
         M0018_SIMPLE_NAME: [
           { required: true, message: '请填写单位简称', trigger: 'blur' }
@@ -674,12 +675,14 @@ export default {
           // { validator: validPile, trigger: 'blur' }
         ],
         M0018_REAL_NAME: [
-          { required: true, message: '请填写真实姓名', trigger: 'blur' }
-          // { validator: validPile, trigger: 'blur' }
+          { required: true, message: '请填写真实姓名', trigger: 'blur' },
+          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' },
+          // { pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9.·-]+$/, message: '姓名不支持特殊字符', trigger: 'blur' }
+          { pattern: /^[\u4E00-\u9FA5]+$/, message: '用户名只能为中文' }
         ],
         M0018_USER_EMAIL: [
-          { required: true, message: '请填写邮箱', trigger: 'blur' }
-          // { validator: validOrder, trigger: 'blur' }
+          { required: true, message: '请填写邮箱', trigger: 'blur' },
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
         ],
         M0018_COMPANY_ADRESS: [
           { required: true, message: '请填写地址', trigger: 'blur' }

@@ -450,16 +450,17 @@ export default {
     position: relative;
   }
   .tip{
-    width:60%;
+    width:auto;
+     padding-left:10%;
     display: inline-block;
     text-align: center;
     // float: left;
   }
   .buttons{
-    // float: right;
-    position:absolute;
-    top:-2px;
-    left:250px;
+    float: right;
+    // position:absolute;
+    // top:-2px;
+    // left:250px;
   }
 }
 </style>

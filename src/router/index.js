@@ -18,7 +18,6 @@ import Position from '../views/Position.vue'
 import Authority from '../views/Authority.vue'
 import Personal from '../views/Personal.vue'
 // 集团公司
-import workBanchC from '../views/company/workBanch.vue'
 import yhCostListC from '../views/company/yhCostList.vue'
 import dailyCostC from '../views/company/dailyCost.vue'
 import techGradeC from '../views/company/techGrade.vue'
@@ -32,6 +31,7 @@ import managerC from '../views/company/manager.vue'
 import PositionC from '../views/company/Position.vue'
 import AuthorityC from '../views/company/Authority.vue'
 import PersonalC from '../views/company/Personal.vue'
+import workBanchC from '../views/company/workBanch.vue'
 
 Vue.use(VueRouter)
 
@@ -47,7 +47,7 @@ const routes1 = [{
   name: 'login',
   component: Login
 }, {
-  path: '/Manage/:menu/:menuType',
+  path: '/Manage',
   name: 'Manage',
   component: Manage,
   children: [{
@@ -150,12 +150,11 @@ const routes1 = [{
     component: Personal
   }]
 }
-// 集团公司
 ]
 // 集团公司
 const routes2 = [
   {
-    path: '/Manage/:menu/:menuType',
+    path: '/Manage',
     name: 'Manage',
     component: Manage,
     children: [{

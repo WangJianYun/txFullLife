@@ -1,23 +1,19 @@
-/*
- * @Description 资产类别列表
- */
+/* * @Description 资产类别列表 */
 <template>
   <div class="higway-wrap">
     <p class="title-p">
-      <span style="display:inline-block;margin-bottom:20px;"> >> 资产类别管理 </span>
-      <el-button
-        type="primary"
-        icon="el-icon-plus"
-        @click="openDialog('add')"
-      >增加资产类别</el-button>
+      <span style="display:inline-block;margin-bottom:20px;">
+        >> 资产类别管理
+      </span>
+      <el-button type="primary" icon="el-icon-plus" @click="openDialog('add')"
+        >增加资产类别</el-button
+      >
     </p>
     <div class="content">
       <div>
-        <el-button
-          type="primary"
-          icon="el-icon-delete"
-          @click="delListFun"
-        >批量删除</el-button>
+        <el-button type="primary" icon="el-icon-delete" @click="delListFun"
+          >批量删除</el-button
+        >
       </div>
       <div class="table-div">
         <el-table
@@ -28,20 +24,14 @@
           highlight-current-row
           @select="selectTable"
           @select-all="selectAll"
-          :header-cell-style="{background:'#f0f0f0'}"
+          :header-cell-style="{ background: '#f0f0f0' }"
         >
           >
-          <el-table-column
-            type="selection"
-            width="40"
-          >
-          </el-table-column>
-          <el-table-column
-            label="序号"
-            width="50"
-            align="center"
-          >
-            <template scope="scope"><span>{{scope.$index + 1}}</span></template>
+          <el-table-column type="selection" width="40"> </el-table-column>
+          <el-table-column label="序号" width="50" align="center">
+            <template scope="scope"
+              ><span>{{ scope.$index + 1 }}</span></template
+            >
           </el-table-column>
           <el-table-column
             prop="T0001_ASSETTYPE_NAME"
@@ -50,32 +40,32 @@
             align="center"
           >
           </el-table-column>
-          <el-table-column
-            prop="T0001_CHILD"
-            label="从属子类别"
-            align="center"
-          >
-          <template slot-scope="scope">
-           <div class="button_box" v-for="(item,index) of scope.row.T0001_CHILD" :key="index">
-              <span class="tip">{{item.T0001_ASSETTYPE_NAME}}</span>
-              <div class="buttons" v-if="scope.row.T0001_CHILD.length>0">
-                <el-button
-                type="info"
-                size="mini"
-                @click="openDialog('look',item)"
-              >查看</el-button>
-              <el-button
-                type="primary"
-                size="mini"
-                @click="openDialog('edit',item)"
-              >编辑</el-button>
-              <el-button
-                type="danger"
-                size="mini"
-                @click="deleteRow(item)"
-              >删除</el-button>
+          <el-table-column prop="T0001_CHILD" label="从属子类别" align="center">
+            <template slot-scope="scope">
+              <div
+                class="button_box"
+                v-for="(item, index) of scope.row.T0001_CHILD"
+                :key="index"
+              >
+                <span class="tip">{{ item.T0001_ASSETTYPE_NAME }}</span>
+                <div class="buttons" v-if="scope.row.T0001_CHILD.length > 0">
+                  <el-button
+                    type="info"
+                    size="mini"
+                    @click="openDialog('look', item)"
+                    >查看</el-button
+                  >
+                  <el-button
+                    type="primary"
+                    size="mini"
+                    @click="openDialog('edit', item)"
+                    >编辑</el-button
+                  >
+                  <el-button type="danger" size="mini" @click="deleteRow(item)"
+                    >删除</el-button
+                  >
+                </div>
               </div>
-           </div>
             </template>
           </el-table-column>
           <el-table-column
@@ -94,18 +84,18 @@
               <el-button
                 type="info"
                 size="mini"
-                @click="openDialog('look',scope.row)"
-              >查看</el-button>
+                @click="openDialog('look', scope.row)"
+                >查看</el-button
+              >
               <el-button
                 type="primary"
                 size="mini"
-                @click="openDialog('edit',scope.row)"
-              >编辑</el-button>
-              <el-button
-                type="danger"
-                size="mini"
-                @click="deleteRow(scope.row)"
-              >删除</el-button>
+                @click="openDialog('edit', scope.row)"
+                >编辑</el-button
+              >
+              <el-button type="danger" size="mini" @click="deleteRow(scope.row)"
+                >删除</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
@@ -125,51 +115,56 @@
     <el-dialog
       :title="dialogName"
       :visible.sync="addShow"
-       :before-close="closeDialog"
+      :before-close="closeDialog"
       custom-class="dialog-div"
     >
-    <el-form
-        :model="form"
-        :rules="rules"
-        ref="form"
-      >
-      <table class="add-table">
-        <tr>
-          <td class="bg-td">请选择类别</td>
-          <td>
-            <el-select v-model="form.T0001_PID" placeholder="请选择" :disabled="isChoose">
-              <el-option
-                v-for="(item,index ) in assetData"
-                :key="index"
-                :label="item.T0001_ASSETTYPE_NAME"
-                :value="item.T0001_ID">
-              </el-option>
-            </el-select>
-          </td>
-          <td class="bg-td">类别名称</td>
+      <el-form :model="form" :rules="rules" ref="form">
+        <table class="add-table">
+          <tr>
+            <td class="bg-td">请选择类别</td>
+            <td>
+              <el-select
+                v-model="form.T0001_PID"
+                placeholder="请选择"
+                :disabled="isChoose"
+              >
+                <el-option
+                  v-for="(item, index) in assetData"
+                  :key="index"
+                  :label="item.T0001_ASSETTYPE_NAME"
+                  :value="item.T0001_ID"
+                >
+                </el-option>
+              </el-select>
+            </td>
+            <td class="bg-td">类别名称</td>
             <td>
               <el-form-item prop="T0001_ASSETTYPE_NAME">
-              <el-input v-model.trim="form.T0001_ASSETTYPE_NAME" size="small" maxlength="30" :disabled="islook"></el-input>
+                <el-input
+                  v-model.trim="form.T0001_ASSETTYPE_NAME"
+                  size="small"
+                  maxlength="30"
+                  :disabled="islook"
+                ></el-input>
               </el-form-item>
             </td>
-        <tr>
-          <td class="bg-td">备注</td>
-          <td colspan="10">
-            <el-input
-              type="textarea"
-              :rows="10"
-              v-model="form.T0001_ASSETYPE_REMARK"
-              :disabled="islook"
-              maxlength="2000"
-            ></el-input>
-          </td>
-        </tr>
-      </table>
-       </el-form>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
+          </tr>
+
+          <tr>
+            <td class="bg-td">备注</td>
+            <td colspan="10">
+              <el-input
+                type="textarea"
+                :rows="10"
+                v-model="form.T0001_ASSETYPE_REMARK"
+                :disabled="islook"
+                maxlength="2000"
+              ></el-input>
+            </td>
+          </tr>
+        </table>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="save">保 存</el-button>
         <el-button @click="resetDialog">取 消</el-button>
       </div>
@@ -178,16 +173,11 @@
 </template>
 <script>
 export default {
-  data () {
+  data() {
     return {
       dialogName: '新增高速',
       loading: false,
       addShow: false,
-      editShow: false,
-      infoShow: false,
-      editForm: {},
-      addForm: {},
-      infoForm: {},
       dpData: [],
       assetData: [],
       islook: false,
@@ -210,31 +200,30 @@ export default {
       },
       total: 0,
       selectList: [],
-      mainData: [],
-      options: []
+      mainData: []
     }
   },
-  mounted () {
+  mounted() {
     this.refreshTable()
     this.getAllData()
   },
   methods: {
     // 分页
-    sizeChange (val) {
+    sizeChange(val) {
       this.higway.showCount = val
     },
-    currentChange (val) {
+    currentChange(val) {
       this.higway.currentPage = val
     },
-    selectTable (selection) {
+    selectTable(selection) {
       this.selectList = selection
     },
-    selectAll (selection) {
+    selectAll(selection) {
       this.selectList = selection
     },
 
     // 数据整理出子集
-    findChild (currentItem, list) {
+    findChild(currentItem, list) {
       currentItem.T0001_CHILD = []
       // eslint-disable-next-line no-unneeded-ternary
       list.forEach(v => {
@@ -243,8 +232,8 @@ export default {
         }
       })
     },
-    // 列表
-    refreshTable (pageIndex) {
+    // 列表页
+    refreshTable() {
       this.form.M0018_ID = sessionStorage.getItem('id')
       // eslint-disable-next-line no-unused-vars
       // let _data = {
@@ -252,22 +241,36 @@ export default {
       //   showCount: this.higway.showCount,
       //   searchMap: { 'M0018_ID': this.form.M0018_ID }
       // }
-      this.$api.post('/cycle/assetType/listAll', { 'M0018_ID': this.form.M0018_ID }, null, r => {
-        this.assetData = r.data.filter(v => v.T0001_PID === '0' || v.T0001_PID === 0)
-        this.assetData.forEach(v => {
-          this.findChild(v, r.data)
-        })
-        this.total = this.assetData.length
-      })
+      this.$api.post(
+        '/cycle/assetType/listAll',
+        { M0018_ID: this.form.M0018_ID },
+        null,
+        r => {
+          this.assetData = r.data.filter(
+            v => v.T0001_PID === '0' || v.T0001_PID === 0
+          )
+          this.assetData.forEach(v => {
+            this.findChild(v, r.data)
+          })
+          this.total = this.assetData.length
+        }
+      )
     },
     // 选择框的数据
-    getAllData () {
-      this.$api.post('/cycle/assetType/listAll', { 'M0018_ID': this.form.M0018_ID }, null, r => {
-        this.mainData = r.data.filter(v => v.T0001_PID === '0' || v.T0001_PID === 0) // 选择框的数据
-      })
+    getAllData() {
+      this.$api.post(
+        '/cycle/assetType/listAll',
+        { M0018_ID: this.form.M0018_ID },
+        null,
+        r => {
+          this.mainData = r.data.filter(
+            v => v.T0001_PID === '0' || v.T0001_PID === 0
+          ) // 选择框的数据
+        }
+      )
     },
     // 关闭弹窗
-    closeDialog () {
+    closeDialog() {
       this.$refs['form'].resetFields()
       this.addShow = false
       this.islook = false
@@ -275,12 +278,12 @@ export default {
       this.form = {}
       this.refreshTable()
     },
-    resetDialog () {
+    resetDialog() {
       this.addShow = false
       this.$refs['form'].resetFields()
       this.closeDialog()
     },
-    openDialog (type, row) {
+    openDialog(type, row) {
       if (type === 'add') {
         this.addShow = true
         this.dialogName = '新增资产类别'
@@ -311,9 +314,9 @@ export default {
         this.dialogType = 'look'
       }
     },
-    save () {
+    save() {
       this.form.M0018_ID = sessionStorage.getItem('id')
-      this.$refs['form'].validate((valid) => {
+      this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.dialogType === 'new') {
             // 选择框为空，则传0给后端
@@ -321,17 +324,27 @@ export default {
               this.form.T0001_PID = '0'
             }
             console.log(this.form)
-            this.$api.post('/cycle/assetType/insert', this.form, '新增成功', r => {
-              this.closeDialog()
-            })
+            this.$api.post(
+              '/cycle/assetType/insert',
+              this.form,
+              '新增成功',
+              r => {
+                this.closeDialog()
+              }
+            )
           }
           if (this.dialogType === 'edit') {
             if (this.form.T0001_PID === '') {
               this.form.T0001_PID = '0'
             }
-            this.$api.post('/cycle/assetType/update', this.form, '编辑成功', r => {
-              this.closeDialog()
-            })
+            this.$api.post(
+              '/cycle/assetType/update',
+              this.form,
+              '编辑成功',
+              r => {
+                this.closeDialog()
+              }
+            )
           }
           if (this.dialogType === 'look') {
             this.addShow = false
@@ -345,32 +358,28 @@ export default {
         }
       })
     },
-    deleteRow (row) {
+    // 单条删除
+    deleteRow(row) {
       console.log(row)
       this.$confirm('确认删除？此操作不可取消', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        this.$api.post('/cycle/assetType/deleteById?ID=' + row.T0001_ID, {}, '删除成功', r => {
-          this.refreshTable()
+      })
+        .then(() => {
+          this.$api.post(
+            '/cycle/assetType/deleteById?ID=' + row.T0001_ID,
+            {},
+            '删除成功',
+            r => {
+              this.refreshTable()
+            }
+          )
         })
-      }).catch(() => {})
+        .catch(() => {})
     },
-    addFun () {
-      this.addShow = true
-    },
-    handleInfo (data) {
-      this.infoShow = true
-      this.infoForm = Object.assign({}, data)
-    },
-    handleEdit (data) {
-      this.editShow = true
-      this.editForm = Object.assign({}, data)
-    },
-    handleDelete (data) {},
     // 批量删除
-    delListFun () {
+    delListFun() {
       let _list = []
       if (this.selectList.length > 0) {
         for (let i = 0; i < this.selectList.length; i++) {
@@ -410,7 +419,7 @@ export default {
     background: #fff;
     padding: 30px 20px;
     .table-div {
-        margin-top: 10px;
+      margin-top: 10px;
       .el-button--mini {
         margin: 0 2px;
         padding: 4px 8px;
@@ -438,9 +447,9 @@ export default {
       td {
         border: 1px solid #dcdfe6;
         padding: 15px 15px !important;
-          .el-form-item{
-            margin-bottom: 0 !important;
-          }
+        .el-form-item {
+          margin-bottom: 0 !important;
+        }
       }
     }
     .bg-td {
@@ -457,13 +466,13 @@ export default {
     text-align: start;
     position: relative;
   }
-  .higway-wrap .tip{
-    width:auto;
+  .higway-wrap .tip {
+    width: auto;
     display: inline-block;
     text-align: center;
-    padding-left:10%;
+    padding-left: 10%;
   }
-  .buttons{
+  .buttons {
     float: right;
   }
 }

@@ -201,20 +201,20 @@ export default {
       this.$router.push('/')
     }
     this.currentUser = JSON.parse(sessionStorage.getItem('currentUser'))
-    this.M0018_ID = this.currentUser.UserMap.M0018_ID
-    console.log(this.currentUser.UserMap.M0018_ID)
+    // this.M0018_ID = this.currentUser.UserMap.M0018_ID
+    // console.log(this.currentUser.UserMap.M0018_ID)
   },
   created() {},
   methods: {
     refreshTable() {
-      this.$api.post(
-        '/cycle/userManagement/listAll',
-        { M0018_ID: this.M0018_ID },
-        null,
-        r => {
-          console.log(r)
-        }
-      )
+      // this.$api.post(
+      //   '/cycle/userManagement/listAll',
+      //   { M0018_ID: this.M0018_ID },
+      //   null,
+      //   r => {
+      //     console.log(r)
+      //   }
+      // )
     },
     timer() {
       let that = this

@@ -4,15 +4,10 @@
       <el-col :span="4">
         <span style="font-size:20px;">>> 权限配置与管理</span>
       </el-col>
-      <el-col
-        :span="20"
-        style="text-align:right;padding-right:30px;"
-      >
-        <el-button
-          type="primary"
-          icon="el-icon-plus"
-          @click="openDialog('add')"
-        >添加权限组</el-button>
+      <el-col :span="20" style="text-align:right;padding-right:30px;">
+        <el-button type="primary" icon="el-icon-plus" @click="openDialog('add')"
+          >添加权限组</el-button
+        >
       </el-col>
     </el-row>
     <el-main id="tableWrap">
@@ -22,54 +17,52 @@
             :data="dpData"
             border
             style="width: 100%"
-            :header-cell-style="{background:'rgb(240,240,240)'}"
+            :header-cell-style="{ background: 'rgb(240,240,240)' }"
           >
-            <el-table-column
-              label="序号"
-              width="50"
-              align="center"
-            >
-              <template scope="scope"><span>{{scope.$index + 1}}</span></template>
+            <el-table-column label="序号" width="50" align="center">
+              <template scope="scope"
+                ><span>{{ scope.$index + 1 }}</span></template
+              >
             </el-table-column>
-            <el-table-column
-              prop="M0003_NAME"
-              label="角色名称"
-              align="center"
-            >
+            <el-table-column prop="M0003_NAME" label="角色名称" align="center">
             </el-table-column>
-            <el-table-column
-              label="管理员"
-              width="500"
-              align="center"
-            >
+            <el-table-column label="管理员" width="500" align="center">
               <template slot-scope="scope">
                 <table style="width:100%;height:100%;">
                   <tr>
-                    <td style="max-width:100px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;border-bottom:none;padding:0;border-right:none;padding-right:10px">
-                      <span v-text="scope.row.NAMES"></span>
+                    <td
+                      style="max-width:100px;overflow: hidden;text-overflow:ellipsis;white-space: nowrap;border-bottom:none;padding:0;border-right:none;padding-right:10px"
+                    >
+                      <span
+                        v-text="scope.row.NAMES"
+                        style="font-size:12px"
+                      ></span>
                     </td>
-                    <td style="width:160px;border-bottom:none;padding:0;border-right:none">
+                    <td
+                      style="width:160px;border-bottom:none;padding:0;border-right:none"
+                    >
                       <el-button
                         type="danger"
                         size="mini"
-                        v-if="scope.row.COUNT>0"
+                        v-if="scope.row.COUNT > 0"
                         @click="checkMangers(scope.row)"
-                      >查看<span class="num">{{scope.row.COUNT}}</span></el-button>
+                        >查看<span class="num">{{
+                          scope.row.COUNT
+                        }}</span></el-button
+                      >
                       <el-button
                         type="primary"
                         icon="el-icon-plus"
                         size="mini"
                         @click="addManager(scope.row.M0003_ID)"
-                      >添加</el-button>
+                        >添加</el-button
+                      >
                     </td>
                   </tr>
                 </table>
               </template>
             </el-table-column>
-            <el-table-column
-              label="状态"
-              align="center"
-            >
+            <el-table-column label="状态" align="center">
               <template slot-scope="scope">
                 <el-switch
                   v-model="scope.row.isBlue"
@@ -80,11 +73,7 @@
                 </el-switch>
               </template>
             </el-table-column>
-            <el-table-column
-              prop='CREATOR'
-              label="创建人"
-              align="center"
-            >
+            <el-table-column prop="CREATOR" label="创建人" align="center">
             </el-table-column>
             <el-table-column
               prop="M0003_DATA_CREATE"
@@ -92,43 +81,41 @@
               align="center"
             >
             </el-table-column>
-            <el-table-column
-              label="操作"
-              width="220"
-              align="center"
-            >
+            <el-table-column label="操作" width="220" align="center">
               <template slot-scope="scope">
                 <el-button
                   type="info"
                   size="mini"
-                  @click="openDialog('look',scope.$index,scope.row)"
-                >查看</el-button>
+                  @click="openDialog('look', scope.$index, scope.row)"
+                  >查看</el-button
+                >
                 <el-button
                   type="primary"
                   size="mini"
-                  @click="openDialog('edit',scope.$index,scope.row)"
-                >编辑</el-button>
+                  @click="openDialog('edit', scope.$index, scope.row)"
+                  >编辑</el-button
+                >
                 <el-button
                   type="danger"
                   size="mini"
-                  @click="deleteRow(scope.$index,scope.row)"
-                >删除</el-button>
+                  @click="deleteRow(scope.$index, scope.row)"
+                  >删除</el-button
+                >
               </template>
             </el-table-column>
-
           </el-table>
         </el-col>
       </el-row>
       <el-row class="list-pagination-row">
-         <el-pagination
-                class="table-page"
-                @size-change="sizeChange"
-                @current-change="currentChange"
-                :current-page="currentPage"
-                :page-sizes="[10, 50, 100]"
-                :page-size="showCount"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="total"
+        <el-pagination
+          class="table-page"
+          @size-change="sizeChange"
+          @current-change="currentChange"
+          :current-page="currentPage"
+          :page-sizes="[10, 50, 100]"
+          :page-size="showCount"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
         ></el-pagination>
       </el-row>
     </el-main>
@@ -155,13 +142,13 @@
               <tr>
                 <td class="bg-td">权限组名称：</td>
                 <td>
-                  <el-form-item prop='M0003_NAME'>
-                  <el-input
-                    type="text"
-                    v-model="form.M0003_NAME"
-                    size="small"
-                    :disabled="islook"
-                  ></el-input>
+                  <el-form-item prop="M0003_NAME">
+                    <el-input
+                      type="text"
+                      v-model="form.M0003_NAME"
+                      size="small"
+                      :disabled="islook"
+                    ></el-input>
                   </el-form-item>
                 </td>
                 <td class="bg-td">是否激活：</td>
@@ -188,33 +175,30 @@
                 </td>
               </tr>
             </table>
+
             <el-main id="authModel">
               <p style="margin: 80px 0 30px 0;">权限配置</p>
-              <div
-                v-for="item of permisionListData"
-                :key="item.M0004_ID"
-              >
+              <div v-for="item of permisionListData" :key="item.M0004_ID">
                 <!-- <div v-show="item.M0004_LEVEL == 1"> -->
-                  <span
-                    class="tabs"
-                    v-text="item.M0004_NAME"
-                  ></span>
-                  <table class="add-table authTable">
+                <span class="tabs" v-text="item.M0004_NAME"></span>
+                <table class="add-table authTable">
                   <thead>
                     <tr>
-                      <th width='10%'>序号</th>
-                      <th width='40%'>模块名称</th>
+                      <th width="10%">序号</th>
+                      <th width="40%">模块名称</th>
                       <th>权限节点</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr
-                      v-for="(child,index) of item.M0004_CHILD"
-                      :key="index"
-                    >
-                      <td v-text="index+1"></td>
+                    <tr v-for="(child, index) of item.M0004_CHILD" :key="index">
+                      <td v-text="index + 1"></td>
                       <td class="chakan">
-                        <el-checkbox v-model="child.M0004_CHECKED" @change="changeCheck(child)" :disabled="islook">{{child.M0004_NAME}}</el-checkbox>
+                        <el-checkbox
+                          v-model="child.M0004_CHECKED"
+                          @change="changeCheck(child)"
+                          :disabled="islook"
+                          >{{ child.M0004_NAME }}</el-checkbox
+                        >
                         <!-- <el-checkbox v-model="child.M0004_CHECKED"></el-checkbox>  @change="handleCheckAllChange" :indeterminate="isIndeterminate"-->
                       </td>
                       <td>
@@ -233,69 +217,41 @@
                     </tr>
                   </tbody>
                 </table>
-                </div>
+              </div>
               <!-- </div> -->
             </el-main>
           </el-form>
         </el-main>
-        <div
-          slot="footer"
-          class="dialog-footer"
-        >
-          <el-button
-            type="primary"
-            @click="save"
-            size="small"
-          >提交</el-button>
-          <el-button
-            @click="closeDialog"
-            size="small"
-          >重置</el-button>
+        <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="save" size="small">提交</el-button>
+          <el-button @click="closeDialog" size="small">重置</el-button>
         </div>
       </el-dialog>
     </el-row>
-    <div
-      id="managers"
-      v-if="managerDialog"
-      :style="manStyle"
-    >
+    <div id="managers" v-if="managerDialog" :style="manStyle">
       <span
         class="el-icon-close"
         style="position:absolute;right:5px;top:5px;cursor:pointer;"
         @click="closeManger"
       ></span>
-      <el-checkbox-group
-        v-model="everyManager"
-        @change='editManger'
-      >
-        <div
-          v-for="item in mans"
-          :key="item.$index"
-        >
+      <el-checkbox-group v-model="everyManager" @change="editManger">
+        <div v-for="item in mans" :key="item.$index">
           <el-checkbox
             :label="item.NAME"
-            id='checkbox_item'
+            id="checkbox_item"
             :disabled="item.STATE == 2"
           ></el-checkbox>
         </div>
       </el-checkbox-group>
     </div>
-    <div
-      id="checkMans"
-      v-if="checkMans"
-      :style="checkStyle"
-    >
+    <div id="checkMans" v-if="checkMans" :style="checkStyle">
       <span
         class="el-icon-close"
-        style="position:absolute;right:5px;top:5px;cursor:pointer;"
+        style="position:absolute;right:5px;top:5px;cursor:pointer;background:#ffffff"
         @click="closeCheck"
       ></span>
-      <div
-        id="chMans"
-        v-for=" item in this.list"
-        :key="item.index"
-      >
-        <span>{{item.NAME}}</span>
+      <div id="chMans" v-for="item in this.list" :key="item.index">
+        <span>{{ item.NAME }}</span>
       </div>
     </div>
   </div>
@@ -303,7 +259,7 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
       // isBlue: false,
       pageIndex: 1,
@@ -365,24 +321,27 @@ export default {
       }
     }
   },
-  mounted () {
+  mounted() {
     this.refreshTable(1)
   },
   methods: {
     // 分页
-    sizeChange (val) {
+    sizeChange(val) {
       this.showCount = val
       this.refreshTable()
     },
-    currentChange (val) {
+    currentChange(val) {
       this.currentPage = val
       this.refreshTable()
     },
     // 分级查找子节点
-    findChild (currentItem, list) {
+    findChild(currentItem, list) {
       currentItem.M0004_CHILD = []
       // eslint-disable-next-line no-unneeded-ternary
-      currentItem.M0004_CHECKED = (currentItem.M0005_STATE === '1' || currentItem.M0005_STATE === 1) ? true : false
+      currentItem.M0004_CHECKED =
+        currentItem.M0005_STATE === '1' || currentItem.M0005_STATE === 1
+          ? true
+          : false
       list.forEach(v => {
         if (currentItem.M0004_ID === v.M0004_PID) {
           if (v.M0004_LEVEL !== 3 && v.M0004_LEVEL !== '3' && !v.M0004_CHILD) {
@@ -392,7 +351,7 @@ export default {
         }
       })
     },
-    setTableForm (send) {
+    setTableForm(send) {
       // 无send表示发送前，有send表示发送后
       this.listPromision = []
       this.permisionListData.forEach(v => {
@@ -419,70 +378,89 @@ export default {
         }
       })
     },
-    getPermission (id) {
-      const path = `/cycle/roleGroupManagement/${id ? ('getPermissionByRoleId?ID=' + id) : 'getPermission'}`
-      this.$api.post(path, { 'M0018_ID': this.form.M0018_ID }, null, r => {
-        this.permisionListData = r.data.filter(v => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1)
+    getPermission(id) {
+      const path = `/cycle/roleGroupManagement/${
+        id ? 'getPermissionByRoleId?ID=' + id : 'getPermission'
+      }`
+      this.$api.post(path, { M0018_ID: this.form.M0018_ID }, null, r => {
+        this.permisionListData = r.data.filter(
+          v => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1
+        )
         this.permisionListData.forEach(v => {
           this.findChild(v, r.data)
         })
         this.setTableForm()
       })
     },
-    refreshTable (pageIndex) {
+    refreshTable(pageIndex) {
       this.form.M0018_ID = sessionStorage.getItem('id')
       // eslint-disable-next-line no-unused-vars
       let _data = {
         currentPage: this.currentPage,
         showCount: this.showCount,
-        searchMap: { 'M0018_ID': this.form.M0018_ID }
+        searchMap: { M0018_ID: this.form.M0018_ID }
       }
       this.$api.post('/cycle/roleGroupManagement/listPage', _data, null, r => {
         this.dpData = r.data.returnParam
         this.dpData.forEach(v => {
-          v.isBlue = !!((v.M0003_DATA_STATE === '1' || v.M0003_DATA_STATE === 1))
+          v.isBlue = !!(v.M0003_DATA_STATE === '1' || v.M0003_DATA_STATE === 1)
         })
         console.log(this.dpData)
         this.total = r.data.totalResult
       })
     },
-    save () {
+    save() {
       this.form.M0018_ID = sessionStorage.getItem('id')
       this.setTableForm(true)
       this.itemData = {
         M0003_DATA_STATE: this.form.M0003_DATA_STATE === true ? 1 : 0,
         M0003_DISP_NAME: this.form.M0003_DISP_NAME,
-        M0001_ID_UPDATE: JSON.parse(sessionStorage.getItem('currentUser')).UserMap.CM_M0001_ID,
+        M0001_ID_UPDATE: JSON.parse(sessionStorage.getItem('currentUser'))
+          .UserMap.CM_M0001_ID,
         M0003_NAME: this.form.M0003_NAME
       }
       this.data = {
-        'mapParam': this.itemData,
-        'permissionList': this.listPromision
+        mapParam: this.itemData,
+        permissionList: this.listPromision
       }
       this.$refs['form'].validate(v => {
         if (v) {
           if (this.dialogType === 'add') {
-            this.itemData.CREATOR = JSON.parse(sessionStorage.getItem('currentUser')).UserName
-            this.itemData.M0001_ID_CREATE = JSON.parse(sessionStorage.getItem('currentUser')).UserMap.CM_M0001_ID
+            this.itemData.CREATOR = JSON.parse(
+              sessionStorage.getItem('currentUser')
+            ).UserName
+            this.itemData.M0001_ID_CREATE = JSON.parse(
+              sessionStorage.getItem('currentUser')
+            ).UserMap.CM_M0001_ID
             this.data.mapParam = this.itemData
-            this.$api.post('/cycle/roleGroupManagement/insert', this.data, '新增成功', r => {
-              this.closeDialog()
-              this.refreshTable()
-            })
+            this.$api.post(
+              '/cycle/roleGroupManagement/insert',
+              this.data,
+              '新增成功',
+              r => {
+                this.closeDialog()
+                this.refreshTable()
+              }
+            )
           }
           if (this.dialogType === 'edit') {
             this.data.mapParam = { ...this.updateData, ...this.itemData }
-            this.$api.post('/cycle/roleGroupManagement/updateSelective', this.data, '修改成功', r => {
-              this.closeDialog()
-              this.refreshTable()
-            })
+            this.$api.post(
+              '/cycle/roleGroupManagement/updateSelective',
+              this.data,
+              '修改成功',
+              r => {
+                this.closeDialog()
+                this.refreshTable()
+              }
+            )
           }
         } else {
           return false
         }
       })
     },
-    changeCheck (child) {
+    changeCheck(child) {
       // console.log(child)
       if (child.M0004_CHECKED) {
         child.tableForm = ['查询', '删除', '修改', '添加']
@@ -490,7 +468,7 @@ export default {
         child.tableForm = []
       }
     },
-    openDialog (type, index, row) {
+    openDialog(type, index, row) {
       // console.log(row)
       this.disVisible = true
       this.managerDialog = false
@@ -522,53 +500,68 @@ export default {
         this.getPermission(row.M0003_ID)
       }
     },
-    changeAuths (currets) {
+    changeAuths(currets) {
       this.setTableForm(true)
     },
-    closeDialog () {
+    closeDialog() {
       this.$refs['form'].resetFields()
       this.disVisible = false
       this.islook = false
       this.form = {}
       this.data = ''
     },
-    deleteRow (index, row) {
+    deleteRow(index, row) {
       this.$confirm('确认删除？此操作不可取消', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(() => {
-        this.$api.post('/cycle/roleGroupManagement/deleteById?ID=' + row.M0003_ID, {}, '删除成功', r => {
-          this.refreshTable(1)
-        })
-      }).catch((err) => {
-        console.log(err)
       })
+        .then(() => {
+          this.$api.post(
+            '/cycle/roleGroupManagement/deleteById?ID=' + row.M0003_ID,
+            {},
+            '删除成功',
+            r => {
+              this.refreshTable(1)
+            }
+          )
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
 
-    addManager (id) {
+    addManager(id) {
       this.managerDialog = true
       this.checkMans = false
       let e = window.event
       this.M0003ID = id
-      this.manStyle = { left: e.clientX - 280 + 'px', top: e.clientY - 150 + 'px' }
-      this.$api.post('/cycle/roleGroupMember/addList?M0003_ID=' + id, {}, null, r => {
-        this.mans = []
-        this.everyManager = []
-        this.manList = r.data
-        this.manList.forEach(item => {
-          this.mans.push(item)// 成员
-          if (item.STATE === '1') {
-            this.everyManager.push(item.NAME)// 选中状态成员
-          }
-        })
-      })
+      this.manStyle = {
+        left: e.clientX - 280 + 'px',
+        top: e.clientY - 150 + 'px'
+      }
+      this.$api.post(
+        '/cycle/roleGroupMember/addList?M0003_ID=' + id,
+        {},
+        null,
+        r => {
+          this.mans = []
+          this.everyManager = []
+          this.manList = r.data
+          this.manList.forEach(item => {
+            this.mans.push(item) // 成员
+            if (item.STATE === '1') {
+              this.everyManager.push(item.NAME) // 选中状态成员
+            }
+          })
+        }
+      )
     },
-    closeManger () {
+    closeManger() {
       this.managerDialog = false
       this.checkMans = false
     },
-    editManger (data) {
+    editManger(data) {
       // 判断是添加还是取消管理员
       this.mans.forEach(v => {
         if (this.everyManager.includes(v.NAME)) {
@@ -590,21 +583,34 @@ export default {
       } else {
         this.tip = '新增成功'
       }
-      this.$api.post('/cycle/roleGroupMember/update', this.diff, this.tip, r => {
-        this.refreshTable(1)
-      })
+      this.$api.post(
+        '/cycle/roleGroupMember/update',
+        this.diff,
+        this.tip,
+        r => {
+          this.refreshTable(1)
+        }
+      )
     },
-    checkMangers (row) {
+    checkMangers(row) {
       // console.log(row)// 成员查看
       this.checkMans = true
       this.managerDialog = false
       let e = window.event
-      this.checkStyle = { left: e.clientX - 280 + 'px', top: e.clientY - 150 + 'px' }
-      this.$api.post('/cycle/roleGroupMember/lookList?M0003_ID=' + row.M0003_ID, {}, null, r => {
-        this.list = r.data.list
-      })
+      this.checkStyle = {
+        left: e.clientX - 280 + 'px',
+        top: e.clientY - 150 + 'px'
+      }
+      this.$api.post(
+        '/cycle/roleGroupMember/lookList?M0003_ID=' + row.M0003_ID,
+        {},
+        null,
+        r => {
+          this.list = r.data.list
+        }
+      )
     },
-    closeCheck () {
+    closeCheck() {
       this.checkMans = false
       this.managerDialog = false
     }
@@ -621,6 +627,7 @@ export default {
   #tableWrap {
     background: #fff;
     margin-top: 20px;
+    height: 650px;
   }
   #managers {
     position: absolute;
@@ -660,7 +667,7 @@ export default {
   }
   .el-button--mini {
     padding: 4px 5px;
-    }
+  }
   .add-table {
     width: 100%;
     border-collapse: collapse;
@@ -678,11 +685,11 @@ export default {
       background: #f0f0f0;
       text-align: center;
     }
-    .el-form-item{
-        margin-bottom: 0;
-      }
+    .el-form-item {
+      margin-bottom: 0;
+    }
   }
-  .chakan{
+  .chakan {
     font-weight: 700;
     font-size: 16px;
   }

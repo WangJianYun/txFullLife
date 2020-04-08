@@ -11,7 +11,7 @@
     </p>
     <div class="content">
       <el-row :gutter="0">
-        <el-form label-position="right" label-width="60px" :model="searchMap">
+        <el-form label-position="right" label-width="70px" :model="searchMap">
           <el-col :span="4">
             <el-form-item label="资产类别">
               <el-select
@@ -280,12 +280,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-button type="primary" @click="addSearchFun">搜索</el-button>
-            <el-button @click="addReset">重置</el-button>
+            <el-button type="primary" @click="addSearchFun" size="small">搜索</el-button>
+            <el-button @click="addReset" size="small">重置</el-button>
           </el-col>
         </el-form>
       </el-row>
-      <p>
+      <p style="padding:10px">
         您的检索：
         <span v-show="!isAddSearch"> 无 </span>
         <span> {{ addSearchVal }} </span>
@@ -1127,6 +1127,9 @@ export default {
   }
   .el-col-2 {
     width: 8%;
+  }
+  .el-input--suffix .el-input__inner {
+    height: 32px;
   }
   .title-p {
     margin-bottom: 10px;

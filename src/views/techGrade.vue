@@ -302,12 +302,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-button type="primary" @click="addSearchFun">搜索</el-button>
-            <el-button @click="addReset">重置</el-button>
+            <el-button type="primary" @click="addSearchFun" size="small">搜索</el-button>
+            <el-button @click="addReset" size="small">重置</el-button>
           </el-col>
         </el-form>
       </el-row>
-      <p>
+      <p style="padding:10px">
         您的检索： <span v-show="!isAddSearch"> 无 </span>
         <span> {{ addSearchVal }} </span>
       </p>

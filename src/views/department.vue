@@ -482,7 +482,7 @@ export default {
           this.options = r.data
           // this.options.push('--请选择--')
           this.options.unshift({
-            M0016_ID: null,
+            M0016_ID: 0,
             M0016_DEPART_NAME: '请选择--'
           })
           console.log(this.options)

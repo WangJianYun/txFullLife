@@ -5,18 +5,40 @@
       <div class="login-container-title">高速公路全生命周期管理平台</div>
       <div class="login-container-form">
         <h2>欢迎您，请登录</h2>
-        <el-form :model="form" ref="form" :rules="rules" class="login-form" @keyup.enter.native="onSubmit">
+        <el-form
+          :model="form"
+          ref="form"
+          :rules="rules"
+          class="login-form"
+          @keyup.enter.native="onSubmit"
+        >
           <el-form-item prop="userName" label="用户名">
-            <el-input v-model="form.userName" placeholder="用户名" style="width:100%"></el-input>
+            <el-input
+              v-model="form.userName"
+              placeholder="用户名"
+              style="width:100%"
+            ></el-input>
           </el-form-item>
           <span class="icon1 icon">*</span>
           <el-form-item prop="password" label="密码">
-            <el-input type="password" placeholder="密码" style="width:100%" v-model="form.password"></el-input>
+            <el-input
+              type="password"
+              placeholder="密码"
+              style="width:100%"
+              v-model="form.password"
+            ></el-input>
           </el-form-item>
           <span class="icon2 icon">*</span>
           <el-form-item>
-            <el-button type="primary" style="width:100%" @click="onSubmit" :loading="isload" :disabled="isdisabled">登录</el-button>
-            <span class="msg">{{msg}}</span>
+            <el-button
+              type="primary"
+              style="width:100%"
+              @click="onSubmit"
+              :loading="isload"
+              :disabled="isdisabled"
+              >登录</el-button
+            >
+            <span class="msg">{{ msg }}</span>
           </el-form-item>
         </el-form>
       </div>
@@ -30,19 +52,17 @@
 <script>
 import { Message } from 'element-ui'
 export default {
-  data () {
+  data() {
     return {
       form: {
-        userName: 'admin',
-        password: '1'
+        userName: '',
+        password: ''
       },
       rules: {
         userName: [
           { required: true, message: '请输入用户名', trigger: 'blur' }
         ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' }
-        ]
+        password: [{ required: true, message: '请输入密码', trigger: 'blur' }]
       },
       menuData: [],
       menuData1: [],
@@ -53,10 +73,10 @@ export default {
     }
   },
   methods: {
-    onSubmit () {
+    onSubmit() {
       this.isload = true
       this.isdisabled = true
-      this.$refs['form'].validate((valid) => {
+      this.$refs['form'].validate(valid => {
         if (valid) {
           this.$api.post('/cycle/login/login', this.form, null, r => {
             this.$nextTick(() => {
@@ -113,8 +133,10 @@ export default {
   background: url('../assets/002.jpg') no-repeat 0% 0%;
   background-size: 100% 100%;
 }
-.login-header{height: 15%;}
-.container{
+.login-header {
+  height: 15%;
+}
+.container {
   width: 70%;
   margin: 0 auto;
   position: relative;
@@ -125,7 +147,7 @@ export default {
   width: 100%;
   font-size: 30px;
   letter-spacing: 2px;
-  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   /* margin: 30px 0 50px 0; */
   /* padding-left: 50px; */
   color: #fff;
@@ -134,27 +156,42 @@ export default {
   top: 30px;
 }
 .login-container-form {
-  padding:10px;
+  padding: 10px;
   /* margin-left: 50px; */
-  width:30%;
+  width: 30%;
   border-radius: 5px;
-  text-align:center;
+  text-align: center;
   background: #fff;
   position: absolute;
   left: 50px;
   top: 150px;
   border: 1px solid #000;
 }
-@media screen and (max-width: 1400px ){
-.login-container-form h2{display: none;}
+@media screen and (max-width: 1400px) {
+  .login-container-form h2 {
+    display: none;
+  }
 }
 .login-form {
-  width:80%;
-  margin:0 auto;
-  min-height:200px;
-  background-color: #FFFFFF;
+  width: 80%;
+  margin: 0 auto;
+  min-height: 200px;
+  background-color: #ffffff;
 }
-.login-container-footer{width: 100%;text-align: center;color: #fff;font-size: 14px;margin-top: 100px;}
-.msg{color:red}
-.icon{color:red;position: relative;left:140px;top:-50px}
+.login-container-footer {
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  font-size: 14px;
+  margin-top: 100px;
+}
+.msg {
+  color: red;
+}
+.icon {
+  color: red;
+  position: relative;
+  left: 140px;
+  top: -50px;
+}
 </style>

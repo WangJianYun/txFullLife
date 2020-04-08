@@ -1,30 +1,20 @@
-/*
- * @Author: liuhaosheng
- * @Description：分公司管辖路段列表
- */
+/* * @Author: liuhaosheng * @Description：分公司管辖路段列表 */
 <template>
   <div class="jurisdiction-wrap">
     <p class="title-p">
-      <span style="display:inline-block;margin-bottom:20px;">>> 分公司管辖路段列表</span>
-      <el-button
-        type="primary"
-        icon="el-icon-plus"
-        @click="addFun"
-      >分公司管辖路段配置</el-button>
+      <span style="display:inline-block;margin-bottom:20px;"
+        >>> 分公司管辖路段列表</span
+      >
+      <el-button type="primary" icon="el-icon-plus" @click="addFun"
+        >分公司管辖路段配置</el-button
+      >
     </p>
     <div class="content">
-      <el-form
-        :model="searchMap"
-        label-width="80px"
-        :inline="true"
-      >
+      <el-form :model="searchMap" label-width="80px" :inline="true">
         <el-form-item label="所属路段">
-          <el-select
-            v-model="searchMap.M0010_LOAD_NAME"
-            placeholder="请选择"
-          >
+          <el-select v-model="searchMap.M0010_LOAD_NAME" placeholder="请选择">
             <el-option
-              v-for="(item,index ) in listNameList"
+              v-for="(item, index) in listNameList"
               :key="index"
               :label="item.M0010_LOAD_NAME"
               :value="item.M0010_LOAD_NAME"
@@ -33,22 +23,18 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button
-            type="primary"
-            @click="searchFun"
-          >搜索</el-button>
+          <el-button type="primary" @click="searchFun">搜索</el-button>
           <el-button @click="reset">重置</el-button>
         </el-form-item>
       </el-form>
       <p class="div-btn">
-        <el-button
-          type="primary"
-          icon="el-icon-delete"
-          @click="delListFun"
-        >批量删除</el-button>
-        <span class="serach-span"> 您的检索：
+        <el-button type="primary" icon="el-icon-delete" @click="delListFun"
+          >批量删除</el-button
+        >
+        <span class="serach-span">
+          您的检索：
           <span v-show="!isSearch"> 无 </span>
-          <span> {{searchVal}} </span>
+          <span> {{ searchVal }} </span>
         </span>
       </p>
       <div class="table-div">
@@ -60,20 +46,14 @@
           highlight-current-row
           @select="selectTable"
           @select-all="selectAll"
-          :header-cell-style="{background:'#f0f0f0'}"
+          :header-cell-style="{ background: '#f0f0f0' }"
         >
           >
-          <el-table-column
-            type="selection"
-            width="40"
-          >
-          </el-table-column>
-          <el-table-column
-            label="序号"
-            width="50"
-            align="center"
-          >
-            <template scope="scope"><span>{{scope.$index + 1}}</span></template>
+          <el-table-column type="selection" width="40"> </el-table-column>
+          <el-table-column label="序号" width="50" align="center">
+            <template scope="scope"
+              ><span>{{ scope.$index + 1 }}</span></template
+            >
           </el-table-column>
           <el-table-column
             prop="M0010_LOAD_NAME"
@@ -87,67 +67,44 @@
             :show-overflow-tooltip="true"
           >
           </el-table-column>
-          <el-table-column
-            prop="M0010_START_PILE"
-            label="起点桩号"
-          >
+          <el-table-column prop="M0010_START_PILE" label="起点桩号">
           </el-table-column>
-          <el-table-column
-            prop="M0010_END_PILE"
-            label="终点桩号"
-          >
+          <el-table-column prop="M0010_END_PILE" label="终点桩号">
           </el-table-column>
-          <el-table-column
-            prop="M0010_LOAD_PRECI"
-            label="经度"
-          >
+          <el-table-column prop="M0010_LOAD_PRECI" label="经度">
           </el-table-column>
-          <el-table-column
-            prop="M0010_LOAD_LATI"
-            label="纬度"
-          >
+          <el-table-column prop="M0010_LOAD_LATI" label="纬度">
           </el-table-column>
-          <el-table-column
-            label="图片"
-            align="center"
-            width="80"
-          >
+          <el-table-column label="图片" align="center" width="80">
             <template slot-scope="scope">
               <el-image
                 style="width: 50px; height: 18px"
                 :src="scope.row.pic"
                 :preview-src-list="scope.row.srcList"
               >
-                <div
-                  slot="error"
-                  class="image-slot"
-                >
+                <div slot="error" class="image-slot">
                   无
                 </div>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column
-            fixed="right"
-            width="170"
-            label="操作"
-          >
+          <el-table-column fixed="right" width="170" label="操作">
             <template slot-scope="scope">
-              <el-button
-                type="info"
-                size="mini"
-                @click="handleInfo(scope.row)"
-              >查看</el-button>
+              <el-button type="info" size="mini" @click="handleInfo(scope.row)"
+                >查看</el-button
+              >
               <el-button
                 type="primary"
                 size="mini"
                 @click="handleEdit(scope.row)"
-              >编辑</el-button>
+                >编辑</el-button
+              >
               <el-button
                 type="danger"
                 size="mini"
                 @click="handleDelete(scope.row)"
-              >删除</el-button>
+                >删除</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
@@ -170,11 +127,7 @@
       :close-on-click-modal="false"
       custom-class="dialog-div"
     >
-      <el-form
-        :model="addForm"
-        :rules="rules"
-        ref="addFormRef"
-      >
+      <el-form :model="addForm" :rules="rules" ref="addFormRef">
         <table class="add-table">
           <tr>
             <td class="bg-td">路段名称：</td>
@@ -187,7 +140,7 @@
                 ></el-input>
               </el-form-item>
             </td>
-            <td class="bg-td">养管单位名称： </td>
+            <td class="bg-td">养管单位名称：</td>
             <td>
               <el-form-item prop="M0010_CURING_UNIT">
                 <el-input
@@ -199,7 +152,7 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-td">起点桩号： </td>
+            <td class="bg-td">起点桩号：</td>
             <td>
               <el-form-item prop="M0010_START_PILE">
                 <el-input
@@ -221,7 +174,7 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-td">经度： </td>
+            <td class="bg-td">经度：</td>
             <td>
               <el-form-item prop="M0010_LOAD_PRECI">
                 <el-input
@@ -254,26 +207,16 @@
                 :auto-upload="false"
                 style="display: inline"
               >
-                <img
-                  v-if="imageUrl"
-                  :src="imageUrl"
-                  class="avatar"
-                />
-                <i
-                  v-else
-                  class="el-icon-plus avatar-uploader-icon"
-                ></i>
+                <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
               <ul class="ul-img">
                 <li
                   class="avatar-uploader"
-                  v-for="(item, index) in  imageList"
+                  v-for="(item, index) in imageList"
                   :key="index"
                 >
-                  <img
-                    :src="item.FILE_URL"
-                    class="el-upload avatar"
-                  />
+                  <img :src="item.FILE_URL" class="el-upload avatar" />
                   <span class="actions-item">
                     <span>
                       <i
@@ -306,15 +249,9 @@
           </tr>
         </table>
       </el-form>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
+      <div slot="footer" class="dialog-footer">
         <el-button @click="addShow = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="addSaveFun"
-        >保 存</el-button>
+        <el-button type="primary" @click="addSaveFun">保 存</el-button>
       </div>
     </el-dialog>
     <!-- 修改 -->
@@ -324,11 +261,7 @@
       :close-on-click-modal="false"
       custom-class="dialog-div"
     >
-      <el-form
-        :model="editForm"
-        :rules="rules"
-        ref="editFormRef"
-      >
+      <el-form :model="editForm" :rules="rules" ref="editFormRef">
         <table class="add-table">
           <tr>
             <td class="bg-td">路段名称：</td>
@@ -341,7 +274,7 @@
                 ></el-input>
               </el-form-item>
             </td>
-            <td class="bg-td">养管单位名称： </td>
+            <td class="bg-td">养管单位名称：</td>
             <td>
               <el-form-item prop="M0010_CURING_UNIT">
                 <el-input
@@ -353,7 +286,7 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-td">起点桩号： </td>
+            <td class="bg-td">起点桩号：</td>
             <td>
               <el-form-item prop="M0010_START_PILE">
                 <el-input
@@ -375,7 +308,7 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-td">经度： </td>
+            <td class="bg-td">经度：</td>
             <td>
               <el-form-item prop="M0010_LOAD_PRECI">
                 <el-input
@@ -408,26 +341,16 @@
                 :auto-upload="false"
                 style="display: inline"
               >
-                <img
-                  v-if="imageUrl"
-                  :src="imageUrl"
-                  class="avatar"
-                />
-                <i
-                  v-else
-                  class="el-icon-plus avatar-uploader-icon"
-                ></i>
+                <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
               <ul class="ul-img">
                 <li
                   class="avatar-uploader"
-                  v-for="(item, index) in  imageList"
+                  v-for="(item, index) in imageList"
                   :key="index"
                 >
-                  <img
-                    :src="item.FILE_URL"
-                    class="el-upload avatar"
-                  />
+                  <img :src="item.FILE_URL" class="el-upload avatar" />
                   <span class="actions-item">
                     <span>
                       <i
@@ -460,15 +383,9 @@
           </tr>
         </table>
       </el-form>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
+      <div slot="footer" class="dialog-footer">
         <el-button @click="editShow = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="editSaveFun"
-        >保 存</el-button>
+        <el-button type="primary" @click="editSaveFun">保 存</el-button>
       </div>
     </el-dialog>
     <!-- 查看 -->
@@ -483,29 +400,29 @@
           <td>
             {{ infoForm.M0010_LOAD_NAME }}
           </td>
-          <td class="bg-td">养管单位名称： </td>
+          <td class="bg-td">养管单位名称：</td>
           <td>
             {{ infoForm.M0010_CURING_UNIT }}
           </td>
         </tr>
         <tr>
-          <td class="bg-td">起点桩号： </td>
+          <td class="bg-td">起点桩号：</td>
           <td>
             {{ infoForm.M0010_START_PILE }}
           </td>
           <td class="bg-td">终点桩号：</td>
           <td>
-            {{ infoForm.M0010_END_PILE}}
+            {{ infoForm.M0010_END_PILE }}
           </td>
         </tr>
         <tr>
-          <td class="bg-td">经度： </td>
+          <td class="bg-td">经度：</td>
           <td>
             {{ infoForm.M0010_LOAD_PRECI }}
           </td>
           <td class="bg-td">纬度：</td>
           <td>
-            {{ infoForm.M0010_LOAD_LATI}}
+            {{ infoForm.M0010_LOAD_LATI }}
           </td>
         </tr>
         <tr>
@@ -514,13 +431,10 @@
             <ul class="ul-img">
               <li
                 class="avatar-uploader"
-                v-for="(item, index) in  imageList"
+                v-for="(item, index) in imageList"
                 :key="index"
               >
-                <img
-                  :src="item.FILE_URL"
-                  class="el-upload avatar"
-                />
+                <img :src="item.FILE_URL" class="el-upload avatar" />
                 <span class="actions-item">
                   <span>
                     <i
@@ -536,30 +450,21 @@
         <tr>
           <td class="bg-td">简介（备注）：</td>
           <td colspan="3">
-            {{ infoForm.M0010_LOAD_REMARK}}
+            {{ infoForm.M0010_LOAD_REMARK }}
           </td>
         </tr>
       </table>
-      <div slot="footer">
-      </div>
+
+      <div slot="footer"></div>
     </el-dialog>
     <!-- 图片预览 -->
-    <el-dialog
-      :visible.sync="imgShow"
-      title="图片预览"
-    >
+    <el-dialog :visible.sync="imgShow" title="图片预览">
       <div style="text-align: center;">
         <el-image :src="imgShowUrl">
-          <div
-            slot="placeholder"
-            class="image-slot"
-          >
+          <div slot="placeholder" class="image-slot">
             加载中<span class="dot">...</span>
           </div>
-          <div
-            slot="error"
-            class="image-slot"
-          >
+          <div slot="error" class="image-slot">
             <i class="el-icon-picture-outline"></i>
           </div>
         </el-image>
@@ -569,7 +474,7 @@
 </template>
 <script>
 export default {
-  data () {
+  data() {
     // 不能输入文本
     const validNoText = (rule, value, callback) => {
       let reg = new RegExp('[\\u4E00-\\u9FFF]+', 'g')
@@ -663,40 +568,40 @@ export default {
   },
   methods: {
     // 搜索
-    searchFun () {
+    searchFun() {
       this.isSearch = true
       this.getLoadList()
     },
     // 重置
-    reset () {
+    reset() {
       this.isSearch = false
       this.searchMap.M0010_LOAD_NAME = ''
       this.getLoadList()
     },
     // 分页
-    sizeChange (val) {
+    sizeChange(val) {
       this.showCount = val
       this.getLoadList()
     },
-    currentChange (val) {
+    currentChange(val) {
       this.currentPage = val
       this.getLoadList()
     },
-    selectTable (selection) {
+    selectTable(selection) {
       this.selectList = selection
     },
-    selectAll (selection) {
+    selectAll(selection) {
       this.selectList = selection
     },
     // 点击查看
-    handleInfo (data) {
+    handleInfo(data) {
       this.imageList = []
       this.infoShow = true
       this.infoForm = Object.assign({}, data)
       this.imageList = data.files
     },
     // 点击修改
-    handleEdit (data) {
+    handleEdit(data) {
       this.imageList = []
       this.editShow = true
       this.imageUrl = ''
@@ -712,7 +617,7 @@ export default {
       )
     },
     // 修改保存
-    editSaveFun () {
+    editSaveFun() {
       this.$refs['editFormRef'].validate(valid => {
         if (valid) {
           this.$api.post(`/cycle//load/update`, this.editForm, null, r => {
@@ -724,13 +629,13 @@ export default {
       })
     },
     // 请求select 的所属路段
-    getListNameList () {
+    getListNameList() {
       this.$api.post('/cycle/load/listLoadName', {}, null, r => {
         this.listNameList = r.data
       })
     },
     // 点击新增
-    addFun () {
+    addFun() {
       this.addShow = true
       this.dataParams.ID = ''
       this.imageList = []
@@ -744,7 +649,7 @@ export default {
       })
     },
     // 新增保存
-    addSaveFun () {
+    addSaveFun() {
       this.$refs['addFormRef'].validate(valid => {
         if (valid) {
           this.$api.post('/cycle/load/insert', this.addForm, null, r => {
@@ -756,7 +661,7 @@ export default {
       })
     },
     //  管辖路段 列表
-    getLoadList () {
+    getLoadList() {
       let _data = {
         currentPage: this.currentPage,
         showCount: this.showCount,
@@ -783,7 +688,7 @@ export default {
       })
     },
     // 点击删除
-    handleDelete (data) {
+    handleDelete(data) {
       this.$confirm('确定要删除该条记录?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -802,7 +707,7 @@ export default {
       })
     },
     // 批量删除
-    delListFun () {
+    delListFun() {
       let _list = []
       if (this.selectList.length > 0) {
         for (let i = 0; i < this.selectList.length; i++) {
@@ -829,7 +734,7 @@ export default {
       }
     },
     // 文件状态改变
-    imgChange (file) {
+    imgChange(file) {
       if (this.dataParams.ID === '') {
         this.$message.warning('请先新建管辖路段')
         return false
@@ -842,7 +747,7 @@ export default {
       this.uploadImgFun(file)
     },
     // 上传文件
-    uploadImgFun (file) {
+    uploadImgFun(file) {
       let param = new FormData()
       param.append('files', file.raw)
       param.append('ID', this.dataParams.ID)
@@ -854,11 +759,11 @@ export default {
         this.imageList.push(Object.assign({}, r.data[0]))
       })
     },
-    clickImgFun (data) {
+    clickImgFun(data) {
       this.imgShowUrl = data.FILE_URL
       this.imgShow = true
     },
-    clickDeleteFun (data) {
+    clickDeleteFun(data) {
       this.$confirm('确定要删除该图片?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -879,7 +784,7 @@ export default {
       })
     }
   },
-  created () {
+  created() {
     this.getLoadList()
     this.getListNameList()
   }
@@ -893,8 +798,8 @@ export default {
     margin: 0;
   }
   .div-btn {
-      margin: 10px 0;
-    }
+    margin: 10px 0;
+  }
   .avatar-uploader {
     display: inline-block;
     margin-left: 10px;
@@ -930,6 +835,7 @@ export default {
     opacity: 1;
   }
   .title-p {
+    margin-bottom: 10px;
     button {
       float: right;
     }

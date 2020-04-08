@@ -1,20 +1,16 @@
 <template>
   <div class="meters-wrap">
     <p class="title-p">
-      <span style="display:inline-block;margin-bottom:20px;"> >> 桩号展示 </span>
-      <el-button
-        type="primary"
-        icon="el-icon-plus"
-        @click="addFun"
-      >新增桩号信息</el-button>
+      <span style="display:inline-block;margin-bottom:20px;">
+        >> 桩号展示
+      </span>
+      <el-button type="primary" icon="el-icon-plus" @click="addFun"
+        >新增桩号信息</el-button
+      >
     </p>
     <div class="content">
       <el-row :gutter="10">
-        <el-form
-          label-position="right"
-          label-width="80px"
-          :model="dataParam"
-        >
+        <el-form label-position="right" label-width="80px" :model="dataParam">
           <el-col :span="5">
             <el-form-item label="所属路段">
               <el-select
@@ -48,10 +44,7 @@
           </el-col>
           <el-col :span="5">
             <el-form-item label="终点桩号">
-              <el-select
-                v-model="dataParam.M0010_END_PILE"
-                style="width:100%"
-              >
+              <el-select v-model="dataParam.M0010_END_PILE" style="width:100%">
                 <el-option
                   v-for="item in pileList"
                   :key="item.M0010_ID"
@@ -84,19 +77,15 @@
         </el-form>
       </el-row>
       <div class="div-btn">
-        <el-button
-          type="primary"
-          @click="searchFun"
-        >搜索</el-button>
+        <el-button type="primary" @click="searchFun">搜索</el-button>
         <el-button @click="reset">重置</el-button>
-        <el-button
-          type="primary"
-          icon="el-icon-delete"
-          @click="delListFun"
-        >批量删除</el-button>
-        <span class="serach-span"> 您的检索：
+        <el-button type="primary" icon="el-icon-delete" @click="delListFun"
+          >批量删除</el-button
+        >
+        <span class="serach-span">
+          您的检索：
           <span v-show="!isSearch"> 无 </span>
-          <span> {{searchVal}} </span>
+          <span> {{ searchVal }} </span>
         </span>
       </div>
       <div class="table-div">
@@ -108,20 +97,14 @@
           highlight-current-row
           @select="selectTable"
           @select-all="selectAll"
-          :header-cell-style="{background:'#f0f0f0'}"
+          :header-cell-style="{ background: '#f0f0f0' }"
         >
           >
-          <el-table-column
-            type="selection"
-            width="40"
-          >
-          </el-table-column>
-          <el-table-column
-            label="序号"
-            width="50"
-            align="center"
-          >
-            <template scope="scope"><span>{{scope.$index + 1}}</span></template>
+          <el-table-column type="selection" width="40"> </el-table-column>
+          <el-table-column label="序号" width="50" align="center">
+            <template scope="scope"
+              ><span>{{ scope.$index + 1 }}</span></template
+            >
           </el-table-column>
           <el-table-column
             prop="M0008_HIGHSPEED_NAME"
@@ -129,10 +112,7 @@
             show-overflow-tooltip
           >
           </el-table-column>
-          <el-table-column
-            prop="M0009_LOAD_NAME"
-            label="路段名称"
-          >
+          <el-table-column prop="M0009_LOAD_NAME" label="路段名称">
           </el-table-column>
           <el-table-column
             prop="M0018_COMPANY_NAME"
@@ -140,10 +120,7 @@
             label="管理单位"
           >
           </el-table-column>
-          <el-table-column
-            prop="M0009_PILENUMBER_NAME"
-            label="桩号"
-          >
+          <el-table-column prop="M0009_PILENUMBER_NAME" label="桩号">
           </el-table-column>
           <el-table-column
             prop="M0009_PILENUMBER_DREICT"
@@ -151,42 +128,29 @@
             :formatter="codeFmt"
           >
           </el-table-column>
-          <el-table-column
-            prop="M0009_PILENUMBER_PRECI"
-            label="经度"
-          >
+          <el-table-column prop="M0009_PILENUMBER_PRECI" label="经度">
           </el-table-column>
-          <el-table-column
-            prop="M0009_PILENUMBER_LATI"
-            label="纬度"
-          >
+          <el-table-column prop="M0009_PILENUMBER_LATI" label="纬度">
           </el-table-column>
-          <el-table-column
-            prop="M0009_PILENUMBER_YEAR"
-            label="归属年份"
-          >
+          <el-table-column prop="M0009_PILENUMBER_YEAR" label="归属年份">
           </el-table-column>
-          <el-table-column
-            fixed="right"
-            width="170"
-            label="操作"
-          >
+          <el-table-column fixed="right" width="170" label="操作">
             <template slot-scope="scope">
-              <el-button
-                type="info"
-                size="mini"
-                @click="handleInfo(scope.row)"
-              >查看</el-button>
+              <el-button type="info" size="mini" @click="handleInfo(scope.row)"
+                >查看</el-button
+              >
               <el-button
                 type="primary"
                 size="mini"
                 @click="handleEdit(scope.row)"
-              >编辑</el-button>
+                >编辑</el-button
+              >
               <el-button
                 type="danger"
                 size="mini"
                 @click="handleDelete(scope.row)"
-              >删除</el-button>
+                >删除</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
@@ -209,11 +173,7 @@
       :close-on-click-modal="false"
       custom-class="dialog-div"
     >
-      <el-form
-        :model="addForm"
-        :rules="rules"
-        ref="addFormRef"
-      >
+      <el-form :model="addForm" :rules="rules" ref="addFormRef">
         <table class="add-table">
           <tr>
             <td class="bg-td">高速名称：</td>
@@ -233,7 +193,7 @@
                 </el-select>
               </el-form-item>
             </td>
-            <td class="bg-td">所属路段： </td>
+            <td class="bg-td">所属路段：</td>
             <td>
               <el-form-item prop="M0009_LOAD_NAME">
                 <el-select
@@ -252,7 +212,7 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-td">桩号： </td>
+            <td class="bg-td">桩号：</td>
             <td>
               <el-form-item prop="M0009_PILENUMBER_NAME">
                 <el-input
@@ -271,7 +231,7 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-td">经度： </td>
+            <td class="bg-td">经度：</td>
             <td>
               <el-form-item prop="M0009_PILENUMBER_PRECI">
                 <el-input
@@ -279,7 +239,6 @@
                   size="small"
                 ></el-input>
               </el-form-item>
-
             </td>
             <td class="bg-td">纬度：</td>
             <td>
@@ -292,7 +251,7 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-td">归属年份： </td>
+            <td class="bg-td">归属年份：</td>
             <td>
               <el-form-item prop="M0009_PILENUMBER_YEAR">
                 <el-date-picker
@@ -311,15 +270,11 @@
           </tr>
         </table>
       </el-form>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
+      <div slot="footer" class="dialog-footer">
         <el-button @click="addShow = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="addSaveFun('ruleForm')"
-        >保 存</el-button>
+        <el-button type="primary" @click="addSaveFun('ruleForm')"
+          >保 存</el-button
+        >
       </div>
     </el-dialog>
     <!-- 修改 -->
@@ -329,11 +284,7 @@
       :close-on-click-modal="false"
       custom-class="dialog-div"
     >
-      <el-form
-        :model="editForm"
-        :rules="rules"
-        ref="editFormRef"
-      >
+      <el-form :model="editForm" :rules="rules" ref="editFormRef">
         <table class="add-table">
           <tr>
             <td class="bg-td">高速名称：</td>
@@ -353,7 +304,7 @@
                 </el-select>
               </el-form-item>
             </td>
-            <td class="bg-td">所属路段： </td>
+            <td class="bg-td">所属路段：</td>
             <td>
               <el-form-item prop="M0009_LOAD_NAME">
                 <el-select
@@ -372,7 +323,7 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-td">桩号： </td>
+            <td class="bg-td">桩号：</td>
             <td>
               <el-form-item prop="M0009_PILENUMBER_NAME">
                 <el-input
@@ -391,7 +342,7 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-td">经度： </td>
+            <td class="bg-td">经度：</td>
             <td>
               <el-form-item prop="M0009_PILENUMBER_PRECI">
                 <el-input
@@ -399,7 +350,6 @@
                   size="small"
                 ></el-input>
               </el-form-item>
-
             </td>
             <td class="bg-td">纬度：</td>
             <td>
@@ -412,7 +362,7 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-td">归属年份： </td>
+            <td class="bg-td">归属年份：</td>
             <td>
               <el-form-item prop="M0009_PILENUMBER_YEAR">
                 <el-date-picker
@@ -431,15 +381,9 @@
           </tr>
         </table>
       </el-form>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
+      <div slot="footer" class="dialog-footer">
         <el-button @click="editShow = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="editSaveFun"
-        >保 存</el-button>
+        <el-button type="primary" @click="editSaveFun">保 存</el-button>
       </div>
     </el-dialog>
     <!-- 查看 -->
@@ -454,13 +398,13 @@
           <td>
             {{ infoForm.M0008_HIGHSPEED_NAME }}
           </td>
-          <td class="bg-td">所属路段： </td>
+          <td class="bg-td">所属路段：</td>
           <td>
             {{ infoForm.M0010_LOAD_NAME }}
           </td>
         </tr>
         <tr>
-          <td class="bg-td">桩号： </td>
+          <td class="bg-td">桩号：</td>
           <td>
             {{ infoForm.M0009_PILENUMBER_NAME }}
           </td>
@@ -470,7 +414,7 @@
           </td>
         </tr>
         <tr>
-          <td class="bg-td">经度： </td>
+          <td class="bg-td">经度：</td>
           <td>
             {{ infoForm.M0009_PILENUMBER_PRECI }}
           </td>
@@ -480,7 +424,7 @@
           </td>
         </tr>
         <tr>
-          <td class="bg-td">归属年份： </td>
+          <td class="bg-td">归属年份：</td>
           <td>
             {{ infoForm.M0009_PILENUMBER_YEAR }}
           </td>
@@ -488,17 +432,14 @@
           <td></td>
         </tr>
       </table>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
-      </div>
+
+      <div slot="footer" class="dialog-footer"></div>
     </el-dialog>
   </div>
 </template>
 <script>
 export default {
-  data () {
+  data() {
     // 起点终点桩号
     const validPile = (rule, value, callback) => {
       let reg = /[0-9a-zA-Z]|[+,-]/ // 固定
@@ -590,13 +531,13 @@ export default {
   },
   methods: {
     // 请求所有的起点 / 终点桩号
-    assetDataFun () {
+    assetDataFun() {
       this.$api.post('/cycle/load/listAll', {}, null, r => {
         this.pileList = r.data
       })
     },
     // 根据 所属路段 获取起点，终点桩号
-    changeSelect (val) {
+    changeSelect(val) {
       let _data = {
         M0010_LOAD_NAME: val
       }
@@ -605,15 +546,15 @@ export default {
       })
     },
     // 搜索
-    searchFun () {
+    searchFun() {
       this.isSearch = true
       this.getPileList()
     },
-    codeFmt (row) {
+    codeFmt(row) {
       return row.M0009_PILENUMBER_DREICT === '1' ? '上行线' : '下行线'
     },
     // 重置
-    reset () {
+    reset() {
       this.dataParam.M0010_LOAD_NAME = ''
       this.dataParam.M0010_START_PILE = ''
       this.dataParam.M0010_END_PILE = ''
@@ -624,22 +565,22 @@ export default {
       this.getPileList()
     },
     // 分页
-    sizeChange (val) {
+    sizeChange(val) {
       this.showCount = val
       this.getPileList()
     },
-    currentChange (val) {
+    currentChange(val) {
       this.currentPage = val
       this.getPileList()
     },
-    selectTable (selection) {
+    selectTable(selection) {
       this.selectList = selection
     },
-    selectAll (selection) {
+    selectAll(selection) {
       this.selectList = selection
     },
     // 点击新增
-    addFun () {
+    addFun() {
       this.addShow = true
       this.$nextTick(() => {
         this.$refs['addFormRef'].resetFields()
@@ -649,7 +590,7 @@ export default {
       })
     },
     // 添加保存
-    addSaveFun () {
+    addSaveFun() {
       this.$refs['addFormRef'].validate(valid => {
         if (valid) {
           this.$api.post('/cycle/pileNumber/insert', this.addForm, null, r => {
@@ -661,7 +602,7 @@ export default {
       })
     },
     // 点击查看
-    handleInfo (data) {
+    handleInfo(data) {
       this.infoShow = true
       if (data.M0009_PILENUMBER_DREICT === 1) {
         data.M0009_PILENUMBER_DREICT = '上行线'
@@ -671,7 +612,7 @@ export default {
       this.infoForm = Object.assign({}, data)
     },
     // 点击编辑
-    handleEdit (data) {
+    handleEdit(data) {
       this.editShow = true
       this.$api.post(
         `/cycle/pileNumber/selectById?ID=${data.M0009_ID}`,
@@ -683,7 +624,7 @@ export default {
       )
     },
     // 修改保存
-    editSaveFun () {
+    editSaveFun() {
       this.$refs['editFormRef'].validate(valid => {
         if (valid) {
           this.$api.post('/cycle/pileNumber/update', this.editForm, null, r => {
@@ -695,7 +636,7 @@ export default {
       })
     },
     // 点击删除
-    handleDelete (data) {
+    handleDelete(data) {
       this.$confirm('确定要删除该条记录?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -713,7 +654,7 @@ export default {
       })
     },
     // 请求 百米桩分页列表
-    getPileList () {
+    getPileList() {
       let _data = {
         currentPage: this.currentPage,
         showCount: this.showCount,
@@ -727,19 +668,19 @@ export default {
       })
     },
     // 管辖路段接口
-    getLoadList () {
+    getLoadList() {
       this.$api.post('/cycle/load/listLoadName', {}, null, r => {
         this.loadList = r.data
       })
     },
     // 选择高速下拉框 list
-    getHighspeedList () {
+    getHighspeedList() {
       this.$api.post('/cycle/highspeed/listAll', {}, null, r => {
         this.highspeedList = r.data
       })
     },
     // 删除多个
-    delListFun () {
+    delListFun() {
       let _list = []
       if (this.selectList.length > 0) {
         for (let i = 0; i < this.selectList.length; i++) {
@@ -766,7 +707,7 @@ export default {
       }
     }
   },
-  created () {
+  created() {
     this.getHighspeedList()
     this.getLoadList()
     this.getPileList()
@@ -777,6 +718,7 @@ export default {
 <style lang="scss">
 .meters-wrap {
   .title-p {
+    margin-bottom: 10px;
     button {
       float: right;
     }

@@ -1,25 +1,17 @@
-/*
- * @Author: liuhaosheng
- * @Description：日常费用收支列表
- */
+/* * @Author: liuhaosheng * @Description：日常费用收支列表 */
 <template>
   <div id="dailycost">
     <p class="title-p">
-      <span style="display:inline-block;margin-bottom:20px;"> >> 日常费用收支列表 </span>
-      <el-button
-        type="primary"
-        icon="el-icon-plus"
-        @click="addFun"
-      >增加日常费用收支
+      <span style="display:inline-block;margin-bottom:20px;">
+        >> 日常费用收支列表
+      </span>
+      <el-button type="primary" icon="el-icon-plus" @click="addFun"
+        >增加日常费用收支
       </el-button>
     </p>
     <div class="content">
-      <el-row :gutter="10">
-        <el-form
-          label-position="right"
-          label-width="80px"
-          :model="searchMap"
-        >
+      <el-row :gutter="0">
+        <el-form label-position="right" label-width="60px" :model="searchMap">
           <el-col :span="4">
             <el-form-item label="资产类别">
               <el-select
@@ -68,10 +60,7 @@
           </el-col>
           <el-col :span="4">
             <el-form-item label="终点桩号">
-              <el-select
-                v-model="searchMap.T0002_END_PILE"
-                style="width:100%"
-              >
+              <el-select v-model="searchMap.T0002_END_PILE" style="width:100%">
                 <el-option
                   v-for="item in pileList"
                   :key="item.T0002_ID"
@@ -81,10 +70,10 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
             <el-form-item label="起止日期">
               <el-date-picker
-                style="width:330px"
+                style="width:100%"
                 v-model="searchMap.time"
                 type="daterange"
                 range-separator="至"
@@ -95,22 +84,24 @@
               </el-date-picker>
             </el-form-item>
           </el-col>
+          <el-col :span="4" style="padding-top:4px;padding-left:5px">
+            <el-button type="primary" @click="searchFun" size="small"
+              >搜索</el-button
+            >
+            <el-button @click="reset" size="small">重置</el-button>
+          </el-col>
         </el-form>
       </el-row>
       <div class="div-btn">
-        <el-button
-          type="primary"
-          @click="searchFun"
-        >搜索</el-button>
-        <el-button @click="reset">重置</el-button>
-        <el-button
-          type="primary"
-          icon="el-icon-delete"
-          @click="delListFun"
-        >批量删除</el-button>
-        <span class="serach-span"> 您的检索：
+        <!-- <el-button type="primary" @click="searchFun">搜索</el-button>
+        <el-button @click="reset">重置</el-button> -->
+        <el-button type="primary" icon="el-icon-delete" @click="delListFun"
+          >批量删除</el-button
+        >
+        <span class="serach-span">
+          您的检索：
           <span v-show="!isSearch"> 无 </span>
-          <span> {{searchVal}} </span>
+          <span> {{ searchVal }} </span>
         </span>
       </div>
       <div class="table-div">
@@ -122,20 +113,14 @@
           highlight-current-row
           @select="selectTable"
           @select-all="selectAll"
-          :header-cell-style="{background:'#f0f0f0'}"
+          :header-cell-style="{ background: '#f0f0f0' }"
         >
           >
-          <el-table-column
-            type="selection"
-            width="40"
-          >
-          </el-table-column>
-          <el-table-column
-            label="序号"
-            width="50"
-            align="center"
-          >
-            <template scope="scope"><span>{{scope.$index + 1}}</span></template>
+          <el-table-column type="selection" width="40"> </el-table-column>
+          <el-table-column label="序号" width="50" align="center">
+            <template scope="scope"
+              ><span>{{ scope.$index + 1 }}</span></template
+            >
           </el-table-column>
           <el-table-column
             prop="T0002_ASSET_NAME"
@@ -192,47 +177,36 @@
             show-overflow-tooltip
           >
           </el-table-column>
-          <el-table-column
-            label="票据查看"
-            align="center"
-            width="80"
-          >
+          <el-table-column label="票据查看" align="center" width="80">
             <template slot-scope="scope">
               <el-image
                 style="width: 50px; height: 18px"
                 :src="scope.row.pic"
                 :preview-src-list="scope.row.srcList"
               >
-                <div
-                  slot="error"
-                  class="image-slot"
-                >
+                <div slot="error" class="image-slot">
                   无
                 </div>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column
-            fixed="right"
-            width="170"
-            label="操作"
-          >
+          <el-table-column fixed="right" width="170" label="操作">
             <template slot-scope="scope">
-              <el-button
-                type="info"
-                size="mini"
-                @click="handleInfo(scope.row)"
-              >查看</el-button>
+              <el-button type="info" size="mini" @click="handleInfo(scope.row)"
+                >查看</el-button
+              >
               <el-button
                 type="primary"
                 size="mini"
                 @click="handleEdit(scope.row)"
-              >编辑</el-button>
+                >编辑</el-button
+              >
               <el-button
                 type="danger"
                 size="mini"
                 @click="handleDelete(scope.row)"
-              >删除</el-button>
+                >删除</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
@@ -256,11 +230,7 @@
       custom-class="dialog-div"
     >
       <el-row :gutter="10">
-        <el-form
-          label-position="right"
-          label-width="80px"
-          :model="addSearch"
-        >
+        <el-form label-position="right" label-width="80px" :model="addSearch">
           <el-col :span="5">
             <el-form-item label="资产类别">
               <el-select
@@ -294,10 +264,7 @@
           </el-col>
           <el-col :span="5">
             <el-form-item label="终点桩号">
-              <el-select
-                v-model="addSearch.T0002_END_PILE"
-                style="width:100%"
-              >
+              <el-select v-model="addSearch.T0002_END_PILE" style="width:100%">
                 <el-option
                   v-for="item in searchPileList"
                   :key="item.T0002_ID"
@@ -313,23 +280,17 @@
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-button
-              type="primary"
-              @click="addSearchFun"
-            >搜索</el-button>
+            <el-button type="primary" @click="addSearchFun">搜索</el-button>
             <el-button @click="addReset">重置</el-button>
           </el-col>
         </el-form>
       </el-row>
-      <p> 您的检索：
+      <p>
+        您的检索：
         <span v-show="!isAddSearch"> 无 </span>
-        <span> {{addSearchVal}} </span>
+        <span> {{ addSearchVal }} </span>
       </p>
-      <el-form
-        :model="addForm"
-        :rules="rules"
-        ref="addFormRef"
-      >
+      <el-form :model="addForm" :rules="rules" ref="addFormRef">
         <table class="add-table">
           <tr>
             <td class="bg-td">请选择资产：</td>
@@ -349,11 +310,11 @@
                 </el-select>
               </el-form-item>
             </td>
-            <td class="bg-td"> </td>
-            <td> </td>
+            <td class="bg-td"></td>
+            <td></td>
           </tr>
           <tr>
-            <td class="bg-td">费用名称： </td>
+            <td class="bg-td">费用名称：</td>
             <td>
               <el-form-item prop="T0004_CURINGCOST_NAME">
                 <el-input
@@ -374,7 +335,7 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-td">收支选择： </td>
+            <td class="bg-td">收支选择：</td>
             <td>
               <el-radio-group v-model="addForm.T0004_CURINGCOST_TYPE">
                 <el-radio :label="1">收入</el-radio>
@@ -409,26 +370,16 @@
                 :auto-upload="false"
                 style="display: inline"
               >
-                <img
-                  v-if="imageUrl"
-                  :src="imageUrl"
-                  class="avatar"
-                />
-                <i
-                  v-else
-                  class="el-icon-plus avatar-uploader-icon"
-                ></i>
+                <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
               <ul class="ul-img">
                 <li
                   class="avatar-uploader"
-                  v-for="(item, index) in  imageList"
+                  v-for="(item, index) in imageList"
                   :key="index"
                 >
-                  <img
-                    :src="item.FILE_URL"
-                    class="el-upload avatar"
-                  />
+                  <img :src="item.FILE_URL" class="el-upload avatar" />
                   <span class="actions-item">
                     <span>
                       <i
@@ -459,15 +410,9 @@
           </tr>
         </table>
       </el-form>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
+      <div slot="footer" class="dialog-footer">
         <el-button @click="addShow = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="addSaveFun"
-        >确 定</el-button>
+        <el-button type="primary" @click="addSaveFun">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 修改 -->
@@ -478,11 +423,7 @@
       custom-class="dialog-div"
     >
       <el-row :gutter="10">
-        <el-form
-          label-position="right"
-          label-width="80px"
-          :model="addSearch"
-        >
+        <el-form label-position="right" label-width="80px" :model="addSearch">
           <el-col :span="5">
             <el-form-item label="资产类别">
               <el-select
@@ -516,10 +457,7 @@
           </el-col>
           <el-col :span="5">
             <el-form-item label="终点桩号">
-              <el-select
-                v-model="addSearch.T0002_END_PILE"
-                style="width:100%"
-              >
+              <el-select v-model="addSearch.T0002_END_PILE" style="width:100%">
                 <el-option
                   v-for="item in searchPileList"
                   :key="item.T0002_ID"
@@ -535,22 +473,17 @@
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-button
-              type="primary"
-              @click="addSearchFun"
-            >搜索</el-button>
+            <el-button type="primary" @click="addSearchFun">搜索</el-button>
             <el-button @click="addReset">重置</el-button>
           </el-col>
         </el-form>
       </el-row>
-      <p> 您的检索：
+      <p>
+        您的检索：
         <span v-show="!isAddSearch"> 无 </span>
-        <span> {{addSearchVal}} </span> </p>
-      <el-form
-        :model="editForm"
-        :rules="rules"
-        ref="editFormRef"
-      >
+        <span> {{ addSearchVal }} </span>
+      </p>
+      <el-form :model="editForm" :rules="rules" ref="editFormRef">
         <table class="add-table">
           <tr>
             <td class="bg-td">请选择资产：</td>
@@ -570,11 +503,11 @@
                 </el-select>
               </el-form-item>
             </td>
-            <td class="bg-td"> </td>
-            <td> </td>
+            <td class="bg-td"></td>
+            <td></td>
           </tr>
           <tr>
-            <td class="bg-td">费用名称： </td>
+            <td class="bg-td">费用名称：</td>
             <td>
               <el-form-item prop="T0004_CURINGCOST_NAME">
                 <el-input
@@ -595,7 +528,7 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-td">收支选择： </td>
+            <td class="bg-td">收支选择：</td>
             <td>
               <el-radio-group v-model="editForm.T0004_CURINGCOST_TYPE">
                 <el-radio :label="1">收入</el-radio>
@@ -630,26 +563,16 @@
                 :auto-upload="false"
                 style="display: inline"
               >
-                <img
-                  v-if="imageUrl"
-                  :src="imageUrl"
-                  class="avatar"
-                />
-                <i
-                  v-else
-                  class="el-icon-plus avatar-uploader-icon"
-                ></i>
+                <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
               <ul class="ul-img">
                 <li
                   class="avatar-uploader"
-                  v-for="(item, index) in  imageList"
+                  v-for="(item, index) in imageList"
                   :key="index"
                 >
-                  <img
-                    :src="item.FILE_URL"
-                    class="el-upload avatar"
-                  />
+                  <img :src="item.FILE_URL" class="el-upload avatar" />
                   <span class="actions-item">
                     <span>
                       <i
@@ -680,15 +603,9 @@
           </tr>
         </table>
       </el-form>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
+      <div slot="footer" class="dialog-footer">
         <el-button @click="editShow = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="editSaveFun"
-        >确 定</el-button>
+        <el-button type="primary" @click="editSaveFun">确 定</el-button>
       </div>
     </el-dialog>
     <!-- 查看 -->
@@ -701,13 +618,13 @@
         <tr>
           <td class="bg-td">资产名称：</td>
           <td>
-            {{ infoForm.T0002_ASSET_NAME}}
+            {{ infoForm.T0002_ASSET_NAME }}
           </td>
-          <td class="bg-td"> </td>
-          <td> </td>
+          <td class="bg-td"></td>
+          <td></td>
         </tr>
         <tr>
-          <td class="bg-td">费用名称： </td>
+          <td class="bg-td">费用名称：</td>
           <td>
             {{ infoForm.T0004_CURINGCOST_NAME }}
           </td>
@@ -717,7 +634,7 @@
           </td>
         </tr>
         <tr>
-          <td class="bg-td">收支选择： </td>
+          <td class="bg-td">收支选择：</td>
           <td>
             {{ infoForm.T0004_CURINGCOST_TYPE }}
           </td>
@@ -732,13 +649,10 @@
             <ul class="ul-img">
               <li
                 class="avatar-uploader"
-                v-for="(item, index) in  imageList"
+                v-for="(item, index) in imageList"
                 :key="index"
               >
-                <img
-                  :src="item.FILE_URL"
-                  class="el-upload avatar"
-                />
+                <img :src="item.FILE_URL" class="el-upload avatar" />
                 <span class="actions-item">
                   <span>
                     <i
@@ -758,29 +672,17 @@
           </td>
         </tr>
       </table>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
-      </div>
+
+      <div slot="footer" class="dialog-footer"></div>
     </el-dialog>
     <!-- 图片预览 -->
-    <el-dialog
-      :visible.sync="imgShow"
-      title="图片预览"
-    >
+    <el-dialog :visible.sync="imgShow" title="图片预览">
       <div style="text-align: center;">
         <el-image :src="imgShowUrl">
-          <div
-            slot="placeholder"
-            class="image-slot"
-          >
+          <div slot="placeholder" class="image-slot">
             加载中<span class="dot">...</span>
           </div>
-          <div
-            slot="error"
-            class="image-slot"
-          >
+          <div slot="error" class="image-slot">
             <i class="el-icon-picture-outline"></i>
           </div>
         </el-image>
@@ -790,7 +692,7 @@
 </template>
 <script>
 export default {
-  data () {
+  data() {
     const validNum = (rule, value, callback) => {
       let reg = /^\d+.?\d{0,2}$/
       if (!reg.test(value)) {
@@ -889,13 +791,13 @@ export default {
   },
   methods: {
     // 请求所有的起点 / 终点桩号
-    assetDataFun () {
+    assetDataFun() {
       this.$api.post('/cycle/assetData/listAll', {}, null, r => {
         this.pileList = r.data
       })
     },
     // 根据 资产类别 请求 起点 / 终点桩号
-    changeSelect (val) {
+    changeSelect(val) {
       let _data = {
         T0001_ID: val
       }
@@ -906,12 +808,12 @@ export default {
       })
     },
     // 搜索
-    searchFun () {
+    searchFun() {
       this.isSearch = true
       this.getCuringList()
     },
     // 重置
-    reset () {
+    reset() {
       this.isSearch = false
       this.searchMap.T0001_ID = ''
       this.searchMap.T0004_CURINGCOST_TYPE = ''
@@ -925,7 +827,7 @@ export default {
       this.getCuringList()
     },
     // 收入
-    incomeFmt (row) {
+    incomeFmt(row) {
       if (row.T0004_CURINGCOST_TYPE === 1) {
         return row.T0004_CURINGCOST_MONEY
       } else {
@@ -933,7 +835,7 @@ export default {
       }
     },
     // 支出
-    expensesFmt (row) {
+    expensesFmt(row) {
       if (row.T0004_CURINGCOST_TYPE === 2) {
         return row.T0004_CURINGCOST_MONEY
       } else {
@@ -941,24 +843,24 @@ export default {
       }
     },
     // 分页
-    sizeChange (val) {
+    sizeChange(val) {
       this.showCount = val
       this.getCuringList()
     },
-    currentChange (val) {
+    currentChange(val) {
       this.currentPage = val
       this.getCuringList()
     },
     // table  选中
-    selectTable (selection) {
+    selectTable(selection) {
       this.selectList = selection
     },
     // table  选中
-    selectAll (selection) {
+    selectAll(selection) {
       this.selectList = selection
     },
     // 点击新建
-    addFun () {
+    addFun() {
       this.imageUrl = ''
       this.dataParams.ID = ''
       this.imageList = []
@@ -976,7 +878,7 @@ export default {
       })
     },
     // 新建 选中 资产类别
-    addSearchChange (val) {
+    addSearchChange(val) {
       let _data = {
         T0001_ID: val
       }
@@ -990,7 +892,7 @@ export default {
       })
     },
     // 新建 / 修改 搜索
-    addSearchFun () {
+    addSearchFun() {
       this.isAddSearch = true
       this.$api.post(`/cycle/assetData/listAll`, this.addSearch, null, r => {
         this.assetDataList = r.data
@@ -998,7 +900,7 @@ export default {
       })
     },
     // 新建/ 修改 重置
-    addReset () {
+    addReset() {
       this.addSearchVal = ''
       this.isAddSearch = false
       this.addSearch.T0001_ID = ''
@@ -1008,7 +910,7 @@ export default {
       this.getAssetDataList()
     },
     // 新增保存
-    addSaveFun () {
+    addSaveFun() {
       this.$refs['addFormRef'].validate(valid => {
         if (valid) {
           this.$api.post('/cycle/curingCost/insert', this.addForm, null, r => {
@@ -1020,19 +922,19 @@ export default {
       })
     },
     // 获取资产类别 list
-    getAssetTypeList () {
+    getAssetTypeList() {
       this.$api.post(`/cycle/assetType/listAll`, {}, null, r => {
         this.assetTypeList = r.data
       })
     },
     // 获取资产信息 select 列表
-    getAssetDataList () {
+    getAssetDataList() {
       this.$api.post(`/cycle/assetData/listAll`, {}, null, r => {
         this.assetDataList = r.data
       })
     },
     // 日常费用 list
-    getCuringList () {
+    getCuringList() {
       if (this.searchMap.time.length > 0) {
         this.searchMap.START_TIME = this.searchMap.time[0]
         this.searchMap.END_TIME = this.searchMap.time[1]
@@ -1062,7 +964,7 @@ export default {
         this.searchVal = r.search_val
       })
     },
-    handleInfo (data) {
+    handleInfo(data) {
       this.infoShow = true
       this.imageList = []
       this.$api.post(
@@ -1082,7 +984,7 @@ export default {
       )
     },
     // 点击修改
-    handleEdit (data) {
+    handleEdit(data) {
       this.$api.post('/cycle/assetData/listAll', {}, null, r => {
         this.searchPileList = r.data
       })
@@ -1102,7 +1004,7 @@ export default {
       )
     },
     // 修改保存
-    editSaveFun () {
+    editSaveFun() {
       this.$refs['editFormRef'].validate(valid => {
         if (valid) {
           this.$api.post(`/cycle/curingCost/update`, this.editForm, null, r => {
@@ -1114,7 +1016,7 @@ export default {
       })
     },
     // 点击删除
-    handleDelete (data) {
+    handleDelete(data) {
       this.$confirm('确定要删除该条记录?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -1132,7 +1034,7 @@ export default {
       })
     },
     // 批量删除
-    delListFun () {
+    delListFun() {
       let _list = []
       if (this.selectList.length > 0) {
         for (let i = 0; i < this.selectList.length; i++) {
@@ -1159,7 +1061,7 @@ export default {
       }
     },
     // 文件状态改变
-    imgChange (file) {
+    imgChange(file) {
       if (this.dataParams.ID === '') {
         this.$message.warning('请先增加日常费用')
         return false
@@ -1172,7 +1074,7 @@ export default {
       this.uploadImgFun(file)
     },
     // 上传文件
-    uploadImgFun (file) {
+    uploadImgFun(file) {
       let param = new FormData()
       param.append('files', file.raw)
       param.append('ID', this.dataParams.ID)
@@ -1185,12 +1087,12 @@ export default {
       })
     },
     // 查看图片
-    clickImgFun (data) {
+    clickImgFun(data) {
       this.imgShowUrl = data.FILE_URL
       this.imgShow = true
     },
     // 删除图片
-    clickDeleteFun (data) {
+    clickDeleteFun(data) {
       this.$confirm('确定要删除该图片?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -1211,7 +1113,7 @@ export default {
       })
     }
   },
-  created () {
+  created() {
     this.getCuringList()
     this.getAssetTypeList()
     this.assetDataFun()
@@ -1220,12 +1122,19 @@ export default {
 </script>
 <style lang="scss">
 #dailycost {
+  .el-col-4 {
+    width: 15%;
+  }
+  .el-col-2 {
+    width: 8%;
+  }
   .title-p {
+    margin-bottom: 10px;
     button {
       float: right;
     }
   }
-  .el-range-separator{
+  .el-range-separator {
     width: 25px;
   }
   .content {

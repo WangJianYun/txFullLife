@@ -1343,6 +1343,7 @@ export default {
 <style lang="scss">
 .assets-wrap {
   .title-p {
+    margin-bottom: 10px;
     button {
       float: right;
     }

@@ -76,7 +76,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="4" style="padding-top:4px;padding-left:5px">
-            <el-button type="primary" @click="searchFun" size="small">搜索</el-button>
+            <el-button type="primary" @click="searchFun" size="small"
+              >搜索</el-button
+            >
             <el-button @click="reset" size="small">重置</el-button>
           </el-col>
         </el-form>
@@ -441,8 +443,9 @@
         </table>
       </el-form>
       <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="addSaveFun">确 认</el-button>
         <el-button @click="addShow = false">取 消</el-button>
-        <el-button type="primary" @click="addSaveFun">保 存</el-button>
+        
       </div>
     </el-dialog>
     <!-- 修改 -->
@@ -665,8 +668,9 @@
         </table>
       </el-form>
       <div slot="footer" class="dialog-footer">
+         <el-button type="primary" @click="editSaveFun">确 认</el-button>
         <el-button @click="editShow = false">取 消</el-button>
-        <el-button type="primary" @click="editSaveFun">保 存</el-button>
+       
       </div>
     </el-dialog>
     <!-- 查看 -->
@@ -1243,6 +1247,9 @@ export default {
 </script>
 <style lang="scss">
 .assets-wrap {
+  .el-dialog__header {
+    background: #f5f5f5;
+  }
   .title-p {
     margin-bottom: 10px;
     button {

@@ -103,7 +103,8 @@
       </el-row>
       <div class="div-btn">
         <el-button type="primary" icon="el-icon-delete" @click="delListFun"
-          >批量删除</el-button>
+          >批量删除</el-button
+        >
         <span class="serach-span">
           您的检索：
           <span v-show="!isSearch"> 无 </span>
@@ -267,7 +268,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-button type="primary" @click="addSearchFun" size="small">搜索</el-button>
+            <el-button type="primary" @click="addSearchFun" size="small"
+              >搜索</el-button
+            >
             <el-button @click="addReset" size="small">重置</el-button>
           </el-col>
         </el-form>
@@ -397,8 +400,8 @@
         </table>
       </el-form>
       <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="addSaveFun">确 认</el-button>
         <el-button @click="addShow = false">取 消</el-button>
-        <el-button type="primary" @click="addSaveFun">保 存</el-button>
       </div>
     </el-dialog>
     <!-- 修改 -->
@@ -459,12 +462,14 @@
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-button type="primary" @click="addSearchFun">搜索</el-button>
-            <el-button @click="addReset">重置</el-button>
+            <el-button type="primary" @click="addSearchFun" size="small"
+              >搜索</el-button
+            >
+            <el-button @click="addReset" size="small">重置</el-button>
           </el-col>
         </el-form>
       </el-row>
-      <p>
+      <p style="padding:10px">
         您的检索： <span v-show="!isAddSearch"> 无 </span>
         <span> {{ addSearchVal }} </span>
       </p>
@@ -545,7 +550,7 @@
                 action
                 :show-file-list="false"
                 :auto-upload="false"
-                style="display: inline;margin-left:50px"
+                style="display: inline;"
               >
                 <img v-if="imageUrl" :src="imageUrl" class="avatar" />
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
@@ -587,8 +592,8 @@
         </table>
       </el-form>
       <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="editSaveFun">确 认</el-button>
         <el-button @click="editShow = false">取 消</el-button>
-        <el-button type="primary" @click="editSaveFun">保 存</el-button>
       </div>
     </el-dialog>
     <!-- 查看 -->
@@ -615,7 +620,7 @@
           </td>
           <td class="bg-td">工程时间区间：</td>
           <td>
-            {{ infoForm.T0005_START_TIME }} ——— {{ infoForm.T0005_END_TIME }}
+            {{ infoForm.T0005_START_TIME }}至{{ infoForm.T0005_END_TIME }}
           </td>
         </tr>
         <tr>
@@ -977,11 +982,13 @@ export default {
         this.searchMap.T0005_START_TIME = this.searchMap.time[0]
         this.searchMap.T0005_END_TIME = this.searchMap.time[1]
       }
+      console.log(this.searchMap)
       let _data = {
         currentPage: this.currentPage,
         showCount: this.showCount,
         searchMap: this.searchMap
       }
+      console.log(_data)
       this.$api.post(`/cycle/costBudget/listPage`, _data, null, r => {
         this.loading = false
         for (let i = 0; i < r.data.returnParam.length; i++) {
@@ -1106,6 +1113,9 @@ export default {
 </script>
 <style lang="scss">
 #yhCostMap {
+  .el-dialog__header {
+    background: #f5f5f5;
+  }
   .title-p {
     margin-bottom: 10px;
     button {
@@ -1179,6 +1189,7 @@ export default {
     display: inline;
     list-style: none;
     margin: 0;
+    margin-left: 0 !important;
   }
   .avatar-uploader {
     display: inline-block;

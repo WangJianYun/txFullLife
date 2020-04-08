@@ -280,7 +280,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-button type="primary" @click="addSearchFun" size="small">搜索</el-button>
+            <el-button type="primary" @click="addSearchFun" size="small"
+              >搜索</el-button
+            >
             <el-button @click="addReset" size="small">重置</el-button>
           </el-col>
         </el-form>
@@ -411,8 +413,9 @@
         </table>
       </el-form>
       <div slot="footer" class="dialog-footer">
+         <el-button type="primary" @click="addSaveFun">确 定</el-button>
         <el-button @click="addShow = false">取 消</el-button>
-        <el-button type="primary" @click="addSaveFun">确 定</el-button>
+       
       </div>
     </el-dialog>
     <!-- 修改 -->
@@ -473,12 +476,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-button type="primary" @click="addSearchFun">搜索</el-button>
-            <el-button @click="addReset">重置</el-button>
+            <el-button type="primary" @click="addSearchFun" size="small">搜索</el-button>
+            <el-button @click="addReset" size="small">重置</el-button>
           </el-col>
         </el-form>
       </el-row>
-      <p>
+      <p style="padding:10px">
         您的检索：
         <span v-show="!isAddSearch"> 无 </span>
         <span> {{ addSearchVal }} </span>
@@ -604,8 +607,9 @@
         </table>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="editShow = false">取 消</el-button>
         <el-button type="primary" @click="editSaveFun">确 定</el-button>
+        <el-button @click="editShow = false">取 消</el-button>
+        
       </div>
     </el-dialog>
     <!-- 查看 -->
@@ -1122,6 +1126,15 @@ export default {
 </script>
 <style lang="scss">
 #dailycost {
+  .el-dialog__header {
+    background: #f5f5f5;
+  }
+  // .el-dialog__title {
+  //   color: #fff;
+  // }
+  // .el-dialog__headerbtn .el-dialog__close {
+  //   color: #fff;
+  // }
   .el-col-4 {
     width: 15%;
   }

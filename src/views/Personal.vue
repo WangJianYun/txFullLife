@@ -172,8 +172,8 @@
             <table class="perstable authTable">
               <thead>
                 <tr>
-                  <th>序号</th>
-                  <th>模块名称</th>
+                  <th width="10%">序号</th>
+                  <th width="40%">模块名称</th>
                   <th>权限节点</th>
                 </tr>
               </thead>

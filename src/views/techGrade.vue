@@ -78,8 +78,10 @@
             </el-form-item>
           </el-col>
           <el-col :span="4" style="padding-left:10px;padding-top:4px">
-             <el-button type="primary" @click="searchFun" size="small">搜索</el-button>
-        <el-button @click="reset" size="small">重置</el-button>
+            <el-button type="primary" @click="searchFun" size="small"
+              >搜索</el-button
+            >
+            <el-button @click="reset" size="small">重置</el-button>
           </el-col>
         </el-form>
       </el-row>
@@ -212,7 +214,7 @@
       <div>
         <table class="table-title add-table">
           <tr>
-            <td class="bg-td" colspan="2">技术等级小贴士</td>
+            <td class="bg-td" colspan="2">小贴士</td>
           </tr>
           <tr>
             <td class="title-info">收费站等级</td>
@@ -302,7 +304,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-button type="primary" @click="addSearchFun" size="small">搜索</el-button>
+            <el-button type="primary" @click="addSearchFun" size="small"
+              >搜索</el-button
+            >
             <el-button @click="addReset" size="small">重置</el-button>
           </el-col>
         </el-form>
@@ -433,7 +437,6 @@
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="addSaveFun">确 认</el-button>
         <el-button @click="addShow = false">取 消</el-button>
-        
       </div>
     </el-dialog>
     <!-- 修改 -->
@@ -494,7 +497,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-button type="primary" @click="addSearchFun" size="small">搜索</el-button>
+            <el-button type="primary" @click="addSearchFun" size="small"
+              >搜索</el-button
+            >
             <el-button @click="addReset" size="small">重置</el-button>
           </el-col>
         </el-form>
@@ -625,7 +630,6 @@
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="editSaveFun">确 认</el-button>
         <el-button @click="editShow = false">取 消</el-button>
-        
       </div>
     </el-dialog>
     <!-- 查看 -->

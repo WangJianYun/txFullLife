@@ -222,9 +222,9 @@
             </el-main>
           </el-form>
         </el-main>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="save" size="small">提交</el-button>
-          <el-button @click="closeDialog" size="small">重置</el-button>
+        <div slot="footer" class="dialog-footer" v-show="isCheck">
+          <el-button type="primary" @click="save" size="small">确定</el-button>
+          <el-button @click="closeDialog" size="small">取消</el-button>
         </div>
       </el-dialog>
     </el-row>
@@ -262,6 +262,7 @@ export default {
   data() {
     return {
       // isBlue: false,
+      isCheck: true,
       pageIndex: 1,
       dpData: [],
       totalData: 3,
@@ -474,11 +475,13 @@ export default {
       this.managerDialog = false
       this.checkMans = false
       if (type === 'add') {
+        this.isCheck = true
         this.dialogName = '新增权限组'
         this.dialogType = 'add'
         this.getPermission()
       }
       if (type === 'edit') {
+        this.isCheck = true
         this.dialogName = '编辑权限组'
         this.form = row
         this.updateData = row
@@ -490,6 +493,7 @@ export default {
         this.getPermission(row.M0003_ID)
       }
       if (type === 'look') {
+        this.isCheck = false
         this.dialogName = '查看权限组'
         this.form = row
         // eslint-disable-next-line no-unneeded-ternary
@@ -624,6 +628,9 @@ export default {
   padding: 0;
 }
 #authority {
+  .el-dialog__header {
+    background: #f5f5f5;
+  }
   #tableWrap {
     background: #fff;
     margin-top: 20px;

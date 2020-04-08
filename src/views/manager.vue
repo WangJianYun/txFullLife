@@ -287,9 +287,9 @@
             </table>
           </el-form>
         </el-main>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="save" size="small">提交</el-button>
-          <el-button @click="resetDialog" size="small">重置</el-button>
+        <div slot="footer" class="dialog-footer" v-show="isCheck">
+          <el-button type="primary" @click="save" size="small">确认</el-button>
+          <el-button @click="resetDialog" size="small">提交</el-button>
         </div>
       </el-dialog>
     </el-row>
@@ -300,6 +300,7 @@
 export default {
   data() {
     return {
+      isCheck: true,
       pageIndex: 1,
       dpData: [
         {
@@ -330,7 +331,7 @@ export default {
       disVisible: false,
       islook: false,
       Expassword: '',
-      isedit:false,
+      isedit: false,
       form: {
         M0014_USER_CODE: '',
         M0014_SIMP_NAME: '',
@@ -507,10 +508,12 @@ export default {
       this.disVisible = true
       console.log(row)
       if (type === 'add') {
+        this.isCheck = true
         this.dialogName = '新增管理员'
         this.dialogType = 'new'
       }
       if (type === 'edit') {
+        this.isCheck = true
         this.isedit = 'readonly'
         this.Expassword = row.M0014_PASS_WORD
         // if (row.M0014_IS_AVTIVE === 1) {
@@ -536,6 +539,7 @@ export default {
         this.form.M0015_ID = row.DUTY_NAME
       }
       if (type === 'look') {
+        this.isCheck = false
         this.Expassword = row.M0014_PASS_WORD
         if (row.M0014_IS_AVTIVE === 1) {
           row.M0014_IS_AVTIVE = true

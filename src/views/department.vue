@@ -195,9 +195,9 @@
             </table>
           </el-form>
         </el-main>
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="save" size="small">提交</el-button>
-          <el-button @click="closeDialog" size="small">重置</el-button>
+        <div slot="footer" class="dialog-footer" v-show="isCheck">
+          <el-button type="primary" @click="save" size="small">确认</el-button>
+          <el-button @click="closeDialog" size="small">取消</el-button>
         </div>
       </el-dialog>
     </el-row>
@@ -244,7 +244,8 @@ export default {
       lookState: '',
       addState: '',
       editState: '',
-      delState: ''
+      delState: '',
+      isCheck: true
     }
   },
   mounted() {
@@ -411,10 +412,12 @@ export default {
       this.refreshTable()
       this.disVisible = true
       if (type === 'add') {
+        this.isCheck = true
         this.dialogName = '新增部门'
         this.dialogType = 'new'
       }
       if (type === 'edit') {
+        this.isCheck = true
         if (row.M0016_IS_AVTIVE === 1) {
           row.M0016_IS_AVTIVE = true
         } else {
@@ -429,6 +432,7 @@ export default {
         this.dialogType = 'edit'
       }
       if (type === 'look') {
+        this.isCheck = false
         if (row.M0016_IS_AVTIVE === 1) {
           row.M0016_IS_AVTIVE = true
         } else {
@@ -499,6 +503,9 @@ export default {
 </script>
 <style lang="scss">
 #department {
+  .el-dialog__header {
+    background: #f5f5f5;
+  }
   #tableWrap {
     background: #fff;
     margin-top: 20px;

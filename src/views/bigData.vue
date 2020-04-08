@@ -64,7 +64,7 @@
                 style="margin:0 10px;">
               </el-date-picker>
               <el-button type="primary" size="mini" @click='getSerch'>搜</el-button>
-              <el-button type="info" class="more" size="mini" @click='checkRow'>查看>></el-button>
+              <el-button type="info" class="more" size="mini" @click='checkRow'>查看 >></el-button>
             </el-row>
             <el-row>
               <div id="roadChart" class="dataChart"></div>
@@ -75,7 +75,7 @@
           <el-main>
             <el-row class="itemTh">
               交通安全设施数据统计
-              <el-button type="info" class="more" size="mini" @click='checkSafe'>查看>></el-button>
+              <el-button type="info" class="more" size="mini" @click='checkSafe'>查看 >></el-button>
             </el-row>
             <el-row>
               <div id="safeChart" class="dataChart"></div>
@@ -87,7 +87,7 @@
         <el-col :span="12"><el-main>
             <el-row class="itemTh">
               日常费用收支情况
-              <el-button type="info" class="more" size="mini" @click='checkDayCost'>查看>></el-button>
+              <el-button type="info" class="more" size="mini" @click='checkDayCost'>查看 >></el-button>
             </el-row>
             <el-row>
               <div id="dailyChart" class="dataChart"></div>
@@ -96,7 +96,7 @@
         <el-col :span="12"><el-main>
             <el-row class="itemTh">
               历年养护费用统计
-              <el-button type="info" class="more" size="mini" @click='checkYhcost'>查看>></el-button>
+              <el-button type="info" class="more" size="mini" @click='checkYhcost'>查看 >></el-button>
             </el-row>
             <el-row>
               <div id="yearsChart" class="dataChart"></div>
@@ -124,7 +124,7 @@
               <el-col :span="7">
                 <el-row class="itemTh">
                   桥梁技术等级检测数据
-                  <el-button type="info" class="more" size="mini" @click='checkBridge'>查看>></el-button>
+                  <el-button type="info" class="more" size="mini" @click='checkBridge'>查看 >></el-button>
                 </el-row>
                 <el-row>
                   <div id="bridgeChart" class="dataChart"></div>
@@ -133,7 +133,7 @@
               <el-col :span="7">
                 <el-row class="itemTh">
                   隧道技术等级检测数据
-                  <el-button type="info" class="more" size="mini" @click='checkTunnel'>查看>></el-button>
+                  <el-button type="info" class="more" size="mini" @click='checkTunnel'>查看 >></el-button>
                 </el-row>
                 <el-row>
                   <div id="tunnelChart" class="dataChart"></div>
@@ -142,7 +142,7 @@
               <el-col :span="7">
                 <el-row class="itemTh">
                   涵洞技术等级检测数据
-                  <el-button type="info" class="more" size="mini" @click='checkHole'>查看>></el-button>
+                  <el-button type="info" class="more" size="mini" @click='checkHole'>查看 >></el-button>
                 </el-row>
                 <el-row>
                   <div id="culvertChart" class="dataChart"></div>
@@ -550,7 +550,7 @@ export default {
                 normal: {
                   show: true,
                   position: 'inside',
-                  formatter: '{b}{value|{c}}个',
+                  formatter: '{b} {value|{c}}个',
                   rich: {
                     value: {
                       fontSize: 20,

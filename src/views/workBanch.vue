@@ -3,7 +3,7 @@
     <div id="mkDialog">
       <div id="mkBox">
         <span class="el-icon-close close" @click="closeMk"></span>
-        <p class="mkTitle" style="width:100%;text-align:center;font-size:18px;">
+        <p class="mkTitle" style="width:100%;text-align:center;font-size:18px;margin-bottom:20px;">
           土桥
         </p>
         <table class="fgstb">
@@ -62,7 +62,7 @@
           </tr>
         </table>
 
-        <p style="text-indent:2rem;" class="remark">
+        <p style="text-indent:2rem;margin:20px 0;" class="remark">
           土桥铜川市合凤高速南部塬区，建筑年代2015年，建设单位：*****建筑公司，属二类技术等级桥梁。
         </p>
         <table class="bdtable" id="techLevel">
@@ -211,8 +211,8 @@
     </el-main>
     <el-main>
       <el-row style="margin-bottom:20px;" :gutter="10">
-        <el-col :span="6">
-          <span class="mapSercLabel">资产类别</span>
+        <el-col :span="4">
+          <span class="mapSercLabel">资产类别 </span>
           <el-select
             v-model="condition.ASSET_TYPE_ID"
             size="small"
@@ -226,8 +226,8 @@
             ></el-option>
           </el-select>
         </el-col>
-        <el-col :span="6">
-          <span class="mapSercLabel">起点桩号</span>
+        <el-col :span="4">
+          <span class="mapSercLabel">起点桩号 </span>
           <el-select
             v-model="condition.START_PILE"
             size="small"
@@ -241,8 +241,8 @@
             ></el-option>
           </el-select>
         </el-col>
-        <el-col :span="6">
-          <span class="mapSercLabel">终点桩号</span>
+        <el-col :span="4">
+          <span class="mapSercLabel">终点桩号 </span>
           <el-select
             v-model="condition.END_PILE"
             size="small"
@@ -256,9 +256,9 @@
             ></el-option>
           </el-select>
         </el-col>
-        <el-col :span="6">
-          <span class="mapSercLabel">归属年份</span>
-          <el-select v-model="condition.YEAR" size="small" style="width:50%">
+        <el-col :span="4">
+          <span class="mapSercLabel">归属年份 </span>
+          <el-select v-model="condition.YEAR" size="small" style="width:70%">
             <el-option
               v-for="item in yearArr"
               :key="item.$index"
@@ -266,6 +266,10 @@
               :label="item"
             ></el-option>
           </el-select>
+        </el-col>
+        
+        <el-col :span="2">
+          
           <el-button type="primary" size="small" @click="changeMarkers"
             >搜</el-button
           >
@@ -274,10 +278,10 @@
       <el-row>
         <div id="assetsMap">
           <div id="astList">
-            <table>
+            <table style="border-collapse: collapse;">
               <thead>
                 <tr>
-                  <th colspan="2">图例</th>
+                  <th colspan="2" style="background:rgb(141,172,90);color:#fff;">图例</th>
                 </tr>
               </thead>
               <tbody>
@@ -321,7 +325,7 @@
           <el-row class="itemTh">
             公路资产
             <el-button type="info" class="more" size="mini" @click="toAssets"
-              >查看>></el-button
+              >查看 >></el-button
             >
           </el-row>
           <el-row>
@@ -386,7 +390,7 @@
           <el-row class="itemTh">
             技术等级
             <el-button type="info" class="more" size="mini" @click="toTech"
-              >查看>></el-button
+              >查看 >></el-button
             >
           </el-row>
           <el-row>
@@ -412,7 +416,7 @@
                       type="primary"
                       size="small"
                       :btitle="scope.row.report"
-                      @click="imgDialog(scope.row.report)"
+                      @click="imgDialog(scope.row.report,scope.row,'1')"
                       >报告查看</el-button
                     >
                   </template>
@@ -445,7 +449,7 @@
           <el-row class="itemTh">
             日常费用收支
             <el-button type="info" class="more" size="mini" @click="toDayliCost"
-              >查看>></el-button
+              >查看 >></el-button
             >
           </el-row>
           <el-row>
@@ -489,7 +493,7 @@
                       type="primary"
                       size="small"
                       :btitle="scope.row.bill"
-                      @click="imgDialog(scope.row.bill)"
+                      @click="imgDialog(scope.row.bill,scope.row,'2')"
                       >票据查看</el-button
                     >
                   </template>
@@ -504,7 +508,7 @@
           <el-row class="itemTh">
             养护费用管理
             <el-button type="info" class="more" size="mini" @click="toConsCost"
-              >查看>></el-button
+              >查看 >></el-button
             >
           </el-row>
           <el-row>
@@ -548,7 +552,7 @@
                       type="primary"
                       size="small"
                       :btitle="scope.row.bill"
-                      @click="imgDialog(scope.row.bill)"
+                      @click="imgDialog(scope.row.bill,scope.row,'3')"
                       >票据查看</el-button
                     >
                   </template>
@@ -771,7 +775,7 @@ export default {
                       element.TOCOME_MONEY +
                       '</td><td>' +
                       element.YEAR +
-                      '</td><td><button type="primary" class="el-button">详细</button></td></tr>'
+                      '</td><td><button type="primary" class="el-button el-button--primary el-button--small">详细</button></td></tr>'
                   })
                   document
                     .getElementById('fgsCost')
@@ -1024,11 +1028,18 @@ export default {
     closeMk() {
       document.getElementById('mkDialog').style.display = 'none'
     },
-    imgDialog(img) {
+    imgDialog(img,row,type) {
       console.log(img)
       if (img) {
         this.portDialog = true
         this.imgUrl = img
+        if(type==='1'){
+          this.portName = row.name+'--报告'
+        }else if(type==='2'){
+          this.portName = row.name+'--票据'
+        }else{
+          this.portName = row.name+'--票据'
+        }
       } else {
         Message({
           showClose: true,
@@ -1199,205 +1210,212 @@ export default {
   }
 }
 </script>
-<style>
-#workBanck {
+<style lang="scss">
+#workBanck{
   position: relative;
-}
-.el-select-dropdown__wrap {
-  margin-bottom: 0 !important;
-}
-.el-scrollbar__wrap {
-  margin-bottom: 0 !important;
-}
-#workBanck .el-main {
-  background: #fff;
-  margin: 15px 10px;
-}
-#workBanck #topItems .el-col-4 {
-  width: 20%;
-}
-#workBanck .topItem {
-  width: 100%;
-  height: 80px;
-  background: #bbb;
-  color: #fff;
-  line-height: 80px;
-  cursor: pointer;
-}
-#workBanck .topItem .ttile {
-  width: 60%;
-  text-align: left;
-  font-size: 18px;
-  float: left;
-}
-@media screen and (max-width: 1600px) {
-  #workBanck .topItem .ttile {
+  .el-dialog__header{background: rgb(64, 158, 255);}
+  .el-dialog__title{color:#FFF;}
+  .el-dialog__headerbtn .el-dialog__close{color: #fff;}
+  .el-select-dropdown__wrap {
+    margin-bottom: 0 !important;
+  }
+  .el-scrollbar__wrap {
+    margin-bottom: 0 !important;
+  }
+  .el-main {
+    background: #fff;
+    margin: 15px 10px;
+  }
+  #topItems .el-col-4 {
+    width: 20%;
+  }
+  .topItem {
+    width: 100%;
+    height: 80px;
+    background: #bbb;
+    color: #fff;
+    line-height: 80px;
+    cursor: pointer;
+  }
+  .topItem .ttile {
     width: 60%;
     text-align: left;
-    font-size: 14px;
+    font-size: 18px;
     float: left;
   }
-  #workBanck .mapSercLabel {
+  @media screen and (max-width: 1600px) {
+    .topItem .ttile {
+      width: 60%;
+      text-align: left;
+      font-size: 14px;
+      float: left;
+    }
+    .mapSercLabel {
+      font-size: 14px;
+    }
+  }
+  .topItem .ticon {
+    width: 40%;
+    text-align: center;
+    height: 80px;
+    float: left;
+  }
+  .more {
+    float: right;
+  }
+  .itemTh {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 15px;
+  }
+  .el-icon-location {
+    font-size: 20px;
+    color: red;
+    cursor: pointer;
+  }
+  .dTech {
+    background: red;
+    color: #fff;
+    border-radius: 100%;
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+    line-height: 20px;
+  }
+  .amap-wrapper {
+    height: 500px;
+  }
+  #assetsMap {
+    position: relative;
+  }
+  #assetsMap #astList {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    z-index: 999;
+    text-align: center;
+    background: #fff;
+    border-right: 1px solid #bbb;
+    border-bottom: 1px solid #bbb;
+    border-collapse: collapse;
+    height: 244px;
+    overflow-y: auto;
+    min-width: 100px;
+  }
+  #assetsMap #astList::-webkit-scrollbar {
+    width: 5px;
+  }
+  #assetsMap #astList::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.2);
+  }
+  #assetsMap #astList::-webkit-scrollbar-track {
+    border-radius: 0;
+    background: rgba(0, 0, 0, 0.1);
+  }
+  #assetsMap #astList tr {
+    cursor: pointer;
+  }
+  #assetsMap #astList td,
+  #assetsMap #astList th {
+    text-align: center;
+    border-left: 1px solid #bbb;
+    font-size: 14px;
+    vertical-align: middle;
+    border-top: 1px solid #bbb;
+    padding: 3px 10px;
+  }
+  #assetsMap #astList td img {
+    height: 20px;
+  }
+  #mkDialog {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0);
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 999;
+    transition: all 1s;
+    display: none;
+  }
+  #mkDialog #mkBox {
+    width: 600px;
+    background: #fff;
+    position: absolute;
+    left: 25%;
+    top: 80px;
+    box-shadow: 0 0 5px #bbb;
+    padding: 8px;
+  }
+  @media screen and (max-width: 1400px) {
+    #mkDialog #mkBox {
+      width: 58%;
+      left: 10%;
+    }
+  }
+  #mkDialog #mkBox .close {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    cursor: pointer;
+  }
+  #mkDialog #mkBox table {
+    width: 100%;
+  }
+  #mkDialog #mkBox table td.left {
+    text-align: left;
+  }
+  #mkDialog #mkBox table td.right {
+    text-align: right;
+    min-width:100px;
+  }
+  #mkDialog #mkBox table td.imgWrap {
+    width: 55%;
+    text-align: center;
+  }
+  #mkDialog #mkBox .baseTb td.imgWrap img {
+    height: 170px;
+    width: 80%;
+  }
+  #mkDialog #mkBox .fgstb td.imgWrap img {
+    height: 100px;
+    width: 80%;
+  }
+  #mkDialog #mkBox .bdtable {
+    width: 584px;
+    border-top: 1px solid #bbb;
+    border-left: 1px solid #bbb;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  #mkDialog #mkBox .bdtable th,
+  #mkDialog #mkBox .bdtable td {
+    text-align: center;
+    border-right: 1px solid #bbb;
+    border-bottom: 1px solid #bbb;
+    padding: 5px 8px;
     font-size: 14px;
   }
-}
-#workBanck .topItem .ticon {
-  width: 40%;
-  text-align: center;
-  height: 80px;
-  float: left;
-}
-#workBanck .more {
-  float: right;
-}
-#workBanck .itemTh {
-  padding: 8px 0;
-  border-bottom: 1px solid #eee;
-  margin-bottom: 15px;
-}
-#workBanck .el-icon-location {
-  font-size: 20px;
-  color: red;
-  cursor: pointer;
-}
-#workBanck .dTech {
-  background: red;
-  color: #fff;
-  border-radius: 100%;
-  width: 20px;
-  height: 20px;
-  display: inline-block;
-  line-height: 20px;
-}
-#workBanck .amap-wrapper {
-  height: 500px;
-}
-#workBanck #assetsMap {
-  position: relative;
-}
-#workBanck #assetsMap #astList {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  z-index: 999;
-  text-align: center;
-  background: #fff;
-  border-right: 1px solid #bbb;
-  border-bottom: 1px solid #bbb;
-  border-collapse: collapse;
-  height: 240px;
-  overflow-y: auto;
-  min-width: 100px;
-}
-#workBanck #assetsMap #astList::-webkit-scrollbar {
-  width: 5px;
-}
-#workBanck #assetsMap #astList::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background: rgba(0, 0, 0, 0.2);
-}
-#workBanck #assetsMap #astList::-webkit-scrollbar-track {
-  border-radius: 0;
-  background: rgba(0, 0, 0, 0.1);
-}
-#workBanck #assetsMap #astList tr {
-  cursor: pointer;
-}
-#workBanck #assetsMap #astList td,
-#workBanck #assetsMap #astList th {
-  text-align: center;
-  border-left: 1px solid #bbb;
-  font-size: 14px;
-  vertical-align: middle;
-  border-top: 1px solid #bbb;
-  padding: 3px 10px;
-}
-#workBanck #assetsMap #astList td img {
-  height: 20px;
-}
-#workBanck #mkDialog {
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0);
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 999;
-  transition: all 1s;
-  display: none;
-}
-#workBanck #mkDialog #mkBox {
-  width: 38%;
-  background: #fff;
-  position: absolute;
-  left: 25%;
-  top: 80px;
-  box-shadow: 0 0 5px #bbb;
-  padding: 8px;
-}
-@media screen and (max-width: 1400px) {
-  #workBanck #mkDialog #mkBox {
-    width: 58%;
-    left: 10%;
+  #techLevel th,
+  #techLevel td {
+    min-width: 146px;
+  }
+  #dailyCost th,
+  #dailyCost td {
+    min-width: 114px;
+  }
+  #yhCost th,
+  #yhCost td {
+    min-width: 100px;
+  }
+  #fgsCost th,
+  #fgsCost td {
+    min-width: 110px;
+  }
+  .el-table .cell {
+    text-overflow: clip !important;
   }
 }
-#workBanck #mkDialog #mkBox .close {
-  position: absolute;
-  right: 5px;
-  top: 5px;
-  cursor: pointer;
-}
-#workBanck #mkDialog #mkBox table {
-  width: 100%;
-}
-#workBanck #mkDialog #mkBox table td.left {
-  text-align: left;
-}
-#workBanck #mkDialog #mkBox table td.right {
-  text-align: right;
-}
-#workBanck #mkDialog #mkBox table td.imgWrap {
-  width: 55%;
-  text-align: center;
-}
-#workBanck #mkDialog #mkBox .baseTb td.imgWrap img {
-  height: 170px;
-}
-#workBanck #mkDialog #mkBox .fgstb td.imgWrap img {
-  height: 100px;
-}
-#workBanck #mkDialog #mkBox .bdtable {
-  width: 100%;
-  border-top: 1px solid #bbb;
-  border-left: 1px solid #bbb;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-}
-#workBanck #mkDialog #mkBox .bdtable th,
-#workBanck #mkDialog #mkBox .bdtable td {
-  text-align: center;
-  border-right: 1px solid #bbb;
-  border-bottom: 1px solid #bbb;
-  padding: 5px 8px;
-  font-size: 14px;
-}
-#techLevel th,
-#techLevel td {
-  min-width: 133px;
-}
-#dailyCost th,
-#dailyCost td {
-  min-width: 101px;
-}
-#yhCost th,
-#yhCost td {
-  min-width: 100px;
-}
-#fgsCost th,
-#fgsCost td {
-  min-width: 100px;
-}
-.el-table .cell {
-  text-overflow: clip !important;
-}
+
 </style>

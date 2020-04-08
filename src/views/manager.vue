@@ -146,6 +146,8 @@
                       v-model="form.M0014_SIMP_NAME"
                       :disabled="islook"
                       @change="isHaveName"
+                      :readonly="isedit"
+                      style="width:200px;"
                     ></el-input>
                   </el-form-item>
                 </td>
@@ -159,6 +161,8 @@
                       v-model="form.M0014_USER_NAME"
                       size="small"
                       :disabled="islook"
+                      :readonly="isedit"
+                      style="width:200px;"
                     ></el-input>
                   </el-form-item>
                 </td>
@@ -173,6 +177,7 @@
                       size="small"
                       :disabled="islook"
                       show-password
+                      style="width:200px;"
                     ></el-input>
                   </el-form-item>
                 </td>
@@ -184,6 +189,7 @@
                       v-model="Expassword"
                       size="small"
                       :disabled="islook"
+                      style="width:200px;"
                     ></el-input>
                   </el-form-item>
                 </td>
@@ -195,7 +201,7 @@
                     <el-select
                       v-model="form.M0016_ID"
                       size="small"
-                      style="width:100%;"
+                      style="width:200px;"
                       :disabled="islook"
                     >
                       <el-option
@@ -213,7 +219,7 @@
                     <el-select
                       v-model="form.M0015_ID"
                       size="small"
-                      style="width:100%;"
+                      style="width:200px;"
                       :disabled="islook"
                     >
                       <el-option
@@ -235,6 +241,7 @@
                       v-model="form.M0014_USER_EMAIL"
                       size="small"
                       :disabled="islook"
+                      style="width:200px;"
                     ></el-input>
                   </el-form-item>
                 </td>
@@ -246,6 +253,7 @@
                       v-model="form.M0014_USER_TEL"
                       size="small"
                       :disabled="islook"
+                      style="width:200px;"
                     ></el-input>
                   </el-form-item>
                 </td>
@@ -322,6 +330,7 @@ export default {
       disVisible: false,
       islook: false,
       Expassword: '',
+      isedit:false,
       form: {
         M0014_USER_CODE: '',
         M0014_SIMP_NAME: '',
@@ -502,12 +511,13 @@ export default {
         this.dialogType = 'new'
       }
       if (type === 'edit') {
+        this.isedit = 'readonly'
         this.Expassword = row.M0014_PASS_WORD
-        if (row.M0014_IS_AVTIVE === 1) {
-          row.M0014_IS_AVTIVE = true
-        } else {
-          row.M0014_IS_AVTIVE = false
-        }
+        // if (row.M0014_IS_AVTIVE === 1) {
+        //   row.M0014_IS_AVTIVE = true
+        // } else {
+        //   row.M0014_IS_AVTIVE = false
+        // }
         // 判断选择框内是否返回了0,如果是0就为空
         if (row.M0016_ID === '0' || row.M0016_PID === 0) {
           row.M0016_ID = ''
@@ -541,6 +551,7 @@ export default {
       this.$refs['form'].resetFields()
       this.disVisible = false
       this.islook = false
+      this.isedit = false
       this.form = {}
       this.refreshTable(1)
     },

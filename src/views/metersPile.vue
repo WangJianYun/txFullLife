@@ -9,9 +9,9 @@
       >
     </p>
     <div class="content">
-      <el-row :gutter="10">
+      <el-row :gutter="0">
         <el-form label-position="right" label-width="80px" :model="dataParam">
-          <el-col :span="5">
+          <el-col :span="4">
             <el-form-item label="所属路段">
               <el-select
                 v-model="dataParam.M0010_LOAD_NAME"
@@ -27,7 +27,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
+          <el-col :span="4">
             <el-form-item label="起点桩号">
               <el-select
                 v-model="dataParam.M0010_START_PILE"
@@ -42,7 +42,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
+          <el-col :span="4">
             <el-form-item label="终点桩号">
               <el-select v-model="dataParam.M0010_END_PILE" style="width:100%">
                 <el-option
@@ -54,7 +54,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
+          <el-col :span="4">
             <el-form-item label="年份选择">
               <el-date-picker
                 style="width:100%"
@@ -74,11 +74,13 @@
               </el-input>
             </el-form-item>
           </el-col>
+          <el-col :span="4" style="padding-top:4px;padding-left:5px">
+            <el-button type="primary" @click="searchFun" size="small">搜索</el-button>
+            <el-button @click="reset" size="small">重置</el-button>
+          </el-col>
         </el-form>
       </el-row>
       <div class="div-btn">
-        <el-button type="primary" @click="searchFun">搜索</el-button>
-        <el-button @click="reset">重置</el-button>
         <el-button type="primary" icon="el-icon-delete" @click="delListFun"
           >批量删除</el-button
         >

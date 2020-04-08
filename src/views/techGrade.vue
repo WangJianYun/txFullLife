@@ -10,9 +10,9 @@
       >
     </p>
     <div class="content">
-      <el-row :gutter="10">
+      <el-row :gutter="0">
         <el-form label-position="right" label-width="80px" :model="searchMap">
-          <el-col :span="5">
+          <el-col :span="4">
             <el-form-item label="资产类别">
               <el-select
                 v-model="searchMap.T0001_ID"
@@ -28,7 +28,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
+          <el-col :span="4">
             <el-form-item label="等级选择">
               <el-select v-model="searchMap.T0006_ID" style="width:100%">
                 <el-option
@@ -40,7 +40,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
+          <el-col :span="4">
             <el-form-item label="起点桩号">
               <el-select
                 v-model="searchMap.T0002_START_PILE"
@@ -55,7 +55,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
+          <el-col :span="4">
             <el-form-item label="终点桩号">
               <el-select v-model="searchMap.T0002_END_PILE" style="width:100%">
                 <el-option
@@ -77,11 +77,15 @@
               </el-date-picker>
             </el-form-item>
           </el-col>
+          <el-col :span="4" style="padding-left:10px;padding-top:4px">
+             <el-button type="primary" @click="searchFun" size="small">搜索</el-button>
+        <el-button @click="reset" size="small">重置</el-button>
+          </el-col>
         </el-form>
       </el-row>
       <div class="div-btn">
-        <el-button type="primary" @click="searchFun">搜索</el-button>
-        <el-button @click="reset">重置</el-button>
+        <!-- <el-button type="primary" @click="searchFun">搜索</el-button>
+        <el-button @click="reset">重置</el-button> -->
         <el-button type="primary" icon="el-icon-delete" @click="delListFun"
           >批量删除</el-button
         >

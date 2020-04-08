@@ -1,25 +1,18 @@
-/*
- * @Author: liuhaosheng
- * @Description：资产列表管理
- */
+/* * @Author: liuhaosheng * @Description：资产列表管理 */
 <template>
   <div class="assets-wrap">
     <p class="title-p">
-      <span style="display:inline-block;margin-bottom:20px;"> >> 资产列表管理 </span>
-      <el-button
-        type="primary"
-        icon="el-icon-plus"
-        @click="addFun"
-      >添加资产</el-button>
+      <span style="display:inline-block;margin-bottom:20px;">
+        >> 资产列表管理
+      </span>
+      <el-button type="primary" icon="el-icon-plus" @click="addFun"
+        >添加资产</el-button
+      >
     </p>
     <div class="content">
-      <el-row :gutter="10">
-        <el-form
-          label-position="right"
-          label-width="80px"
-          :model="searchMap"
-        >
-          <el-col :span="5">
+      <el-row :gutter="0">
+        <el-form label-position="right" label-width="80px" :model="searchMap">
+          <el-col :span="4">
             <el-form-item label="资产类别">
               <el-select
                 v-model="searchMap.T0001_ID"
@@ -35,7 +28,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
+          <el-col :span="4">
             <el-form-item label="起点桩号">
               <el-select
                 v-model="searchMap.T0002_START_PILE"
@@ -50,12 +43,9 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
+          <el-col :span="4">
             <el-form-item label="终点桩号">
-              <el-select
-                v-model="searchMap.T0002_END_PILE"
-                style="width:100%"
-              >
+              <el-select v-model="searchMap.T0002_END_PILE" style="width:100%">
                 <el-option
                   v-for="item in pileList"
                   :key="item.T0002_ID"
@@ -65,7 +55,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="5">
+          <el-col :span="4">
             <el-form-item label="年份选择">
               <el-date-picker
                 style="width:100%"
@@ -85,22 +75,22 @@
               </el-input>
             </el-form-item>
           </el-col>
+          <el-col :span="4" style="padding-top:4px;padding-left:5px">
+            <el-button type="primary" @click="searchFun" size="small">搜索</el-button>
+            <el-button @click="reset" size="small">重置</el-button>
+          </el-col>
         </el-form>
       </el-row>
       <div class="div-btn">
-        <el-button
-          type="primary"
-          @click="searchFun"
-        >搜索</el-button>
-        <el-button @click="reset">重置</el-button>
-        <el-button
-          type="primary"
-          icon="el-icon-delete"
-          @click="delListFun"
-        >批量删除</el-button>
-        <span class="serach-span"> 您的检索：
+        <!-- <el-button type="primary" @click="searchFun">搜索</el-button>
+        <el-button @click="reset">重置</el-button> -->
+        <el-button type="primary" icon="el-icon-delete" @click="delListFun"
+          >批量删除</el-button
+        >
+        <span class="serach-span">
+          您的检索：
           <span v-show="!isSearch"> 无 </span>
-          <span> {{searchVal}} </span>
+          <span> {{ searchVal }} </span>
         </span>
       </div>
       <div class="table-div">
@@ -112,20 +102,14 @@
           highlight-current-row
           @select="selectTable"
           @select-all="selectAll"
-          :header-cell-style="{background:'#f0f0f0'}"
+          :header-cell-style="{ background: '#f0f0f0' }"
         >
           >
-          <el-table-column
-            type="selection"
-            width="40"
-          >
-          </el-table-column>
-          <el-table-column
-            label="序号"
-            width="50"
-            align="center"
-          >
-            <template scope="scope"><span>{{scope.$index + 1}}</span></template>
+          <el-table-column type="selection" width="40"> </el-table-column>
+          <el-table-column label="序号" width="50" align="center">
+            <template scope="scope"
+              ><span>{{ scope.$index + 1 }}</span></template
+            >
           </el-table-column>
           <el-table-column
             prop="T0002_ASSET_NAME"
@@ -139,61 +123,32 @@
             show-overflow-tooltip
           >
           </el-table-column>
-          <el-table-column
-            prop="T0002_START_PILE"
-            label="起点桩号"
-          >
+          <el-table-column prop="T0002_START_PILE" label="起点桩号">
           </el-table-column>
-          <el-table-column
-            prop="T0002_END_PILE"
-            label="终点桩号"
-          >
+          <el-table-column prop="T0002_END_PILE" label="终点桩号">
           </el-table-column>
-          <el-table-column
-            prop="T0002_ASSET_AMOUNT"
-            label="数量（个/座/片）"
-          >
+          <el-table-column prop="T0002_ASSET_AMOUNT" label="数量（个/座/片）">
           </el-table-column>
-          <el-table-column
-            prop="T0002_LOAD_NAME"
-            label="所属路段"
-          >
+          <el-table-column prop="T0002_LOAD_NAME" label="所属路段">
           </el-table-column>
-          <el-table-column
-            label="图片"
-            align="center"
-            width="80"
-          >
+          <el-table-column label="图片" align="center" width="80">
             <template slot-scope="scope">
               <el-image
                 style="width: 50px; height: 18px"
                 :src="scope.row.pic"
                 :preview-src-list="scope.row.srcList"
               >
-                <div
-                  slot="error"
-                  class="image-slot"
-                >
+                <div slot="error" class="image-slot">
                   无
                 </div>
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="T0002_TECH_STATE"
-            label="技术状况"
-          >
+          <el-table-column prop="T0002_TECH_STATE" label="技术状况">
           </el-table-column>
-          <el-table-column
-            prop="T0002_ASSET_DATE"
-            label="归属年份"
-            width="120"
-          >
+          <el-table-column prop="T0002_ASSET_DATE" label="归属年份" width="120">
           </el-table-column>
-          <el-table-column
-            label="地图位置"
-            width="80"
-          >
+          <el-table-column label="地图位置" width="80">
             <template slot-scope="scope">
               <i
                 class="el-icon-location"
@@ -202,27 +157,23 @@
               ></i>
             </template>
           </el-table-column>
-          <el-table-column
-            fixed="right"
-            width="170"
-            label="操作"
-          >
+          <el-table-column fixed="right" width="170" label="操作">
             <template slot-scope="scope">
-              <el-button
-                type="info"
-                size="mini"
-                @click="handleInfo(scope.row)"
-              >查看</el-button>
+              <el-button type="info" size="mini" @click="handleInfo(scope.row)"
+                >查看</el-button
+              >
               <el-button
                 type="primary"
                 size="mini"
                 @click="handleEdit(scope.row)"
-              >编辑</el-button>
+                >编辑</el-button
+              >
               <el-button
                 type="danger"
                 size="mini"
                 @click="handleDelete(scope.row)"
-              >删除</el-button>
+                >删除</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
@@ -239,29 +190,34 @@
       </div>
       <table class="table-title add-table">
         <tr>
-          <td
-            class="bg-td"
-            colspan="2"
-          > 技术等级小贴士 </td>
+          <td class="bg-td" colspan="2">技术等级小贴士</td>
         </tr>
         <tr>
-          <td class="title-info"> 收费站等级 </td>
-          <td> 各收费站按星级标准区分：一星级收费站、二星级收费站、三星级收费站、四星级收费站、五星级收费站。 </td>
-        </tr>
-        <tr>
-          <td class="title-info"> 桥梁技术等级 </td>
+          <td class="title-info">收费站等级</td>
           <td>
-            <p>桥梁技术状况等级分为五类，分别为一类、二类、三类、四类、五类。 </p>
-            <p> （1）一类桥梁为全新状态，功能完善。（2）二类桥梁为有轻微缺损，对桥梁使用功能无影响。（3）三类桥梁为有中等缺损，尚能维持正常使用功能。（4）四类桥梁为主要构件有大的缺损，严重影响桥梁使用功能，或影响承载能力，不能保证正常使用。（5）五类桥梁为主要构件存在严重缺损，不能正常使用，危及桥梁安全，桥梁处于危险状态。</p>
+            各收费站按星级标准区分：一星级收费站、二星级收费站、三星级收费站、四星级收费站、五星级收费站。
           </td>
         </tr>
         <tr>
-          <td class="title-info"> 隧道技术等级 </td>
-          <td> 隧道工程专业承包企业资质等级标准，是隧道工程专业承包企业资质分为一级、二级、三级。 </td>
+          <td class="title-info">桥梁技术等级</td>
+          <td>
+            <p>
+              桥梁技术状况等级分为五类，分别为一类、二类、三类、四类、五类。
+            </p>
+            <p>
+              （1）一类桥梁为全新状态，功能完善。（2）二类桥梁为有轻微缺损，对桥梁使用功能无影响。（3）三类桥梁为有中等缺损，尚能维持正常使用功能。（4）四类桥梁为主要构件有大的缺损，严重影响桥梁使用功能，或影响承载能力，不能保证正常使用。（5）五类桥梁为主要构件存在严重缺损，不能正常使用，危及桥梁安全，桥梁处于危险状态。
+            </p>
+          </td>
         </tr>
         <tr>
-          <td class="title-info"> 涵洞技术等级 </td>
-          <td> 好、较好、较差、差、危险五类。 </td>
+          <td class="title-info">隧道技术等级</td>
+          <td>
+            隧道工程专业承包企业资质等级标准，是隧道工程专业承包企业资质分为一级、二级、三级。
+          </td>
+        </tr>
+        <tr>
+          <td class="title-info">涵洞技术等级</td>
+          <td>好、较好、较差、差、危险五类。</td>
         </tr>
       </table>
     </div>
@@ -272,11 +228,7 @@
       :close-on-click-modal="false"
       custom-class="dialog-div"
     >
-      <el-form
-        :model="addForm"
-        :rules="rules"
-        ref="addFormRef"
-      >
+      <el-form :model="addForm" :rules="rules" ref="addFormRef">
         <table class="add-table">
           <tr>
             <td class="bg-td">资产名称：</td>
@@ -289,7 +241,7 @@
                 ></el-input>
               </el-form-item>
             </td>
-            <td class="bg-td">资产类别： </td>
+            <td class="bg-td">资产类别：</td>
             <td>
               <el-form-item prop="T0001_ID">
                 <el-select
@@ -317,7 +269,7 @@
                   size="small"
                 >
                   <el-option
-                    v-for="(item,index ) in listNameList"
+                    v-for="(item, index) in listNameList"
                     :key="index"
                     :label="item.M0010_LOAD_NAME"
                     :value="item.M0010_LOAD_NAME"
@@ -326,11 +278,11 @@
                 </el-select>
               </el-form-item>
             </td>
-            <td> </td>
-            <td> </td>
+            <td></td>
+            <td></td>
           </tr>
           <tr>
-            <td class="bg-td">起点桩号： </td>
+            <td class="bg-td">起点桩号：</td>
             <td>
               <el-form-item prop="T0002_START_PILE">
                 <el-input
@@ -352,7 +304,7 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-td">数量： </td>
+            <td class="bg-td">数量：</td>
             <td>
               <el-form-item prop="T0002_ASSET_AMOUNT">
                 <el-input
@@ -377,11 +329,11 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-td">归属公司： </td>
+            <td class="bg-td">归属公司：</td>
             <td>
               {{ addForm.T0002_ASSET_COMPANY }}
             </td>
-            <td class="bg-td"> 所属养管公司： </td>
+            <td class="bg-td">所属养管公司：</td>
             <td>
               <el-form-item prop="T0002_CURING_UNIT">
                 <el-input
@@ -393,7 +345,7 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-td">责任人： </td>
+            <td class="bg-td">责任人：</td>
             <td>
               <el-form-item prop="T0002_DUTY_PERSON">
                 <el-input
@@ -403,7 +355,7 @@
                 ></el-input>
               </el-form-item>
             </td>
-            <td class="bg-td"> 联系电话： </td>
+            <td class="bg-td">联系电话：</td>
             <td>
               <el-form-item prop="T0002_TOUCH_TEL">
                 <el-input
@@ -415,7 +367,7 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-td">经度： </td>
+            <td class="bg-td">经度：</td>
             <td>
               <el-form-item prop="T0002_ASSET_PRECI">
                 <el-input
@@ -424,7 +376,7 @@
                 ></el-input>
               </el-form-item>
             </td>
-            <td class="bg-td"> 纬度： </td>
+            <td class="bg-td">纬度：</td>
             <td>
               <el-form-item prop="T0002_ASSET_LATI">
                 <el-input
@@ -448,26 +400,16 @@
                 :auto-upload="false"
                 style="display: inline"
               >
-                <img
-                  v-if="imageUrl"
-                  :src="imageUrl"
-                  class="avatar"
-                />
-                <i
-                  v-else
-                  class="el-icon-plus avatar-uploader-icon"
-                ></i>
+                <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
               <ul class="ul-img">
                 <li
                   class="avatar-uploader"
-                  v-for="(item, index) in  imageList"
+                  v-for="(item, index) in imageList"
                   :key="index"
                 >
-                  <img
-                    :src="item.FILE_URL"
-                    class="el-upload avatar"
-                  />
+                  <img :src="item.FILE_URL" class="el-upload avatar" />
                   <span class="actions-item">
                     <span>
                       <i
@@ -498,15 +440,9 @@
           </tr>
         </table>
       </el-form>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
+      <div slot="footer" class="dialog-footer">
         <el-button @click="addShow = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="addSaveFun"
-        >保 存</el-button>
+        <el-button type="primary" @click="addSaveFun">保 存</el-button>
       </div>
     </el-dialog>
     <!-- 修改 -->
@@ -516,11 +452,7 @@
       :close-on-click-modal="false"
       custom-class="dialog-div"
     >
-      <el-form
-        :model="editForm"
-        :rules="rules"
-        ref="editFormRef"
-      >
+      <el-form :model="editForm" :rules="rules" ref="editFormRef">
         <table class="add-table">
           <tr>
             <td class="bg-td">资产名称：</td>
@@ -533,7 +465,7 @@
                 ></el-input>
               </el-form-item>
             </td>
-            <td class="bg-td">资产类别： </td>
+            <td class="bg-td">资产类别：</td>
             <td>
               <el-form-item prop="T0001_ID">
                 <el-select
@@ -561,7 +493,7 @@
                   size="small"
                 >
                   <el-option
-                    v-for="(item,index ) in listNameList"
+                    v-for="(item, index) in listNameList"
                     :key="index"
                     :label="item.M0010_LOAD_NAME"
                     :value="item.M0010_LOAD_NAME"
@@ -570,11 +502,11 @@
                 </el-select>
               </el-form-item>
             </td>
-            <td> </td>
-            <td> </td>
+            <td></td>
+            <td></td>
           </tr>
           <tr>
-            <td class="bg-td">起点桩号： </td>
+            <td class="bg-td">起点桩号：</td>
             <td>
               <el-form-item prop="T0002_START_PILE">
                 <el-input
@@ -596,7 +528,7 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-td">数量： </td>
+            <td class="bg-td">数量：</td>
             <td>
               <el-form-item prop="T0002_ASSET_AMOUNT">
                 <el-input
@@ -621,11 +553,11 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-td">归属公司： </td>
+            <td class="bg-td">归属公司：</td>
             <td>
               {{ editForm.T0002_ASSET_COMPANY }}
             </td>
-            <td class="bg-td"> 所属养管公司： </td>
+            <td class="bg-td">所属养管公司：</td>
             <td>
               <el-form-item prop="T0002_CURING_UNIT">
                 <el-input
@@ -637,7 +569,7 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-td">责任人： </td>
+            <td class="bg-td">责任人：</td>
             <td>
               <el-form-item prop="resource">
                 <el-input
@@ -647,7 +579,7 @@
                 ></el-input>
               </el-form-item>
             </td>
-            <td class="bg-td"> 联系电话： </td>
+            <td class="bg-td">联系电话：</td>
             <td>
               <el-form-item prop="T0002_TOUCH_TEL">
                 <el-input
@@ -659,7 +591,7 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-td">经度： </td>
+            <td class="bg-td">经度：</td>
             <td>
               <el-form-item prop="T0002_ASSET_PRECI">
                 <el-input
@@ -668,7 +600,7 @@
                 ></el-input>
               </el-form-item>
             </td>
-            <td class="bg-td"> 纬度： </td>
+            <td class="bg-td">纬度：</td>
             <td>
               <el-form-item prop="T0002_ASSET_LATI">
                 <el-input
@@ -692,26 +624,16 @@
                 :auto-upload="false"
                 style="display: inline"
               >
-                <img
-                  v-if="imageUrl"
-                  :src="imageUrl"
-                  class="avatar"
-                />
-                <i
-                  v-else
-                  class="el-icon-plus avatar-uploader-icon"
-                ></i>
+                <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
               <ul class="ul-img">
                 <li
                   class="avatar-uploader"
-                  v-for="(item, index) in  imageList"
+                  v-for="(item, index) in imageList"
                   :key="index"
                 >
-                  <img
-                    :src="item.FILE_URL"
-                    class="el-upload avatar"
-                  />
+                  <img :src="item.FILE_URL" class="el-upload avatar" />
                   <span class="actions-item">
                     <span>
                       <i
@@ -742,15 +664,9 @@
           </tr>
         </table>
       </el-form>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
+      <div slot="footer" class="dialog-footer">
         <el-button @click="editShow = false">取 消</el-button>
-        <el-button
-          type="primary"
-          @click="editSaveFun"
-        >保 存</el-button>
+        <el-button type="primary" @click="editSaveFun">保 存</el-button>
       </div>
     </el-dialog>
     <!-- 查看 -->
@@ -765,7 +681,7 @@
           <td>
             {{ infoForm.T0002_ASSET_NAME }}
           </td>
-          <td class="bg-td">资产类别： </td>
+          <td class="bg-td">资产类别：</td>
           <td>
             {{ infoForm.T0001_ASSETTYPE_NAME }}
           </td>
@@ -775,11 +691,11 @@
           <td>
             {{ infoForm.T0002_LOAD_NAME }}
           </td>
-          <td> </td>
-          <td> </td>
+          <td></td>
+          <td></td>
         </tr>
         <tr>
-          <td class="bg-td">起点桩号： </td>
+          <td class="bg-td">起点桩号：</td>
           <td>
             {{ infoForm.T0002_START_PILE }}
           </td>
@@ -789,7 +705,7 @@
           </td>
         </tr>
         <tr>
-          <td class="bg-td">数量： </td>
+          <td class="bg-td">数量：</td>
           <td>
             {{ infoForm.T0002_ASSET_AMOUNT }}
           </td>
@@ -799,31 +715,31 @@
           </td>
         </tr>
         <tr>
-          <td class="bg-td">归属公司： </td>
+          <td class="bg-td">归属公司：</td>
           <td>
             {{ infoForm.T0002_ASSET_COMPANY }}
           </td>
-          <td class="bg-td"> 所属养管公司： </td>
+          <td class="bg-td">所属养管公司：</td>
           <td>
             {{ infoForm.T0002_CURING_UNIT }}
           </td>
         </tr>
         <tr>
-          <td class="bg-td">责任人： </td>
+          <td class="bg-td">责任人：</td>
           <td>
             {{ infoForm.T0002_DUTY_PERSON }}
           </td>
-          <td class="bg-td"> 联系电话： </td>
+          <td class="bg-td">联系电话：</td>
           <td>
             {{ infoForm.T0002_TOUCH_TEL }}
           </td>
         </tr>
         <tr>
-          <td class="bg-td">经度： </td>
+          <td class="bg-td">经度：</td>
           <td>
             {{ infoForm.T0002_ASSET_PRECI }}
           </td>
-          <td class="bg-td"> 纬度： </td>
+          <td class="bg-td">纬度：</td>
           <td>
             {{ infoForm.T0002_ASSET_LATI }}
           </td>
@@ -834,13 +750,10 @@
             <ul class="ul-img">
               <li
                 class="avatar-uploader"
-                v-for="(item, index) in  imageList"
+                v-for="(item, index) in imageList"
                 :key="index"
               >
-                <img
-                  :src="item.FILE_URL"
-                  class="el-upload avatar"
-                />
+                <img :src="item.FILE_URL" class="el-upload avatar" />
                 <span class="actions-item">
                   <span>
                     <i
@@ -860,29 +773,17 @@
           </td>
         </tr>
       </table>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
-      </div>
+
+      <div slot="footer" class="dialog-footer"></div>
     </el-dialog>
     <!-- 图片预览 -->
-    <el-dialog
-      :visible.sync="imgShow"
-      title="图片预览"
-    >
+    <el-dialog :visible.sync="imgShow" title="图片预览">
       <div style="text-align: center;">
         <el-image :src="imgShowUrl">
-          <div
-            slot="placeholder"
-            class="image-slot"
-          >
+          <div slot="placeholder" class="image-slot">
             加载中<span class="dot">...</span>
           </div>
-          <div
-            slot="error"
-            class="image-slot"
-          >
+          <div slot="error" class="image-slot">
             <i class="el-icon-picture-outline"></i>
           </div>
         </el-image>
@@ -913,7 +814,7 @@
 </template>
 <script>
 export default {
-  data () {
+  data() {
     const validOrder = (rule, value, callback) => {
       let reg = /^[1-9]\d*$/
       if (!reg.test(value)) {
@@ -1077,20 +978,20 @@ export default {
   },
   methods: {
     // 请求所有的起点 / 终点桩号
-    assetDataFun () {
+    assetDataFun() {
       this.$api.post('/cycle/assetData/listAll', {}, null, r => {
         this.pileList = r.data
       })
     },
     // 点击地图
-    locationFun (data) {
+    locationFun(data) {
       this.mapData.title = []
       this.mapShow = true
       this.mapData.position = [data.T0002_ASSET_PRECI, data.T0002_ASSET_LATI]
       this.mapData.title.push(data.T0002_ASSET_NAME)
     },
     // 根据 资产类别 请求 起点 / 终点桩号
-    changeSelect (val) {
+    changeSelect(val) {
       let _data = {
         T0001_ID: val
       }
@@ -1101,12 +1002,12 @@ export default {
       })
     },
     // 搜索
-    searchFun () {
+    searchFun() {
       this.isSearch = true
       this.getAssetList()
     },
     // 重置
-    reset () {
+    reset() {
       this.isSearch = false
       this.pileList = []
       this.searchMap.T0001_ID = ''
@@ -1119,21 +1020,21 @@ export default {
       this.getAssetList()
     },
     // 分页
-    sizeChange (val) {
+    sizeChange(val) {
       this.showCount = val
       this.getAssetList()
     },
-    currentChange (val) {
+    currentChange(val) {
       this.currentPage = val
       this.getAssetList()
     },
-    selectTable (selection) {
+    selectTable(selection) {
       this.selectList = selection
     },
-    selectAll (selection) {
+    selectAll(selection) {
       this.selectList = selection
     },
-    addFun () {
+    addFun() {
       this.addShow = true
       this.imageUrl = ''
       this.dataParams.ID = ''
@@ -1147,7 +1048,7 @@ export default {
       })
     },
     // 新增保存
-    addSaveFun () {
+    addSaveFun() {
       this.$refs['addFormRef'].validate(valid => {
         if (valid) {
           this.$api.post(`/cycle/assetData/insert`, this.addForm, null, r => {
@@ -1158,7 +1059,7 @@ export default {
         }
       })
     },
-    handleInfo (data) {
+    handleInfo(data) {
       this.infoShow = true
       this.imageList = []
       this.$api.post(
@@ -1171,7 +1072,7 @@ export default {
         }
       )
     },
-    handleEdit (data) {
+    handleEdit(data) {
       this.editShow = true
       this.imageUrl = ''
       this.imageList = []
@@ -1187,7 +1088,7 @@ export default {
       )
     },
     // 修改保存
-    editSaveFun () {
+    editSaveFun() {
       this.$refs['editFormRef'].validate(valid => {
         if (valid) {
           this.$api.post(`/cycle/assetData/update`, this.editForm, null, r => {
@@ -1199,19 +1100,19 @@ export default {
       })
     },
     // 获取资产类别 list
-    getAssetTypeList () {
+    getAssetTypeList() {
       this.$api.post(`/cycle/assetType/listAll`, {}, null, r => {
         this.assetTypeList = r.data
       })
     },
     // 请求select 的所属路段
-    getListNameList () {
+    getListNameList() {
       this.$api.post('/cycle/load/listLoadName', {}, null, r => {
         this.listNameList = r.data
       })
     },
     // 资产信息list
-    getAssetList () {
+    getAssetList() {
       let _data = {
         currentPage: this.currentPage,
         showCount: this.showCount,
@@ -1237,7 +1138,7 @@ export default {
         this.searchVal = r.search_val
       })
     },
-    handleDelete (data) {
+    handleDelete(data) {
       this.$confirm('确定要删除该条记录?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -1255,7 +1156,7 @@ export default {
       })
     },
     // 批量删除
-    delListFun () {
+    delListFun() {
       let _list = []
       if (this.selectList.length > 0) {
         for (let i = 0; i < this.selectList.length; i++) {
@@ -1282,7 +1183,7 @@ export default {
       }
     },
     // 文件状态改变
-    imgChange (file) {
+    imgChange(file) {
       if (this.dataParams.ID === '') {
         this.$message.warning('请先增加资产信息')
         return false
@@ -1295,7 +1196,7 @@ export default {
       this.uploadImgFun(file)
     },
     // 上传文件
-    uploadImgFun (file) {
+    uploadImgFun(file) {
       let param = new FormData()
       param.append('files', file.raw)
       param.append('ID', this.dataParams.ID)
@@ -1307,11 +1208,11 @@ export default {
         this.imageList.push(Object.assign({}, r.data[0]))
       })
     },
-    clickImgFun (data) {
+    clickImgFun(data) {
       this.imgShowUrl = data.FILE_URL
       this.imgShow = true
     },
-    clickDeleteFun (data) {
+    clickDeleteFun(data) {
       this.$confirm('确定要删除该图片?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -1332,7 +1233,7 @@ export default {
       })
     }
   },
-  created () {
+  created() {
     this.getAssetTypeList()
     this.getAssetList()
     this.getListNameList()

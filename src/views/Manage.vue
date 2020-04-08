@@ -30,12 +30,53 @@
             :collapse="false"
           >
             <label v-for="item in menulist1" :key="item.$index">
-               <!-- <i class="ri-home-4-fill" v-if="item.M0004_NAME==='我的桌面' || item.M0004_NAME==='大数据分析'"></i> -->
-                <el-submenu :index="item.M0004_URL" v-if="item.M0005_STATE==='1'||item.M0005_STATE===1">
-
-                <template v-if="item.M0004_CHILD.length > 0 &&!['我的桌面', '大数据分析'].includes(item.M0004_NAME)">
+              <!-- <i class="ri-home-4-fill" v-if="item.M0004_NAME==='我的桌面' || item.M0004_NAME==='大数据分析'"></i> -->
+              <el-submenu
+                :index="item.M0004_URL"
+                v-if="item.M0005_STATE === '1' || item.M0005_STATE === 1"
+              >
+                <template
+                  v-if="
+                    item.M0004_CHILD.length > 0 &&
+                      !['我的桌面', '大数据分析'].includes(item.M0004_NAME)
+                  "
+                >
                   <template slot="title" style="width:50%;text-align:left;">
-                    <i class="ri-user-fill" style='font-size:25px;color:white;margin-right:10px'></i>
+                    <i
+                      class="ri-user-fill"
+                      style="font-size:25px;color:white;margin-right:10px"
+                      v-if="item.M0004_NAME === '个人中心'"
+                    ></i>
+                    <i
+                      class="ri-money-dollar-circle-line"
+                      style="font-size:25px;color:white;margin-right:10px"
+                      v-if="item.M0004_NAME === '养护费用'"
+                    ></i>
+                    <i
+                      class="ri-money-dollar-circle-fill"
+                      style="font-size:25px;color:white;margin-right:10px"
+                      v-if="item.M0004_NAME === '日常费用'"
+                    ></i>
+                    <i
+                      class="ri-equalizer-line"
+                      style="font-size:25px;color:white;margin-right:10px"
+                      v-if="item.M0004_NAME === '资产技术等级'"
+                    ></i>
+                    <i
+                      class="ri-money-pound-circle-fill"
+                      style="font-size:25px;color:white;margin-right:10px"
+                      v-if="item.M0004_NAME === '公路资产'"
+                    ></i>
+                    <i
+                      class="ri-menu-line"
+                      style="font-size:25px;color:white;margin-right:10px"
+                      v-if="item.M0004_NAME === '基础数据'"
+                    ></i>
+                    <i
+                      class="ri-settings-5-line"
+                      style="font-size:25px;color:white;margin-right:10px"
+                      v-if="item.M0004_NAME === '系统配置'"
+                    ></i>
                     <span style="font-size:16px;">{{ item.M0004_NAME }}</span>
                   </template>
                   <el-menu-item
@@ -45,12 +86,26 @@
                     style="font-size:14px;"
                   >
                     <!-- <span style="margin-left:50px">{{ subItem.M0004_NAME }}</span> -->
-                    <span v-if="subItem.M0005_STATE==='1'||subItem.M0005_STATE===1">{{ subItem.M0004_NAME }}</span>
+                    <span
+                      v-if="
+                        subItem.M0005_STATE === '1' || subItem.M0005_STATE === 1
+                      "
+                      >{{ subItem.M0004_NAME }}</span
+                    >
                   </el-menu-item>
                 </template>
                 <template slot="title" v-else>
                   <el-menu-item :index="item.M0004_URL">
-                    <i class="ri-home-4-fill" style='font-size:25px;color:white;margin-right:10px' v-if="item.M0004_NAME==='我的桌面' || item.M0004_NAME==='大数据分析'"></i>
+                    <i
+                      class="ri-home-4-fill"
+                      style="font-size:25px;color:white;margin-right:10px"
+                      v-if="item.M0004_NAME === '我的桌面'"
+                    ></i>
+                    <i
+                      class="ri-reserved-fill"
+                      style="font-size:25px;color:white;margin-right:10px"
+                      v-if="item.M0004_NAME === '大数据分析'"
+                    ></i>
                     <span style="font-size:16px;">{{ item.M0004_NAME }}</span>
                   </el-menu-item>
                 </template>
@@ -65,7 +120,9 @@
         <el-row>
           <el-col :span="18">
             <span
-              >欢迎光临高速公路全生命周期管理平台，当前时间：{{ currentTime }}</span
+              >欢迎光临高速公路全生命周期管理平台，当前时间：{{
+                currentTime
+              }}</span
             >
           </el-col>
           <el-col :span="6" class="tools">
@@ -113,7 +170,7 @@
 import 'remixicon/fonts/remixicon.css'
 import { routes1, routes2 } from '../router/index.js'
 export default {
-  data () {
+  data() {
     return {
       form: {
         userName: 'admin',
@@ -130,25 +187,38 @@ export default {
       pathitem: '',
       menulist1: [],
       menulist2: [],
-      menuType: ''
+      menuType: '',
+      M0018_ID: ''
     }
   },
-  mounted () {
+  mounted() {
     this.getMenu()
     this.timer()
     this.changeActive()
+    this.refreshTable()
     // this.defaultActiveMenu = '/workBanch'
     if (sessionStorage.getItem('currentUser').TokenId === null) {
       this.$router.push('/')
     }
     this.currentUser = JSON.parse(sessionStorage.getItem('currentUser'))
+    this.M0018_ID = this.currentUser.UserMap.M0018_ID
+    console.log(this.currentUser.UserMap.M0018_ID)
   },
-  created () {
-  },
+  created() {},
   methods: {
-    timer () {
+    refreshTable() {
+      this.$api.post(
+        '/cycle/userManagement/listAll',
+        { M0018_ID: this.M0018_ID },
+        null,
+        r => {
+          console.log(r)
+        }
+      )
+    },
+    timer() {
       let that = this
-      setInterval(function () {
+      setInterval(function() {
         that.currentTime = // 修改数据date
           new Date().getFullYear() +
           '-' +
@@ -163,17 +233,17 @@ export default {
           new Date().getSeconds()
       }, 1000)
     },
-    logout () {
+    logout() {
       //   this.$api.post('user/logout', null, '您已退出登录', r => {
       this.$router.push('/')
       //   })
     },
-    handleSelect (key) {
+    handleSelect(key) {
       if (this.$route.path !== key) {
         this.$router.push({ path: key })
       }
     },
-    findKid (currentItem, list, pItem = {}) {
+    findKid(currentItem, list, pItem = {}) {
       currentItem.M0004_CHILD = []
       if (
         !currentItem.M0004_URL &&
@@ -194,7 +264,7 @@ export default {
         }
       })
     },
-    findPath (name, pName, list, listName) {
+    findPath(name, pName, list, listName) {
       let result = ''
       for (const rt of list) {
         if (name === rt.name && (!pName || pName === listName)) {
@@ -208,7 +278,7 @@ export default {
       }
       return result
     },
-    getMenu () {
+    getMenu() {
       // 写死的菜单
       // let menuData = [
       //   { id: '1', name: '我的桌面', icon: '', url: '/workBanch', lvl: '1', children: [], isNotFinal: false },
@@ -243,10 +313,12 @@ export default {
       this.menulist1 = this.menuList.filter(v => {
         return v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1
       })
-      if (parseInt(this.menuType) === 1) { // 分公司
+      if (parseInt(this.menuType) === 1) {
+        // 分公司
         this.routes = routes1
       }
-      if (parseInt(this.menuType) === 0) { // 集团公司
+      if (parseInt(this.menuType) === 0) {
+        // 集团公司
         this.routes = routes2
       }
       try {
@@ -256,7 +328,11 @@ export default {
         for (const v of this.menulist1) {
           if (v.M0005_STATE === 1 || v.M0005_STATE === '1') {
             // this.$router.push((v.M0004_CHILD && v.M0004_CHILD.length > 0) ? v.M0004_CHILD[0].M0004_URL : v.M0004_URL)
-            if (v.M0004_CHILD && v.M0004_CHILD.length > 0 && v.M0004_CHILD[0].M0004_URL) {
+            if (
+              v.M0004_CHILD &&
+              v.M0004_CHILD.length > 0 &&
+              v.M0004_CHILD[0].M0004_URL
+            ) {
               this.$router.push(v.M0004_CHILD[0].M0004_URL)
             } else {
               // eslint-disable-next-line no-unused-expressions
@@ -297,10 +373,10 @@ export default {
       // console.log(this.defaultActiveMenu)
       // })
     },
-    changeActive () {
+    changeActive() {
       let that = this
       this.$nextTick(() => {
-        this.$bus.$on('changeActMenu', function (text) {
+        this.$bus.$on('changeActMenu', function(text) {
           that.defaultActiveMenu = text
           // console.log(that.defaultActiveMenu)
         })
@@ -311,91 +387,89 @@ export default {
 </script>
 
 <style>
-  .el-container{
-    width:100%;
-    height:100%;
-  }
-  .el-header{
-    background-image: linear-gradient(to right,#1FB5AC, #32323c);
-    padding-top:15px !important;
-    color:#ffffff;
-    font-size:14px;
-  }
+.el-container {
+  width: 100%;
+  height: 100%;
+}
+.el-header {
+  background-image: linear-gradient(to right, #1fb5ac, #32323c);
+  padding-top: 15px !important;
+  color: #ffffff;
+  font-size: 14px;
+}
+.el-aside {
+  height: 100%;
+  background-color: #32323c;
+  width: 300px;
+}
+@media screen and (max-width: 1600px) {
   .el-aside {
-    height:100%;
-    background-color:#32323c;
-    width:300px;
+    width: 200px;
   }
-  @media screen and ( max-width: 1600px ){
-     .el-aside {
-      width:200px;
-    }
-  }
-  .el-scrollbar__wrap{
-    overflow-x: hidden !important;
-  }
-  .title{
-    padding-top:20px;
-    height:70px;
-    text-align:center;
-    font-size:23px;
-    color:#ffffff;
-  }
-  .el-menu {
-    width:100%;
-    text-align:center;
-    border-right: solid 0px !important;
-  }
-  .el-submenu .el-menu-item{
-    border-top:1px solid #44444A;
-    border-bottom:1px solid #44444A;
-    font-size:14px;
-  }
-  .el-menu-item.is-active {
-    background-color: rgba(0, 0, 0, .4) !important;
-    color:#ffffff !important;
-  }
-  .userBack{
-    padding-top:9px;
-    width: 100%;
-    height: 138px;
-    text-align:center;
-    background-image: url('../assets/avatarback.png');
-  }
-  .userWel{
-    height:20px;
-    text-align:center;
-    color:#ffffff;
-    font-size:12px;
-  }
-  .userDesc{
-    padding:10px;
-    height:40px;
-    text-align:center;
-    margin-bottom:20px;
-  }
-  .local{
-    width:100%;
-    padding:15px 30px;
-    margin-bottom:20px;
-    border-bottom:1px solid #4CC3A5;
-    font-size:14px;
-    font-weight:bolder;
-    color:#909399;
-  }
-
-  .tools{
-    text-align:right;
-  }
-  .el-submenu .el-menu-item {
-    border-top: none;
-    border-bottom: none;
-    padding:0 !important;
-
 }
-.el-menu{
-  text-align:left;
-  margin-left:55px !important;
+.el-scrollbar__wrap {
+  overflow-x: hidden !important;
+}
+.title {
+  padding-top: 20px;
+  height: 70px;
+  text-align: center;
+  font-size: 23px;
+  color: #ffffff;
+}
+.el-menu {
+  width: 100%;
+  text-align: center;
+  border-right: solid 0px !important;
+}
+.el-submenu .el-menu-item {
+  border-top: 1px solid #44444a;
+  border-bottom: 1px solid #44444a;
+  font-size: 14px;
+}
+.el-menu-item.is-active {
+  background-color: rgba(0, 0, 0, 0.4) !important;
+  color: #ffffff !important;
+}
+.userBack {
+  padding-top: 9px;
+  width: 100%;
+  height: 138px;
+  text-align: center;
+  background-image: url('../assets/avatarback.png');
+}
+.userWel {
+  height: 20px;
+  text-align: center;
+  color: #ffffff;
+  font-size: 12px;
+}
+.userDesc {
+  padding: 10px;
+  height: 40px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.local {
+  width: 100%;
+  padding: 15px 30px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #4cc3a5;
+  font-size: 14px;
+  font-weight: bolder;
+  color: #909399;
 }
 
+.tools {
+  text-align: right;
+}
+.el-submenu .el-menu-item {
+  border-top: none;
+  border-bottom: none;
+  padding: 0 !important;
+}
+.el-menu {
+  text-align: left;
+  margin-left: 55px !important;
+}
 </style>

@@ -543,8 +543,8 @@ export default {
       let e = window.event
       this.M0003ID = id
       this.manStyle = {
-        left: e.clientX - 280 + 'px',
-        top: e.clientY - 150 + 'px'
+        left: e.clientX - 360 + 'px',
+        top: e.clientY - 115 + 'px'
       }
       this.$api.post(
         '/cycle/roleGroupMember/addList?M0003_ID=' + id,
@@ -604,8 +604,8 @@ export default {
       this.managerDialog = false
       let e = window.event
       this.checkStyle = {
-        left: e.clientX - 280 + 'px',
-        top: e.clientY - 150 + 'px'
+        left: e.clientX - 360 + 'px',
+        top: e.clientY - 110 + 'px'
       }
       this.$api.post(
         '/cycle/roleGroupMember/lookList?M0003_ID=' + row.M0003_ID,
@@ -643,7 +643,7 @@ export default {
     width: 300px;
     box-shadow: 0 0 5px #bbb;
     padding: 20px 0 20px 20px;
-    background-color: rgb(221, 253, 247);
+    background-color: #f5f5f5 !important;
   }
   #checkbox_item {
     height: 24px;
@@ -656,13 +656,13 @@ export default {
     width: 300px;
     box-shadow: 0 0 5px #bbb;
     padding: 20px 0 20px 20px;
-    background-color: rgb(221, 253, 247);
+    background-color: #f5f5f5 !important;
   }
   #chMans span {
     display: inline-block;
     margin: 3px 10px;
-    font-size: 18px;
-    color: #333;
+    font-size: 14px !important;
+    color: #666 !important;
     height: 24px;
     line-height: 24px;
   }

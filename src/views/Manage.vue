@@ -239,7 +239,7 @@ export default {
       //   this.$api.post('user/logout', null, '您已退出登录', r => {
       // this.$router.push('/')
       //   })
-      this.$confirm('确定退出登录?', '提示', {
+      this.$confirm('您是否确定退出?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

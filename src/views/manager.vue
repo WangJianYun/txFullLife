@@ -144,9 +144,8 @@
                     <el-input
                       type="text"
                       v-model="form.M0014_SIMP_NAME"
-                      :disabled="islook"
+                      :disabled="islook || isedit"
                       @change="isHaveName"
-                      :readonly="isedit"
                       style="width:200px;"
                     ></el-input>
                   </el-form-item>
@@ -160,8 +159,7 @@
                       type="text"
                       v-model="form.M0014_USER_NAME"
                       size="small"
-                      :disabled="islook"
-                      :readonly="isedit"
+                      :disabled="islook || isedit"
                       style="width:200px;"
                     ></el-input>
                   </el-form-item>
@@ -189,6 +187,7 @@
                       v-model="Expassword"
                       size="small"
                       :disabled="islook"
+                      show-password
                       style="width:200px;"
                     ></el-input>
                   </el-form-item>
@@ -297,6 +296,7 @@
 </template>
 
 <script>
+import { Message } from 'element-ui'
 export default {
   data() {
     return {
@@ -468,6 +468,7 @@ export default {
               // } else {
               // this.form.M0014_IS_AVTIVE = 0
               // }
+              console.log(this.form)
               this.$api.post(
                 '/cycle/userManagement/insert',
                 this.form,
@@ -496,7 +497,12 @@ export default {
               )
             }
           } else {
-            alert('密码不一致')
+            // alert('密码不一致')
+            Message({
+              showClose: true,
+              message: '密码不一致',
+              type: 'warning'
+            })
             return false
           }
         } else {
@@ -514,7 +520,7 @@ export default {
       }
       if (type === 'edit') {
         this.isCheck = true
-        this.isedit = 'readonly'
+        this.isedit = true
         this.Expassword = ''
 
         // if (row.M0014_IS_AVTIVE === 1) {

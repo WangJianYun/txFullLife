@@ -120,6 +120,8 @@ export default {
             // })
           })
         } else {
+          this.isload = false
+          this.isdisabled = false
           return false
         }
       })
@@ -173,7 +175,7 @@ export default {
   }
 }
 .login-form {
-  width: 80%;
+  width: 70%;
   margin: 0 auto;
   min-height: 200px;
   background-color: #ffffff;

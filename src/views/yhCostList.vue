@@ -160,7 +160,7 @@
           >
           </el-table-column>
           <el-table-column
-            prop="T0005_COSTBUDGET_TIME"
+            prop="T0005_START_TIME"
             label="费用发生时间"
             width="120"
           >
@@ -218,9 +218,15 @@
       custom-class="dialog-div"
     >
       <el-row :gutter="10">
-        <el-form label-position="right" label-width="80px" :model="addSearch">
+        <el-form
+          label-position="right"
+          label-width="80px"
+          :model="addSearch"
+          :rules="rules1"
+          ref="searchForm"
+        >
           <el-col :span="5">
-            <el-form-item label="资产类别">
+            <el-form-item label="资产类别" prop="T0001_ID">
               <el-select
                 v-model="addSearch.T0001_ID"
                 style="width:100%"
@@ -275,7 +281,7 @@
           </el-col>
         </el-form>
       </el-row>
-      <p style="padding:10px">
+      <p style="padding:20px 10px">
         您的检索：<span v-show="!isAddSearch"> 无 </span>
         <span> {{ addSearchVal }} </span>
       </p>
@@ -411,7 +417,7 @@
       :close-on-click-modal="false"
       custom-class="dialog-div"
     >
-      <el-row :gutter="10">
+      <!-- <el-row :gutter="10">
         <el-form label-position="right" label-width="80px" :model="addSearch">
           <el-col :span="5">
             <el-form-item label="资产类别">
@@ -468,11 +474,11 @@
             <el-button @click="addReset" size="small">重置</el-button>
           </el-col>
         </el-form>
-      </el-row>
-      <p style="padding:10px">
+      </el-row> -->
+      <!-- <p style="padding:10px">
         您的检索： <span v-show="!isAddSearch"> 无 </span>
         <span> {{ addSearchVal }} </span>
-      </p>
+      </p> -->
       <el-form :model="editForm" :rules="rules" ref="editFormRef">
         <table class="add-table">
           <tr>
@@ -483,6 +489,7 @@
                   v-model="editForm.T0002_ID"
                   style="width:100%"
                   size="small"
+                  disabled="true"
                 >
                   <el-option
                     v-for="item in assetDataList"
@@ -706,6 +713,11 @@ export default {
         time: []
       },
       // 表单验证规则
+      rules1: {
+        T0001_ID: [
+          { required: true, message: '请选择资产类别', trigger: 'change' }
+        ]
+      },
       rules: {
         T0002_ID: [
           { required: true, message: '请选择资产', trigger: 'change' }
@@ -848,6 +860,7 @@ export default {
       this.addReset()
       this.$nextTick(() => {
         this.$refs['addFormRef'].resetFields()
+        this.$refs['searchForm'].resetFields()
       })
       this.$api.post(`/cycle/utilData/getId`, {}, null, r => {
         this.dataParams.ID = r.data
@@ -893,14 +906,23 @@ export default {
     },
     // 新建保存
     addSaveFun() {
-      this.$refs['addFormRef'].validate(valid => {
-        if (valid) {
-          this.addForm.T0005_START_TIME = this.addForm.time[0]
-          this.addForm.T0005_END_TIME = this.addForm.time[1]
-          this.$api.post('/cycle/costBudget/insert', this.addForm, null, r => {
-            this.$message.success('新增成功')
-            this.getCostBudgetList()
-            this.addShow = false
+      this.$refs['searchForm'].validate(vaild => {
+        if (vaild) {
+          this.$refs['addFormRef'].validate(valid => {
+            if (valid) {
+              this.addForm.T0005_START_TIME = this.addForm.time[0]
+              this.addForm.T0005_END_TIME = this.addForm.time[1]
+              this.$api.post(
+                '/cycle/costBudget/insert',
+                this.addForm,
+                null,
+                r => {
+                  this.$message.success('新增成功')
+                  this.getCostBudgetList()
+                  this.addShow = false
+                }
+              )
+            }
           })
         }
       })

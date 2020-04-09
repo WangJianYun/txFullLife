@@ -350,9 +350,9 @@
                 <el-radio :label="2">支出</el-radio>
               </el-radio-group>
             </td>
-            <td class="bg-td">归属时间：</td>
+            <td class="bg-td">费用发生时间：</td>
             <td>
-              <el-form-item prop="T0004_CREATE_TIME">
+              <el-form-item prop="T0004_CURINGCOST_TIME">
                 <el-date-picker
                   v-model="addForm.T0004_CREATE_TIME"
                   type="date"
@@ -430,7 +430,7 @@
       :close-on-click-modal="false"
       custom-class="dialog-div"
     >
-      <el-row :gutter="10">
+      <!-- <el-row :gutter="10">
         <el-form label-position="right" label-width="80px" :model="addSearch">
           <el-col :span="5">
             <el-form-item label="资产类别">
@@ -492,7 +492,7 @@
         您的检索：
         <span v-show="!isAddSearch"> 无 </span>
         <span> {{ addSearchVal }} </span>
-      </p>
+      </p> -->
       <el-form :model="editForm" :rules="rules" ref="editFormRef">
         <table class="add-table">
           <tr>
@@ -503,6 +503,7 @@
                   v-model="editForm.T0002_ID"
                   style="width:100%"
                   size="small"
+                  disabled="true"
                 >
                   <el-option
                     v-for="item in assetDataList"
@@ -545,11 +546,11 @@
                 <el-radio :label="2">支出</el-radio>
               </el-radio-group>
             </td>
-            <td class="bg-td">归属时间：</td>
+            <td class="bg-td">费用发生时间：</td>
             <td>
               <el-form-item prop="T0004_CREATE_TIME">
                 <el-date-picker
-                  v-model="editForm.T0004_CREATE_TIME"
+                  v-model="editForm.T0004_CURINGCOST_TIME"
                   type="date"
                   size="small"
                   style="width:100%"
@@ -648,9 +649,9 @@
           <td>
             {{ infoForm.T0004_CURINGCOST_TYPE }}
           </td>
-          <td class="bg-td">归属时间：</td>
+          <td class="bg-td">费用发生时间：</td>
           <td>
-            {{ infoForm.T0004_CREATE_TIME }}
+            {{ infoForm.T0004_CURINGCOST_TIME }}
           </td>
         </tr>
         <tr>

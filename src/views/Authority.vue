@@ -228,6 +228,7 @@
         </div>
       </el-dialog>
     </el-row>
+    <!-- 添加管理员弹窗 -->
     <div id="managers" v-if="managerDialog" :style="manStyle">
       <span
         class="el-icon-close"
@@ -244,10 +245,11 @@
         </div>
       </el-checkbox-group>
     </div>
+    <!-- 查看权限组成员弹框 -->
     <div id="checkMans" v-if="checkMans" :style="checkStyle">
       <span
         class="el-icon-close"
-        style="position:absolute;right:5px;top:5px;cursor:pointer;background:#ffffff"
+        style="position:absolute;right:5px;top:5px;cursor:pointer;"
         @click="closeCheck"
       ></span>
       <div id="chMans" v-for="item in this.list" :key="item.index">
@@ -651,10 +653,10 @@ export default {
   }
   #checkMans {
     position: absolute;
-    width: 250px;
+    width: 300px;
     box-shadow: 0 0 5px #bbb;
-    padding: 16px 0 16px 16px;
-    background-color: #fff;
+    padding: 20px 0 20px 20px;
+    background-color: rgb(221, 253, 247);
   }
   #chMans span {
     display: inline-block;

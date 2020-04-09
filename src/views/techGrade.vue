@@ -18,6 +18,7 @@
                 v-model="searchMap.T0001_ID"
                 style="width:100%"
                 @change="changeSelect"
+                size="small"
               >
                 <el-option
                   v-for="item in assetTypeList"
@@ -30,7 +31,7 @@
           </el-col>
           <el-col :span="4">
             <el-form-item label="等级选择">
-              <el-select v-model="searchMap.T0006_ID" style="width:100%">
+              <el-select v-model="searchMap.T0006_ID" style="width:100%" size="small">
                 <el-option
                   v-for="item in techTypeList"
                   :key="item.T0006_ID"
@@ -45,6 +46,7 @@
               <el-select
                 v-model="searchMap.T0002_START_PILE"
                 style="width:100%"
+                size="small"
               >
                 <el-option
                   v-for="item in pileList"
@@ -57,7 +59,7 @@
           </el-col>
           <el-col :span="4">
             <el-form-item label="终点桩号">
-              <el-select v-model="searchMap.T0002_END_PILE" style="width:100%">
+              <el-select v-model="searchMap.T0002_END_PILE" style="width:100%" size="small">
                 <el-option
                   v-for="item in pileList"
                   :key="item.T0002_ID"
@@ -73,6 +75,7 @@
                 style="width:100%"
                 v-model="searchMap.YEAR"
                 type="year"
+                size="small"
               >
               </el-date-picker>
             </el-form-item>
@@ -88,7 +91,7 @@
       <div class="div-btn">
         <!-- <el-button type="primary" @click="searchFun">搜索</el-button>
         <el-button @click="reset">重置</el-button> -->
-        <el-button type="primary" icon="el-icon-delete" @click="delListFun"
+        <el-button type="primary" icon="el-icon-delete" @click="delListFun" size="small"
           >批量删除</el-button
         >
         <span class="serach-span">
@@ -348,7 +351,6 @@
                   v-model="addForm.T0006_ID"
                   style="width:100%"
                   size="small"
-                  v-if="searchTechTypeList.length > 0"
                 >
                   <el-option
                     v-for="item in searchTechTypeList"
@@ -524,7 +526,7 @@
                   v-model="editForm.T0002_ID"
                   style="width:100%"
                   size="small"
-                  disabled="true"
+                  disabled="disabled"
                 >
                   <el-option
                     v-for="item in assetDataList"
@@ -542,8 +544,7 @@
                   v-model="editForm.T0006_ID"
                   style="width:100%"
                   size="small"
-                  disabled="true"
-                  v-if="searchTechTypeList.length > 0"
+                  disabled="disabled"
                 >
                   <!-- <el-select
                   v-model="editForm.T0006_ID"
@@ -934,7 +935,7 @@ export default {
     reset() {
       this.searchVal = ''
       this.isSearch = false
-      this.pileList = []
+      // this.pileList = []
       this.searchMap.T0001_ID = ''
       this.searchMap.YEAR = ''
       this.searchMap.T0006_ID = ''
@@ -1108,6 +1109,7 @@ export default {
         searchMap: this.searchMap
       }
       this.$api.post(`/cycle/techData/listPage`, _data, null, r => {
+        console.log(r)
         this.loading = false
         for (let i = 0; i < r.data.returnParam.length; i++) {
           if (r.data.returnParam[i].files.length > 0) {
@@ -1273,6 +1275,7 @@ export default {
 </script>
 <style lang="scss">
 .techgrade-wrap {
+  .add-table tr td{padding:5px 0!important;}
   .el-dialog__header {
     background: #f5f5f5;
   }

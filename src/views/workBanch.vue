@@ -3,7 +3,7 @@
     <div id="mkDialog">
       <div id="mkBox">
         <span class="el-icon-close close" @click="closeMk"></span>
-        <p class="mkTitle" style="width:100%;text-align:center;font-size:18px;margin-bottom:20px;">
+        <p class="mkTitle" style="width:100%;text-align:center;font-size:18px;margin-bottom:20px;background:#f5f5f5;line-height:40px;height:40px;">
           土桥
         </p>
         <table class="fgstb">
@@ -62,7 +62,7 @@
           </tr>
         </table>
 
-        <p style="text-indent:2rem;margin:20px 0;" class="remark">
+        <p style="text-indent:2rem;margin:20px auto;font-size:14px;line-height:26px;width:96%;" class="remark">
           土桥铜川市合凤高速南部塬区，建筑年代2015年，建设单位：*****建筑公司，属二类技术等级桥梁。
         </p>
         <table class="bdtable" id="techLevel">
@@ -86,7 +86,7 @@
         <table class="bdtable" id="fgsCost">
           <thead>
             <tr>
-              <th>日常费用盈余（万元）</th>
+              <th style="min-width:160px;">日常费用盈余（万元）</th>
               <th>收入（万元）</th>
               <th>支出（万元）</th>
               <th>年份</th>
@@ -106,7 +106,7 @@
         <table class="bdtable" id="dailyCost">
           <thead>
             <tr>
-              <th>日常费用（万元）</th>
+              <th style="min-width:130px;">日常费用（万元）</th>
               <th>收入</th>
               <th>支出</th>
               <th>年份</th>
@@ -126,7 +126,7 @@
         <table class="bdtable" id="yhCost">
           <thead>
             <tr>
-              <th>养护费用（万元）</th>
+              <th style="min-width:130px;">养护费用（万元）</th>
               <th>年份</th>
               <th>基本明细（万元）</th>
               <th>详细</th>
@@ -281,7 +281,7 @@
             <table style="border-collapse: collapse;">
               <thead>
                 <tr>
-                  <th colspan="2" style="background:rgb(141,172,90);color:#fff;">图例</th>
+                  <th colspan="2" style="background:#f0f0f0;">图例</th>
                 </tr>
               </thead>
               <tbody>
@@ -319,7 +319,7 @@
         </div>
       </el-row>
     </el-main>
-    <el-row>
+    <el-row id="assetsWrap">
       <el-col :span="12">
         <el-main>
           <el-row class="itemTh">
@@ -629,7 +629,7 @@ export default {
     return {
       mapShow: false, // 地图是否显示
       mapData: {
-        zoom: 12, // 当前地图缩放比列
+        zoom: 10, // 当前地图缩放比列
         position: [],
         title: [],
         contentRender: (h, instance) => {
@@ -642,7 +642,7 @@ export default {
           )
         }
       },
-      astZoom: 12,
+      astZoom: 10,
       astCenter: [108.860159, 34.978],
       locationDialog: false,
       loclZoom: 10,
@@ -1034,11 +1034,11 @@ export default {
         this.portDialog = true
         this.imgUrl = img
         if(type==='1'){
-          this.portName = row.name+'--报告'
+          this.portName = row.name+'--报告查看'
         }else if(type==='2'){
-          this.portName = row.name+'--票据'
+          this.portName = row.name+'--票据查看'
         }else{
-          this.portName = row.name+'--票据'
+          this.portName = row.name+'--票据查看'
         }
       } else {
         Message({
@@ -1213,9 +1213,9 @@ export default {
 <style lang="scss">
 #workBanck{
   position: relative;
-  .el-dialog__header{background: rgb(64, 158, 255);}
-  .el-dialog__title{color:#FFF;}
-  .el-dialog__headerbtn .el-dialog__close{color: #fff;}
+  .el-dialog__header{background: #f5f5f5;}
+  // .el-dialog__title{color:#FFF;}
+  // .el-dialog__headerbtn .el-dialog__close{color: #fff;}
   .el-select-dropdown__wrap {
     margin-bottom: 0 !important;
   }
@@ -1225,7 +1225,10 @@ export default {
   .el-main {
     background: #fff;
     margin: 15px 10px;
+    
   }
+  #assetsWrap .el-main{height: 391px;}
+  .el-table th, .el-table td{padding: 8px 0;}
   #topItems .el-col-4 {
     width: 20%;
   }
@@ -1346,7 +1349,7 @@ export default {
     left: 25%;
     top: 80px;
     box-shadow: 0 0 5px #bbb;
-    padding: 8px;
+    // padding: 8px;
   }
   @media screen and (max-width: 1400px) {
     #mkDialog #mkBox {
@@ -1387,7 +1390,7 @@ export default {
     border-top: 1px solid #bbb;
     border-left: 1px solid #bbb;
     border-collapse: collapse;
-    margin-bottom: 20px;
+    margin:0 auto 20px auto;
   }
   #mkDialog #mkBox .bdtable th,
   #mkDialog #mkBox .bdtable td {
@@ -1397,13 +1400,14 @@ export default {
     padding: 5px 8px;
     font-size: 14px;
   }
+  table thead th{background: #f5f5f5;}
   #techLevel th,
   #techLevel td {
     min-width: 146px;
   }
   #dailyCost th,
   #dailyCost td {
-    min-width: 114px;
+    min-width: 113px;
   }
   #yhCost th,
   #yhCost td {
@@ -1411,7 +1415,7 @@ export default {
   }
   #fgsCost th,
   #fgsCost td {
-    min-width: 110px;
+    min-width: 106px;
   }
   .el-table .cell {
     text-overflow: clip !important;

@@ -18,6 +18,7 @@
                 v-model="searchMap.T0001_ID"
                 style="width:100%"
                 @change="changeSelect"
+                size="small"
               >
                 <el-option
                   v-for="item in assetTypeList"
@@ -33,6 +34,7 @@
               <el-select
                 v-model="searchMap.T0002_START_PILE"
                 style="width:100%"
+                size="small"
               >
                 <el-option
                   v-for="item in pileList"
@@ -45,7 +47,8 @@
           </el-col>
           <el-col :span="4">
             <el-form-item label="终点桩号">
-              <el-select v-model="searchMap.T0002_END_PILE" style="width:100%">
+              <el-select v-model="searchMap.T0002_END_PILE" style="width:100%" 
+                size="small">
                 <el-option
                   v-for="item in pileList"
                   :key="item.T0002_ID"
@@ -62,6 +65,7 @@
                 v-model="searchMap.YEAR"
                 type="year"
                 value-format="yyyy"
+                size="small"
               >
               </el-date-picker>
             </el-form-item>
@@ -71,6 +75,7 @@
               <el-input
                 placeholder="请输入关键字"
                 v-model="searchMap.SEARCH_KEY"
+                size="small"
               >
               </el-input>
             </el-form-item>
@@ -86,7 +91,7 @@
       <div class="div-btn">
         <!-- <el-button type="primary" @click="searchFun">搜索</el-button>
         <el-button @click="reset">重置</el-button> -->
-        <el-button type="primary" icon="el-icon-delete" @click="delListFun"
+        <el-button type="primary" icon="el-icon-delete" @click="delListFun" size="small"
           >批量删除</el-button
         >
         <span class="serach-span">
@@ -1252,6 +1257,7 @@ export default {
 </script>
 <style lang="scss">
 .assets-wrap {
+  .add-table tr td{padding:5px 0!important;}
   .el-dialog__header {
     background: #f5f5f5;
   }

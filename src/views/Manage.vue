@@ -46,38 +46,43 @@
                   <template slot="title" style="width:50%;text-align:left;">
                     <i
                       class="ri-user-fill"
-                      style="font-size:25px;color:white;margin-right:10px"
+                      style="font-size:25px;color:white;margin-right:10px;margin-left:40px;"
                       v-if="item.M0004_NAME === '个人中心'"
                     ></i>
                     <i
                       class="ri-money-dollar-circle-line"
-                      style="font-size:25px;color:white;margin-right:10px"
+                      style="font-size:25px;color:white;margin-right:10px;margin-left:40px;"
                       v-if="item.M0004_NAME === '养护费用'"
                     ></i>
                     <i
                       class="ri-money-dollar-circle-fill"
-                      style="font-size:25px;color:white;margin-right:10px"
+                      style="font-size:25px;color:white;margin-right:10px;margin-left:40px;"
                       v-if="item.M0004_NAME === '日常费用'"
                     ></i>
                     <i
                       class="ri-equalizer-line"
-                      style="font-size:25px;color:white;margin-right:10px"
+                      style="font-size:25px;color:white;margin-right:10px;margin-left:40px;"
                       v-if="item.M0004_NAME === '资产技术等级'"
                     ></i>
                     <i
                       class="ri-money-pound-circle-fill"
-                      style="font-size:25px;color:white;margin-right:10px"
+                      style="font-size:25px;color:white;margin-right:10px;margin-left:40px;"
                       v-if="item.M0004_NAME === '公路资产'"
                     ></i>
                     <i
                       class="ri-menu-line"
-                      style="font-size:25px;color:white;margin-right:10px"
+                      style="font-size:25px;color:white;margin-right:10px;margin-left:40px;"
                       v-if="item.M0004_NAME === '基础数据'"
                     ></i>
                     <i
                       class="ri-settings-5-line"
-                      style="font-size:25px;color:white;margin-right:10px"
+                      style="font-size:25px;color:white;margin-right:10px;margin-left:40px;"
                       v-if="item.M0004_NAME === '系统配置'"
+                    ></i>
+                    <i
+                      class="ri-community-line"
+                      style="font-size:25px;color:white;margin-right:10px;margin-left:40px;"
+                      v-if="item.M0004_NAME === '下属单位管理'"
                     ></i>
                     <span style="font-size:16px;">{{ item.M0004_NAME }}</span>
                   </template>
@@ -89,6 +94,7 @@
                   >
                     <!-- <span style="margin-left:50px">{{ subItem.M0004_NAME }}</span> -->
                     <span
+                      style="text-indent:5rem;display:inline-block;"
                       v-if="
                         subItem.M0005_STATE === '1' || subItem.M0005_STATE === 1
                       "
@@ -239,7 +245,7 @@ export default {
       //   this.$api.post('user/logout', null, '您已退出登录', r => {
       // this.$router.push('/')
       //   })
-      this.$confirm('您是否确定退出?', '提示', {
+      this.$confirm('确定退出登录?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -428,14 +434,14 @@ export default {
 }
 .el-menu {
   width: 100%;
-  text-align: center;
+  text-align: left;
   border-right: solid 0px !important;
 }
-.el-submenu .el-menu-item {
+/* .el-submenu .el-menu-item {
   border-top: 1px solid #44444a;
   border-bottom: 1px solid #44444a;
   font-size: 14px;
-}
+} */
 .el-menu-item.is-active {
   background-color: rgba(0, 0, 0, 0.4) !important;
   color: #ffffff !important;
@@ -475,13 +481,11 @@ export default {
 .el-submenu .el-menu-item {
   border-top: none;
   border-bottom: none;
-  padding-left: 100px !important;
+  /* padding-left: 0px !important; */
 }
-.el-submenu__title {
-  padding-left: 50px !important;
-}
-.el-menu {
-  text-align: left;
-  /* margin-left: 55px !important; */
-}
+/* .el-submenu__title {
+  padding: 0 0 0 30px !important;
+} */
+/* .el-menu .el-submenu .el-menu-item{padding-left:30px!important;}
+.el-menu .el-submenu .el-submenu__title{padding-left:30px;} */
 </style>

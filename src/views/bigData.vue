@@ -682,6 +682,7 @@ export default {
                 // height: {totalHeight} - y - y2,
                 sort: 'ascending',
                 gap: 2,
+                height:'240px',
                 label: {
                   normal: {
                     show: true,

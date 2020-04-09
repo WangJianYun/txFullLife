@@ -191,9 +191,14 @@
         ></el-pagination>
       </div>
       <div class="content">
-        <table class="table-title add-table">
+        <table class="table-title add-table" style="color:#999">
           <tr>
-            <td colspan="2" style="text-align:center;">小贴士</td>
+            <td
+              colspan="2"
+              style="text-align:center;background: #f0f0f0;font-size:16px"
+            >
+              小贴士
+            </td>
           </tr>
           <tr>
             <td class="title-info">收费站等级</td>
@@ -204,10 +209,10 @@
           <tr>
             <td class="title-info">桥梁技术等级</td>
             <td>
-              <p>
+              <p style="line-height:30px">
                 桥梁技术状况等级分为五类，分别为一类、二类、三类、四类、五类。
               </p>
-              <p>
+              <p style="line-height:30px">
                 （1）一类桥梁为全新状态，功能完善。（2）二类桥梁为有轻微缺损，对桥梁使用功能无影响。（3）三类桥梁为有中等缺损，尚能维持正常使用功能。（4）四类桥梁为主要构件有大的缺损，严重影响桥梁使用功能，或影响承载能力，不能保证正常使用。（5）五类桥梁为主要构件存在严重缺损，不能正常使用，危及桥梁安全，桥梁处于危险状态。
               </p>
             </td>

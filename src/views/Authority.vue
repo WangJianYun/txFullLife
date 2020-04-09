@@ -534,7 +534,7 @@ export default {
           console.log(err)
         })
     },
-
+    // 新增管理员
     addManager(id) {
       this.managerDialog = true
       this.checkMans = false

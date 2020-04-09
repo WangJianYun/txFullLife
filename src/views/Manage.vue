@@ -3,7 +3,7 @@
     <el-aside>
       <el-scrollbar style="height:100%">
         <el-row class="title">
-          <span>全生命周期管理平台</span>
+          <span>高速公路全寿命周期智能管理平台</span>
         </el-row>
         <el-row>
           <div class="userBack">
@@ -12,7 +12,9 @@
         </el-row>
         <el-row>
           <div class="userWel">
-            <span>尊敬的用户、{{ currentUser.UserName }}：您好！</span>
+            <span
+              >尊敬的铜旬分公司管理员、{{ currentUser.UserName }}：您好！</span
+            >
           </div>
         </el-row>
         <el-row>
@@ -120,7 +122,7 @@
         <el-row>
           <el-col :span="18">
             <span
-              >欢迎光临高速公路全生命周期管理平台，当前时间：{{
+              >欢迎光临高速公路全寿命周期智能管理平台，当前时间：{{
                 currentTime
               }}</span
             >
@@ -235,8 +237,15 @@ export default {
     },
     logout() {
       //   this.$api.post('user/logout', null, '您已退出登录', r => {
-      this.$router.push('/')
+      // this.$router.push('/')
       //   })
+      this.$confirm('确定退出登录?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$router.push('/')
+      })
     },
     handleSelect(key) {
       if (this.$route.path !== key) {
@@ -411,8 +420,8 @@ export default {
   overflow-x: hidden !important;
 }
 .title {
-  padding-top: 20px;
-  height: 70px;
+  padding: 20px;
+  height: 90px;
   text-align: center;
   font-size: 23px;
   color: #ffffff;
@@ -466,10 +475,13 @@ export default {
 .el-submenu .el-menu-item {
   border-top: none;
   border-bottom: none;
-  padding: 0 !important;
+  padding-left: 100px !important;
+}
+.el-submenu__title {
+  padding-left: 50px !important;
 }
 .el-menu {
   text-align: left;
-  margin-left: 55px !important;
+  /* margin-left: 55px !important; */
 }
 </style>

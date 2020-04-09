@@ -212,9 +212,9 @@
         ></el-pagination>
       </div>
       <div>
-        <table class="table-title add-table">
+        <table class="table-title add-table" style="color:#999">
           <tr>
-            <td class="bg-td" colspan="2">小贴士</td>
+            <td class="bg-td" colspan="2" style="font-size:16px">小贴士</td>
           </tr>
           <tr>
             <td class="title-info">收费站等级</td>
@@ -225,10 +225,10 @@
           <tr>
             <td class="title-info">桥梁技术等级</td>
             <td>
-              <p>
+              <p style="line-height:30px">
                 桥梁技术状况等级分为五类，分别为一类、二类、三类、四类、五类。
               </p>
-              <p>
+              <p style="line-height:30px">
                 （1）一类桥梁为全新状态，功能完善。（2）二类桥梁为有轻微缺损，对桥梁使用功能无影响。（3）三类桥梁为有中等缺损，尚能维持正常使用功能。（4）四类桥梁为主要构件有大的缺损，严重影响桥梁使用功能，或影响承载能力，不能保证正常使用。（5）五类桥梁为主要构件存在严重缺损，不能正常使用，危及桥梁安全，桥梁处于危险状态。
               </p>
             </td>
@@ -537,6 +537,11 @@
                   size="small"
                   v-if="searchTechTypeList.length > 0"
                 >
+                  <!-- <el-select
+                  v-model="editForm.T0006_ID"
+                  style="width:100%"
+                  size="small"
+                > -->
                   <el-option
                     v-for="item in searchTechTypeList"
                     :key="item.T0006_ID"
@@ -974,6 +979,7 @@ export default {
       })
       // 选中 资产类别 查找对应 技术等级分类
       this.$api.post(`/cycle/techType/listAll`, _data, null, r => {
+        console.log(r.data)
         this.searchTechTypeList = r.data
       })
     },

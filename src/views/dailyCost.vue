@@ -230,9 +230,15 @@
       custom-class="dialog-div"
     >
       <el-row :gutter="10">
-        <el-form label-position="right" label-width="80px" :model="addSearch">
+        <el-form
+          label-position="right"
+          label-width="80px"
+          :model="addSearch"
+          :rules="rules1"
+          ref="searchForm"
+        >
           <el-col :span="5">
-            <el-form-item label="资产类别">
+            <el-form-item label="资产类别" prop="T0001_ID">
               <el-select
                 v-model="addSearch.T0001_ID"
                 style="width:100%"
@@ -287,7 +293,7 @@
           </el-col>
         </el-form>
       </el-row>
-      <p style="padding:10px">
+      <p style="padding:20px 10px">
         您的检索：
         <span v-show="!isAddSearch"> 无 </span>
         <span> {{ addSearchVal }} </span>
@@ -413,9 +419,8 @@
         </table>
       </el-form>
       <div slot="footer" class="dialog-footer">
-         <el-button type="primary" @click="addSaveFun">确 定</el-button>
+        <el-button type="primary" @click="addSaveFun">确 定</el-button>
         <el-button @click="addShow = false">取 消</el-button>
-       
       </div>
     </el-dialog>
     <!-- 修改 -->
@@ -476,12 +481,14 @@
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-button type="primary" @click="addSearchFun" size="small">搜索</el-button>
+            <el-button type="primary" @click="addSearchFun" size="small"
+              >搜索</el-button
+            >
             <el-button @click="addReset" size="small">重置</el-button>
           </el-col>
         </el-form>
       </el-row>
-      <p style="padding:10px">
+      <p style="padding:20px 10px">
         您的检索：
         <span v-show="!isAddSearch"> 无 </span>
         <span> {{ addSearchVal }} </span>
@@ -609,7 +616,6 @@
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="editSaveFun">确 定</el-button>
         <el-button @click="editShow = false">取 消</el-button>
-        
       </div>
     </el-dialog>
     <!-- 查看 -->
@@ -735,6 +741,11 @@ export default {
         T0004_CURINGCOST_REMARK: ''
       },
       // 表单验证规则
+      rules1: {
+        T0001_ID: [
+          { required: true, message: '请选择资产类别', trigger: 'change' }
+        ]
+      },
       rules: {
         T0002_ID: [
           { required: true, message: '请选择资产', trigger: 'change' }
@@ -872,6 +883,7 @@ export default {
       this.addReset()
       this.$nextTick(() => {
         this.$refs['addFormRef'].resetFields()
+        this.$refs['searchForm'].resetFields()
       })
       this.$api.post(`/cycle/utilData/getId`, {}, null, r => {
         this.dataParams.ID = r.data
@@ -915,12 +927,21 @@ export default {
     },
     // 新增保存
     addSaveFun() {
-      this.$refs['addFormRef'].validate(valid => {
+      this.$refs['searchForm'].validate(valid => {
         if (valid) {
-          this.$api.post('/cycle/curingCost/insert', this.addForm, null, r => {
-            this.$message.success('新增成功')
-            this.addShow = false
-            this.getCuringList()
+          this.$refs['addFormRef'].validate(valid => {
+            if (valid) {
+              this.$api.post(
+                '/cycle/curingCost/insert',
+                this.addForm,
+                null,
+                r => {
+                  this.$message.success('新增成功')
+                  this.addShow = false
+                  this.getCuringList()
+                }
+              )
+            }
           })
         }
       })

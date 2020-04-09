@@ -289,7 +289,7 @@
         </el-main>
         <div slot="footer" class="dialog-footer" v-show="isCheck">
           <el-button type="primary" @click="save" size="small">确认</el-button>
-          <el-button @click="resetDialog" size="small">提交</el-button>
+          <el-button @click="resetDialog" size="small">取消</el-button>
         </div>
       </el-dialog>
     </el-row>
@@ -368,7 +368,7 @@ export default {
           { pattern: /^[\u4E00-\u9FA5]+$/, message: '用户名只能为中文' }
         ],
         M0014_PASS_WORD: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
+          // { required: true, message: '请输入密码', trigger: 'blur' },
           { min: 6, max: 50, message: '长度在 6 到 50 个字符' },
           {
             pattern: /^(\w){6,50}$/,
@@ -515,7 +515,8 @@ export default {
       if (type === 'edit') {
         this.isCheck = true
         this.isedit = 'readonly'
-        this.Expassword = row.M0014_PASS_WORD
+        this.Expassword = ''
+
         // if (row.M0014_IS_AVTIVE === 1) {
         //   row.M0014_IS_AVTIVE = true
         // } else {
@@ -530,6 +531,7 @@ export default {
         }
         this.dialogName = '编辑管理员'
         this.form = row
+        this.form.M0014_PASS_WORD = ''
         this.dialogType = 'edit'
         // 把M0016_ID和M0015_ID存起来
         this.form.M0016_ID_PRE = this.form.M0016_ID
@@ -540,7 +542,8 @@ export default {
       }
       if (type === 'look') {
         this.isCheck = false
-        this.Expassword = row.M0014_PASS_WORD
+        this.Expassword = ''
+
         if (row.M0014_IS_AVTIVE === 1) {
           row.M0014_IS_AVTIVE = true
         } else {
@@ -548,6 +551,7 @@ export default {
         }
         this.dialogName = '查看部门'
         this.form = row
+        this.form.M0014_PASS_WORD = ''
         this.islook = true
       }
     },

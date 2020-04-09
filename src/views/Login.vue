@@ -2,7 +2,7 @@
   <div class="login-container">
     <div class="login-header"></div>
     <div class="container">
-      <div class="login-container-title">高速公路全生命周期管理平台</div>
+      <div class="login-container-title">高速公路全寿命周期智能管理平台</div>
       <div class="login-container-form">
         <h2>欢迎您，请登录</h2>
         <el-form

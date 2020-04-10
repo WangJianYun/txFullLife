@@ -918,7 +918,7 @@ export default {
       }
       this.searchMap.T0002_START_PILE = ''
       this.searchMap.T0002_END_PILE = ''
-      this.$api.post('/cycle/assetData/listAll', _data, null, r => {
+      this.$api.post('/cycle/assetData/getPileList', _data, null, r => {
         this.pileList = r.data
       })
     },

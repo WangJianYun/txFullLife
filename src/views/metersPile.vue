@@ -415,7 +415,7 @@
           </td>
           <td class="bg-td">所属路段：</td>
           <td>
-            {{ infoForm.M0010_LOAD_NAME }}
+            {{ infoForm.M0009_LOAD_NAME }}
           </td>
         </tr>
         <tr>
@@ -623,6 +623,7 @@ export default {
     },
     // 点击查看
     handleInfo(data) {
+      console.log(data)
       this.infoShow = true
       if (data.M0009_PILENUMBER_DREICT === 1) {
         data.M0009_PILENUMBER_DREICT = '上行线'

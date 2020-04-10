@@ -18,6 +18,7 @@
                 v-model="searchMap.T0001_ID"
                 style="width:100%"
                 @change="changeSelect"
+                size="small"
               >
                 <el-option
                   v-for="item in assetTypeList"
@@ -33,6 +34,7 @@
               <el-select
                 v-model="searchMap.T0004_CURINGCOST_TYPE"
                 style="width:100%"
+                size="small"
               >
                 <el-option
                   v-for="item in curincostList"
@@ -48,6 +50,7 @@
               <el-select
                 v-model="searchMap.T0002_START_PILE"
                 style="width:100%"
+                size="small"
               >
                 <el-option
                   v-for="item in pileList"
@@ -60,7 +63,8 @@
           </el-col>
           <el-col :span="4">
             <el-form-item label="终点桩号">
-              <el-select v-model="searchMap.T0002_END_PILE" style="width:100%">
+              <el-select v-model="searchMap.T0002_END_PILE" style="width:100%" 
+                size="small">
                 <el-option
                   v-for="item in pileList"
                   :key="item.T0002_ID"
@@ -74,6 +78,7 @@
             <el-form-item label="起止日期">
               <el-date-picker
                 style="width:100%"
+                size="small"
                 v-model="searchMap.time"
                 type="daterange"
                 range-separator="至"
@@ -96,6 +101,7 @@
         <!-- <el-button type="primary" @click="searchFun">搜索</el-button>
         <el-button @click="reset">重置</el-button> -->
         <el-button type="primary" icon="el-icon-delete" @click="delListFun"
+                size="small"
           >批量删除</el-button
         >
         <span class="serach-span">
@@ -503,7 +509,7 @@
                   v-model="editForm.T0002_ID"
                   style="width:100%"
                   size="small"
-                  disabled="true"
+                  disabled="disabled"
                 >
                   <el-option
                     v-for="item in assetDataList"
@@ -950,6 +956,12 @@ export default {
     // 获取资产类别 list
     getAssetTypeList() {
       this.$api.post(`/cycle/assetType/listAll`, {}, null, r => {
+        // console.log(r)
+        r.data.forEach(ele=>{
+          if(ele.T0001_PID!=='0'){
+            ele.T0001_ASSETTYPE_NAME = '--'+ele.T0001_ASSETTYPE_NAME
+          }
+        })
         this.assetTypeList = r.data
       })
     },
@@ -1148,6 +1160,7 @@ export default {
 </script>
 <style lang="scss">
 #dailycost {
+  .add-table tr td{padding:5px 10px!important;}
   .el-dialog__header {
     background: #f5f5f5;
   }
@@ -1208,7 +1221,7 @@ export default {
       border: 1px solid #dcdfe6;
       td {
         border: 1px solid #dcdfe6;
-        padding: 15px 10px;
+        padding: 8px 10px;
       }
     }
     .bg-td {

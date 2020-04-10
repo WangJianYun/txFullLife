@@ -285,7 +285,7 @@ export default {
       checkStyle: { left: 0, top: 0 },
       form: {
         M0003_NAME: '',
-        M0003_DATA_STATE: false,
+        M0003_DATA_STATE: true,
         M0003_DISP_NAME: '',
         M0004_ID: '',
         M0004_NAME: '',
@@ -295,7 +295,7 @@ export default {
         M0004_LEVEL: 1,
         M0005_STATE: '',
         M0004_CHILD: [],
-        M0018_ID: '',
+        M0018_ID: ''
       },
       listPromision: [],
       permisionListData: [],
@@ -319,9 +319,9 @@ export default {
       checked: false,
       rules: {
         M0003_NAME: [
-          { required: true, message: '请输入权限组名称', trigger: 'blur' },
-        ],
-      },
+          { required: true, message: '请输入权限组名称', trigger: 'blur' }
+        ]
+      }
     }
   },
   mounted() {
@@ -345,7 +345,7 @@ export default {
         currentItem.M0005_STATE === '1' || currentItem.M0005_STATE === 1
           ? true
           : false
-      list.forEach((v) => {
+      list.forEach(v => {
         if (currentItem.M0004_ID === v.M0004_PID) {
           if (v.M0004_LEVEL !== 3 && v.M0004_LEVEL !== '3' && !v.M0004_CHILD) {
             this.findChild(v, list)
@@ -357,14 +357,14 @@ export default {
     setTableForm(send) {
       // 无send表示发送前，有send表示发送后
       this.listPromision = []
-      this.permisionListData.forEach((v) => {
+      this.permisionListData.forEach(v => {
         if (v.M0004_CHILD && v.M0004_CHILD.length > 0) {
-          v.M0004_CHILD.forEach((v1) => {
+          v.M0004_CHILD.forEach(v1 => {
             if (!send) {
               v1.tableForm = []
             }
             if (v1.M0004_CHILD && v1.M0004_CHILD.length > 0) {
-              v1.M0004_CHILD.forEach((v2) => {
+              v1.M0004_CHILD.forEach(v2 => {
                 if (!send && (v2.M0005_STATE === '1' || v2.M0005_STATE === 1)) {
                   v1.tableForm.push(v2.M0004_NAME)
                 }
@@ -385,11 +385,11 @@ export default {
       const path = `/cycle/roleGroupManagement/${
         id ? 'getPermissionByRoleId?ID=' + id : 'getPermission'
       }`
-      this.$api.post(path, { M0018_ID: this.form.M0018_ID }, null, (r) => {
+      this.$api.post(path, { M0018_ID: this.form.M0018_ID }, null, r => {
         this.permisionListData = r.data.filter(
-          (v) => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1
+          v => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1
         )
-        this.permisionListData.forEach((v) => {
+        this.permisionListData.forEach(v => {
           this.findChild(v, r.data)
         })
         this.setTableForm()
@@ -401,23 +401,16 @@ export default {
       let _data = {
         currentPage: this.currentPage,
         showCount: this.showCount,
-        searchMap: { M0018_ID: this.form.M0018_ID },
+        searchMap: { M0018_ID: this.form.M0018_ID }
       }
-      this.$api.post(
-        '/cycle/roleGroupManagement/listPage',
-        _data,
-        null,
-        (r) => {
-          this.dpData = r.data.returnParam
-          this.dpData.forEach((v) => {
-            v.isBlue = !!(
-              v.M0003_DATA_STATE === '1' || v.M0003_DATA_STATE === 1
-            )
-          })
-          console.log(this.dpData)
-          this.total = r.data.totalResult
-        }
-      )
+      this.$api.post('/cycle/roleGroupManagement/listPage', _data, null, r => {
+        this.dpData = r.data.returnParam
+        this.dpData.forEach(v => {
+          v.isBlue = !!(v.M0003_DATA_STATE === '1' || v.M0003_DATA_STATE === 1)
+        })
+        console.log(this.dpData)
+        this.total = r.data.totalResult
+      })
     },
     save() {
       this.form.M0018_ID = sessionStorage.getItem('id')
@@ -427,13 +420,13 @@ export default {
         M0003_DISP_NAME: this.form.M0003_DISP_NAME,
         M0001_ID_UPDATE: JSON.parse(sessionStorage.getItem('currentUser'))
           .UserMap.CM_M0001_ID,
-        M0003_NAME: this.form.M0003_NAME,
+        M0003_NAME: this.form.M0003_NAME
       }
       this.data = {
         mapParam: this.itemData,
-        permissionList: this.listPromision,
+        permissionList: this.listPromision
       }
-      this.$refs['form'].validate((v) => {
+      this.$refs['form'].validate(v => {
         if (v) {
           if (this.dialogType === 'add') {
             this.itemData.CREATOR = JSON.parse(
@@ -447,7 +440,7 @@ export default {
               '/cycle/roleGroupManagement/insert',
               this.data,
               '新增成功',
-              (r) => {
+              r => {
                 this.closeDialog()
                 this.refreshTable()
               }
@@ -459,7 +452,7 @@ export default {
               '/cycle/roleGroupManagement/updateSelective',
               this.data,
               '修改成功',
-              (r) => {
+              r => {
                 this.closeDialog()
                 this.refreshTable()
               }
@@ -519,27 +512,27 @@ export default {
     closeDialog() {
       this.$refs['form'].resetFields()
       this.disVisible = false
-      this.islook = false
       this.form = {}
+      this.form.M0003_DATA_STATE = true
       this.data = ''
     },
     deleteRow(index, row) {
       this.$confirm('确认删除？此操作不可取消', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning',
+        type: 'warning'
       })
         .then(() => {
           this.$api.post(
             '/cycle/roleGroupManagement/deleteById?ID=' + row.M0003_ID,
             {},
             '删除成功',
-            (r) => {
+            r => {
               this.refreshTable(1)
             }
           )
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err)
         })
     },
@@ -551,17 +544,17 @@ export default {
       this.M0003ID = id
       this.manStyle = {
         left: e.clientX - 360 + 'px',
-        top: e.clientY - 115 + 'px',
+        top: e.clientY - 115 + 'px'
       }
       this.$api.post(
         '/cycle/roleGroupMember/addList?M0003_ID=' + id,
         {},
         null,
-        (r) => {
+        r => {
           this.mans = []
           this.everyManager = []
           this.manList = r.data
-          this.manList.forEach((item) => {
+          this.manList.forEach(item => {
             this.mans.push(item) // 成员
             if (item.STATE === '1') {
               this.everyManager.push(item.NAME) // 选中状态成员
@@ -576,7 +569,7 @@ export default {
     },
     editManger(data) {
       // 判断是添加还是取消管理员
-      this.mans.forEach((v) => {
+      this.mans.forEach(v => {
         if (this.everyManager.includes(v.NAME)) {
           if (v.STATE === 0 || v.STATE === '0') {
             this.diff = v
@@ -600,7 +593,7 @@ export default {
         '/cycle/roleGroupMember/update',
         this.diff,
         this.tip,
-        (r) => {
+        r => {
           this.refreshTable(1)
         }
       )
@@ -612,13 +605,13 @@ export default {
       let e = window.event
       this.checkStyle = {
         left: e.clientX - 360 + 'px',
-        top: e.clientY - 110 + 'px',
+        top: e.clientY - 110 + 'px'
       }
       this.$api.post(
         '/cycle/roleGroupMember/lookList?M0003_ID=' + row.M0003_ID,
         {},
         null,
-        (r) => {
+        r => {
           this.list = r.data.list
         }
       )
@@ -626,8 +619,8 @@ export default {
     closeCheck() {
       this.checkMans = false
       this.managerDialog = false
-    },
-  },
+    }
+  }
 }
 </script>
 <style lang="scss">

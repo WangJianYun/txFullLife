@@ -352,17 +352,19 @@
                   prop="name"
                   label="资产名称"
                   align="center"
+                  width="120"
                 >
                 </el-table-column>
                 <el-table-column
                   prop="zh"
                   label="起终点桩号"
                   align="center"
+                  width="120"
                 >
                 </el-table-column>
                 <el-table-column
                   prop="num"
-                  label="数量(片/个/座)"
+                  label="数量"
                   align="center"
                 >
                 </el-table-column>
@@ -381,9 +383,10 @@
                   prop="year"
                   label="归属年份"
                   align="center"
+                  width="120"
                 >
                 </el-table-column>
-                <el-table-column label="位置" align="center">
+                <el-table-column label="位置" align="center" width="70">
                   <template slot-scope="scope">
                     <i
                       class="el-icon-location"

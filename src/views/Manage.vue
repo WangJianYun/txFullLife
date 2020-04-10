@@ -17,7 +17,11 @@
         </el-row>
         <el-row>
           <div class="userWel">
-            <span>尊敬的铜旬分公司管理员：{{ currentUser.UserName }}</span>
+            <span
+              >尊敬的{{ currentUser.COMPANY_NAME }}管理员：{{
+                currentUser.UserName
+              }}</span
+            >
           </div>
         </el-row>
         <el-row>
@@ -185,7 +189,7 @@ export default {
     return {
       form: {
         userName: 'admin',
-        password: '1',
+        password: '1'
       },
       menuOptions: [],
       defaultActiveMenu: '',
@@ -199,7 +203,7 @@ export default {
       menulist1: [],
       menulist2: [],
       menuType: '',
-      M0018_ID: '',
+      M0018_ID: ''
     }
   },
   mounted() {
@@ -251,7 +255,7 @@ export default {
       this.$confirm('确定退出登录?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning',
+        type: 'warning'
       }).then(() => {
         this.$router.push('/')
       })
@@ -273,7 +277,7 @@ export default {
           this.routes
         )
       }
-      list.forEach((v) => {
+      list.forEach(v => {
         if (currentItem.M0004_ID === v.M0004_PID) {
           if (v.M0004_LEVEL !== 3 && v.M0004_LEVEL !== '3' && !v.M0004_CHILD) {
             this.findKid(v, list, currentItem)
@@ -328,7 +332,7 @@ export default {
       // this.$api.post('/cycle/roleGroupManagement/getMenuList', { 'M0018_ID': sessionStorage.getItem('id') }, '成功', r => {
       //   this.menuList = r.data
       // 根据menuType来判断是集团公司还是分公司菜单
-      this.menulist1 = this.menuList.filter((v) => {
+      this.menulist1 = this.menuList.filter(v => {
         return v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1
       })
       if (parseInt(this.menuType) === 1) {
@@ -340,7 +344,7 @@ export default {
         this.routes = routes2
       }
       try {
-        this.menulist1.forEach((v) => {
+        this.menulist1.forEach(v => {
           this.findKid(v, this.menuList)
         })
         for (const v of this.menulist1) {
@@ -399,8 +403,8 @@ export default {
           // console.log(that.defaultActiveMenu)
         })
       })
-    },
-  },
+    }
+  }
 }
 </script>
 

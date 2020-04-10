@@ -11,7 +11,7 @@
     </p>
     <div class="content">
       <el-row :gutter="0">
-        <el-form label-position="right" label-width="30%" :model="searchMap">
+        <el-form label-position="right" label-width="80px" :model="searchMap">
           <el-col :span="4">
             <el-form-item label="资产类别">
               <el-select
@@ -83,7 +83,7 @@
               </el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="4" style="padding-top:4px;padding-left:5px">
+          <el-col :span="4" style="padding-top:4px;padding-left:10px">
             <el-button type="primary" @click="searchFun" size="small"
               >搜索</el-button
             >

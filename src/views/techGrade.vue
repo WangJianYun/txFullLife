@@ -11,7 +11,7 @@
     </p>
     <div class="content">
       <el-row :gutter="0">
-        <el-form label-position="right" label-width="30%" :model="searchMap">
+        <el-form label-position="right" label-width="80px" :model="searchMap">
           <el-col :span="4">
             <el-form-item label="资产类别">
               <el-select

@@ -11,14 +11,14 @@
     </p>
     <div class="content">
       <el-row :gutter="0">
-        <el-form label-position="right" label-width="30%" :model="searchMap">
+        <el-form label-position="right" label-width="80px" :model="searchMap">
           <el-col :span="4">
             <el-form-item label="资产类别">
               <el-select
                 v-model="searchMap.T0001_ID"
                 style="width:100%"
                 @change="changeSelect"
-                size="medium "
+                size="small"
               >
                 <el-option
                   v-for="item in assetTypeList"
@@ -34,7 +34,7 @@
               <el-select
                 v-model="searchMap.T0005_ENGIN_MAINT"
                 style="width:100%"
-                size="medium "
+                size="small"
               >
                 <el-option
                   v-for="item in projectList"
@@ -50,7 +50,7 @@
               <el-select
                 v-model="searchMap.T0002_START_PILE"
                 style="width:100%"
-                size="medium "
+                size="small"
               >
                 <el-option
                   v-for="item in pileList"
@@ -66,7 +66,7 @@
               <el-select
                 v-model="searchMap.T0002_END_PILE"
                 style="width:100%"
-                size="medium "
+                size="small"
               >
                 <el-option
                   v-for="item in pileList"
@@ -77,10 +77,10 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="5">
             <el-form-item label="起止日期">
               <el-date-picker
-                size="medium "
+                size="small"
                 style="width:100%"
                 v-model="searchMap.time"
                 type="daterange"
@@ -93,7 +93,7 @@
             </el-form-item>
           </el-col>
 
-          <el-col :span="2" style="padding-top:4px;margin-left:5px">
+          <el-col :span="3" style="padding-top:4px;margin-left:10px">
             <el-button type="primary" @click="searchFun" size="small"
               >搜索</el-button
             >
@@ -106,7 +106,7 @@
           type="primary"
           icon="el-icon-delete"
           @click="delListFun"
-          size="medium "
+          size="small"
           >批量删除</el-button
         >
         <span class="serach-span">
@@ -1145,6 +1145,9 @@ export default {
 </script>
 <style lang="scss">
 #yhCostMap {
+  .el-select--small {
+    width: 80% !important;
+  }
   .el-dialog__header {
     background: #f5f5f5;
   }

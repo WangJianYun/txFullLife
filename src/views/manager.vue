@@ -601,6 +601,11 @@ export default {
         null,
         (r) => {
           this.mechans = r.data
+          r.data.forEach((item, index) => {
+            if (item.M0016_PID !== '0') {
+              item.M0016_DEPART_NAME = '-- ' + item.M0016_DEPART_NAME
+            }
+          })
         }
       )
       this.$api.post(

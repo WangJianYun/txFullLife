@@ -15,7 +15,7 @@
             <el-form-item label="所属路段">
               <el-select
                 v-model="dataParam.M0010_LOAD_NAME"
-                size="medium "
+                size="small"
                 @change="changeSelect"
               >
                 <el-option
@@ -32,7 +32,7 @@
               <el-select
                 v-model="dataParam.M0010_START_PILE"
                 style="width:100%"
-                size="medium "
+                size="small"
               >
                 <el-option
                   v-for="item in pileList"
@@ -48,7 +48,7 @@
               <el-select
                 v-model="dataParam.M0010_END_PILE"
                 style="width:100%"
-                size="medium "
+                size="small"
               >
                 <el-option
                   v-for="item in pileList"
@@ -66,7 +66,7 @@
                 v-model="dataParam.YEAR"
                 type="year"
                 value-format="yyyy"
-                size="medium "
+                size="small"
               >
               </el-date-picker>
             </el-form-item>
@@ -76,7 +76,7 @@
               <el-input
                 placeholder="请输入关键字"
                 v-model="dataParam.SEARCH_KEY"
-                size="medium "
+                size="small"
               >
               </el-input>
             </el-form-item>
@@ -90,7 +90,11 @@
         </el-form>
       </el-row>
       <div class="div-btn">
-        <el-button type="primary" icon="el-icon-delete" @click="delListFun"
+        <el-button
+          type="primary"
+          icon="el-icon-delete"
+          @click="delListFun"
+          size="small"
           >批量删除</el-button
         >
         <span class="serach-span">

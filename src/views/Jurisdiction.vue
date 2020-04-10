@@ -15,7 +15,7 @@
           <el-select
             v-model="searchMap.M0010_LOAD_NAME"
             placeholder="请选择"
-            size="medium "
+            size="small"
           >
             <el-option
               v-for="(item, index) in listNameList"
@@ -34,7 +34,11 @@
         </el-form-item>
       </el-form>
       <p class="div-btn">
-        <el-button type="primary" icon="el-icon-delete" @click="delListFun"
+        <el-button
+          type="primary"
+          icon="el-icon-delete"
+          @click="delListFun"
+          size="small"
           >批量删除</el-button
         >
         <span class="serach-span">

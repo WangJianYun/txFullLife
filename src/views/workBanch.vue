@@ -3,7 +3,10 @@
     <div id="mkDialog">
       <div id="mkBox">
         <span class="el-icon-close close" @click="closeMk"></span>
-        <p class="mkTitle" style="width:100%;text-align:center;font-size:18px;margin-bottom:20px;background:#f5f5f5;line-height:40px;height:40px;">
+        <p
+          class="mkTitle"
+          style="width:100%;text-align:center;font-size:18px;margin-bottom:20px;background:#f5f5f5;line-height:40px;height:40px;"
+        >
           土桥
         </p>
         <table class="fgstb">
@@ -62,7 +65,10 @@
           </tr>
         </table>
 
-        <p style="text-indent:2rem;margin:20px auto;font-size:14px;line-height:26px;width:96%;" class="remark">
+        <p
+          style="text-indent:2rem;margin:20px auto;font-size:14px;line-height:26px;width:96%;"
+          class="remark"
+        >
           土桥铜川市合凤高速南部塬区，建筑年代2015年，建设单位：*****建筑公司，属二类技术等级桥梁。
         </p>
         <table class="bdtable" id="techLevel">
@@ -210,8 +216,8 @@
       </el-row>
     </el-main>
     <el-main>
-      <el-row style="margin-bottom:20px;" :gutter="10">
-        <el-col :span="4">
+      <el-row style="margin-bottom:20px;" :gutter="0">
+        <el-col :span="5">
           <span class="mapSercLabel">资产类别 </span>
           <el-select
             v-model="condition.ASSET_TYPE_ID"
@@ -226,7 +232,7 @@
             ></el-option>
           </el-select>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="5">
           <span class="mapSercLabel">起点桩号 </span>
           <el-select
             v-model="condition.START_PILE"
@@ -241,7 +247,7 @@
             ></el-option>
           </el-select>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="5">
           <span class="mapSercLabel">终点桩号 </span>
           <el-select
             v-model="condition.END_PILE"
@@ -256,7 +262,7 @@
             ></el-option>
           </el-select>
         </el-col>
-        <el-col :span="4">
+        <el-col :span="5">
           <span class="mapSercLabel">归属年份 </span>
           <el-select v-model="condition.YEAR" size="small" style="width:70%">
             <el-option
@@ -267,11 +273,10 @@
             ></el-option>
           </el-select>
         </el-col>
-        
+
         <el-col :span="2">
-          
           <el-button type="primary" size="small" @click="changeMarkers"
-            >搜</el-button
+            >搜索</el-button
           >
         </el-col>
       </el-row>
@@ -345,21 +350,23 @@
                 </el-table-column>
                 <el-table-column
                   prop="name"
-                  width="140"
                   label="资产名称"
                   align="center"
                 >
                 </el-table-column>
-                <el-table-column prop="zh" label="起终点桩号" align="center">
-                </el-table-column>
                 <el-table-column
-                  prop="num"
-                  label="数量（个/座/片）"
-                  width="140"
+                  prop="zh"
+                  label="起终点桩号"
                   align="center"
                 >
                 </el-table-column>
-                <el-table-column label="图片" width="70" align="center">
+                <el-table-column
+                  prop="num"
+                  label="数量(片/个/座)"
+                  align="center"
+                >
+                </el-table-column>
+                <el-table-column label="图片" align="center">
                   <template slot-scope="scope">
                     <el-image
                       v-if="scope.row.pic.length > 0"
@@ -370,7 +377,11 @@
                     </el-image>
                   </template>
                 </el-table-column>
-                <el-table-column prop="year" label="归属年份" align="center">
+                <el-table-column
+                  prop="year"
+                  label="归属年份"
+                  align="center"
+                >
                 </el-table-column>
                 <el-table-column label="位置" align="center">
                   <template slot-scope="scope">
@@ -416,7 +427,7 @@
                       type="primary"
                       size="small"
                       :btitle="scope.row.report"
-                      @click="imgDialog(scope.row.report,scope.row,'1')"
+                      @click="imgDialog(scope.row.report, scope.row, '1')"
                       >报告查看</el-button
                     >
                   </template>
@@ -493,7 +504,7 @@
                       type="primary"
                       size="small"
                       :btitle="scope.row.bill"
-                      @click="imgDialog(scope.row.bill,scope.row,'2')"
+                      @click="imgDialog(scope.row.bill, scope.row, '2')"
                       >票据查看</el-button
                     >
                   </template>
@@ -552,7 +563,7 @@
                       type="primary"
                       size="small"
                       :btitle="scope.row.bill"
-                      @click="imgDialog(scope.row.bill,scope.row,'3')"
+                      @click="imgDialog(scope.row.bill, scope.row, '3')"
                       >票据查看</el-button
                     >
                   </template>
@@ -636,11 +647,11 @@ export default {
           return h(
             'div',
             {
-              style: { background: '#80cbc4', whiteSpace: 'nowrap' }
+              style: { background: '#80cbc4', whiteSpace: 'nowrap' },
             },
             this.mapData.title
           )
-        }
+        },
       },
       astZoom: 10,
       astCenter: [108.860159, 34.978],
@@ -651,7 +662,7 @@ export default {
       locMcenter: [108.860159, 34.978],
       loclabel: {
         content: '',
-        offset: [10, -20]
+        offset: [10, -20],
       },
       assAmap: false,
       portName: '',
@@ -664,7 +675,7 @@ export default {
         { id: '4', name: '互通立交', src: require('../assets/htlj.png') },
         { id: '5', name: '收费站', src: require('../assets/sfz.png') },
         { id: '6', name: '隧道', src: require('../assets/tenant.png') },
-        { id: '7', name: '涵洞', src: require('../assets/tunnel.png') }
+        { id: '7', name: '涵洞', src: require('../assets/tunnel.png') },
       ],
       astMarkers: [],
       zctypeArr: [],
@@ -765,7 +776,7 @@ export default {
                     .getElementsByClassName('remark')[0].innerText =
                     mkdt.COMPANY_INFO[0].M0018_COMPANY_REMARK
                   let trs = ''
-                  mkdt.CURING_COST.forEach(element => {
+                  mkdt.CURING_COST.forEach((element) => {
                     trs +=
                       '<tr><td>' +
                       (element.INCOME_MONEY - element.TOCOME_MONEY) +
@@ -903,14 +914,14 @@ export default {
               }
             }
           }
-        }
+        },
       },
       condition: {
         ASSET_TYPE_ID: '',
         START_PILE: '',
         END_PILE: '',
-        YEAR: ''
-      }
+        YEAR: '',
+      },
     }
   },
   mounted() {
@@ -922,7 +933,7 @@ export default {
   methods: {
     loadMarkers() {
       // let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
-      this.$api.post('/cycle/desktopData/getListAll', {}, null, r => {
+      this.$api.post('/cycle/desktopData/getListAll', {}, null, (r) => {
         // console.log(r)
         let marks = []
         r.ASSET_List.forEach(function(item, index) {
@@ -1000,7 +1011,7 @@ export default {
         '/cycle/desktopData/getListAll',
         this.condition,
         null,
-        r => {
+        (r) => {
           // console.log(r.ASSET_List)
           r.ASSET_List.forEach(function(item, index) {
             // console.log(item)
@@ -1028,23 +1039,23 @@ export default {
     closeMk() {
       document.getElementById('mkDialog').style.display = 'none'
     },
-    imgDialog(img,row,type) {
+    imgDialog(img, row, type) {
       console.log(img)
       if (img) {
         this.portDialog = true
         this.imgUrl = img
-        if(type==='1'){
-          this.portName = row.name+'--报告查看'
-        }else if(type==='2'){
-          this.portName = row.name+'--票据查看'
-        }else{
-          this.portName = row.name+'--票据查看'
+        if (type === '1') {
+          this.portName = row.name + '--报告查看'
+        } else if (type === '2') {
+          this.portName = row.name + '--票据查看'
+        } else {
+          this.portName = row.name + '--票据查看'
         }
       } else {
         Message({
           showClose: true,
           message: '无票据报告信息!!!',
-          type: 'warning'
+          type: 'warning',
         })
       }
     },
@@ -1056,7 +1067,7 @@ export default {
       this.locMcenter = [108.860159, 34.978]
       this.loclabel = {
         content: '',
-        offset: [10, -20]
+        offset: [10, -20],
       }
     },
     closeImgDialog() {
@@ -1065,7 +1076,7 @@ export default {
     },
     loadSelect() {
       // let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
-      this.$api.post('/cycle/assetData/listAll', {}, null, r => {
+      this.$api.post('/cycle/assetData/listAll', {}, null, (r) => {
         console.log(r)
         let arr1 = []
         let arr2 = []
@@ -1078,7 +1089,7 @@ export default {
         this.startzhArr = arr1
         this.endzhArr = arr2
       })
-      this.$api.post('/cycle/assetType/listAll', {}, null, r => {
+      this.$api.post('/cycle/assetType/listAll', {}, null, (r) => {
         this.zctypeArr = r.data
         console.log(this.zctypeArr)
         r.data.forEach((item, index) => {
@@ -1091,7 +1102,7 @@ export default {
     loadTableData() {
       // let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
       // console.log(token)
-      this.$api.post('/cycle/assetData/listPage', {}, null, r => {
+      this.$api.post('/cycle/assetData/listPage', {}, null, (r) => {
         console.log(r.data.returnParam)
         r.data.returnParam.forEach((item, index) => {
           // if (item.T0002_ASSET_NAME.indexOf('加油站') > -1) {
@@ -1129,7 +1140,7 @@ export default {
         })
         this.zcTable = r.data.returnParam.slice(0, 5)
       })
-      this.$api.post('/cycle/techData/listPage', {}, null, r => {
+      this.$api.post('/cycle/techData/listPage', {}, null, (r) => {
         // console.log(r)
         r.data.returnParam.forEach((item, index) => {
           if (!item.T0002_ASSET_NAME) item.T0002_ASSET_NAME = ''
@@ -1148,7 +1159,7 @@ export default {
         })
         this.techTable = r.data.returnParam.slice(0, 5)
       })
-      this.$api.post('/cycle/curingCost/listPage', {}, null, r => {
+      this.$api.post('/cycle/curingCost/listPage', {}, null, (r) => {
         // console.log(r)
         r.data.returnParam.forEach((item, index) => {
           if (!item.T0002_ASSET_NAME) item.T0002_ASSET_NAME = ''
@@ -1173,7 +1184,7 @@ export default {
         })
         this.dayliTable = r.data.returnParam.slice(0, 5)
       })
-      this.$api.post('/cycle/costBudget/listPage', {}, null, r => {
+      this.$api.post('/cycle/costBudget/listPage', {}, null, (r) => {
         // console.log(r)
         r.data.returnParam.forEach((item, index) => {
           if (!item.T0002_ASSET_NAME) item.T0002_ASSET_NAME = ''
@@ -1206,14 +1217,16 @@ export default {
         })
         this.conservTable = r.data.returnParam.slice(0, 5)
       })
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss">
-#workBanck{
+#workBanck {
   position: relative;
-  .el-dialog__header{background: #f5f5f5;}
+  .el-dialog__header {
+    background: #f5f5f5;
+  }
   // .el-dialog__title{color:#FFF;}
   // .el-dialog__headerbtn .el-dialog__close{color: #fff;}
   .el-select-dropdown__wrap {
@@ -1225,10 +1238,14 @@ export default {
   .el-main {
     background: #fff;
     margin: 15px 10px;
-    
   }
-  #assetsWrap .el-main{height: 391px;}
-  .el-table th, .el-table td{padding: 8px 0;}
+  #assetsWrap .el-main {
+    height: 391px;
+  }
+  .el-table th,
+  .el-table td {
+    padding: 8px 0;
+  }
   #topItems .el-col-4 {
     width: 20%;
   }
@@ -1371,7 +1388,7 @@ export default {
   }
   #mkDialog #mkBox table td.right {
     text-align: right;
-    min-width:100px;
+    min-width: 100px;
   }
   #mkDialog #mkBox table td.imgWrap {
     width: 55%;
@@ -1390,7 +1407,7 @@ export default {
     border-top: 1px solid #bbb;
     border-left: 1px solid #bbb;
     border-collapse: collapse;
-    margin:0 auto 20px auto;
+    margin: 0 auto 20px auto;
   }
   #mkDialog #mkBox .bdtable th,
   #mkDialog #mkBox .bdtable td {
@@ -1400,7 +1417,9 @@ export default {
     padding: 5px 8px;
     font-size: 14px;
   }
-  table thead th{background: #f5f5f5;}
+  table thead th {
+    background: #f5f5f5;
+  }
   #techLevel th,
   #techLevel td {
     min-width: 146px;
@@ -1421,5 +1440,4 @@ export default {
     text-overflow: clip !important;
   }
 }
-
 </style>

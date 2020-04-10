@@ -164,13 +164,28 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="T0003_CHECK_TIME" label="检测时间" width="140">
+          <el-table-column prop="T0003_CHECK_TIME" label="检测时间" width="180">
             <template slot-scope="scope">
               <div>
                 {{ scope.row.T0003_CHECK_TIME }}
-                <span class="wraning-span" v-if="scope.row.STATE == 1">
+                <span
+                  class="wraning-span"
+                  v-if="scope.row.STATE == 1"
+                  v-on:mouseover="changeActive($event)"
+                  v-on:mouseout="removeActive($event)"
+                >
                   检
                 </span>
+              </div>
+              <!-- 检字提示语 -->
+              <div
+                class="tip"
+                v-show="scope.row.STATE == 1 && isJian"
+                :style="tipPosition"
+              >
+                <span>{{ scope.row.T0001_ASSETTYPE_NAME }}</span>
+                <span>{{ scope.row.T0006_CHECK_YEAR }}</span
+                >年检测一次
               </div>
             </template>
           </el-table-column>
@@ -261,6 +276,7 @@
         </table>
       </div>
     </div>
+
     <!-- 新建 -->
     <el-dialog
       title=">> 新增资产技术等级"
@@ -827,6 +843,7 @@
 export default {
   data() {
     return {
+      isJian: false,
       imageList: [],
       imgShow: false,
       typeShow: false,
@@ -914,13 +931,29 @@ export default {
       isSearch: false, // 是否搜索
       searchVal: '', // 搜索内容
       addSearchVal: '', // 新建 修改搜索内容
-      isAddSearch: false, // 新建 修改 是否搜索
+      isAddSearch: false, // 新建 修改 是否搜索,
+      T0006_CHECK_YEAR: '',
+      tipPosition: {
+        left: '150px',
+        top: '0px',
+        position: 'absolute',
+        zIndex: 9999,
+      },
     }
   },
   methods: {
+    changeActive(e) {
+      console.log(e.clientX)
+      this.isJian = true
+      // this.tipPosition.left = e.clientX + 'px'
+      // this.tipPosition.top = e.clientY + 'px'
+    },
+    removeActive(e) {
+      this.isJian = false
+    },
     // 请求所有的起点 / 终点桩号
     assetDataFun() {
-      this.$api.post('/cycle/assetData/listAll', {}, null, (r) => {
+      this.$api.post('/cycle/assetData/getPileList', {}, null, (r) => {
         this.pileList = r.data
       })
     },
@@ -931,7 +964,7 @@ export default {
       }
       this.searchMap.T0002_START_PILE = ''
       this.searchMap.T0002_END_PILE = ''
-      this.$api.post('/cycle/assetData/listAll', _data, null, (r) => {
+      this.$api.post('/cycle/assetData/getPileList', _data, null, (r) => {
         this.pileList = r.data
       })
       this.$api.post(`/cycle/techType/listAll`, _data, null, (r) => {
@@ -1007,7 +1040,6 @@ export default {
       })
       // 选中 资产类别 查找对应 技术等级分类
       this.$api.post(`/cycle/techType/listAll`, _data, null, (r) => {
-        console.log(r.data)
         this.searchTechTypeList = r.data
       })
     },
@@ -1121,7 +1153,6 @@ export default {
         searchMap: this.searchMap,
       }
       this.$api.post(`/cycle/techData/listPage`, _data, null, (r) => {
-        console.log(r)
         this.loading = false
         for (let i = 0; i < r.data.returnParam.length; i++) {
           if (r.data.returnParam[i].files.length > 0) {
@@ -1137,6 +1168,7 @@ export default {
           }
         }
         this.tableData = r.data.returnParam
+        this.T0006_CHECK_YEAR = r.data.returnParam
         this.total = r.data.totalResult
         this.searchVal = r.search_val
       })
@@ -1287,6 +1319,14 @@ export default {
 </script>
 <style lang="scss">
 .techgrade-wrap {
+  .tip {
+    height: 30px;
+    width: 150px;
+    line-height: 30px;
+    border-radius: 3px;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
   .add-table tr td {
     padding: 5px 0 !important;
   }
@@ -1365,6 +1405,7 @@ export default {
       color: #fff;
       border-radius: 50%;
       padding: 1px 4px;
+      cursor: pointer;
     }
   }
   .dialog-div {

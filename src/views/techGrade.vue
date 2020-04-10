@@ -18,7 +18,7 @@
                 v-model="searchMap.T0001_ID"
                 style="width:100%"
                 @change="changeSelect"
-                size="medium "
+                size="small"
               >
                 <el-option
                   v-for="item in assetTypeList"
@@ -34,7 +34,7 @@
               <el-select
                 v-model="searchMap.T0006_ID"
                 style="width:100%"
-                size="medium "
+                size="small"
               >
                 <el-option
                   v-for="item in techTypeList"
@@ -50,7 +50,7 @@
               <el-select
                 v-model="searchMap.T0002_START_PILE"
                 style="width:100%"
-                size="medium "
+                size="small"
               >
                 <el-option
                   v-for="item in pileList"
@@ -66,7 +66,7 @@
               <el-select
                 v-model="searchMap.T0002_END_PILE"
                 style="width:100%"
-                size="medium "
+                size="small"
               >
                 <el-option
                   v-for="item in pileList"
@@ -83,7 +83,7 @@
                 style="width:100%"
                 v-model="searchMap.YEAR"
                 type="year"
-                size="medium "
+                size="small"
               >
               </el-date-picker>
             </el-form-item>
@@ -103,7 +103,7 @@
           type="primary"
           icon="el-icon-delete"
           @click="delListFun"
-          size="medium "
+          size="small"
           >批量删除</el-button
         >
         <span class="serach-span">

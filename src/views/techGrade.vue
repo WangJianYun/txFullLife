@@ -11,14 +11,14 @@
     </p>
     <div class="content">
       <el-row :gutter="0">
-        <el-form label-position="right" label-width="80px" :model="searchMap">
+        <el-form label-position="right" label-width="30%" :model="searchMap">
           <el-col :span="4">
             <el-form-item label="资产类别">
               <el-select
                 v-model="searchMap.T0001_ID"
                 style="width:100%"
                 @change="changeSelect"
-                size="small"
+                size="medium "
               >
                 <el-option
                   v-for="item in assetTypeList"
@@ -31,7 +31,11 @@
           </el-col>
           <el-col :span="4">
             <el-form-item label="等级选择">
-              <el-select v-model="searchMap.T0006_ID" style="width:100%" size="small">
+              <el-select
+                v-model="searchMap.T0006_ID"
+                style="width:100%"
+                size="medium "
+              >
                 <el-option
                   v-for="item in techTypeList"
                   :key="item.T0006_ID"
@@ -46,7 +50,7 @@
               <el-select
                 v-model="searchMap.T0002_START_PILE"
                 style="width:100%"
-                size="small"
+                size="medium "
               >
                 <el-option
                   v-for="item in pileList"
@@ -59,7 +63,11 @@
           </el-col>
           <el-col :span="4">
             <el-form-item label="终点桩号">
-              <el-select v-model="searchMap.T0002_END_PILE" style="width:100%" size="small">
+              <el-select
+                v-model="searchMap.T0002_END_PILE"
+                style="width:100%"
+                size="medium "
+              >
                 <el-option
                   v-for="item in pileList"
                   :key="item.T0002_ID"
@@ -75,12 +83,12 @@
                 style="width:100%"
                 v-model="searchMap.YEAR"
                 type="year"
-                size="small"
+                size="medium "
               >
               </el-date-picker>
             </el-form-item>
           </el-col>
-          <el-col :span="4" style="padding-left:10px;padding-top:4px">
+          <el-col :span="4" style="padding-left:10px;padding-top:3px">
             <el-button type="primary" @click="searchFun" size="small"
               >搜索</el-button
             >
@@ -91,13 +99,17 @@
       <div class="div-btn">
         <!-- <el-button type="primary" @click="searchFun">搜索</el-button>
         <el-button @click="reset">重置</el-button> -->
-        <el-button type="primary" icon="el-icon-delete" @click="delListFun" size="small"
+        <el-button
+          type="primary"
+          icon="el-icon-delete"
+          @click="delListFun"
+          size="medium "
           >批量删除</el-button
         >
         <span class="serach-span">
           您的检索：
-          <span v-show="!isSearch"> 无 </span>
-          <span> {{ searchVal }} </span>
+          <span v-show="!isSearch" style="font-size:12px;color:#999"> 无 </span>
+          <span style="font-size:12px;color:#999"> {{ searchVal }} </span>
         </span>
       </div>
       <div class="table-div">
@@ -113,7 +125,7 @@
         >
           >
           <el-table-column type="selection" width="40"> </el-table-column>
-          <el-table-column label="序号" width="50" align="center">
+          <el-table-column label="序号" width="60" align="center">
             <template scope="scope"
               ><span>{{ scope.$index + 1 }}</span></template
             >
@@ -827,11 +839,11 @@ export default {
       imgShowUrl: '', // 预览图片
       imageUrl: '',
       header: {
-        TokenId: sessionStorage.getItem('TokenId') // 上传文件token
+        TokenId: sessionStorage.getItem('TokenId'), // 上传文件token
       },
       dataParams: {
         ID: '',
-        TABLE_NAME: 'TECH_DATA'
+        TABLE_NAME: 'TECH_DATA',
       },
       loading: true,
       addShow: false,
@@ -842,42 +854,42 @@ export default {
         T0001_ID: '',
         SEARCH_KEY: '',
         T0002_START_PILE: '',
-        T0002_END_PILE: ''
+        T0002_END_PILE: '',
       },
       addForm: {
         T0002_ID: '',
         T0006_ID: '',
         T0003_CHECK_UNIT: '',
         T0003_CHECK_TIME: '',
-        T0003_TECH_REMARK: ''
+        T0003_TECH_REMARK: '',
       },
       rules1: {
         T0001_ID: [
-          { required: true, message: '请选择资产类别', trigger: 'change' }
-        ]
+          { required: true, message: '请选择资产类别', trigger: 'change' },
+        ],
       },
 
       rules: {
         T0002_ID: [
-          { required: true, message: '请选择资产', trigger: 'change' }
+          { required: true, message: '请选择资产', trigger: 'change' },
         ],
         T0006_ID: [
-          { required: true, message: '请选择技术等级分类', trigger: 'change' }
+          { required: true, message: '请选择技术等级分类', trigger: 'change' },
         ],
         T0003_CHECK_UNIT: [
           {
             required: true,
             message: '请填写检测单位/评测单位',
-            trigger: 'change'
-          }
+            trigger: 'change',
+          },
         ],
         T0003_CHECK_TIME: [
           {
             required: true,
             message: '请选择检测/评测时间',
-            trigger: 'change'
-          }
-        ]
+            trigger: 'change',
+          },
+        ],
       },
       infoForm: {},
       techgrade: {},
@@ -889,7 +901,7 @@ export default {
         T0006_ID: '',
         YEAR: '',
         T0002_START_PILE: '',
-        T0002_END_PILE: ''
+        T0002_END_PILE: '',
       },
       tableData: [],
       selectList: [],
@@ -902,27 +914,27 @@ export default {
       isSearch: false, // 是否搜索
       searchVal: '', // 搜索内容
       addSearchVal: '', // 新建 修改搜索内容
-      isAddSearch: false // 新建 修改 是否搜索
+      isAddSearch: false, // 新建 修改 是否搜索
     }
   },
   methods: {
     // 请求所有的起点 / 终点桩号
     assetDataFun() {
-      this.$api.post('/cycle/assetData/listAll', {}, null, r => {
+      this.$api.post('/cycle/assetData/listAll', {}, null, (r) => {
         this.pileList = r.data
       })
     },
     // 根据 资产类别 请求 起点 / 终点桩号
     changeSelect(val) {
       let _data = {
-        T0001_ID: val
+        T0001_ID: val,
       }
       this.searchMap.T0002_START_PILE = ''
       this.searchMap.T0002_END_PILE = ''
-      this.$api.post('/cycle/assetData/listAll', _data, null, r => {
+      this.$api.post('/cycle/assetData/listAll', _data, null, (r) => {
         this.pileList = r.data
       })
-      this.$api.post(`/cycle/techType/listAll`, _data, null, r => {
+      this.$api.post(`/cycle/techType/listAll`, _data, null, (r) => {
         this.techTypeList = r.data
       })
     },
@@ -970,18 +982,18 @@ export default {
         this.$refs['addFormRef'].resetFields()
         this.$refs['searchForm'].resetFields()
       })
-      this.$api.post(`/cycle/utilData/getId`, {}, null, r => {
+      this.$api.post(`/cycle/utilData/getId`, {}, null, (r) => {
         this.dataParams.ID = r.data
         this.addForm.T0003_ID = r.data
       })
-      this.$api.post('/cycle/assetData/listAll', {}, null, r => {
+      this.$api.post('/cycle/assetData/listAll', {}, null, (r) => {
         this.searchPileList = r.data
       })
     },
     // 新建 选中 资产类别
     addSearchChange(val) {
       let _data = {
-        T0001_ID: val
+        T0001_ID: val,
       }
       this.addSearch.T0002_START_PILE = ''
       this.addSearch.T0002_END_PILE = ''
@@ -989,12 +1001,12 @@ export default {
       this.addForm.T0002_ID = ''
       this.editForm.T0002_ID = ''
       // 选中 资产类别 查找对应 起点，终点桩号
-      this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
+      this.$api.post(`/cycle/assetData/listAll`, _data, null, (r) => {
         this.searchPileList = r.data
         this.assetDataList = r.data
       })
       // 选中 资产类别 查找对应 技术等级分类
-      this.$api.post(`/cycle/techType/listAll`, _data, null, r => {
+      this.$api.post(`/cycle/techType/listAll`, _data, null, (r) => {
         console.log(r.data)
         this.searchTechTypeList = r.data
       })
@@ -1002,7 +1014,7 @@ export default {
     // 新建 / 修改 搜索
     addSearchFun() {
       this.isAddSearch = true
-      this.$api.post(`/cycle/assetData/listAll`, this.addSearch, null, r => {
+      this.$api.post(`/cycle/assetData/listAll`, this.addSearch, null, (r) => {
         this.assetDataList = r.data
         this.addSearchVal = r.search_val
       })
@@ -1021,15 +1033,15 @@ export default {
     },
     // 新建保存
     addSaveFun() {
-      this.$refs['searchForm'].validate(valid => {
+      this.$refs['searchForm'].validate((valid) => {
         if (valid) {
-          this.$refs['addFormRef'].validate(valid => {
+          this.$refs['addFormRef'].validate((valid) => {
             if (valid) {
               this.$api.post(
                 `/cycle/techData/insert`,
                 this.addForm,
                 null,
-                r => {
+                (r) => {
                   this.$message.success('新增成功')
                   this.addShow = false
                   this.getTechDataList()
@@ -1048,7 +1060,7 @@ export default {
     },
     // 点击修改
     handleEdit(data) {
-      this.$api.post('/cycle/assetData/listAll', {}, null, r => {
+      this.$api.post('/cycle/assetData/listAll', {}, null, (r) => {
         this.searchPileList = r.data
       })
       this.getAssetDataList()
@@ -1060,11 +1072,11 @@ export default {
         `/cycle/techData/selectById?ID=${data.T0003_ID}`,
         {},
         null,
-        r => {
+        (r) => {
           this.imageList = r.data.files
           this.editForm = Object.assign({}, r.data)
           let _data = {
-            T0001_ID: r.data.T0001_ID
+            T0001_ID: r.data.T0001_ID,
           }
           this.getTechTypeList(_data)
         }
@@ -1072,9 +1084,9 @@ export default {
     },
     // 修改保存
     editSaveFun() {
-      this.$refs['editFormRef'].validate(valid => {
+      this.$refs['editFormRef'].validate((valid) => {
         if (valid) {
-          this.$api.post(`/cycle/techData/update`, this.editForm, null, r => {
+          this.$api.post(`/cycle/techData/update`, this.editForm, null, (r) => {
             this.$message.success('修改成功')
             this.editShow = false
             this.getTechDataList()
@@ -1085,19 +1097,19 @@ export default {
 
     // 获取资产类别 list
     getAssetTypeList() {
-      this.$api.post(`/cycle/assetType/listAll`, {}, null, r => {
+      this.$api.post(`/cycle/assetType/listAll`, {}, null, (r) => {
         this.assetTypeList = r.data
       })
     },
     // 获取资产信息 select 列表
     getAssetDataList() {
-      this.$api.post(`/cycle/assetData/listAll`, {}, null, r => {
+      this.$api.post(`/cycle/assetData/listAll`, {}, null, (r) => {
         this.assetDataList = r.data
       })
     },
     // 技术类别 select
     getTechTypeList(data) {
-      this.$api.post(`/cycle/techType/listAll`, data, null, r => {
+      this.$api.post(`/cycle/techType/listAll`, data, null, (r) => {
         this.searchTechTypeList = r.data
       })
     },
@@ -1106,9 +1118,9 @@ export default {
       let _data = {
         currentPage: this.currentPage,
         showCount: this.showCount,
-        searchMap: this.searchMap
+        searchMap: this.searchMap,
       }
-      this.$api.post(`/cycle/techData/listPage`, _data, null, r => {
+      this.$api.post(`/cycle/techData/listPage`, _data, null, (r) => {
         console.log(r)
         this.loading = false
         for (let i = 0; i < r.data.returnParam.length; i++) {
@@ -1134,13 +1146,13 @@ export default {
       this.$confirm('确定要删除该条记录?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       }).then(() => {
         this.$api.post(
           `/cycle/techData/deleteById?ID=${data.T0003_ID}`,
           {},
           null,
-          r => {
+          (r) => {
             this.$message.success('删除成功')
             this.getTechDataList()
           }
@@ -1157,13 +1169,13 @@ export default {
         this.$confirm('确定要删除这些记录?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
+          type: 'warning',
         }).then(() => {
           this.$api.post(
             `/cycle/techData/deleteByIds?IDS=${_list}`,
             {},
             null,
-            r => {
+            (r) => {
               this.$message.success('删除成功')
               this.getTechDataList()
               this.selectList = []
@@ -1193,7 +1205,7 @@ export default {
       param.append('files', file.raw)
       param.append('ID', this.dataParams.ID)
       param.append('TABLE_NAME', this.dataParams.TABLE_NAME)
-      this.$api.post(`/cycle/fileInfo/uploadFile`, param, null, r => {
+      this.$api.post(`/cycle/fileInfo/uploadFile`, param, null, (r) => {
         this.$message.success('上传图片成功')
         this.getTechDataList()
         this.imageUrl = ''
@@ -1208,16 +1220,16 @@ export default {
       this.$confirm('确定要删除该图片?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       }).then(() => {
         this.$api.post(
           `/cycle/fileInfo/deleteById?ID=${data.M0013_ID}`,
           {},
           null,
-          r => {
+          (r) => {
             this.$message.success('删除成功')
             this.getTechDataList()
-            this.imageList = this.imageList.filter(item => {
+            this.imageList = this.imageList.filter((item) => {
               return item.M0013_ID !== data.M0013_ID
             })
           }
@@ -1235,9 +1247,9 @@ export default {
       let _data = {
         currentPage: this.TypeCurrentPage,
         showCount: this.TypeShowCount,
-        searchMap: this.typeData
+        searchMap: this.typeData,
       }
-      this.$api.post(`/cycle/techData/listPage`, _data, null, r => {
+      this.$api.post(`/cycle/techData/listPage`, _data, null, (r) => {
         this.typeLoading = false
         for (let i = 0; i < r.data.returnParam.length; i++) {
           if (r.data.returnParam[i].files.length > 0) {
@@ -1264,18 +1276,20 @@ export default {
     currentTypeChange(val) {
       this.TypeCurrentPage = val
       this.typeListFun()
-    }
+    },
   },
   created() {
     this.getAssetTypeList()
     this.getTechDataList()
     this.assetDataFun()
-  }
+  },
 }
 </script>
 <style lang="scss">
 .techgrade-wrap {
-  .add-table tr td{padding:5px 0!important;}
+  .add-table tr td {
+    padding: 5px 0 !important;
+  }
   .el-dialog__header {
     background: #f5f5f5;
   }

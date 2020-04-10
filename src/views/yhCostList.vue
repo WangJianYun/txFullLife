@@ -11,14 +11,14 @@
     </p>
     <div class="content">
       <el-row :gutter="0">
-        <el-form label-position="right" label-width="70px" :model="searchMap">
+        <el-form label-position="right" label-width="30%" :model="searchMap">
           <el-col :span="4">
             <el-form-item label="资产类别">
               <el-select
                 v-model="searchMap.T0001_ID"
                 style="width:100%"
                 @change="changeSelect"
-                size="small"
+                size="medium "
               >
                 <el-option
                   v-for="item in assetTypeList"
@@ -34,7 +34,7 @@
               <el-select
                 v-model="searchMap.T0005_ENGIN_MAINT"
                 style="width:100%"
-                size="small"
+                size="medium "
               >
                 <el-option
                   v-for="item in projectList"
@@ -50,7 +50,7 @@
               <el-select
                 v-model="searchMap.T0002_START_PILE"
                 style="width:100%"
-                size="small"
+                size="medium "
               >
                 <el-option
                   v-for="item in pileList"
@@ -66,7 +66,7 @@
               <el-select
                 v-model="searchMap.T0002_END_PILE"
                 style="width:100%"
-                size="small"
+                size="medium "
               >
                 <el-option
                   v-for="item in pileList"
@@ -80,7 +80,7 @@
           <el-col :span="6">
             <el-form-item label="起止日期">
               <el-date-picker
-                size="small"
+                size="medium "
                 style="width:100%"
                 v-model="searchMap.time"
                 type="daterange"
@@ -102,13 +102,17 @@
         </el-form>
       </el-row>
       <div class="div-btn">
-        <el-button type="primary" icon="el-icon-delete" @click="delListFun"
+        <el-button
+          type="primary"
+          icon="el-icon-delete"
+          @click="delListFun"
+          size="medium "
           >批量删除</el-button
         >
         <span class="serach-span">
           您的检索：
-          <span v-show="!isSearch" style="font-size:14px;"> 无 </span>
-          <span style="font-size:14px;"> {{ searchVal }} </span>
+          <span v-show="!isSearch" style="font-size:12px;color:#999"> 无 </span>
+          <span style="font-size:12px;color:#999"> {{ searchVal }} </span>
         </span>
       </div>
       <div class="table-div">
@@ -124,7 +128,7 @@
         >
           >
           <el-table-column type="selection" width="40"> </el-table-column>
-          <el-table-column label="序号" width="50" align="center">
+          <el-table-column label="序号" width="60" align="center">
             <template scope="scope"
               ><span>{{ scope.$index + 1 }}</span></template
             >
@@ -165,7 +169,7 @@
             width="120"
           >
           </el-table-column>
-          <el-table-column label="票据查看" align="center" width="80">
+          <el-table-column label="票据查看" align="center" width="120">
             <template slot-scope="scope">
               <el-image
                 style="width: 50px; height: 18px"
@@ -627,7 +631,7 @@
           </td>
           <td class="bg-td">工程时间区间：</td>
           <td>
-            {{ infoForm.T0005_START_TIME }}  至  {{ infoForm.T0005_END_TIME }}
+            {{ infoForm.T0005_START_TIME }} 至 {{ infoForm.T0005_END_TIME }}
           </td>
         </tr>
         <tr>
@@ -692,11 +696,11 @@ export default {
       imgShowUrl: '', // 预览图片
       imageUrl: '',
       header: {
-        TokenId: sessionStorage.getItem('TokenId') // 上传文件token
+        TokenId: sessionStorage.getItem('TokenId'), // 上传文件token
       },
       dataParams: {
         ID: '',
-        TABLE_NAME: 'COST_BUDGET'
+        TABLE_NAME: 'COST_BUDGET',
       },
       addShow: false,
       editShow: false,
@@ -710,33 +714,33 @@ export default {
         T0005_START_TIME: '',
         T0005_END_TIME: '',
         T0005_COSTBUDGET_REMARK: '',
-        time: []
+        time: [],
       },
       // 表单验证规则
       rules1: {
         T0001_ID: [
-          { required: true, message: '请选择资产类别', trigger: 'change' }
-        ]
+          { required: true, message: '请选择资产类别', trigger: 'change' },
+        ],
       },
       rules: {
         T0002_ID: [
-          { required: true, message: '请选择资产', trigger: 'change' }
+          { required: true, message: '请选择资产', trigger: 'change' },
         ],
         T0005_COSTBUDGET_MONEY: [
           { required: true, message: '请填写金额', trigger: 'change' },
-          { validator: validNum, trigger: 'blur' }
+          { validator: validNum, trigger: 'blur' },
         ],
         T0005_ENGIN_MAINT: [
-          { required: true, message: '请选择养护工程', trigger: 'change' }
+          { required: true, message: '请选择养护工程', trigger: 'change' },
         ],
         time: [
           {
             required: true,
             message: '请选择起止时间',
             trigger: 'blur',
-            type: 'array'
-          }
-        ]
+            type: 'array',
+          },
+        ],
       },
       // addSearch: {
       //   T0001_ID: '',
@@ -746,7 +750,7 @@ export default {
       // },
       editSearch: {
         T0001_ID: '',
-        SEARCH_KEY: ''
+        SEARCH_KEY: '',
       },
       editForm: {},
       infoForm: {},
@@ -761,25 +765,25 @@ export default {
         T0005_START_TIME: '',
         T0005_END_TIME: '',
         T0002_START_PILE: '',
-        T0002_END_PILE: ''
+        T0002_END_PILE: '',
       },
       projectList: [
         {
           code: 1,
-          name: '日常养护'
+          name: '日常养护',
         },
         {
           code: 2,
-          name: '小修保养'
+          name: '小修保养',
         },
         {
           code: 3,
-          name: '中修工程'
+          name: '中修工程',
         },
         {
           code: 4,
-          name: '大修工程'
-        }
+          name: '大修工程',
+        },
       ],
       tableData: [],
       assetTypeList: [], // 资产类别
@@ -795,18 +799,18 @@ export default {
   methods: {
     // 请求所有的起点 / 终点桩号
     assetDataFun() {
-      this.$api.post('/cycle/assetData/listAll', {}, null, r => {
+      this.$api.post('/cycle/assetData/listAll', {}, null, (r) => {
         this.pileList = r.data
       })
     },
     // 根据 资产类别 请求 起点 / 终点桩号
     changeSelect(val) {
       let _data = {
-        T0001_ID: val
+        T0001_ID: val,
       }
       this.searchMap.T0002_START_PILE = ''
       this.searchMap.T0002_END_PILE = ''
-      this.$api.post('/cycle/assetData/listAll', _data, null, r => {
+      this.$api.post('/cycle/assetData/listAll', _data, null, (r) => {
         this.pileList = r.data
       })
     },
@@ -862,7 +866,7 @@ export default {
         this.$refs['addFormRef'].resetFields()
         // this.$refs['searchForm'].resetFields()
       })
-      this.$api.post(`/cycle/utilData/getId`, {}, null, r => {
+      this.$api.post(`/cycle/utilData/getId`, {}, null, (r) => {
         this.dataParams.ID = r.data
         this.addForm.T0005_ID = r.data
       })
@@ -907,24 +911,24 @@ export default {
     // 新建保存
     addSaveFun() {
       // this.$refs['searchForm'].validate(vaild => {
-        // if (vaild) {
-          this.$refs['addFormRef'].validate(valid => {
-            if (valid) {
-              this.addForm.T0005_START_TIME = this.addForm.time[0]
-              this.addForm.T0005_END_TIME = this.addForm.time[1]
-              this.$api.post(
-                '/cycle/costBudget/insert',
-                this.addForm,
-                null,
-                r => {
-                  this.$message.success('新增成功')
-                  this.getCostBudgetList()
-                  this.addShow = false
-                }
-              )
+      // if (vaild) {
+      this.$refs['addFormRef'].validate((valid) => {
+        if (valid) {
+          this.addForm.T0005_START_TIME = this.addForm.time[0]
+          this.addForm.T0005_END_TIME = this.addForm.time[1]
+          this.$api.post(
+            '/cycle/costBudget/insert',
+            this.addForm,
+            null,
+            (r) => {
+              this.$message.success('新增成功')
+              this.getCostBudgetList()
+              this.addShow = false
             }
-          })
-        // }
+          )
+        }
+      })
+      // }
       // })
     },
     // 点击查看
@@ -935,7 +939,7 @@ export default {
         `/cycle/costBudget/selectById?ID=${data.T0005_ID}`,
         {},
         null,
-        r => {
+        (r) => {
           this.imageList = r.data.files
           this.infoForm = Object.assign({}, r.data)
           this.infoForm.T0002_ASSET_NAME = data.T0002_ASSET_NAME
@@ -961,11 +965,11 @@ export default {
         `/cycle/costBudget/selectById?ID=${data.T0005_ID}`,
         {},
         null,
-        r => {
+        (r) => {
           this.editForm = Object.assign({}, r.data)
           let _arr = [
             this.editForm.T0005_START_TIME,
-            this.editForm.T0005_END_TIME
+            this.editForm.T0005_END_TIME,
           ]
           this.imageList = r.data.files
           this.$set(this.editForm, 'time', _arr)
@@ -974,27 +978,32 @@ export default {
     },
     // 修改保存
     editSaveFun() {
-      this.$refs['editFormRef'].validate(valid => {
+      this.$refs['editFormRef'].validate((valid) => {
         if (valid) {
           this.editForm.T0005_START_TIME = this.editForm.time[0]
           this.editForm.T0005_END_TIME = this.editForm.time[1]
-          this.$api.post(`/cycle/costBudget/update`, this.editForm, null, r => {
-            this.$message.success('修改成功')
-            this.editShow = false
-            this.getCostBudgetList()
-          })
+          this.$api.post(
+            `/cycle/costBudget/update`,
+            this.editForm,
+            null,
+            (r) => {
+              this.$message.success('修改成功')
+              this.editShow = false
+              this.getCostBudgetList()
+            }
+          )
         }
       })
     },
     // 获取资产类别 list
     getAssetTypeList() {
-      this.$api.post(`/cycle/assetType/listAll`, {}, null, r => {
+      this.$api.post(`/cycle/assetType/listAll`, {}, null, (r) => {
         this.assetTypeList = r.data
       })
     },
     // 获取资产信息 select 列表
     getAssetDataList() {
-      this.$api.post(`/cycle/assetData/listAll`, {}, null, r => {
+      this.$api.post(`/cycle/assetData/listAll`, {}, null, (r) => {
         this.assetDataList = r.data
       })
     },
@@ -1008,10 +1017,10 @@ export default {
       let _data = {
         currentPage: this.currentPage,
         showCount: this.showCount,
-        searchMap: this.searchMap
+        searchMap: this.searchMap,
       }
       console.log(_data)
-      this.$api.post(`/cycle/costBudget/listPage`, _data, null, r => {
+      this.$api.post(`/cycle/costBudget/listPage`, _data, null, (r) => {
         this.loading = false
         for (let i = 0; i < r.data.returnParam.length; i++) {
           if (r.data.returnParam[i].files.length > 0) {
@@ -1035,13 +1044,13 @@ export default {
       this.$confirm('确定要删除该条记录?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       }).then(() => {
         this.$api.post(
           `/cycle/costBudget/deleteById?ID=${data.T0005_ID}`,
           {},
           null,
-          r => {
+          (r) => {
             this.$message.success('删除成功')
             this.getCostBudgetList()
           }
@@ -1058,13 +1067,13 @@ export default {
         this.$confirm('确定要删除这些记录?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
+          type: 'warning',
         }).then(() => {
           this.$api.post(
             `/cycle/costBudget/deleteByIds?IDS=${_list}`,
             {},
             null,
-            r => {
+            (r) => {
               this.$message.success('删除成功')
               this.getCostBudgetList()
               this.selectList = []
@@ -1094,7 +1103,7 @@ export default {
       param.append('files', file.raw)
       param.append('ID', this.dataParams.ID)
       param.append('TABLE_NAME', this.dataParams.TABLE_NAME)
-      this.$api.post(`/cycle/fileInfo/uploadFile`, param, null, r => {
+      this.$api.post(`/cycle/fileInfo/uploadFile`, param, null, (r) => {
         this.$message.success('上传图片成功')
         this.getCostBudgetList()
         this.imageUrl = ''
@@ -1109,29 +1118,29 @@ export default {
       this.$confirm('确定要删除该图片?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       }).then(() => {
         this.$api.post(
           `/cycle/fileInfo/deleteById?ID=${data.M0013_ID}`,
           {},
           null,
-          r => {
+          (r) => {
             this.$message.success('删除成功')
             this.getCostBudgetList()
-            this.imageList = this.imageList.filter(item => {
+            this.imageList = this.imageList.filter((item) => {
               return item.M0013_ID !== data.M0013_ID
             })
           }
         )
       })
-    }
+    },
   },
   created() {
     this.getAssetTypeList()
     this.getCostBudgetList()
     this.assetDataFun()
     this.getAssetDataList()
-  }
+  },
 }
 </script>
 <style lang="scss">

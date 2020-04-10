@@ -3,18 +3,21 @@
     <el-aside>
       <el-scrollbar style="height:100%">
         <el-row class="title">
-          <span>高速公路全寿命周期智能管理平台</span>
+          <h3>高速公路全寿命周期</h3>
+          <p style="height:40px;font-size:22px;line-height:40px;">
+            智能管理平台
+          </p>
         </el-row>
         <el-row>
           <div class="userBack">
-            <el-avatar :size="120" :src="currentUserImg"></el-avatar>
+            <el-avatar :size="120" :src="currentUserImg">
+              <img src="../assets/head_img.png" alt="" />
+            </el-avatar>
           </div>
         </el-row>
         <el-row>
           <div class="userWel">
-            <span
-              >尊敬的铜旬分公司管理员、{{ currentUser.UserName }}：您好！</span
-            >
+            <span>尊敬的铜旬分公司管理员：{{ currentUser.UserName }}</span>
           </div>
         </el-row>
         <el-row>
@@ -182,12 +185,12 @@ export default {
     return {
       form: {
         userName: 'admin',
-        password: '1'
+        password: '1',
       },
       menuOptions: [],
       defaultActiveMenu: '',
       currentTime: '', // 获取当前时
-      currentUserImg: '',
+      currentUserImg: '../assets/head_img.png',
       currentUser: [],
       menuList: [],
       routes: [],
@@ -196,7 +199,7 @@ export default {
       menulist1: [],
       menulist2: [],
       menuType: '',
-      M0018_ID: ''
+      M0018_ID: '',
     }
   },
   mounted() {
@@ -248,7 +251,7 @@ export default {
       this.$confirm('确定退出登录?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       }).then(() => {
         this.$router.push('/')
       })
@@ -270,7 +273,7 @@ export default {
           this.routes
         )
       }
-      list.forEach(v => {
+      list.forEach((v) => {
         if (currentItem.M0004_ID === v.M0004_PID) {
           if (v.M0004_LEVEL !== 3 && v.M0004_LEVEL !== '3' && !v.M0004_CHILD) {
             this.findKid(v, list, currentItem)
@@ -325,7 +328,7 @@ export default {
       // this.$api.post('/cycle/roleGroupManagement/getMenuList', { 'M0018_ID': sessionStorage.getItem('id') }, '成功', r => {
       //   this.menuList = r.data
       // 根据menuType来判断是集团公司还是分公司菜单
-      this.menulist1 = this.menuList.filter(v => {
+      this.menulist1 = this.menuList.filter((v) => {
         return v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1
       })
       if (parseInt(this.menuType) === 1) {
@@ -337,7 +340,7 @@ export default {
         this.routes = routes2
       }
       try {
-        this.menulist1.forEach(v => {
+        this.menulist1.forEach((v) => {
           this.findKid(v, this.menuList)
         })
         for (const v of this.menulist1) {
@@ -396,8 +399,8 @@ export default {
           // console.log(that.defaultActiveMenu)
         })
       })
-    }
-  }
+    },
+  },
 }
 </script>
 
@@ -415,7 +418,7 @@ export default {
 .el-aside {
   height: 100%;
   background-color: #32323c;
-  width: 300px;
+  width: 260px !important;
 }
 @media screen and (max-width: 1600px) {
   .el-aside {
@@ -426,10 +429,10 @@ export default {
   overflow-x: hidden !important;
 }
 .title {
-  padding: 20px;
+  padding: 10px;
   height: 90px;
   text-align: center;
-  font-size: 23px;
+  font-size: 20px;
   color: #ffffff;
 }
 .el-menu {
@@ -447,9 +450,9 @@ export default {
   color: #ffffff !important;
 }
 .userBack {
-  padding-top: 9px;
+  padding-top: 10px;
   width: 100%;
-  height: 138px;
+  height: 148px;
   text-align: center;
   background-image: url('../assets/avatarback.png');
 }

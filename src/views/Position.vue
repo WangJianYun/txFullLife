@@ -19,7 +19,7 @@
             style="width: 100%"
             :header-cell-style="{ background: 'rgb(240,240,240)' }"
           >
-            <el-table-column label="序号" width="50" align="center">
+            <el-table-column label="序号" width="80" align="center">
               <template scope="scope"
                 ><span>{{ scope.$index + 1 }}</span></template
               >
@@ -180,13 +180,13 @@ export default {
         M0015_DUTY_REMARK: '',
         M0015_CREATE_PERSON: '',
         M0015_CREATE_TIME: '',
-        M0018_ID: ''
+        M0018_ID: '',
       },
       rules: {
         M0015_DUTY_NAME: [
-          { required: true, message: '请输入职务名称', trigger: 'blur' }
-        ]
-      }
+          { required: true, message: '请输入职务名称', trigger: 'blur' },
+        ],
+      },
     }
   },
   mounted() {
@@ -223,10 +223,10 @@ export default {
       let _data = {
         currentPage: this.currentPage,
         showCount: this.showCount,
-        searchMap: { M0018_ID: this.form.M0018_ID }
+        searchMap: { M0018_ID: this.form.M0018_ID },
       }
       // let tabDatas = []
-      this.$api.post('/cycle/dutyManagement/listPage', _data, null, r => {
+      this.$api.post('/cycle/dutyManagement/listPage', _data, null, (r) => {
         console.log(r)
         this.dpData = r.data.returnParam
         this.total = r.data.totalResult
@@ -238,14 +238,14 @@ export default {
       this.form.M0015_CREATE_PERSON = JSON.parse(
         sessionStorage.getItem('currentUser')
       ).UserName
-      this.$refs['form'].validate(v => {
+      this.$refs['form'].validate((v) => {
         if (v) {
           if (this.dialogType === 'new') {
             this.$api.post(
               '/cycle/dutyManagement/insert',
               this.form,
               '新增成功',
-              r => {
+              (r) => {
                 console.log(r)
                 this.closeDialog()
               }
@@ -258,7 +258,7 @@ export default {
               '/cycle/dutyManagement/update',
               this.form,
               '编辑成功',
-              r => {
+              (r) => {
                 this.closeDialog()
               }
             )
@@ -307,7 +307,7 @@ export default {
         M0015_DUTY_REMARK: '',
         M0015_CREATE_PERSON: '',
         M0015_CREATE_TIME: '',
-        M0018_ID: ''
+        M0018_ID: '',
       }
       this.refreshTable(1)
     },
@@ -318,7 +318,7 @@ export default {
       this.$confirm('确认删除？此操作不可取消', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       }).then(() => {
         // let form = {}
         // form.ID = row.M0016_ID
@@ -326,13 +326,13 @@ export default {
           '/cycle/dutyManagement/deleteById?ID=' + row.M0015_ID,
           {},
           '删除成功',
-          r => {
+          (r) => {
             this.refreshTable(1)
           }
         )
       })
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss">

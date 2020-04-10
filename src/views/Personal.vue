@@ -312,7 +312,7 @@
             <table class="perstable authTable">
               <thead>
                 <tr>
-                  <th width="10%">序号</th>
+                  <th width="8%">序号</th>
                   <th width="40%">模块名称</th>
                   <th>权限节点</th>
                 </tr>
@@ -385,7 +385,7 @@ export default {
         manager: [],
         authority: [],
         M0018_ID: '',
-        M0014_ID: ''
+        M0014_ID: '',
       },
       permisionListData: [],
       islook: true,
@@ -398,15 +398,15 @@ export default {
             min: 6,
             max: 50,
             message: '密码长度在 6 到 50 个字符',
-            trigger: 'blur'
+            trigger: 'blur',
           },
           {
             pattern: /^(\w){6,50}$/,
             message: '只能输入6-50个字母、数字、下划线',
-            trigger: 'blur'
-          }
-        ]
-      }
+            trigger: 'blur',
+          },
+        ],
+      },
     }
   },
   mounted() {
@@ -420,7 +420,7 @@ export default {
         currentItem.M0005_STATE === '1' || currentItem.M0005_STATE === 1
           ? true
           : false
-      list.forEach(v => {
+      list.forEach((v) => {
         if (currentItem.M0004_ID === v.M0004_PID) {
           if (v.M0004_LEVEL !== 3 && v.M0004_LEVEL !== '3' && !v.M0004_CHILD) {
             this.findChild(v, list)
@@ -442,11 +442,11 @@ export default {
         '/cycle/roleGroupManagement/getPermissionByTokenId',
         { M0018_ID: this.form.M0018_ID },
         null,
-        r => {
+        (r) => {
           this.permisionListData = r.data.filter(
-            v => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1
+            (v) => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1
           )
-          this.permisionListData.forEach(v => {
+          this.permisionListData.forEach((v) => {
             this.findChild(v, r.data)
           })
           this.setTableForm()
@@ -457,14 +457,14 @@ export default {
     setTableForm(send) {
       // 无send表示发送前，有send表示发送后
       this.listPromision = []
-      this.permisionListData.forEach(v => {
+      this.permisionListData.forEach((v) => {
         if (v.M0004_CHILD && v.M0004_CHILD.length > 0) {
-          v.M0004_CHILD.forEach(v1 => {
+          v.M0004_CHILD.forEach((v1) => {
             if (!send) {
               v1.tableForm = []
             }
             if (v1.M0004_CHILD && v1.M0004_CHILD.length > 0) {
-              v1.M0004_CHILD.forEach(v2 => {
+              v1.M0004_CHILD.forEach((v2) => {
                 if (!send && (v2.M0005_STATE === '1' || v2.M0005_STATE === 1)) {
                   v1.tableForm.push(v2.M0004_NAME)
                 }
@@ -493,20 +493,20 @@ export default {
           '/cycle/userManagement/updateInformation',
           this.form,
           null,
-          r => {
+          (r) => {
             console.log(r)
             if (r.msg === 'success') {
               Message({
                 showClose: true,
                 message: '修改成功',
-                type: 'success'
+                type: 'success',
               })
               this.cancel()
             } else {
               Message({
                 showClose: true,
                 message: '原密码错误',
-                type: 'warning'
+                type: 'warning',
               })
             }
           }
@@ -515,7 +515,7 @@ export default {
         Message({
           showClose: true,
           message: '两次密码不一致',
-          type: 'warning'
+          type: 'warning',
         })
         return false
       }
@@ -531,7 +531,7 @@ export default {
         '/cycle/userManagement/selectById?ID=' + userId,
         {},
         null,
-        r => {
+        (r) => {
           if (r.data.M0014_IS_AVTIVE === 1) {
             r.data.M0014_IS_AVTIVE = true
           } else {
@@ -544,8 +544,8 @@ export default {
     cancel() {
       this.form = {}
       this.addShow = false
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss">

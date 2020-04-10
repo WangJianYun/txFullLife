@@ -11,14 +11,14 @@
     </p>
     <div class="content">
       <el-row :gutter="0">
-        <el-form label-position="right" label-width="80px" :model="searchMap">
+        <el-form label-position="right" label-width="30%" :model="searchMap">
           <el-col :span="4">
             <el-form-item label="资产类别">
               <el-select
                 v-model="searchMap.T0001_ID"
                 style="width:100%"
                 @change="changeSelect"
-                size="small"
+                size="medium "
               >
                 <el-option
                   v-for="item in assetTypeList"
@@ -34,7 +34,7 @@
               <el-select
                 v-model="searchMap.T0002_START_PILE"
                 style="width:100%"
-                size="small"
+                size="medium "
               >
                 <el-option
                   v-for="item in pileList"
@@ -47,8 +47,11 @@
           </el-col>
           <el-col :span="4">
             <el-form-item label="终点桩号">
-              <el-select v-model="searchMap.T0002_END_PILE" style="width:100%" 
-                size="small">
+              <el-select
+                v-model="searchMap.T0002_END_PILE"
+                style="width:100%"
+                size="medium "
+              >
                 <el-option
                   v-for="item in pileList"
                   :key="item.T0002_ID"
@@ -65,7 +68,7 @@
                 v-model="searchMap.YEAR"
                 type="year"
                 value-format="yyyy"
-                size="small"
+                size="medium "
               >
               </el-date-picker>
             </el-form-item>
@@ -75,7 +78,7 @@
               <el-input
                 placeholder="请输入关键字"
                 v-model="searchMap.SEARCH_KEY"
-                size="small"
+                size="medium "
               >
               </el-input>
             </el-form-item>
@@ -91,13 +94,17 @@
       <div class="div-btn">
         <!-- <el-button type="primary" @click="searchFun">搜索</el-button>
         <el-button @click="reset">重置</el-button> -->
-        <el-button type="primary" icon="el-icon-delete" @click="delListFun" size="small"
+        <el-button
+          type="primary"
+          icon="el-icon-delete"
+          @click="delListFun"
+          size="small"
           >批量删除</el-button
         >
         <span class="serach-span">
           您的检索：
-          <span v-show="!isSearch"> 无 </span>
-          <span> {{ searchVal }} </span>
+          <span v-show="!isSearch" style="font-size:12px;color:#999"> 无 </span>
+          <span style="font-size:12px;color:#999"> {{ searchVal }} </span>
         </span>
       </div>
       <div class="table-div">
@@ -884,22 +891,22 @@ export default {
           return h(
             'div',
             {
-              style: { background: '#80cbc4', whiteSpace: 'nowrap' }
+              style: { background: '#80cbc4', whiteSpace: 'nowrap' },
             },
             this.mapData.title
           )
-        }
+        },
       },
       imageList: [],
       imgShow: false,
       imgShowUrl: '', // 预览图片
       imageUrl: '',
       header: {
-        TokenId: sessionStorage.getItem('TokenId') // 上传文件token
+        TokenId: sessionStorage.getItem('TokenId'), // 上传文件token
       },
       dataParams: {
         ID: '',
-        TABLE_NAME: 'ASSET_DATA'
+        TABLE_NAME: 'ASSET_DATA',
       },
       loading: true,
       addShow: false,
@@ -920,55 +927,55 @@ export default {
         T0002_TOUCH_TEL: '',
         T0002_ASSET_PRECI: '',
         T0002_ASSET_LATI: '',
-        T0002_ASSET_REAMRK: ''
+        T0002_ASSET_REAMRK: '',
       },
       rules: {
         T0002_ASSET_NAME: [
-          { required: true, message: '请填写资产名称', trigger: 'blur' }
+          { required: true, message: '请填写资产名称', trigger: 'blur' },
         ],
         T0001_ID: [
-          { required: true, message: '请选择资产类别', trigger: 'change' }
+          { required: true, message: '请选择资产类别', trigger: 'change' },
         ],
         T0002_LOAD_NAME: [
-          { required: true, message: '请选择所属路段', trigger: 'change' }
+          { required: true, message: '请选择所属路段', trigger: 'change' },
         ],
         T0002_START_PILE: [
           { required: true, message: '请填写起点桩号', trigger: 'blur' },
-          { validator: validPile, trigger: 'blur' }
+          { validator: validPile, trigger: 'blur' },
         ],
         T0002_END_PILE: [
           { required: true, message: '请填写起点桩号', trigger: 'blur' },
-          { validator: validPile, trigger: 'blur' }
+          { validator: validPile, trigger: 'blur' },
         ],
         T0002_ASSET_AMOUNT: [
           { required: true, message: '请填写数量', trigger: 'blur' },
-          { validator: validOrder, trigger: 'blur' }
+          { validator: validOrder, trigger: 'blur' },
         ],
         T0002_ASSET_DATE: [
           {
             required: true,
             message: '请选择归属年份',
-            trigger: 'change'
-          }
+            trigger: 'change',
+          },
         ],
         T0002_CURING_UNIT: [
-          { required: true, message: '请填写所属养管公司', trigger: 'blur' }
+          { required: true, message: '请填写所属养管公司', trigger: 'blur' },
         ],
         T0002_DUTY_PERSON: [
-          { required: true, message: '请填写责任人', trigger: 'blur' }
+          { required: true, message: '请填写责任人', trigger: 'blur' },
         ],
         T0002_TOUCH_TEL: [
           { required: true, message: '请填写联系电话', trigger: 'blur' },
-          { validator: validTel, trigger: 'blur' }
+          { validator: validTel, trigger: 'blur' },
         ],
         T0002_ASSET_PRECI: [
           { required: true, message: '请填写经度', trigger: 'blur' },
-          { validator: validPreci, trigger: 'blur' }
+          { validator: validPreci, trigger: 'blur' },
         ],
         T0002_ASSET_LATI: [
           { required: true, message: '请填写纬度', trigger: 'blur' },
-          { validator: validLati, trigger: 'blur' }
-        ]
+          { validator: validLati, trigger: 'blur' },
+        ],
       },
       infoForm: {},
       showCount: 10,
@@ -979,7 +986,7 @@ export default {
         YEAR: '',
         SEARCH_KEY: '',
         T0002_START_PILE: '',
-        T0002_END_PILE: ''
+        T0002_END_PILE: '',
       },
       tableData: [],
       selectList: [],
@@ -987,13 +994,13 @@ export default {
       listNameList: [], // 所属路段
       pileList: [], // 起点 / 终点桩号
       isSearch: false, // 是否搜索
-      searchVal: '' // 显示搜索内容
+      searchVal: '', // 显示搜索内容
     }
   },
   methods: {
     // 请求所有的起点 / 终点桩号
     assetDataFun() {
-      this.$api.post('/cycle/assetData/listAll', {}, null, r => {
+      this.$api.post('/cycle/assetData/listAll', {}, null, (r) => {
         this.pileList = r.data
       })
     },
@@ -1007,11 +1014,11 @@ export default {
     // 根据 资产类别 请求 起点 / 终点桩号
     changeSelect(val) {
       let _data = {
-        T0001_ID: val
+        T0001_ID: val,
       }
       this.searchMap.T0002_START_PILE = ''
       this.searchMap.T0002_END_PILE = ''
-      this.$api.post('/cycle/assetData/listAll', _data, null, r => {
+      this.$api.post('/cycle/assetData/listAll', _data, null, (r) => {
         this.pileList = r.data
       })
     },
@@ -1056,16 +1063,16 @@ export default {
       this.$nextTick(() => {
         this.$refs['addFormRef'].resetFields()
       })
-      this.$api.post(`/cycle/utilData/getId`, {}, null, r => {
+      this.$api.post(`/cycle/utilData/getId`, {}, null, (r) => {
         this.dataParams.ID = r.data
         this.addForm.T0002_ID = r.data
       })
     },
     // 新增保存
     addSaveFun() {
-      this.$refs['addFormRef'].validate(valid => {
+      this.$refs['addFormRef'].validate((valid) => {
         if (valid) {
-          this.$api.post(`/cycle/assetData/insert`, this.addForm, null, r => {
+          this.$api.post(`/cycle/assetData/insert`, this.addForm, null, (r) => {
             this.$message.success('新增成功')
             this.getAssetList()
             this.addShow = false
@@ -1080,7 +1087,7 @@ export default {
         `/cycle/assetData/selectById?ID=${data.T0002_ID}`,
         {},
         null,
-        r => {
+        (r) => {
           this.imageList = r.data.files
           this.infoForm = Object.assign({}, r.data)
         }
@@ -1095,7 +1102,7 @@ export default {
         `/cycle/assetData/selectById?ID=${data.T0002_ID}`,
         {},
         null,
-        r => {
+        (r) => {
           this.imageList = r.data.files
           this.editForm = Object.assign({}, r.data)
         }
@@ -1103,25 +1110,30 @@ export default {
     },
     // 修改保存
     editSaveFun() {
-      this.$refs['editFormRef'].validate(valid => {
+      this.$refs['editFormRef'].validate((valid) => {
         if (valid) {
-          this.$api.post(`/cycle/assetData/update`, this.editForm, null, r => {
-            this.$message.success('修改成功')
-            this.editShow = false
-            this.getAssetList()
-          })
+          this.$api.post(
+            `/cycle/assetData/update`,
+            this.editForm,
+            null,
+            (r) => {
+              this.$message.success('修改成功')
+              this.editShow = false
+              this.getAssetList()
+            }
+          )
         }
       })
     },
     // 获取资产类别 list
     getAssetTypeList() {
-      this.$api.post(`/cycle/assetType/listAll`, {}, null, r => {
+      this.$api.post(`/cycle/assetType/listAll`, {}, null, (r) => {
         this.assetTypeList = r.data
       })
     },
     // 请求select 的所属路段
     getListNameList() {
-      this.$api.post('/cycle/load/listLoadName', {}, null, r => {
+      this.$api.post('/cycle/load/listLoadName', {}, null, (r) => {
         this.listNameList = r.data
       })
     },
@@ -1130,9 +1142,9 @@ export default {
       let _data = {
         currentPage: this.currentPage,
         showCount: this.showCount,
-        searchMap: this.searchMap
+        searchMap: this.searchMap,
       }
-      this.$api.post(`/cycle/assetData/listPage`, _data, null, r => {
+      this.$api.post(`/cycle/assetData/listPage`, _data, null, (r) => {
         this.loading = false
         for (let i = 0; i < r.data.returnParam.length; i++) {
           if (r.data.returnParam[i].files.length > 0) {
@@ -1156,13 +1168,13 @@ export default {
       this.$confirm('确定要删除该条记录?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       }).then(() => {
         this.$api.post(
           `/cycle/assetData/deleteById?ID=${data.T0002_ID}`,
           {},
           null,
-          r => {
+          (r) => {
             this.$message.success('删除成功')
             this.getAssetList()
           }
@@ -1179,13 +1191,13 @@ export default {
         this.$confirm('确定要删除这些记录?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
+          type: 'warning',
         }).then(() => {
           this.$api.post(
             `/cycle/assetData/deleteByIds?IDS=${_list}`,
             {},
             null,
-            r => {
+            (r) => {
               this.$message.success('删除成功')
               this.getAssetList()
               this.selectList = []
@@ -1215,7 +1227,7 @@ export default {
       param.append('files', file.raw)
       param.append('ID', this.dataParams.ID)
       param.append('TABLE_NAME', this.dataParams.TABLE_NAME)
-      this.$api.post(`/cycle/fileInfo/uploadFile`, param, null, r => {
+      this.$api.post(`/cycle/fileInfo/uploadFile`, param, null, (r) => {
         this.$message.success('上传图片成功')
         this.imageUrl = ''
         this.getAssetList()
@@ -1230,34 +1242,36 @@ export default {
       this.$confirm('确定要删除该图片?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       }).then(() => {
         this.$api.post(
           `/cycle/fileInfo/deleteById?ID=${data.M0013_ID}`,
           {},
           null,
-          r => {
+          (r) => {
             this.$message.success('删除成功')
             this.getAssetList()
-            this.imageList = this.imageList.filter(item => {
+            this.imageList = this.imageList.filter((item) => {
               return item.M0013_ID !== data.M0013_ID
             })
           }
         )
       })
-    }
+    },
   },
   created() {
     this.getAssetTypeList()
     this.getAssetList()
     this.getListNameList()
     this.assetDataFun()
-  }
+  },
 }
 </script>
 <style lang="scss">
 .assets-wrap {
-  .add-table tr td{padding:5px 0!important;}
+  .add-table tr td {
+    padding: 5px 0 !important;
+  }
   .el-dialog__header {
     background: #f5f5f5;
   }

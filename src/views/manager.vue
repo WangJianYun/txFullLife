@@ -19,7 +19,7 @@
             style="width: 100%"
             :header-cell-style="{ background: 'rgb(240,240,240)' }"
           >
-            <el-table-column label="序号" width="50" align="center">
+            <el-table-column label="序号" width="80" align="center">
               <template scope="scope"
                 ><span>{{ scope.$index + 1 }}</span></template
               >
@@ -311,7 +311,7 @@ export default {
           rights: '1',
           phone: '13333333333',
           email: '123@321.com',
-          switch: true
+          switch: true,
         },
         {
           nickname: 'red',
@@ -321,8 +321,8 @@ export default {
           rights: '1',
           phone: '15665656565',
           email: '23@43.com',
-          switch: false
-        }
+          switch: false,
+        },
       ],
       currentPage: 1,
       showCount: 10,
@@ -348,13 +348,13 @@ export default {
         M0016_DEPART_NAME: '',
         M0015_DEPART_NAME: '',
         M0016_ID_PRE: '',
-        M0015_ID_PRE: ''
+        M0015_ID_PRE: '',
       },
       mechans: [],
       positions: [],
       rules: {
         M0014_SIMP_NAME: [
-          { required: true, message: '请输入昵称', trigger: 'blur' }
+          { required: true, message: '请输入昵称', trigger: 'blur' },
         ],
         M0014_USER_NAME: [
           { required: true, message: '请输入真实姓名', trigger: 'blur' },
@@ -362,41 +362,41 @@ export default {
             min: 2,
             max: 10,
             message: '长度在 2 到 10 个字符',
-            trigger: 'blur'
+            trigger: 'blur',
           },
           // { pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9.·-]+$/, message: '姓名不支持特殊字符', trigger: 'blur' }
-          { pattern: /^[\u4E00-\u9FA5]+$/, message: '用户名只能为中文' }
+          { pattern: /^[\u4E00-\u9FA5]+$/, message: '用户名只能为中文' },
         ],
         M0014_PASS_WORD: [
           // { required: true, message: '请输入密码', trigger: 'blur' },
           { min: 6, max: 50, message: '长度在 6 到 50 个字符' },
           {
             pattern: /^(\w){6,50}$/,
-            message: '只能输入6-50个字母、数字、下划线'
-          }
+            message: '只能输入6-50个字母、数字、下划线',
+          },
         ],
         // Expassword: [
         //   { required: true, message: '请确认密码', trigger: 'blur' }
         // ],
         M0014_USER_EMAIL: [
           { required: true, message: '请输入电子邮箱', trigger: 'blur' },
-          { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' },
         ],
         M0014_USER_TEL: [
           { required: true, message: '请输入电话号码', trigger: 'blur' },
           {
             pattern: /^1[3|4|5|7|8][0-9]\d{8}$/,
             message: '请输入11位手机号码',
-            trigger: 'blur'
-          }
-        ]
+            trigger: 'blur',
+          },
+        ],
         // M0015_ID: [
         //   { required: true, message: '请选择职务' }
         // ],
         // M0016_ID: [
         //   { required: true, message: '请选择归属部门' }
         // ]
-      }
+      },
     }
   },
   mounted() {
@@ -419,12 +419,12 @@ export default {
       let _data = {
         currentPage: this.currentPage,
         showCount: this.showCount,
-        searchMap: { M0018_ID: this.form.M0018_ID }
+        searchMap: { M0018_ID: this.form.M0018_ID },
       }
       // let tabDatas = []
-      this.$api.post('/cycle/userManagement/listPage', _data, null, r => {
+      this.$api.post('/cycle/userManagement/listPage', _data, null, (r) => {
         console.log(r)
-        r.data.returnParam.forEach(element => {
+        r.data.returnParam.forEach((element) => {
           if (element.M0014_IS_AVTIVE === 1) {
             element.M0014_IS_AVTIVE = true
           } else {
@@ -440,7 +440,7 @@ export default {
         '/cycle/userManagement/isExist?userName=' + this.form.M0014_SIMP_NAME,
         {},
         null,
-        r => {
+        (r) => {
           console.log(r)
           if (r.data === true) {
             this.$message.warning('用户名已存在，请重新输入')
@@ -451,7 +451,7 @@ export default {
     },
     save() {
       this.form.M0018_ID = sessionStorage.getItem('id')
-      this.$refs['form'].validate(valid => {
+      this.$refs['form'].validate((valid) => {
         if (valid) {
           if (this.form.M0016_ID === '') {
             this.form.M0016_ID = '0'
@@ -473,7 +473,7 @@ export default {
                 '/cycle/userManagement/insert',
                 this.form,
                 '新增成功',
-                r => {
+                (r) => {
                   this.closeDialog()
                 }
               )
@@ -491,7 +491,7 @@ export default {
                 '/cycle/userManagement/update',
                 this.form,
                 '编辑成功',
-                r => {
+                (r) => {
                   this.closeDialog()
                 }
               )
@@ -501,7 +501,7 @@ export default {
             Message({
               showClose: true,
               message: '密码不一致',
-              type: 'warning'
+              type: 'warning',
             })
             return false
           }
@@ -580,7 +580,7 @@ export default {
       this.$confirm('确认删除？此操作不可取消', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       }).then(() => {
         // let form = {}
         // form.ID = row.M0016_ID
@@ -588,7 +588,7 @@ export default {
           '/cycle/userManagement/deleteById?ID=' + row.M0014_ID,
           {},
           '删除成功',
-          r => {
+          (r) => {
             this.refreshTable(1)
           }
         )
@@ -599,7 +599,7 @@ export default {
         '/cycle/departmentManagement/listAll',
         { M0018_ID: this.form.M0018_ID },
         null,
-        r => {
+        (r) => {
           this.mechans = r.data
         }
       )
@@ -607,12 +607,12 @@ export default {
         '/cycle/dutyManagement/listAll',
         { M0018_ID: this.form.M0018_ID },
         null,
-        r => {
+        (r) => {
           this.positions = r.data
         }
       )
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="scss">

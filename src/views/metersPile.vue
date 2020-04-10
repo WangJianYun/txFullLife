@@ -15,7 +15,7 @@
             <el-form-item label="所属路段">
               <el-select
                 v-model="dataParam.M0010_LOAD_NAME"
-                style="width:100%"
+                size="medium "
                 @change="changeSelect"
               >
                 <el-option
@@ -32,6 +32,7 @@
               <el-select
                 v-model="dataParam.M0010_START_PILE"
                 style="width:100%"
+                size="medium "
               >
                 <el-option
                   v-for="item in pileList"
@@ -44,7 +45,11 @@
           </el-col>
           <el-col :span="4">
             <el-form-item label="终点桩号">
-              <el-select v-model="dataParam.M0010_END_PILE" style="width:100%">
+              <el-select
+                v-model="dataParam.M0010_END_PILE"
+                style="width:100%"
+                size="medium "
+              >
                 <el-option
                   v-for="item in pileList"
                   :key="item.M0010_ID"
@@ -61,6 +66,7 @@
                 v-model="dataParam.YEAR"
                 type="year"
                 value-format="yyyy"
+                size="medium "
               >
               </el-date-picker>
             </el-form-item>
@@ -70,11 +76,12 @@
               <el-input
                 placeholder="请输入关键字"
                 v-model="dataParam.SEARCH_KEY"
+                size="medium "
               >
               </el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="4" style="padding-top:4px;padding-left:5px">
+          <el-col :span="4" style="padding-top:3px;padding-left:5px">
             <el-button type="primary" @click="searchFun" size="small"
               >搜索</el-button
             >
@@ -88,8 +95,8 @@
         >
         <span class="serach-span">
           您的检索：
-          <span v-show="!isSearch"> 无 </span>
-          <span> {{ searchVal }} </span>
+          <span v-show="!isSearch" style="font-size:12px;color:#999"> 无 </span>
+          <span style="font-size:12px;color:#999"> {{ searchVal }} </span>
         </span>
       </div>
       <div class="table-div">
@@ -388,7 +395,6 @@
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="editSaveFun">确 认</el-button>
         <el-button @click="editShow = false">取 消</el-button>
-        
       </div>
     </el-dialog>
     <!-- 查看 -->
@@ -485,34 +491,34 @@ export default {
         M0009_PILENUMBER_DREICT: 1,
         M0009_PILENUMBER_PRECI: '',
         M0009_PILENUMBER_LATI: '',
-        M0009_PILENUMBER_YEAR: ''
+        M0009_PILENUMBER_YEAR: '',
       },
       rules: {
         M0008_ID: [
-          { required: true, message: '请选择高速名称', trigger: 'change' }
+          { required: true, message: '请选择高速名称', trigger: 'change' },
         ],
         M0009_LOAD_NAME: [
-          { required: true, message: '请选择所属路段', trigger: 'change' }
+          { required: true, message: '请选择所属路段', trigger: 'change' },
         ],
         M0009_PILENUMBER_NAME: [
           { required: true, message: '请填写桩号', trigger: 'change' },
-          { validator: validPile, trigger: 'blur' }
+          { validator: validPile, trigger: 'blur' },
         ],
         M0009_PILENUMBER_PRECI: [
           { required: true, message: '请填写经度', trigger: 'change' },
-          { validator: validPreci, trigger: 'blur' }
+          { validator: validPreci, trigger: 'blur' },
         ],
         M0009_PILENUMBER_LATI: [
           { required: true, message: '请填写纬度', trigger: 'change' },
-          { validator: validLati, trigger: 'blur' }
+          { validator: validLati, trigger: 'blur' },
         ],
         M0009_PILENUMBER_YEAR: [
           {
             required: true,
             message: '请选择归属年份',
-            trigger: 'change'
-          }
-        ]
+            trigger: 'change',
+          },
+        ],
       },
       infoForm: {},
       tableData: [],
@@ -526,27 +532,27 @@ export default {
         M0010_START_PILE: '',
         M0010_END_PILE: '',
         YEAR: '',
-        SEARCH_KEY: ''
+        SEARCH_KEY: '',
       },
       pileList: [], // 桩好数组
       highspeedList: [], //
       isSearch: false,
-      searchVal: '' // 搜索内容
+      searchVal: '', // 搜索内容
     }
   },
   methods: {
     // 请求所有的起点 / 终点桩号
     assetDataFun() {
-      this.$api.post('/cycle/load/listAll', {}, null, r => {
+      this.$api.post('/cycle/load/listAll', {}, null, (r) => {
         this.pileList = r.data
       })
     },
     // 根据 所属路段 获取起点，终点桩号
     changeSelect(val) {
       let _data = {
-        M0010_LOAD_NAME: val
+        M0010_LOAD_NAME: val,
       }
-      this.$api.post('/cycle/load/listAll', _data, null, r => {
+      this.$api.post('/cycle/load/listAll', _data, null, (r) => {
         this.pileList = r.data
       })
     },
@@ -590,19 +596,24 @@ export default {
       this.$nextTick(() => {
         this.$refs['addFormRef'].resetFields()
       })
-      this.$api.post(`/cycle/utilData/getId`, {}, null, r => {
+      this.$api.post(`/cycle/utilData/getId`, {}, null, (r) => {
         this.addForm.M0009_ID = r.data
       })
     },
     // 添加保存
     addSaveFun() {
-      this.$refs['addFormRef'].validate(valid => {
+      this.$refs['addFormRef'].validate((valid) => {
         if (valid) {
-          this.$api.post('/cycle/pileNumber/insert', this.addForm, null, r => {
-            this.$message.success('新增成功')
-            this.addShow = false
-            this.getPileList()
-          })
+          this.$api.post(
+            '/cycle/pileNumber/insert',
+            this.addForm,
+            null,
+            (r) => {
+              this.$message.success('新增成功')
+              this.addShow = false
+              this.getPileList()
+            }
+          )
         }
       })
     },
@@ -623,20 +634,25 @@ export default {
         `/cycle/pileNumber/selectById?ID=${data.M0009_ID}`,
         {},
         null,
-        r => {
+        (r) => {
           this.editForm = Object.assign({}, r.data)
         }
       )
     },
     // 修改保存
     editSaveFun() {
-      this.$refs['editFormRef'].validate(valid => {
+      this.$refs['editFormRef'].validate((valid) => {
         if (valid) {
-          this.$api.post('/cycle/pileNumber/update', this.editForm, null, r => {
-            this.$message.success('修改成功')
-            this.editShow = false
-            this.getPileList()
-          })
+          this.$api.post(
+            '/cycle/pileNumber/update',
+            this.editForm,
+            null,
+            (r) => {
+              this.$message.success('修改成功')
+              this.editShow = false
+              this.getPileList()
+            }
+          )
         }
       })
     },
@@ -645,13 +661,13 @@ export default {
       this.$confirm('确定要删除该条记录?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
       }).then(() => {
         this.$api.post(
           `/cycle/pileNumber/deleteById?ID=${data.M0009_ID}`,
           {},
           null,
-          r => {
+          (r) => {
             this.$message.success('删除成功')
             this.getPileList()
           }
@@ -663,9 +679,9 @@ export default {
       let _data = {
         currentPage: this.currentPage,
         showCount: this.showCount,
-        searchMap: this.dataParam
+        searchMap: this.dataParam,
       }
-      this.$api.post('/cycle/pileNumber/listPage', _data, null, r => {
+      this.$api.post('/cycle/pileNumber/listPage', _data, null, (r) => {
         this.loading = false
         this.tableData = r.data.returnParam
         this.total = r.data.totalResult
@@ -674,13 +690,13 @@ export default {
     },
     // 管辖路段接口
     getLoadList() {
-      this.$api.post('/cycle/load/listLoadName', {}, null, r => {
+      this.$api.post('/cycle/load/listLoadName', {}, null, (r) => {
         this.loadList = r.data
       })
     },
     // 选择高速下拉框 list
     getHighspeedList() {
-      this.$api.post('/cycle/highspeed/listAll', {}, null, r => {
+      this.$api.post('/cycle/highspeed/listAll', {}, null, (r) => {
         this.highspeedList = r.data
       })
     },
@@ -694,13 +710,13 @@ export default {
         this.$confirm('确定要删除这些记录?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning'
+          type: 'warning',
         }).then(() => {
           this.$api.post(
             `/cycle/pileNumber/deleteByIds?IDS=${_list}`,
             {},
             null,
-            r => {
+            (r) => {
               this.$message.success('删除成功')
               this.getPileList()
               this.selectList = []
@@ -710,17 +726,20 @@ export default {
       } else {
         this.$message.warning('请选择要删除的数据！')
       }
-    }
+    },
   },
   created() {
     this.getHighspeedList()
     this.getLoadList()
     this.getPileList()
     this.assetDataFun()
-  }
+  },
 }
 </script>
 <style lang="scss">
+.el-scrollbar__wrap {
+  margin-bottom: 0 !important;
+}
 .meters-wrap {
   .el-dialog__header {
     background: #f5f5f5;
@@ -741,6 +760,9 @@ export default {
       .el-button--mini {
         padding: 4px 5px;
       }
+      // .el-input__inner {
+      //   height: 36px !important;
+      // }
     }
     .div-btn {
       margin: 10px 0;

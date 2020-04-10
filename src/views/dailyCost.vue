@@ -306,7 +306,7 @@
               ></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="4" style="margin-top:5px;padding-left:10px;">
             <el-button type="primary" @click="addSearchFun" size="small"
               >搜索</el-button
             >

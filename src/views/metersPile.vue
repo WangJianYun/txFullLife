@@ -196,7 +196,7 @@
               <el-form-item prop="M0008_ID">
                 <el-select
                   v-model="addForm.M0008_ID"
-                  style="width:100%"
+                  style="width:80%"
                   size="small"
                 >
                   <el-option
@@ -213,7 +213,7 @@
               <el-form-item prop="M0009_LOAD_NAME">
                 <el-select
                   v-model="addForm.M0009_LOAD_NAME"
-                  style="width:100%"
+                  style="width:80%"
                   size="small"
                 >
                   <el-option
@@ -234,6 +234,7 @@
                   v-model.trim="addForm.M0009_PILENUMBER_NAME"
                   size="small"
                   maxlength="20"
+                  style="width:80%"
                 ></el-input>
               </el-form-item>
             </td>
@@ -252,6 +253,7 @@
                 <el-input
                   v-model.trim="addForm.M0009_PILENUMBER_PRECI"
                   size="small"
+                  style="width:80%"
                 ></el-input>
               </el-form-item>
             </td>
@@ -261,6 +263,7 @@
                 <el-input
                   v-model.trim="addForm.M0009_PILENUMBER_LATI"
                   size="small"
+                  style="width:80%"
                 ></el-input>
               </el-form-item>
             </td>
@@ -273,7 +276,7 @@
                   v-model="addForm.M0009_PILENUMBER_YEAR"
                   type="date"
                   placeholder="选择日期"
-                  style="width: 100%"
+                  style="width:80%"
                   size="small"
                   value-format="yyyy-MM-dd"
                 >

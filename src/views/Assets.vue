@@ -259,6 +259,7 @@
                   v-model.trim="addForm.T0002_ASSET_NAME"
                   size="small"
                   maxlength="50"
+                  style="width:80%;text-indent:5px;"
                 ></el-input>
               </el-form-item>
             </td>
@@ -267,8 +268,8 @@
               <el-form-item prop="T0001_ID">
                 <el-select
                   v-model="addForm.T0001_ID"
-                  style="width:100%"
                   size="small"
+                  style="width:80%;text-indent:5px;"
                 >
                   <el-option
                     v-for="item in assetTypeList"
@@ -286,7 +287,7 @@
               <el-form-item prop="T0002_LOAD_NAME">
                 <el-select
                   v-model="addForm.T0002_LOAD_NAME"
-                  style="width:100%"
+                  style="width:80%;text-indent:5px;"
                   size="small"
                 >
                   <el-option
@@ -310,6 +311,7 @@
                   v-model.trim="addForm.T0002_START_PILE"
                   size="small"
                   maxlength="20"
+                  style="width:80%;text-indent:5px;"
                 ></el-input>
               </el-form-item>
             </td>
@@ -320,6 +322,7 @@
                   v-model.trim="addForm.T0002_END_PILE"
                   size="small"
                   maxlength="20"
+                  style="width:80%;text-indent:5px;"
                 ></el-input>
               </el-form-item>
             </td>
@@ -331,6 +334,7 @@
                 <el-input
                   v-model.trim="addForm.T0002_ASSET_AMOUNT"
                   size="small"
+                  style="width:80%;text-indent:5px;"
                 ></el-input>
               </el-form-item>
             </td>
@@ -338,10 +342,10 @@
             <td>
               <el-form-item prop="T0002_ASSET_DATE">
                 <el-date-picker
+                  style="width:80%;text-indent:5px;"
                   v-model="addForm.T0002_ASSET_DATE"
                   type="date"
                   placeholder="选择年"
-                  style="width: 100%"
                   size="small"
                   value-format="yyyy-MM-dd"
                 >
@@ -357,7 +361,8 @@
             <td class="bg-td">所属养管公司：</td>
             <td>
               <el-form-item prop="T0002_CURING_UNIT">
-                <el-input
+                <el-input                
+                  style="width:80%;text-indent:5px;"
                   v-model.trim="addForm.T0002_CURING_UNIT"
                   size="small"
                   maxlength="50"
@@ -373,6 +378,7 @@
                   v-model.trim="addForm.T0002_DUTY_PERSON"
                   size="small"
                   maxlength="20"
+                  style="width:80%;text-indent:5px;"
                 ></el-input>
               </el-form-item>
             </td>
@@ -383,6 +389,7 @@
                   v-model.trim="addForm.T0002_TOUCH_TEL"
                   size="small"
                   maxlength="20"
+                  style="width:80%;text-indent:5px;"
                 ></el-input>
               </el-form-item>
             </td>
@@ -394,6 +401,7 @@
                 <el-input
                   v-model.trim="addForm.T0002_ASSET_PRECI"
                   size="small"
+                  style="width:80%;text-indent:5px;"
                 ></el-input>
               </el-form-item>
             </td>
@@ -403,6 +411,7 @@
                 <el-input
                   v-model.trim="addForm.T0002_ASSET_LATI"
                   size="small"
+                  style="width:80%;text-indent:5px;"
                 ></el-input>
               </el-form-item>
             </td>

@@ -221,7 +221,7 @@
       :close-on-click-modal="false"
       custom-class="dialog-div"
     >
-      <el-row :gutter="10">
+      <el-row>
         <el-form
           label-position="right"
           label-width="80px"
@@ -286,7 +286,7 @@
               ></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="4" style="margin-top:5px;padding-left:10px;">
             <el-button type="primary" @click="addSearchFun" size="small"
               >搜索</el-button
             >
@@ -753,12 +753,12 @@ export default {
           }
         ]
       },
-      // addSearch: {
-      //   T0001_ID: '',
-      //   SEARCH_KEY: '',
-      //   T0002_START_PILE: '',
-      //   T0002_END_PILE: ''
-      // },
+      addSearch: {
+        T0001_ID: '',
+        SEARCH_KEY: '',
+        T0002_START_PILE: '',
+        T0002_END_PILE: ''
+      },
       editSearch: {
         T0001_ID: '',
         SEARCH_KEY: ''
@@ -800,11 +800,11 @@ export default {
       assetTypeList: [], // 资产类别
       assetDataList: [],
       pileList: [], // 起点，终点桩号 list
-      // searchPileList: [], // 新增/修改的 起点，终点桩号 list
+      searchPileList: [], // 新增/修改的 起点，终点桩号 list
       searchVal: '', // 搜索内容
-      isSearch: false // 列表是否搜索
-      // addSearchVal: '', // 新建 修改搜索内容
-      // isAddSearch: false // 新建 修改 是否搜索
+      isSearch: false, // 列表是否搜索
+      addSearchVal: '', // 新建 修改搜索内容
+      isAddSearch: false // 新建 修改 是否搜索
     }
   },
   methods: {
@@ -881,44 +881,44 @@ export default {
         this.dataParams.ID = r.data
         this.addForm.T0005_ID = r.data
       })
-      // this.$api.post('/cycle/assetData/listAll', {}, null, r => {
-      //   this.searchPileList = r.data
-      // })
+      this.$api.post('/cycle/assetData/listAll', {}, null, r => {
+        this.searchPileList = r.data
+      })
     },
     // 新建 选中 资产类别
-    // addSearchChange(val) {
-    //   let _data = {
-    //     T0001_ID: val
-    //   }
-    //   this.addSearch.T0002_START_PILE = ''
-    //   this.addSearch.T0002_END_PILE = ''
-    //   this.addForm.T0002_ID = ''
-    //   this.editForm.T0002_ID = ''
-    //   // 请求 资产类别 对应的 资产信息  和起点，终点桩号
-    //   this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
-    //     // this.searchPileList = r.data
-    //     this.assetDataList = r.data
-    //   })
-    // },
+    addSearchChange(val) {
+      let _data = {
+        T0001_ID: val
+      }
+      this.addSearch.T0002_START_PILE = ''
+      this.addSearch.T0002_END_PILE = ''
+      this.addForm.T0002_ID = ''
+      this.editForm.T0002_ID = ''
+      // 请求 资产类别 对应的 资产信息  和起点，终点桩号
+      this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
+        this.searchPileList = r.data
+        this.assetDataList = r.data
+      })
+    },
     // 新建 / 修改 搜索
-    // addSearchFun() {
-    //   this.isAddSearch = true
-    //   this.$api.post(`/cycle/assetData/listAll`, this.addSearch, null, r => {
-    //     this.assetDataList = r.data
-    //     this.addSearchVal = r.search_val
-    //   })
-    // },
+    addSearchFun() {
+      this.isAddSearch = true
+      this.$api.post(`/cycle/assetData/listAll`, this.addSearch, null, r => {
+        this.assetDataList = r.data
+        this.addSearchVal = r.search_val
+      })
+    },
     // 新建/ 修改 重置
-    // addReset() {
-    //   this.addSearchVal = ''
-    //   this.isAddSearch = false
-    //   this.searchPileList = []
-    //   this.addSearch.T0001_ID = ''
-    //   this.addSearch.SEARCH_KEY = ''
-    //   this.addSearch.T0002_START_PILE = ''
-    //   this.addSearch.T0002_END_PILE = ''
-    //   this.getAssetDataList()
-    // },
+    addReset() {
+      this.addSearchVal = ''
+      this.isAddSearch = false
+      this.searchPileList = []
+      this.addSearch.T0001_ID = ''
+      this.addSearch.SEARCH_KEY = ''
+      this.addSearch.T0002_START_PILE = ''
+      this.addSearch.T0002_END_PILE = ''
+      this.getAssetDataList()
+    },
     // 新建保存
     addSaveFun() {
       // this.$refs['searchForm'].validate(vaild => {
@@ -959,9 +959,9 @@ export default {
     },
     // 点击修改
     handleEdit(data) {
-      // this.$api.post('/cycle/assetData/listAll', {}, null, r => {
-      //   this.searchPileList = r.data
-      // })
+      this.$api.post('/cycle/assetData/listAll', {}, null, r => {
+        this.searchPileList = r.data
+      })
       this.imageList = []
       this.imageUrl = ''
       this.dataParams.ID = data.T0005_ID

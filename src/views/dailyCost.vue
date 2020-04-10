@@ -11,7 +11,7 @@
     </p>
     <div class="content">
       <el-row :gutter="0">
-        <el-form label-position="right" label-width="70px" :model="searchMap">
+        <el-form label-position="right" label-width="80px" :model="searchMap">
           <el-col :span="4">
             <el-form-item label="资产类别">
               <el-select
@@ -63,8 +63,11 @@
           </el-col>
           <el-col :span="4">
             <el-form-item label="终点桩号">
-              <el-select v-model="searchMap.T0002_END_PILE" style="width:100%" 
-                size="small">
+              <el-select
+                v-model="searchMap.T0002_END_PILE"
+                style="width:100%"
+                size="small"
+              >
                 <el-option
                   v-for="item in pileList"
                   :key="item.T0002_ID"
@@ -74,7 +77,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="5">
             <el-form-item label="起止日期">
               <el-date-picker
                 style="width:100%"
@@ -100,14 +103,17 @@
       <div class="div-btn">
         <!-- <el-button type="primary" @click="searchFun">搜索</el-button>
         <el-button @click="reset">重置</el-button> -->
-        <el-button type="primary" icon="el-icon-delete" @click="delListFun"
-                size="small"
+        <el-button
+          type="primary"
+          icon="el-icon-delete"
+          @click="delListFun"
+          size="small"
           >批量删除</el-button
         >
         <span class="serach-span">
           您的检索：
-          <span v-show="!isSearch"> 无 </span>
-          <span> {{ searchVal }} </span>
+          <span v-show="!isSearch" style="font-size:12px;color:#999"> 无 </span>
+          <span style="font-size:12px;color:#999"> {{ searchVal }} </span>
         </span>
       </div>
       <div class="table-div">
@@ -249,6 +255,7 @@
                 v-model="addSearch.T0001_ID"
                 style="width:100%"
                 @change="addSearchChange"
+                size="small"
               >
                 <el-option
                   v-for="item in assetTypeList"
@@ -264,6 +271,7 @@
               <el-select
                 v-model="addSearch.T0002_START_PILE"
                 style="width:100%"
+                size="small"
               >
                 <el-option
                   v-for="item in searchPileList"
@@ -276,7 +284,11 @@
           </el-col>
           <el-col :span="5">
             <el-form-item label="终点桩号">
-              <el-select v-model="addSearch.T0002_END_PILE" style="width:100%">
+              <el-select
+                v-model="addSearch.T0002_END_PILE"
+                style="width:100%"
+                size="small"
+              >
                 <el-option
                   v-for="item in searchPileList"
                   :key="item.T0002_ID"
@@ -288,7 +300,10 @@
           </el-col>
           <el-col :span="5">
             <el-form-item label="关键字">
-              <el-input v-model.trim="addSearch.SEARCH_KEY"></el-input>
+              <el-input
+                v-model.trim="addSearch.SEARCH_KEY"
+                size="small"
+              ></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="4">
@@ -301,8 +316,10 @@
       </el-row>
       <p style="padding:20px 10px">
         您的检索：
-        <span v-show="!isAddSearch"> 无 </span>
-        <span> {{ addSearchVal }} </span>
+        <span v-show="!isAddSearch" style="font-size:12px;color:#999">
+          无
+        </span>
+        <span style="font-size:12px;color:#999"> {{ addSearchVal }} </span>
       </p>
       <el-form :model="addForm" :rules="rules" ref="addFormRef">
         <table class="add-table">
@@ -957,9 +974,9 @@ export default {
     getAssetTypeList() {
       this.$api.post(`/cycle/assetType/listAll`, {}, null, r => {
         // console.log(r)
-        r.data.forEach(ele=>{
-          if(ele.T0001_PID!=='0'){
-            ele.T0001_ASSETTYPE_NAME = '--'+ele.T0001_ASSETTYPE_NAME
+        r.data.forEach(ele => {
+          if (ele.T0001_PID !== '0') {
+            ele.T0001_ASSETTYPE_NAME = '--' + ele.T0001_ASSETTYPE_NAME
           }
         })
         this.assetTypeList = r.data
@@ -1160,7 +1177,9 @@ export default {
 </script>
 <style lang="scss">
 #dailycost {
-  .add-table tr td{padding:5px 10px!important;}
+  .add-table tr td {
+    padding: 5px 10px !important;
+  }
   .el-dialog__header {
     background: #f5f5f5;
   }

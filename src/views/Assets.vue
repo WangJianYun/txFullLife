@@ -18,7 +18,7 @@
                 v-model="searchMap.T0001_ID"
                 style="width:100%"
                 @change="changeSelect"
-                size="medium "
+                size="small"
               >
                 <el-option
                   v-for="item in assetTypeList"
@@ -34,7 +34,7 @@
               <el-select
                 v-model="searchMap.T0002_START_PILE"
                 style="width:100%"
-                size="medium "
+                size="small"
               >
                 <el-option
                   v-for="item in pileList"
@@ -50,7 +50,7 @@
               <el-select
                 v-model="searchMap.T0002_END_PILE"
                 style="width:100%"
-                size="medium "
+                size="small"
               >
                 <el-option
                   v-for="item in pileList"
@@ -68,7 +68,7 @@
                 v-model="searchMap.YEAR"
                 type="year"
                 value-format="yyyy"
-                size="medium "
+                size="small"
               >
               </el-date-picker>
             </el-form-item>
@@ -78,7 +78,7 @@
               <el-input
                 placeholder="请输入关键字"
                 v-model="searchMap.SEARCH_KEY"
-                size="medium "
+                size="small"
               >
               </el-input>
             </el-form-item>

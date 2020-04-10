@@ -439,7 +439,7 @@ export default {
             }
           },
           grid: {
-            left: '6%',
+            left: '8%',
             top: '8%',
             right: '0',
             bottom: '8%'
@@ -482,7 +482,7 @@ export default {
             }
           },
           grid: {
-            left: '6%',
+            left: '8%',
             top: '8%',
             right: '0',
             bottom: '8%'
@@ -545,7 +545,7 @@ export default {
                 name: '桥梁技术等级',
                 type: 'pie',
                 radius: '55%',
-                center: ['50%', '60%'],
+                center: ['50%', '50%'],
                 data: arr1,
                 emphasis: {
                   itemStyle: {

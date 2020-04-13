@@ -19,7 +19,6 @@ body,
 }
 #app {
   min-width: 1800px;
-  overflow-x: scroll;
 }
 // #nav {
 //   padding: 30px;

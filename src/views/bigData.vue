@@ -114,7 +114,7 @@
             >
             </el-date-picker>
             <el-button type="primary" size="mini" @click="getSerch"
-              >搜</el-button
+              >搜索</el-button
             >
             <el-button type="info" class="more" size="mini" @click="checkRow"
               >查看<span style="padding-left:10px">>></span></el-button
@@ -682,7 +682,7 @@ export default {
                 // height: {totalHeight} - y - y2,
                 sort: 'ascending',
                 gap: 2,
-                height:'240px',
+                height: '240px',
                 label: {
                   normal: {
                     show: true,

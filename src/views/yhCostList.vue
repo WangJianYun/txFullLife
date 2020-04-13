@@ -230,7 +230,7 @@
           ref="searchForm"
         >
           <el-col :span="5">
-            <el-form-item label="资产类别" prop="T0001_ID">
+            <el-form-item label="资产类别" prop="T0001_ID" required>
               <el-select
                 v-model="addSearch.T0001_ID"
                 style="width:100%"
@@ -1146,8 +1146,11 @@ export default {
 </script>
 <style lang="scss">
 #yhCostMap {
-  .el-select--small {
-    width: 80% !important;
+  // .el-select--small {
+  //   width: 80% !important;
+  // }
+  .add-table tr td {
+    padding: 5px 10px !important;
   }
   .el-dialog__header {
     background: #f5f5f5;

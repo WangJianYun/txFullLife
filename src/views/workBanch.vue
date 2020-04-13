@@ -65,19 +65,16 @@
           </tr>
         </table>
 
-        <p
-          style="text-indent:2rem;margin:20px auto;font-size:14px;line-height:26px;width:96%;"
-          class="remark"
-        >
+        <p class="remark">
           土桥铜川市合凤高速南部塬区，建筑年代2015年，建设单位：*****建筑公司，属二类技术等级桥梁。
         </p>
         <table class="bdtable" id="techLevel">
           <thead>
             <tr>
               <th>技术等级</th>
-              <th>检测公司</th>
-              <th>检测时间</th>
-              <th>详细</th>
+              <th style="min-width:165px">检测公司</th>
+              <th style="min-width:160px">检测时间</th>
+              <th style="min-width:113px">详细</th>
             </tr>
           </thead>
           <tbody>
@@ -85,7 +82,11 @@
               <td class="techlevel">二类</td>
               <td class="techcomp">陕西建大维固质量检测技术有限公司</td>
               <td class="techtime">2018-03-25</td>
-              <td><el-button type="primary" size="small">详细</el-button></td>
+              <td style="min-width:113px">
+                <el-button type="primary" size="small" @click="toTech"
+                  >详细</el-button
+                >
+              </td>
             </tr>
           </tbody>
         </table>
@@ -105,7 +106,11 @@
               <td class="fgssr">1</td>
               <td class="fgszc">1</td>
               <td class="fgsnf">2018</td>
-              <td><el-button type="primary" size="small">详细</el-button></td>
+              <td style="min-width:113px">
+                <el-button type="primary" size="small" @click="toDayliCost"
+                  >详细</el-button
+                >
+              </td>
             </tr>
           </tbody>
         </table>
@@ -116,7 +121,7 @@
               <th>收入</th>
               <th>支出</th>
               <th>年份</th>
-              <th>详细</th>
+              <th style="min-width:113px">详细</th>
             </tr>
           </thead>
           <tbody>
@@ -125,7 +130,11 @@
               <td>1</td>
               <td>1</td>
               <td>2018</td>
-              <td><el-button type="primary" size="small">详细</el-button></td>
+              <td style="width:113px">
+                <el-button type="primary" size="small" @click="toDayliCost"
+                  >详细</el-button
+                >
+              </td>
             </tr>
           </tbody>
         </table>
@@ -135,7 +144,7 @@
               <th style="min-width:130px;">养护费用（万元）</th>
               <th>年份</th>
               <th>基本明细（万元）</th>
-              <th>详细</th>
+              <th style="min-width:113px">详细</th>
             </tr>
           </thead>
           <tbody>
@@ -145,7 +154,11 @@
               <td>
                 日常养护（80）小修保养（120）中修工程（120）大修工程（180）
               </td>
-              <td><el-button type="primary" size="small">详细</el-button></td>
+              <td style="min-width:113px">
+                <el-button type="primary" size="small" @click="toConsCost"
+                  >详细</el-button
+                >
+              </td>
             </tr>
           </tbody>
         </table>
@@ -362,11 +375,7 @@
                   width="120"
                 >
                 </el-table-column>
-                <el-table-column
-                  prop="num"
-                  label="数量"
-                  align="center"
-                >
+                <el-table-column prop="num" label="数量" align="center">
                 </el-table-column>
                 <el-table-column label="图片" align="center">
                   <template slot-scope="scope">
@@ -650,11 +659,11 @@ export default {
           return h(
             'div',
             {
-              style: { background: '#80cbc4', whiteSpace: 'nowrap' },
+              style: { background: '#80cbc4', whiteSpace: 'nowrap' }
             },
             this.mapData.title
           )
-        },
+        }
       },
       astZoom: 10,
       astCenter: [108.860159, 34.978],
@@ -665,7 +674,7 @@ export default {
       locMcenter: [108.860159, 34.978],
       loclabel: {
         content: '',
-        offset: [10, -20],
+        offset: [10, -20]
       },
       assAmap: false,
       portName: '',
@@ -678,7 +687,7 @@ export default {
         { id: '4', name: '互通立交', src: require('../assets/htlj.png') },
         { id: '5', name: '收费站', src: require('../assets/sfz.png') },
         { id: '6', name: '隧道', src: require('../assets/tenant.png') },
-        { id: '7', name: '涵洞', src: require('../assets/tunnel.png') },
+        { id: '7', name: '涵洞', src: require('../assets/tunnel.png') }
       ],
       astMarkers: [],
       zctypeArr: [],
@@ -779,7 +788,7 @@ export default {
                     .getElementsByClassName('remark')[0].innerText =
                     mkdt.COMPANY_INFO[0].M0018_COMPANY_REMARK
                   let trs = ''
-                  mkdt.CURING_COST.forEach((element) => {
+                  mkdt.CURING_COST.forEach(element => {
                     trs +=
                       '<tr><td>' +
                       (element.INCOME_MONEY - element.TOCOME_MONEY) +
@@ -917,14 +926,14 @@ export default {
               }
             }
           }
-        },
+        }
       },
       condition: {
         ASSET_TYPE_ID: '',
         START_PILE: '',
         END_PILE: '',
-        YEAR: '',
-      },
+        YEAR: ''
+      }
     }
   },
   mounted() {
@@ -936,7 +945,7 @@ export default {
   methods: {
     loadMarkers() {
       // let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
-      this.$api.post('/cycle/desktopData/getListAll', {}, null, (r) => {
+      this.$api.post('/cycle/desktopData/getListAll', {}, null, r => {
         // console.log(r)
         let marks = []
         r.ASSET_List.forEach(function(item, index) {
@@ -1014,7 +1023,7 @@ export default {
         '/cycle/desktopData/getListAll',
         this.condition,
         null,
-        (r) => {
+        r => {
           // console.log(r.ASSET_List)
           r.ASSET_List.forEach(function(item, index) {
             // console.log(item)
@@ -1058,7 +1067,7 @@ export default {
         Message({
           showClose: true,
           message: '无票据报告信息!!!',
-          type: 'warning',
+          type: 'warning'
         })
       }
     },
@@ -1070,7 +1079,7 @@ export default {
       this.locMcenter = [108.860159, 34.978]
       this.loclabel = {
         content: '',
-        offset: [10, -20],
+        offset: [10, -20]
       }
     },
     closeImgDialog() {
@@ -1079,7 +1088,7 @@ export default {
     },
     loadSelect() {
       // let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
-      this.$api.post('/cycle/assetData/listAll', {}, null, (r) => {
+      this.$api.post('/cycle/assetData/listAll', {}, null, r => {
         console.log(r)
         let arr1 = []
         let arr2 = []
@@ -1092,7 +1101,7 @@ export default {
         this.startzhArr = arr1
         this.endzhArr = arr2
       })
-      this.$api.post('/cycle/assetType/listAll', {}, null, (r) => {
+      this.$api.post('/cycle/assetType/listAll', {}, null, r => {
         this.zctypeArr = r.data
         console.log(this.zctypeArr)
         r.data.forEach((item, index) => {
@@ -1105,7 +1114,7 @@ export default {
     loadTableData() {
       // let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
       // console.log(token)
-      this.$api.post('/cycle/assetData/listPage', {}, null, (r) => {
+      this.$api.post('/cycle/assetData/listPage', {}, null, r => {
         console.log(r.data.returnParam)
         r.data.returnParam.forEach((item, index) => {
           // if (item.T0002_ASSET_NAME.indexOf('加油站') > -1) {
@@ -1143,7 +1152,7 @@ export default {
         })
         this.zcTable = r.data.returnParam.slice(0, 5)
       })
-      this.$api.post('/cycle/techData/listPage', {}, null, (r) => {
+      this.$api.post('/cycle/techData/listPage', {}, null, r => {
         // console.log(r)
         r.data.returnParam.forEach((item, index) => {
           if (!item.T0002_ASSET_NAME) item.T0002_ASSET_NAME = ''
@@ -1162,7 +1171,7 @@ export default {
         })
         this.techTable = r.data.returnParam.slice(0, 5)
       })
-      this.$api.post('/cycle/curingCost/listPage', {}, null, (r) => {
+      this.$api.post('/cycle/curingCost/listPage', {}, null, r => {
         // console.log(r)
         r.data.returnParam.forEach((item, index) => {
           if (!item.T0002_ASSET_NAME) item.T0002_ASSET_NAME = ''
@@ -1187,7 +1196,7 @@ export default {
         })
         this.dayliTable = r.data.returnParam.slice(0, 5)
       })
-      this.$api.post('/cycle/costBudget/listPage', {}, null, (r) => {
+      this.$api.post('/cycle/costBudget/listPage', {}, null, r => {
         // console.log(r)
         r.data.returnParam.forEach((item, index) => {
           if (!item.T0002_ASSET_NAME) item.T0002_ASSET_NAME = ''
@@ -1220,8 +1229,8 @@ export default {
         })
         this.conservTable = r.data.returnParam.slice(0, 5)
       })
-    },
-  },
+    }
+  }
 }
 </script>
 <style lang="scss">
@@ -1229,6 +1238,18 @@ export default {
   position: relative;
   .el-dialog__header {
     background: #f5f5f5;
+  }
+  .remark {
+    text-indent: 2rem;
+    margin: 20px auto;
+    font-size: 14px;
+    line-height: 26px;
+    width: 94%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
   }
   // .el-dialog__title{color:#FFF;}
   // .el-dialog__headerbtn .el-dialog__close{color: #fff;}
@@ -1363,13 +1384,17 @@ export default {
     display: none;
   }
   #mkDialog #mkBox {
-    width: 600px;
+    width: 620px;
     background: #fff;
     position: absolute;
     left: 25%;
     top: 80px;
     box-shadow: 0 0 5px #bbb;
-    // padding: 8px;
+    // padding:0 8px;
+  }
+  .baseTb,
+  .fgstb {
+    padding: 0 15px;
   }
   @media screen and (max-width: 1400px) {
     #mkDialog #mkBox {

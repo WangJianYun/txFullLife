@@ -242,15 +242,9 @@
       custom-class="dialog-div"
     >
       <el-row :gutter="10">
-        <el-form
-          label-position="right"
-          label-width="80px"
-          :model="addSearch"
-          :rules="rules1"
-          ref="searchForm"
-        >
+        <el-form label-position="right" label-width="80px" :model="addSearch">
           <el-col :span="5">
-            <el-form-item label="资产类别" prop="T0001_ID">
+            <el-form-item label="资产类别">
               <el-select
                 v-model="addSearch.T0001_ID"
                 style="width:100%"
@@ -765,11 +759,11 @@ export default {
         T0004_CURINGCOST_REMARK: ''
       },
       // 表单验证规则
-      rules1: {
-        T0001_ID: [
-          { required: true, message: '请选择资产类别', trigger: 'change' }
-        ]
-      },
+      // rules1: {
+      //   T0001_ID: [
+      //     { required: true, message: '请选择资产类别', trigger: 'change' }
+      //   ]
+      // },
       rules: {
         T0002_ID: [
           { required: true, message: '请选择资产', trigger: 'change' }
@@ -907,7 +901,7 @@ export default {
       this.addReset()
       this.$nextTick(() => {
         this.$refs['addFormRef'].resetFields()
-        this.$refs['searchForm'].resetFields()
+        // this.$refs['searchForm'].resetFields()
       })
       this.$api.post(`/cycle/utilData/getId`, {}, null, r => {
         this.dataParams.ID = r.data
@@ -951,24 +945,19 @@ export default {
     },
     // 新增保存
     addSaveFun() {
-      this.$refs['searchForm'].validate(valid => {
+      // this.$refs['searchForm'].validate(valid => {
+      //   if (valid) {
+      this.$refs['addFormRef'].validate(valid => {
         if (valid) {
-          this.$refs['addFormRef'].validate(valid => {
-            if (valid) {
-              this.$api.post(
-                '/cycle/curingCost/insert',
-                this.addForm,
-                null,
-                r => {
-                  this.$message.success('新增成功')
-                  this.addShow = false
-                  this.getCuringList()
-                }
-              )
-            }
+          this.$api.post('/cycle/curingCost/insert', this.addForm, null, r => {
+            this.$message.success('新增成功')
+            this.addShow = false
+            this.getCuringList()
           })
         }
       })
+      //   }
+      // })
     },
     // 获取资产类别 list
     getAssetTypeList() {

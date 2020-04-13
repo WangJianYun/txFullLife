@@ -794,7 +794,7 @@ export default {
       border: 1px solid #dcdfe6;
       td {
         border: 1px solid #dcdfe6;
-        padding: 15px 10px;
+        padding: 10px 10px;
       }
     }
     .bg-td {

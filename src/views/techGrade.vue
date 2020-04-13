@@ -374,7 +374,7 @@
               <el-form-item prop="T0002_ID">
                 <el-select
                   v-model="addForm.T0002_ID"
-                  style="width:90%"
+                  style="width:100%"
                   size="small"
                 >
                   <el-option
@@ -391,7 +391,7 @@
               <el-form-item prop="T0006_ID">
                 <el-select
                   v-model="addForm.T0006_ID"
-                  style="width:90%"
+                  style="width:100%"
                   size="small"
                 >
                   <el-option
@@ -412,7 +412,7 @@
                   v-model.trim="addForm.T0003_CHECK_UNIT"
                   size="small"
                   maxlength="20"
-                  style="width: 90%"
+                  style="width: 100%"
                 ></el-input>
               </el-form-item>
             </td>
@@ -423,7 +423,7 @@
                   v-model="addForm.T0003_CHECK_TIME"
                   type="date"
                   placeholder="选择年"
-                  style="width: 90%"
+                  style="width: 100%"
                   size="small"
                   value-format="yyyy-MM-dd"
                 >
@@ -1334,6 +1334,9 @@ export default {
 </script>
 <style lang="scss">
 .techgrade-wrap {
+   .add-table tr td {
+    padding: 5px 10px !important;
+  }
   .tip {
     height: 30px;
     width: 150px;
@@ -1342,9 +1345,7 @@ export default {
     color: #fff;
     background-color: rgba(0, 0, 0, 0.5);
   }
-  .add-table tr td {
-    padding: 5px 0 !important;
-  }
+ 
   .el-dialog__header {
     background: #f5f5f5;
   }

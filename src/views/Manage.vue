@@ -17,19 +17,21 @@
         </el-row>
         <el-row>
           <div class="userWel">
-            <span
-              >尊敬的{{ currentUser.COMPANY_NAME }}管理员：{{
-                currentUser.UserName
-              }}</span
-            >
+            <p style="height:30px">
+              尊敬的{{ currentUser.COMPANY_NAME }}管理员
+            </p>
+            <p style="color:gold;font-size:14px">
+              {{ currentUser.UserName }}
+              <span style="color:#fff">:您好！</span>
+            </p>
           </div>
         </el-row>
-        <el-row>
+        <!-- <el-row>
           <div class="userDesc">
             <el-button size="small" type="danger" round>预警</el-button>
             <el-button size="small" type="warning" round>代办</el-button>
           </div>
-        </el-row>
+        </el-row> -->
         <el-row>
           <el-menu
             :default-active="defaultActiveMenu"
@@ -158,12 +160,12 @@
           <el-col :span="12">
             <div class="weather" style="text-align:right;">
               <iframe
-                width="300"
+                width="350"
                 scrolling="no"
                 height="22"
                 frameborder="0"
                 allowtransparency="true"
-                src="//i.tianqi.com/index.php?c=code&id=1&icon=1&wind=0&num=1&site=14"
+                src="//i.tianqi.com/index.php?c=code&id=1&icon=1&wind=0&num=1&site=15"
               ></iframe>
             </div>
           </el-col>
@@ -461,7 +463,7 @@ export default {
   background-image: url('../assets/avatarback.png');
 }
 .userWel {
-  height: 20px;
+  height: 60px;
   text-align: center;
   color: #ffffff;
   font-size: 12px;

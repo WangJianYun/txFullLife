@@ -1279,7 +1279,7 @@ export default {
 <style lang="scss">
 .assets-wrap {
   .add-table tr td {
-    padding: 5px 0 !important;
+    padding: 5px 10px !important;
   }
   .el-dialog__header {
     background: #f5f5f5;

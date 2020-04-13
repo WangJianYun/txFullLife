@@ -357,7 +357,7 @@
                 <el-table-column
                   label="序号"
                   type="index"
-                  width="50"
+                  width="60"
                   align="center"
                 >
                 </el-table-column>
@@ -427,7 +427,7 @@
                 <el-table-column
                   label="序号"
                   type="index"
-                  width="50"
+                  width="60"
                   align="center"
                 >
                 </el-table-column>
@@ -486,7 +486,7 @@
                 <el-table-column
                   label="序号"
                   type="index"
-                  width="50"
+                  width="60"
                   align="center"
                 >
                 </el-table-column>
@@ -545,7 +545,7 @@
                 <el-table-column
                   label="序号"
                   type="index"
-                  width="50"
+                  width="60"
                   align="center"
                 >
                 </el-table-column>
@@ -1269,7 +1269,10 @@ export default {
     margin: 15px 10px;
   }
   #assetsWrap .el-main {
-    height: 391px;
+    height: 420px;
+  }
+  .el-table .cell{
+    line-height: 31px;
   }
   .el-table th,
   .el-table td {

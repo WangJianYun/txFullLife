@@ -22,7 +22,9 @@
             </p>
             <p style="color:gold;font-size:14px">
               {{ currentUser.UserName }}
-              <span style="color:#fff">:您好！</span>
+              <span style="color:#fff"
+                >:<span style="margin-left:10px">您好</span></span
+              >
             </p>
           </div>
         </el-row>

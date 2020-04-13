@@ -9,7 +9,7 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="4">
-          <div class="topItem" style="background:rgb(114, 212, 223)">
+          <div class="topItem" style="background:rgb(114, 212, 223)" @click="toDepartment">
             <div class="ticon" style="font-size:50px;">
               <i class="el-icon-user-solid"></i>
             </div>
@@ -18,7 +18,7 @@
               <p style="width:80%;text-align:right;">
                 <span
                   style="font-size:20px;display:inline-block;margin:0 10px;"
-                  @click="toDepartment"
+                  
                   >{{ rzyhgq }}</span
                 >家
               </p>
@@ -26,7 +26,7 @@
           </div>
         </el-col>
         <el-col :span="4"
-          ><div class="topItem" style="background:rgb(143, 199, 64)">
+          ><div class="topItem" style="background:rgb(143, 199, 64)" @click="toManager">
             <div class="ticon" style="font-size:50px;">
               <i class="el-icon-user"></i>
             </div>
@@ -35,7 +35,7 @@
               <p style="width:80%;text-align:right;">
                 <span
                   style="font-size:20px;display:inline-block;margin:0 10px;"
-                  @click="toManager"
+                 
                   >{{ ljyh }}</span
                 >名
               </p>
@@ -43,7 +43,7 @@
           </div>
         </el-col>
         <el-col :span="4"
-          ><div class="topItem" style="background:rgb(104, 204, 166)">
+          ><div class="topItem" style="background:rgb(104, 204, 166)" @click="toAssetsList">
             <div class="ticon" style="font-size:50px;">
               <i class="el-icon-s-data"></i>
             </div>
@@ -52,7 +52,7 @@
               <p style="width:80%;text-align:right;">
                 <span
                   style="font-size:20px;display:inline-block;margin:0 10px;"
-                  @click="toAssetsList"
+                  
                   >{{ glzc }}</span
                 >
               </p>
@@ -60,7 +60,7 @@
           </div>
         </el-col>
         <el-col :span="4"
-          ><div class="topItem" style="background:rgb(255, 204, 102)">
+          ><div class="topItem" style="background:rgb(255, 204, 102)" @click="toDailyCost">
             <div class="ticon" style="font-size:50px;">
               <i class="ri-money-dollar-circle-fill"></i>
             </div>
@@ -71,7 +71,7 @@
               <p style="width:80%;text-align:right;">
                 收<span
                   style="font-size:20px;display:inline-block;margin:0 10px;"
-                  @click="toDailyCost"
+                  
                   >{{ rcfy }}</span
                 >
               </p>
@@ -79,7 +79,7 @@
           </div>
         </el-col>
         <el-col :span="4"
-          ><div class="topItem" style="background:rgb(114, 212, 223)">
+          ><div class="topItem" style="background:rgb(114, 212, 223)" @click="toYhCost">
             <div class="ticon" style="font-size:50px;">
               <i class="ri-money-dollar-circle-fill"></i>
             </div>
@@ -90,7 +90,7 @@
               <p style="width:80%;text-align:right;">
                 支<span
                   style="font-size:20px;display:inline-block;margin:0 10px;"
-                  @click="toYhCost"
+                  
                   >{{ yhfy }}</span
                 >
               </p>

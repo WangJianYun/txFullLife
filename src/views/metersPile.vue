@@ -149,7 +149,7 @@
           </el-table-column>
           <el-table-column prop="M0009_PILENUMBER_YEAR" label="归属年份">
           </el-table-column>
-          <el-table-column fixed="right" width="170" label="操作">
+          <el-table-column fixed="right" width="190" label="操作">
             <template slot-scope="scope">
               <el-button type="info" size="mini" @click="handleInfo(scope.row)"
                 >查看</el-button
@@ -270,21 +270,19 @@
           </tr>
           <tr>
             <td class="bg-td">归属年份：</td>
-            <td>
+            <td colspan="3">
               <el-form-item prop="M0009_PILENUMBER_YEAR">
                 <el-date-picker
                   v-model="addForm.M0009_PILENUMBER_YEAR"
                   type="date"
                   placeholder="选择日期"
-                  style="width:80%"
+                  style="width:32%"
                   size="small"
                   value-format="yyyy-MM-dd"
                 >
                 </el-date-picker>
               </el-form-item>
             </td>
-            <td></td>
-            <td></td>
           </tr>
         </table>
       </el-form>
@@ -381,21 +379,19 @@
           </tr>
           <tr>
             <td class="bg-td">归属年份：</td>
-            <td>
+            <td colspan="3">
               <el-form-item prop="M0009_PILENUMBER_YEAR">
                 <el-date-picker
                   v-model="editForm.M0009_PILENUMBER_YEAR"
                   type="date"
                   placeholder="选择日期"
-                  style="width: 100%"
+                  style="width: 41%"
                   size="small"
                   value-format="yyyy-MM-dd"
                 >
                 </el-date-picker>
               </el-form-item>
             </td>
-            <td></td>
-            <td></td>
           </tr>
         </table>
       </el-form>
@@ -443,11 +439,9 @@
         </tr>
         <tr>
           <td class="bg-td">归属年份：</td>
-          <td>
+          <td colspan="3">
             {{ infoForm.M0009_PILENUMBER_YEAR }}
           </td>
-          <td></td>
-          <td></td>
         </tr>
       </table>
 
@@ -498,34 +492,34 @@ export default {
         M0009_PILENUMBER_DREICT: 1,
         M0009_PILENUMBER_PRECI: '',
         M0009_PILENUMBER_LATI: '',
-        M0009_PILENUMBER_YEAR: '',
+        M0009_PILENUMBER_YEAR: ''
       },
       rules: {
         M0008_ID: [
-          { required: true, message: '请选择高速名称', trigger: 'change' },
+          { required: true, message: '请选择高速名称', trigger: 'change' }
         ],
         M0009_LOAD_NAME: [
-          { required: true, message: '请选择所属路段', trigger: 'change' },
+          { required: true, message: '请选择所属路段', trigger: 'change' }
         ],
         M0009_PILENUMBER_NAME: [
           { required: true, message: '请填写桩号', trigger: 'change' },
-          { validator: validPile, trigger: 'blur' },
+          { validator: validPile, trigger: 'blur' }
         ],
         M0009_PILENUMBER_PRECI: [
           { required: true, message: '请填写经度', trigger: 'change' },
-          { validator: validPreci, trigger: 'blur' },
+          { validator: validPreci, trigger: 'blur' }
         ],
         M0009_PILENUMBER_LATI: [
           { required: true, message: '请填写纬度', trigger: 'change' },
-          { validator: validLati, trigger: 'blur' },
+          { validator: validLati, trigger: 'blur' }
         ],
         M0009_PILENUMBER_YEAR: [
           {
             required: true,
             message: '请选择归属年份',
-            trigger: 'change',
-          },
-        ],
+            trigger: 'change'
+          }
+        ]
       },
       infoForm: {},
       tableData: [],
@@ -539,27 +533,27 @@ export default {
         M0010_START_PILE: '',
         M0010_END_PILE: '',
         YEAR: '',
-        SEARCH_KEY: '',
+        SEARCH_KEY: ''
       },
       pileList: [], // 桩好数组
       highspeedList: [], //
       isSearch: false,
-      searchVal: '', // 搜索内容
+      searchVal: '' // 搜索内容
     }
   },
   methods: {
     // 请求所有的起点 / 终点桩号
     assetDataFun() {
-      this.$api.post('/cycle/load/listAll', {}, null, (r) => {
+      this.$api.post('/cycle/load/listAll', {}, null, r => {
         this.pileList = r.data
       })
     },
     // 根据 所属路段 获取起点，终点桩号
     changeSelect(val) {
       let _data = {
-        M0010_LOAD_NAME: val,
+        M0010_LOAD_NAME: val
       }
-      this.$api.post('/cycle/load/listAll', _data, null, (r) => {
+      this.$api.post('/cycle/load/listAll', _data, null, r => {
         this.pileList = r.data
       })
     },
@@ -603,24 +597,19 @@ export default {
       this.$nextTick(() => {
         this.$refs['addFormRef'].resetFields()
       })
-      this.$api.post(`/cycle/utilData/getId`, {}, null, (r) => {
+      this.$api.post(`/cycle/utilData/getId`, {}, null, r => {
         this.addForm.M0009_ID = r.data
       })
     },
     // 添加保存
     addSaveFun() {
-      this.$refs['addFormRef'].validate((valid) => {
+      this.$refs['addFormRef'].validate(valid => {
         if (valid) {
-          this.$api.post(
-            '/cycle/pileNumber/insert',
-            this.addForm,
-            null,
-            (r) => {
-              this.$message.success('新增成功')
-              this.addShow = false
-              this.getPileList()
-            }
-          )
+          this.$api.post('/cycle/pileNumber/insert', this.addForm, null, r => {
+            this.$message.success('新增成功')
+            this.addShow = false
+            this.getPileList()
+          })
         }
       })
     },
@@ -642,25 +631,20 @@ export default {
         `/cycle/pileNumber/selectById?ID=${data.M0009_ID}`,
         {},
         null,
-        (r) => {
+        r => {
           this.editForm = Object.assign({}, r.data)
         }
       )
     },
     // 修改保存
     editSaveFun() {
-      this.$refs['editFormRef'].validate((valid) => {
+      this.$refs['editFormRef'].validate(valid => {
         if (valid) {
-          this.$api.post(
-            '/cycle/pileNumber/update',
-            this.editForm,
-            null,
-            (r) => {
-              this.$message.success('修改成功')
-              this.editShow = false
-              this.getPileList()
-            }
-          )
+          this.$api.post('/cycle/pileNumber/update', this.editForm, null, r => {
+            this.$message.success('修改成功')
+            this.editShow = false
+            this.getPileList()
+          })
         }
       })
     },
@@ -669,13 +653,13 @@ export default {
       this.$confirm('确定要删除该条记录?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning',
+        type: 'warning'
       }).then(() => {
         this.$api.post(
           `/cycle/pileNumber/deleteById?ID=${data.M0009_ID}`,
           {},
           null,
-          (r) => {
+          r => {
             this.$message.success('删除成功')
             this.getPileList()
           }
@@ -687,9 +671,9 @@ export default {
       let _data = {
         currentPage: this.currentPage,
         showCount: this.showCount,
-        searchMap: this.dataParam,
+        searchMap: this.dataParam
       }
-      this.$api.post('/cycle/pileNumber/listPage', _data, null, (r) => {
+      this.$api.post('/cycle/pileNumber/listPage', _data, null, r => {
         this.loading = false
         this.tableData = r.data.returnParam
         this.total = r.data.totalResult
@@ -698,13 +682,13 @@ export default {
     },
     // 管辖路段接口
     getLoadList() {
-      this.$api.post('/cycle/load/listLoadName', {}, null, (r) => {
+      this.$api.post('/cycle/load/listLoadName', {}, null, r => {
         this.loadList = r.data
       })
     },
     // 选择高速下拉框 list
     getHighspeedList() {
-      this.$api.post('/cycle/highspeed/listAll', {}, null, (r) => {
+      this.$api.post('/cycle/highspeed/listAll', {}, null, r => {
         this.highspeedList = r.data
       })
     },
@@ -718,13 +702,13 @@ export default {
         this.$confirm('确定要删除这些记录?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning',
+          type: 'warning'
         }).then(() => {
           this.$api.post(
             `/cycle/pileNumber/deleteByIds?IDS=${_list}`,
             {},
             null,
-            (r) => {
+            r => {
               this.$message.success('删除成功')
               this.getPileList()
               this.selectList = []
@@ -734,14 +718,14 @@ export default {
       } else {
         this.$message.warning('请选择要删除的数据！')
       }
-    },
+    }
   },
   created() {
     this.getHighspeedList()
     this.getLoadList()
     this.getPileList()
     this.assetDataFun()
-  },
+  }
 }
 </script>
 <style lang="scss">
@@ -749,6 +733,9 @@ export default {
   margin-bottom: 0 !important;
 }
 .meters-wrap {
+  .el-button--mini {
+    padding: 4px 5px;
+  }
   .el-dialog__header {
     background: #f5f5f5;
   }

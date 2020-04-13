@@ -10,7 +10,7 @@
       </el-button>
     </p>
     <div class="content">
-      <el-row :gutter="0">
+      <el-row :gutter="10">
         <el-form label-position="right" label-width="80px" :model="searchMap">
           <el-col :span="4">
             <el-form-item label="资产类别">
@@ -202,7 +202,7 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column fixed="right" width="170" label="操作">
+          <el-table-column fixed="right" width="190" label="操作">
             <template slot-scope="scope">
               <el-button type="info" size="mini" @click="handleInfo(scope.row)"
                 >查看</el-button
@@ -300,7 +300,7 @@
               ></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="4" style="margin-top:5px;padding-left:10px;">
+          <el-col :span="3.5" style="margin-top:5px;padding-left:10px;">
             <el-button type="primary" @click="addSearchFun" size="small"
               >搜索</el-button
             >

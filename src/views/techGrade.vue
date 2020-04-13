@@ -210,7 +210,7 @@
           </el-table-column>
           <el-table-column prop="T0002_LOAD_NAME" label="所属路段">
           </el-table-column>
-          <el-table-column fixed="right" width="170" label="操作">
+          <el-table-column fixed="right" width="190" label="操作">
             <template slot-scope="scope">
               <el-button type="info" size="mini" @click="handleInfo(scope.row)"
                 >查看</el-button

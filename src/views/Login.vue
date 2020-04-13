@@ -11,7 +11,7 @@
           :rules="rules"
           class="login-form"
           @keyup.enter.native="onSubmit"
-          label-width="60px"
+          label-width="70px"
         >
           <el-form-item prop="userName" label="用户名">
             <el-input
@@ -19,7 +19,7 @@
               placeholder="用户名"
               style="width:75%"
             ></el-input>
-          <span class="icon1 icon">*</span>
+            <span class="icon1 icon">*</span>
           </el-form-item>
           <el-form-item prop="password" label="密码">
             <el-input
@@ -28,7 +28,7 @@
               style="width:75%"
               v-model="form.password"
             ></el-input>
-          <span class="icon2 icon">*</span>
+            <span class="icon2 icon">*</span>
           </el-form-item>
           <el-form-item>
             <el-button
@@ -56,8 +56,8 @@ export default {
   data() {
     return {
       form: {
-        userName: 'admin',
-        password: '1'
+        userName: '',
+        password: ''
       },
       rules: {
         userName: [
@@ -181,7 +181,9 @@ export default {
   min-height: 200px;
   background-color: #ffffff;
 }
-.login-form .el-form-item__content{margin-left:0!important;}
+.login-form .el-form-item__content {
+  margin-left: 0 !important;
+}
 .login-container-footer {
   width: 100%;
   text-align: center;

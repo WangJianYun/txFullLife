@@ -1101,6 +1101,7 @@ export default {
         (r) => {
           this.imageList = r.data.files
           this.infoForm = Object.assign({}, r.data)
+          this.infoForm.T0002_ASSET_COMPANY = JSON.parse(sessionStorage.getItem('currentUser')).COMPANY_NAME
         }
       )
     },
@@ -1117,6 +1118,7 @@ export default {
         console.log(r)
           this.imageList = r.data.files
           this.editForm = Object.assign({}, r.data)
+          this.editForm.T0002_ASSET_COMPANY = JSON.parse(sessionStorage.getItem('currentUser')).COMPANY_NAME
         }
       )
     },

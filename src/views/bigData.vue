@@ -18,6 +18,7 @@
               <p style="width:80%;text-align:right;">
                 <span
                   style="font-size:20px;display:inline-block;margin:0 10px;"
+                  @click="toDepartment"
                   >{{ rzyhgq }}</span
                 >家
               </p>
@@ -34,6 +35,7 @@
               <p style="width:80%;text-align:right;">
                 <span
                   style="font-size:20px;display:inline-block;margin:0 10px;"
+                  @click="toManager"
                   >{{ ljyh }}</span
                 >名
               </p>
@@ -50,6 +52,7 @@
               <p style="width:80%;text-align:right;">
                 <span
                   style="font-size:20px;display:inline-block;margin:0 10px;"
+                  @click="toAssetsList"
                   >{{ glzc }}</span
                 >
               </p>
@@ -68,6 +71,7 @@
               <p style="width:80%;text-align:right;">
                 收<span
                   style="font-size:20px;display:inline-block;margin:0 10px;"
+                  @click="toDailyCost"
                   >{{ rcfy }}</span
                 >
               </p>
@@ -86,6 +90,7 @@
               <p style="width:80%;text-align:right;">
                 支<span
                   style="font-size:20px;display:inline-block;margin:0 10px;"
+                  @click="toYhCost"
                   >{{ yhfy }}</span
                 >
               </p>
@@ -293,6 +298,26 @@ export default {
           this.yhfy = r[0].YHFY
         }
       )
+    },
+    toDepartment() {
+      this.$bus.$emit('changeActMenu', '/department')
+      this.$router.push('/department')
+    },
+    toManager(){
+      this.$bus.$emit('changeActMenu', '/manager')
+      this.$router.push('/manager')
+    },
+    toAssetsList(){
+      this.$bus.$emit('changeActMenu', '/AssetsList')
+      this.$router.push('/AssetsList')
+    },
+    toDailyCost(){
+      this.$bus.$emit('changeActMenu', '/dailyCostList')
+      this.$router.push('/dailyCostList')
+    },
+    toYhCost(){
+      this.$bus.$emit('changeActMenu', '/yhCostList')
+      this.$router.push('/yhCostList')
     },
     loadChart() {
       // let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId

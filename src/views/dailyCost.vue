@@ -335,10 +335,7 @@
                 </el-select>
               </el-form-item>
             </td>
-            <td class="bg-td"></td>
-            <td></td>
-          </tr>
-          <tr>
+            
             <td class="bg-td">费用名称：</td>
             <td>
               <el-form-item prop="T0004_CURINGCOST_NAME">
@@ -348,6 +345,10 @@
                 ></el-input>
               </el-form-item>
             </td>
+            <!-- <td class="bg-td"></td> -->
+            <!-- <td colspan="2"></td> -->
+          </tr>
+          <tr>
             <td class="bg-td">金额（元）：</td>
             <td>
               <el-form-item prop="T0004_CURINGCOST_MONEY">
@@ -358,20 +359,11 @@
                 ></el-input>
               </el-form-item>
             </td>
-          </tr>
-          <tr>
-            <td class="bg-td">收支选择：</td>
-            <td>
-              <el-radio-group v-model="addForm.T0004_CURINGCOST_TYPE">
-                <el-radio :label="1">收入</el-radio>
-                <el-radio :label="2">支出</el-radio>
-              </el-radio-group>
-            </td>
             <td class="bg-td">费用发生时间：</td>
             <td>
               <el-form-item prop="T0004_CURINGCOST_TIME">
                 <el-date-picker
-                  v-model="addForm.T0004_CREATE_TIME"
+                  v-model="addForm.T0004_CURINGCOST_TIME"
                   type="date"
                   size="small"
                   style="width:100%"
@@ -379,6 +371,15 @@
                 >
                 </el-date-picker>
               </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">收支选择：</td>
+            <td colspan="3">
+              <el-radio-group v-model="addForm.T0004_CURINGCOST_TYPE">
+                <el-radio :label="1">收入</el-radio>
+                <el-radio :label="2">支出</el-radio>
+              </el-radio-group>
             </td>
           </tr>
           <tr>
@@ -565,7 +566,7 @@
             </td>
             <td class="bg-td">费用发生时间：</td>
             <td>
-              <el-form-item prop="T0004_CREATE_TIME">
+              <el-form-item prop="T0004_CURINGCOST_TIME">
                 <el-date-picker
                   v-model="editForm.T0004_CURINGCOST_TIME"
                   type="date"
@@ -756,7 +757,8 @@ export default {
         T0004_CURINGCOST_MONEY: '',
         T0004_CURINGCOST_TYPE: 1,
         T0004_CREATE_TIME: '',
-        T0004_CURINGCOST_REMARK: ''
+        T0004_CURINGCOST_REMARK: '',
+        T0004_CURINGCOST_TIME:''
       },
       // 表单验证规则
       // rules1: {
@@ -775,7 +777,7 @@ export default {
           { required: true, message: '请填写金额', trigger: 'change' },
           { validator: validNum, trigger: 'blur' }
         ],
-        T0004_CREATE_TIME: [
+        T0004_CURINGCOST_TIME: [
           {
             required: true,
             message: '请选择归属时间',
@@ -823,6 +825,12 @@ export default {
     }
   },
   methods: {
+      getDateTime(){
+          let nDate=new Date()
+          let str=''
+          str=nDate.getFullYear()+'-'+(nDate.getMonth()+1)+'-'+nDate.getDate()
+          this.addForm.T0004_CURINGCOST_TIME=str
+      },
     // 请求所有的起点 / 终点桩号
     assetDataFun() {
       this.$api.post('/cycle/assetData/getPileList', {}, null, r => {
@@ -947,6 +955,7 @@ export default {
     addSaveFun() {
       // this.$refs['searchForm'].validate(valid => {
       //   if (valid) {
+      this.addForm.T0004_CREATE_TIME = this.addForm.T0004_CURINGCOST_TIME
       this.$refs['addFormRef'].validate(valid => {
         if (valid) {
           this.$api.post('/cycle/curingCost/insert', this.addForm, null, r => {
@@ -1049,6 +1058,7 @@ export default {
     },
     // 修改保存
     editSaveFun() {
+      this.editForm.T0004_CREATE_TIME = this.editForm.T0004_CURINGCOST_TIME
       this.$refs['editFormRef'].validate(valid => {
         if (valid) {
           this.$api.post(`/cycle/curingCost/update`, this.editForm, null, r => {

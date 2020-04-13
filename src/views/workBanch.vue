@@ -351,7 +351,7 @@
               <el-table
                 :data="zcTable"
                 border
-                style="width: 100%"
+                style="width: 100%;"
                 :header-cell-style="{ background: 'rgb(240,240,240)' }"
               >
                 <el-table-column
@@ -431,7 +431,7 @@
                   align="center"
                 >
                 </el-table-column>
-                <el-table-column prop="name" label="资产名称" align="center">
+                <el-table-column prop="name" label="资产名称" align="center" width="115">
                 </el-table-column>
                 <el-table-column label="检查报告查看" align="center">
                   <template slot-scope="scope">
@@ -789,6 +789,10 @@ export default {
                     mkdt.COMPANY_INFO[0].M0018_COMPANY_REMARK
                   let trs = ''
                   mkdt.CURING_COST.forEach(element => {
+                    console.log(element)
+                    if(!element.INCOME_MONEY)element.INCOME_MONEY = 0
+                    if(!element.TOCOME_MONEY)element.TOCOME_MONEY = 0
+                    if(!element.YEAR)element.YEAR = ''
                     trs +=
                       '<tr><td>' +
                       (element.INCOME_MONEY - element.TOCOME_MONEY) +
@@ -798,7 +802,7 @@ export default {
                       element.TOCOME_MONEY +
                       '</td><td>' +
                       element.YEAR +
-                      '</td><td><button type="primary" class="el-button el-button--primary el-button--small">详细</button></td></tr>'
+                      '</td><td><button type="primary" class="el-button el-button--primary el-button--small"  @click="toDayliCost">详细</button></td></tr>'
                   })
                   document
                     .getElementById('fgsCost')
@@ -1057,11 +1061,11 @@ export default {
         this.portDialog = true
         this.imgUrl = img
         if (type === '1') {
-          this.portName = row.name + '--报告查看'
+          this.portName = row.name + '--技术等级--报告查看'
         } else if (type === '2') {
-          this.portName = row.name + '--票据查看'
+          this.portName = row.name + '--日常费用--票据查看'
         } else {
-          this.portName = row.name + '--票据查看'
+          this.portName = row.name + '--养护费用--票据查看'
         }
       } else {
         Message({
@@ -1234,6 +1238,7 @@ export default {
 }
 </script>
 <style lang="scss">
+.el-icon-circle-close{color: #fff;}
 #workBanck {
   position: relative;
   .el-dialog__header {

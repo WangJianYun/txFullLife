@@ -283,7 +283,7 @@
           </tr>
           <tr>
             <td class="bg-td">所属路段：</td>
-            <td>
+            <td colspan="3">
               <el-form-item prop="T0002_LOAD_NAME">
                 <el-select
                   v-model="addForm.T0002_LOAD_NAME"
@@ -300,8 +300,8 @@
                 </el-select>
               </el-form-item>
             </td>
-            <td></td>
-            <td></td>
+            <!-- <td colspan="2"></td> -->
+            <!-- <td></td> -->
           </tr>
           <tr>
             <td class="bg-td">起点桩号：</td>
@@ -355,7 +355,7 @@
           </tr>
           <tr>
             <td class="bg-td">归属公司：</td>
-            <td>
+            <td style="text-indent:10px;">
               {{ addForm.T0002_ASSET_COMPANY }}
             </td>
             <td class="bg-td">所属养管公司：</td>
@@ -515,7 +515,7 @@
           </tr>
           <tr>
             <td class="bg-td">所属路段：</td>
-            <td>
+            <td colspan="3">
               <el-form-item prop="T0002_LOAD_NAME">
                 <el-select
                   v-model="editForm.T0002_LOAD_NAME"
@@ -532,8 +532,7 @@
                 </el-select>
               </el-form-item>
             </td>
-            <td></td>
-            <td></td>
+            <!-- <td colspan="2"></td> -->
           </tr>
           <tr>
             <td class="bg-td">起点桩号：</td>
@@ -594,6 +593,7 @@
                   v-model.trim="editForm.T0002_CURING_UNIT"
                   size="small"
                   maxlength="50"
+                  readonly="readonly"
                 ></el-input>
               </el-form-item>
             </td>
@@ -1068,7 +1068,9 @@ export default {
       this.addShow = true
       this.imageUrl = ''
       this.dataParams.ID = ''
-      this.imageList = []
+      this.imageList = []      
+      this.addForm.T0002_ASSET_COMPANY = JSON.parse(sessionStorage.getItem('currentUser')).COMPANY_NAME
+      // console.log(sessionStorage.getItem('currentUser'))
       this.$nextTick(() => {
         this.$refs['addFormRef'].resetFields()
       })
@@ -1112,6 +1114,7 @@ export default {
         {},
         null,
         (r) => {
+        console.log(r)
           this.imageList = r.data.files
           this.editForm = Object.assign({}, r.data)
         }
@@ -1154,6 +1157,7 @@ export default {
         searchMap: this.searchMap,
       }
       this.$api.post(`/cycle/assetData/listPage`, _data, null, (r) => {
+        console.log(r)
         this.loading = false
         for (let i = 0; i < r.data.returnParam.length; i++) {
           if (r.data.returnParam[i].files.length > 0) {
@@ -1273,6 +1277,7 @@ export default {
     this.getAssetList()
     this.getListNameList()
     this.assetDataFun()
+
   },
 }
 </script>

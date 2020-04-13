@@ -881,7 +881,7 @@ export default {
         this.dataParams.ID = r.data
         this.addForm.T0005_ID = r.data
       })
-      this.$api.post('/cycle/assetData/listAll', {}, null, r => {
+      this.$api.post('/cycle/assetData/getPileList', {}, null, r => {
         this.searchPileList = r.data
       })
     },
@@ -895,7 +895,7 @@ export default {
       this.addForm.T0002_ID = ''
       this.editForm.T0002_ID = ''
       // 请求 资产类别 对应的 资产信息  和起点，终点桩号
-      this.$api.post(`/cycle/assetData/listAll`, _data, null, r => {
+      this.$api.post(`/cycle/assetData/getPileList`, _data, null, r => {
         this.searchPileList = r.data
         this.assetDataList = r.data
       })
@@ -959,7 +959,7 @@ export default {
     },
     // 点击修改
     handleEdit(data) {
-      this.$api.post('/cycle/assetData/listAll', {}, null, r => {
+      this.$api.post('/cycle/assetData/getPileList', {}, null, r => {
         this.searchPileList = r.data
       })
       this.imageList = []
@@ -1000,6 +1000,11 @@ export default {
     getAssetTypeList() {
       this.$api.post(`/cycle/assetType/listAll`, {}, null, r => {
         this.assetTypeList = r.data
+        r.data.forEach((item, index) => {
+          if (item.T0001_PID !== '0') {
+            item.T0001_ASSETTYPE_NAME = '-- ' + item.T0001_ASSETTYPE_NAME
+          }
+        })
       })
     },
     // 获取资产信息 select 列表

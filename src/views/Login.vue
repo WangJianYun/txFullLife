@@ -4,35 +4,36 @@
     <div class="container">
       <div class="login-container-title">高速公路全寿命周期智能管理平台</div>
       <div class="login-container-form">
-        <h2>欢迎您，请登录</h2>
+        <h2 style="margin:20px auto 50px auto;">欢迎您，请登录</h2>
         <el-form
           :model="form"
           ref="form"
           :rules="rules"
           class="login-form"
           @keyup.enter.native="onSubmit"
+          label-width="60px"
         >
           <el-form-item prop="userName" label="用户名">
             <el-input
               v-model="form.userName"
               placeholder="用户名"
-              style="width:100%"
+              style="width:75%"
             ></el-input>
-          </el-form-item>
           <span class="icon1 icon">*</span>
+          </el-form-item>
           <el-form-item prop="password" label="密码">
             <el-input
               type="password"
               placeholder="密码"
-              style="width:100%"
+              style="width:75%"
               v-model="form.password"
             ></el-input>
-          </el-form-item>
           <span class="icon2 icon">*</span>
+          </el-form-item>
           <el-form-item>
             <el-button
               type="primary"
-              style="width:100%"
+              style="width:90%;"
               @click="onSubmit"
               :loading="isload"
               :disabled="isdisabled"
@@ -55,8 +56,8 @@ export default {
   data() {
     return {
       form: {
-        userName: '',
-        password: ''
+        userName: 'admin',
+        password: '1'
       },
       rules: {
         userName: [
@@ -160,12 +161,12 @@ export default {
 .login-container-form {
   padding: 10px;
   /* margin-left: 50px; */
-  width: 30%;
+  width: 32%;
   border-radius: 5px;
   text-align: center;
   background: #fff;
   position: absolute;
-  left: 50px;
+  left: 40px;
   top: 150px;
   border: 1px solid #000;
 }
@@ -175,11 +176,12 @@ export default {
   }
 }
 .login-form {
-  width: 70%;
+  width: 90%;
   margin: 0 auto;
   min-height: 200px;
   background-color: #ffffff;
 }
+.login-form .el-form-item__content{margin-left:0!important;}
 .login-container-footer {
   width: 100%;
   text-align: center;
@@ -192,8 +194,7 @@ export default {
 }
 .icon {
   color: red;
-  position: relative;
-  left: 140px;
-  top: -50px;
+  display: inline-block;
+  margin-left: 5px;
 }
 </style>

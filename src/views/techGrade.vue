@@ -1145,6 +1145,11 @@ export default {
     // 获取资产类别 list
     getAssetTypeList() {
       this.$api.post(`/cycle/assetType/listAll`, {}, null, r => {
+        r.data.forEach(ele => {
+          if (ele.T0001_PID !== '0') {
+            ele.T0001_ASSETTYPE_NAME = '--' + ele.T0001_ASSETTYPE_NAME
+          }
+        })
         this.assetTypeList = r.data
       })
     },

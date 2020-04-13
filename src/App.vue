@@ -4,7 +4,7 @@
       <router-link to="/">Home</router-link> |
       <router-link to="/about">About</router-link>
     </div> -->
-    <router-view />
+    <router-view style="width:100%;height:100%;margin:0;padding:0;" />
   </div>
 </template>
 
@@ -18,7 +18,7 @@ body,
   padding: 0;
 }
 #app {
-  min-width: 1600px;
+  min-width: 1800px;
   overflow-x: scroll;
 }
 // #nav {

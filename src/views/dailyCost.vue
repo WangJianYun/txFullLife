@@ -532,10 +532,6 @@
                 </el-select>
               </el-form-item>
             </td>
-            <td class="bg-td"></td>
-            <td></td>
-          </tr>
-          <tr>
             <td class="bg-td">费用名称：</td>
             <td>
               <el-form-item prop="T0004_CURINGCOST_NAME">
@@ -545,6 +541,8 @@
                 ></el-input>
               </el-form-item>
             </td>
+          </tr>
+          <tr>
             <td class="bg-td">金额（元）：</td>
             <td>
               <el-form-item prop="T0004_CURINGCOST_MONEY">
@@ -555,16 +553,7 @@
                 ></el-input>
               </el-form-item>
             </td>
-          </tr>
-          <tr>
-            <td class="bg-td">收支选择：</td>
-            <td>
-              <el-radio-group v-model="editForm.T0004_CURINGCOST_TYPE">
-                <el-radio :label="1">收入</el-radio>
-                <el-radio :label="2">支出</el-radio>
-              </el-radio-group>
-            </td>
-            <td class="bg-td">费用发生时间：</td>
+             <td class="bg-td">费用发生时间：</td>
             <td>
               <el-form-item prop="T0004_CURINGCOST_TIME">
                 <el-date-picker
@@ -577,6 +566,16 @@
                 </el-date-picker>
               </el-form-item>
             </td>
+          </tr>
+          <tr>
+            <td class="bg-td">收支选择：</td>
+            <td colspan="3">
+              <el-radio-group v-model="editForm.T0004_CURINGCOST_TYPE">
+                <el-radio :label="1">收入</el-radio>
+                <el-radio :label="2">支出</el-radio>
+              </el-radio-group>
+            </td>
+           
           </tr>
           <tr>
             <td class="bg-td">票据上传：</td>
@@ -646,11 +645,9 @@
       <table class="add-table">
         <tr>
           <td class="bg-td">资产名称：</td>
-          <td>
+          <td colspan="3">
             {{ infoForm.T0002_ASSET_NAME }}
           </td>
-          <td class="bg-td"></td>
-          <td></td>
         </tr>
         <tr>
           <td class="bg-td">费用名称：</td>

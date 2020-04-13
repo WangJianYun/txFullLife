@@ -1272,7 +1272,7 @@ export default {
     height: 420px;
   }
   .el-table .cell{
-    line-height: 31px;
+    line-height: 30px;
   }
   .el-table th,
   .el-table td {

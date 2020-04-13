@@ -18,7 +18,10 @@
         <el-row>
           <div class="userWel">
             <p style="height:30px">
-              尊敬的{{ currentUser.COMPANY_NAME }}管理员
+              尊敬的<span style="padding:5px">{{
+                currentUser.COMPANY_NAME
+              }}</span
+              >管理员
             </p>
             <p style="color:gold;font-size:14px">
               {{ currentUser.UserName }}

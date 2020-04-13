@@ -5,7 +5,9 @@
         <span style="font-size:20px;">>> 部门列表</span>
       </el-col>
       <el-col :span="8">
-        归属上级公司：<span class="preDepartment">铜旬分公司</span>
+        归属上级公司：<span class="preDepartment">{{
+          currentUser.COMPANY_NAME
+        }}</span>
       </el-col>
       <el-col :span="12" style="text-align:right;padding-right:30px;">
         <el-button
@@ -227,15 +229,15 @@ export default {
         M0016_CREATE_TIME: '',
         ORGANIZATION_NAME: '',
         M0018_ID: '',
-        DEPART_PARENT_NAME: '',
+        DEPART_PARENT_NAME: ''
       },
       rules: {
         // M0016_ID: [
         //   { required: true, message: '请选择归属部门' }
         // ],
         M0016_DEPART_NAME: [
-          { required: true, message: '请填写部门名称', trigger: 'blur' },
-        ],
+          { required: true, message: '请填写部门名称', trigger: 'blur' }
+        ]
       },
       rowSpanArr: [],
       position: '',
@@ -246,6 +248,7 @@ export default {
       editState: '',
       delState: '',
       isCheck: true,
+      currentUser: ''
     }
   },
   mounted() {
@@ -253,6 +256,7 @@ export default {
     this.loadSelect()
     this.getDateTime()
     this.getState()
+    this.currentUser = JSON.parse(sessionStorage.getItem('currentUser'))
   },
   methods: {
     // 分页
@@ -294,7 +298,7 @@ export default {
         const _row = this.rowSpanArr[rowIndex]
         return {
           rowspan: _row, // 行
-          colspan: 1, // 列
+          colspan: 1 // 列
         }
       }
     },
@@ -317,7 +321,7 @@ export default {
         currentItem.M0005_STATE === '1' || currentItem.M0005_STATE === 1
           ? true
           : false
-      list.forEach((v) => {
+      list.forEach(v => {
         if (currentItem.M0004_ID === v.M0004_PID) {
           if (v.M0004_LEVEL !== 3 && v.M0004_LEVEL !== '3' && !v.M0004_CHILD) {
             this.findChild(v, list)
@@ -330,14 +334,14 @@ export default {
     getState() {
       this.menuList = JSON.parse(sessionStorage.getItem('currentUser')).menuList
       this.menuList1 = this.menuList.filter(
-        (v) => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1
+        v => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1
       )
-      this.menuList1.forEach((v) => {
+      this.menuList1.forEach(v => {
         this.findChild(v, this.menuList)
         if (v.M0004_NAME === '系统配置') {
-          v.M0004_CHILD.forEach((v1) => {
+          v.M0004_CHILD.forEach(v1 => {
             if (v1.M0004_NAME === '部门列表') {
-              v1.M0004_CHILD.forEach((v2) => {
+              v1.M0004_CHILD.forEach(v2 => {
                 if (v2.M0004_NAME === '查询') {
                   this.lookState = v2.M0005_STATE
                 }
@@ -362,23 +366,18 @@ export default {
       let _data = {
         currentPage: this.currentPage,
         showCount: this.showCount,
-        searchMap: { M0018_ID: this.form.M0018_ID },
+        searchMap: { M0018_ID: this.form.M0018_ID }
       }
-      this.$api.post(
-        '/cycle/departmentManagement/listPage',
-        _data,
-        null,
-        (r) => {
-          this.dpData = r.data.returnParam
-          this.total = r.data.totalResult
-          this.getRowSpan()
-        }
-      )
+      this.$api.post('/cycle/departmentManagement/listPage', _data, null, r => {
+        this.dpData = r.data.returnParam
+        this.total = r.data.totalResult
+        this.getRowSpan()
+      })
       this.loadSelect()
     },
     save() {
       this.form.M0018_ID = sessionStorage.getItem('id')
-      this.$refs['form'].validate((v) => {
+      this.$refs['form'].validate(v => {
         if (v) {
           if (this.form.M0016_PID === '') {
             this.form.M0016_PID = '0'
@@ -391,7 +390,7 @@ export default {
               '/cycle/departmentManagement/insert',
               this.form,
               '新增成功',
-              (r) => {
+              r => {
                 this.closeDialog()
                 this.refreshTable()
               }
@@ -402,7 +401,7 @@ export default {
               '/cycle/departmentManagement/update',
               this.form,
               '编辑成功',
-              (r) => {
+              r => {
                 this.closeDialog()
                 this.refreshTable()
               }
@@ -458,7 +457,7 @@ export default {
         M0016_IS_AVTIVE: true,
         M0016_DUTY_REMARK: '',
         M0016_CREATE_PERSON: '',
-        M0016_CREATE_TIME: '',
+        M0016_CREATE_TIME: ''
       }
       this.refreshTable()
     },
@@ -468,7 +467,7 @@ export default {
       this.$confirm('确认删除？此操作不可取消', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning',
+        type: 'warning'
       }).then(() => {
         // let form = {}
         // form.ID = row.M0016_ID
@@ -476,7 +475,7 @@ export default {
           '/cycle/departmentManagement/deleteById?ID=' + row.M0016_ID,
           {},
           '删除成功',
-          (r) => {
+          r => {
             this.refreshTable(1)
           }
         )
@@ -487,12 +486,12 @@ export default {
         '/cycle/departmentManagement/listAll',
         { M0018_ID: this.form.M0018_ID },
         null,
-        (r) => {
+        r => {
           this.options = r.data
           // this.options.push('--请选择--')
           this.options.unshift({
             M0016_ID: 0,
-            M0016_DEPART_NAME: '请选择--',
+            M0016_DEPART_NAME: '请选择--'
           })
           console.log(this.options)
           r.data.forEach((item, index) => {
@@ -502,8 +501,8 @@ export default {
           })
         }
       )
-    },
-  },
+    }
+  }
 }
 </script>
 <style lang="scss">

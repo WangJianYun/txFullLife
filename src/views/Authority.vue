@@ -51,10 +51,13 @@
                         }}</span></el-button
                       >
                       <el-button
+                        :disabled="
+                          scope.row.M0003_DATA_STATE === 0 ? true : false
+                        "
                         type="primary"
                         icon="el-icon-plus"
                         size="mini"
-                        @click="addManager(scope.row.M0003_ID)"
+                        @click="addManager(scope.row)"
                         >添加</el-button
                       >
                     </td>
@@ -98,7 +101,7 @@
                 <el-button
                   type="danger"
                   size="mini"
-                  @click="deleteRow(scope.$index, scope.row)"
+                  @click="deleteRow(scope.row)"
                   >删除</el-button
                 >
               </template>
@@ -158,6 +161,7 @@
                     :disabled="islook"
                     active-color="#409eff"
                     inactive-color="#bbb"
+                    @change="stateTip(form.M0003_DATA_STATE, form.COUNT)"
                   >
                   </el-switch>
                 </td>
@@ -260,10 +264,12 @@
 </template>
 
 <script>
+import { Message } from 'element-ui'
 export default {
   data() {
     return {
       // isBlue: false,
+      isAdd: false,
       isCheck: true,
       pageIndex: 1,
       dpData: [],
@@ -295,7 +301,8 @@ export default {
         M0004_LEVEL: 1,
         M0005_STATE: '',
         M0004_CHILD: [],
-        M0018_ID: ''
+        M0018_ID: '',
+        COUNT: ''
       },
       listPromision: [],
       permisionListData: [],
@@ -404,11 +411,11 @@ export default {
         searchMap: { M0018_ID: this.form.M0018_ID }
       }
       this.$api.post('/cycle/roleGroupManagement/listPage', _data, null, r => {
+        console.log(r)
         this.dpData = r.data.returnParam
         this.dpData.forEach(v => {
           v.isBlue = !!(v.M0003_DATA_STATE === '1' || v.M0003_DATA_STATE === 1)
         })
-        console.log(this.dpData)
         this.total = r.data.totalResult
       })
     },
@@ -524,43 +531,67 @@ export default {
         M0004_LEVEL: 1,
         M0005_STATE: '',
         M0004_CHILD: [],
-        M0018_ID: ''
+        M0018_ID: '',
+        COUNT: ''
       }
       // this.form.M0003_DATA_STATE = true
       this.data = ''
+      this.refreshTable(1)
     },
-    deleteRow(index, row) {
-      this.$confirm('确认删除？此操作不可取消', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          this.$api.post(
-            '/cycle/roleGroupManagement/deleteById?ID=' + row.M0003_ID,
-            {},
-            '删除成功',
-            r => {
-              this.refreshTable(1)
-            }
-          )
+    deleteRow(row) {
+      if (row.COUNT > 0) {
+        Message({
+          showClose: true,
+          message: '请先移除管理员成员',
+          type: 'warning'
         })
-        .catch(err => {
-          console.log(err)
+      } else {
+        this.$confirm('确认删除？此操作不可取消', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
         })
+          .then(() => {
+            this.$api.post(
+              '/cycle/roleGroupManagement/deleteById?ID=' + row.M0003_ID,
+              {},
+              '删除成功',
+              r => {
+                this.refreshTable(1)
+              }
+            )
+          })
+          .catch(err => {
+            console.log(err)
+          })
+      }
+    },
+    stateTip(state, count) {
+      if (count > 0) {
+        Message({
+          showClose: true,
+          message: '请先移除管理员成员',
+          type: 'warning'
+        })
+        this.form.M0003_DATA_STATE = !state
+      }
     },
     // 新增管理员
-    addManager(id) {
+    addManager(row) {
+      console.log(row.M0003_DATA_STATE)
+      if (row.M0003_DATA_STATE === 0) {
+        this.isAdd = true
+      }
       this.managerDialog = true
       this.checkMans = false
       let e = window.event
-      this.M0003ID = id
+      this.M0003ID = row.M0003_ID
       this.manStyle = {
         left: e.clientX - 360 + 'px',
         top: e.clientY - 115 + 'px'
       }
       this.$api.post(
-        '/cycle/roleGroupMember/addList?M0003_ID=' + id,
+        '/cycle/roleGroupMember/addList?M0003_ID=' + row.M0003_ID,
         {},
         null,
         r => {

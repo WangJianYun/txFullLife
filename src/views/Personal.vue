@@ -1,14 +1,28 @@
 <template>
   <div id="personal">
-    <!-- <el-row style="line-height:20px;" class="tbTitle">
+    <!-- 我的资料列表 -->
+    <el-row style="line-height:20px;" class="tbTitle">
       <el-col :span="4">
         <span style="font-size:20px;">>> 我的资料</span>
       </el-col>
-      
+      <el-col :span="20" style="text-align:right;padding-right:30px;">
+        <el-button
+          type="primary"
+          icon="el-icon-view"
+          @click="openDialog('look')"
+          >我的权限查看</el-button
+        >
+        <el-button
+          type="primary"
+          icon="el-icon-edit-outline"
+          @click="openDialog('edit')"
+          >个人资料编辑</el-button
+        >
+      </el-col>
     </el-row>
     <el-row class="tbWrap">
       <el-col :span="18" :offset="3">
-        <table class="perstable">
+        <table class="perstable" style="width: 70%;margin:0 auto">
           <tr>
             <td class="bg-td">昵称：</td>
             <td>
@@ -70,18 +84,17 @@
             </td>
           </tr>
           <tr>
-            <td class="bg-td" :disabled="isEdit">是否激活：</td>
-            <td style="text-align:left">
+            <td class="bg-td">是否激活：</td>
+            <td style="text-align:left" colspan="3">
               <el-switch
                 v-model="form.M0014_IS_AVTIVE"
                 active-color="#409eff"
                 size="small"
                 inactive-color="#bbb"
+                :disabled="isEdit"
               >
               </el-switch>
             </td>
-            <td class="bg-td"></td>
-            <td></td>
           </tr>
           <tr>
             <td class="bg-td">备注：</td>
@@ -98,62 +111,7 @@
         </table>
       </el-col>
     </el-row>
-    <el-row style="line-height:20px;" class="tbTitle">
-      <el-col :span="4">
-        <span style="font-size:20px;">>> 修改密码</span>
-      </el-col>
-    </el-row>
-    <el-row class="tbWrap">
-      <el-col :span="10" :offset="3">
-        <table class="perstable">
-          <tr>
-            <td>账户名：</td>
-            <td>
-              <el-input
-                type="text"
-                v-model="form.M0014_USER_CODE"
-                :disabled="isEdit"
-                size="small"
-              ></el-input>
-            </td>
-          </tr>
-          <tr>
-            <td>原始密码：</td>
-            <td>
-              <el-input
-                type="password"
-                v-model="form.oldpswd"
-                size="small"
-              ></el-input>
-            </td>
-          </tr>
-          <tr>
-            <td>新密码：</td>
-            <td>
-              <el-input
-                type="password"
-                v-model="form.newpswd"
-                size="small"
-              ></el-input>
-            </td>
-          </tr>
-          <tr>
-            <td>再次确认密码：</td>
-            <td>
-              <el-input
-                type="password"
-                v-model="form.confirmpswd"
-                size="small"
-              ></el-input>
-            </td>
-          </tr>
-        </table>
-        <div style="text-align:center;margin-top:20px;">
-          <el-button type="primary" size="small" @click="save">提交</el-button>
-          <el-button size="small" @click="cancel">取消</el-button>
-        </div>
-      </el-col>
-    </el-row> -->
+
     <!-- 修改个人资料弹框 -->
     <el-dialog
       title=">> 修改个人资料"
@@ -290,65 +248,58 @@
       </div>
     </el-dialog>
     <!-- 我的权限列表 -->
-    <el-row style="line-height:20px;" class="tbTitle">
-      <el-col :span="4">
-        <span style="font-size:20px;">>> 我的权限</span>
-      </el-col>
-      <el-col :span="20" style="text-align:right;padding-right:30px;">
-        <span
-          style="cursor:pointer;color:#444;font-size:15px;"
-          icon="el-icon-plus"
-          @click="openDialog()"
-          ><i class="el-icon-edit-outline"></i> 个人资料编辑</span
-        >
-      </el-col>
-    </el-row>
-    <el-row class="tbWrap">
-      <el-col :span="18" :offset="3">
-        <el-main id="authModel">
-          <p style="margin: 0 0 30px 0;">权限范围</p>
-          <div v-for="item of permisionListData" :key="item.index">
-            <span class="tabs">{{ item.M0004_NAME }}</span>
-            <table class="perstable authTable">
-              <thead>
-                <tr>
-                  <th width="8%">序号</th>
-                  <th width="40%">模块名称</th>
-                  <th>权限节点</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(child, index) of item.M0004_CHILD" :key="index">
-                  <td v-text="index + 1">1</td>
-                  <td class="chakan">
-                    <el-checkbox
-                      v-model="child.M0004_CHECKED"
-                      @change="changeCheck(child)"
-                      :disabled="islook"
-                      >{{ child.M0004_NAME }}</el-checkbox
-                    >
-                    <!-- <el-checkbox v-model="child.M0004_CHECKED"></el-checkbox>  @change="handleCheckAllChange" :indeterminate="isIndeterminate"-->
-                  </td>
-                  <td>
-                    <el-checkbox-group
-                      v-model="child.tableForm"
-                      @change="changeAuths(child)"
-                    >
+    <el-dialog
+      title=">> 我的权限"
+      :visible.sync="lookShow"
+      :close-on-click-modal="false"
+      custom-class="dialog-div"
+    >
+      <el-row>
+        <el-col :span="18" :offset="3">
+          <el-main id="authModel">
+            <div v-for="item of permisionListData" :key="item.index">
+              <span class="tabs">{{ item.M0004_NAME }}</span>
+              <table class="perstable authTable">
+                <thead>
+                  <tr>
+                    <th width="10%" style="text-align:center">序号</th>
+                    <th width="40%">模块名称</th>
+                    <th width="50%">权限节点</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(child, index) of item.M0004_CHILD" :key="index">
+                    <td v-text="index + 1" style="text-align:center">1</td>
+                    <td class="chakan" style="text-align:left">
                       <el-checkbox
-                        v-for="item1 in child.M0004_CHILD"
-                        :key="item1.$index"
-                        :label="item1.M0004_NAME"
+                        v-model="child.M0004_CHECKED"
+                        @change="changeCheck(child)"
                         :disabled="islook"
-                      ></el-checkbox>
-                    </el-checkbox-group>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </el-main>
-      </el-col>
-    </el-row>
+                        >{{ child.M0004_NAME }}</el-checkbox
+                      >
+                      <!-- <el-checkbox v-model="child.M0004_CHECKED"></el-checkbox>  @change="handleCheckAllChange" :indeterminate="isIndeterminate"-->
+                    </td>
+                    <td style="text-align:left">
+                      <el-checkbox-group
+                        v-model="child.tableForm"
+                        @change="changeAuths(child)"
+                      >
+                        <el-checkbox
+                          v-for="item1 in child.M0004_CHILD"
+                          :key="item1.$index"
+                          :label="item1.M0004_NAME"
+                          :disabled="islook"
+                        ></el-checkbox>
+                      </el-checkbox-group>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </el-main>
+        </el-col>
+      </el-row>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -356,6 +307,7 @@ import { Message } from 'element-ui'
 export default {
   data() {
     return {
+      lookShow: false,
       addShow: false,
       isEdit: true,
       form: {
@@ -385,7 +337,7 @@ export default {
         manager: [],
         authority: [],
         M0018_ID: '',
-        M0014_ID: '',
+        M0014_ID: ''
       },
       permisionListData: [],
       islook: true,
@@ -398,19 +350,20 @@ export default {
             min: 6,
             max: 50,
             message: '密码长度在 6 到 50 个字符',
-            trigger: 'blur',
+            trigger: 'blur'
           },
           {
             pattern: /^(\w){6,50}$/,
             message: '只能输入6-50个字母、数字、下划线',
-            trigger: 'blur',
-          },
-        ],
-      },
+            trigger: 'blur'
+          }
+        ]
+      }
     }
   },
   mounted() {
     this.getPermission()
+    this.loadMsg()
   },
   methods: {
     findChild(currentItem, list) {
@@ -420,7 +373,7 @@ export default {
         currentItem.M0005_STATE === '1' || currentItem.M0005_STATE === 1
           ? true
           : false
-      list.forEach((v) => {
+      list.forEach(v => {
         if (currentItem.M0004_ID === v.M0004_PID) {
           if (v.M0004_LEVEL !== 3 && v.M0004_LEVEL !== '3' && !v.M0004_CHILD) {
             this.findChild(v, list)
@@ -442,11 +395,11 @@ export default {
         '/cycle/roleGroupManagement/getPermissionByTokenId',
         { M0018_ID: this.form.M0018_ID },
         null,
-        (r) => {
+        r => {
           this.permisionListData = r.data.filter(
-            (v) => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1
+            v => v.M0004_LEVEL === '1' || v.M0004_LEVEL === 1
           )
-          this.permisionListData.forEach((v) => {
+          this.permisionListData.forEach(v => {
             this.findChild(v, r.data)
           })
           this.setTableForm()
@@ -457,14 +410,14 @@ export default {
     setTableForm(send) {
       // 无send表示发送前，有send表示发送后
       this.listPromision = []
-      this.permisionListData.forEach((v) => {
+      this.permisionListData.forEach(v => {
         if (v.M0004_CHILD && v.M0004_CHILD.length > 0) {
-          v.M0004_CHILD.forEach((v1) => {
+          v.M0004_CHILD.forEach(v1 => {
             if (!send) {
               v1.tableForm = []
             }
             if (v1.M0004_CHILD && v1.M0004_CHILD.length > 0) {
-              v1.M0004_CHILD.forEach((v2) => {
+              v1.M0004_CHILD.forEach(v2 => {
                 if (!send && (v2.M0005_STATE === '1' || v2.M0005_STATE === 1)) {
                   v1.tableForm.push(v2.M0004_NAME)
                 }
@@ -493,20 +446,20 @@ export default {
           '/cycle/userManagement/updateInformation',
           this.form,
           null,
-          (r) => {
+          r => {
             console.log(r)
             if (r.msg === 'success') {
               Message({
                 showClose: true,
                 message: '修改成功',
-                type: 'success',
+                type: 'success'
               })
               this.cancel()
             } else {
               Message({
                 showClose: true,
                 message: '原密码错误',
-                type: 'warning',
+                type: 'warning'
               })
             }
           }
@@ -515,7 +468,7 @@ export default {
         Message({
           showClose: true,
           message: '两次密码不一致',
-          type: 'warning',
+          type: 'warning'
         })
         return false
       }
@@ -524,14 +477,39 @@ export default {
       //   }
       // })
     },
-    openDialog() {
-      this.addShow = true
+    openDialog(type) {
+      if (type === 'look') {
+        this.lookShow = true
+      }
+      if (type === 'edit') {
+        this.addShow = true
+        let userId = JSON.parse(sessionStorage.getItem('currentUser')).UserId
+        this.$api.post(
+          '/cycle/userManagement/selectById?ID=' + userId,
+          {},
+          null,
+          r => {
+            if (r.data.M0014_IS_AVTIVE === 1) {
+              r.data.M0014_IS_AVTIVE = true
+            } else {
+              r.data.M0014_IS_AVTIVE = false
+            }
+            this.form = r.data
+          }
+        )
+      }
+    },
+    cancel() {
+      this.form = {}
+      this.addShow = false
+    },
+    loadMsg() {
       let userId = JSON.parse(sessionStorage.getItem('currentUser')).UserId
       this.$api.post(
         '/cycle/userManagement/selectById?ID=' + userId,
         {},
         null,
-        (r) => {
+        r => {
           if (r.data.M0014_IS_AVTIVE === 1) {
             r.data.M0014_IS_AVTIVE = true
           } else {
@@ -540,16 +518,67 @@ export default {
           this.form = r.data
         }
       )
-    },
-    cancel() {
-      this.form = {}
-      this.addShow = false
-    },
-  },
+    }
+  }
 }
 </script>
 <style lang="scss">
+// #personal {
+//   .el-dialog__header {
+//     background: #f5f5f5;
+//   }
+//   .tbTitle {
+//     padding: 0 30px;
+//   }
+//   .tabs {
+//     padding: 8px 30px;
+//     background: rgb(76, 195, 165);
+//     color: #fff;
+//   }
+//   .authTable {
+//     margin: 20px 0 30px 0;
+//   }
+//   .tbWrap {
+//     background: #fff;
+//     padding: 30px 0;
+//     margin: 20px 0 50px 0;
+//   }
+//   .perstable {
+//     width: 100%;
+//     border-collapse: collapse;
+//     border: 1px solid #dcdfe6;
+
+//     tr {
+//       border: 1px solid #dcdfe6;
+//       td,
+//       th {
+//         border: 1px solid #dcdfe6;
+//         padding: 5px 10px;
+//         text-align: left !important;
+//       }
+//     }
+//     .bg-td {
+//       background: #f0f0f0;
+//       text-align: center;
+//     }
+//     //   .el-col-18 {
+//     //   width: 90%;
+//     // }
+//     // .el-col-offset-3 {
+//     //   margin-left: 0 !important;
+//     // }
+//   }
+// }
 #personal {
+  // .el-dialog__body{
+  //   padding-top:0 !important;
+  // }
+  .el-col-18 {
+    width: 100%;
+  }
+  .el-col-offset-3 {
+    margin-left: 0;
+  }
   .el-dialog__header {
     background: #f5f5f5;
   }
@@ -579,7 +608,7 @@ export default {
       th {
         border: 1px solid #dcdfe6;
         padding: 5px 10px;
-        text-align: left !important;
+        text-align: center;
       }
     }
     .bg-td {

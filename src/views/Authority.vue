@@ -512,8 +512,21 @@ export default {
     closeDialog() {
       this.$refs['form'].resetFields()
       this.disVisible = false
-      this.form = {}
-      this.form.M0003_DATA_STATE = true
+      this.form = {
+        M0003_NAME: '',
+        M0003_DATA_STATE: true,
+        M0003_DISP_NAME: '',
+        M0004_ID: '',
+        M0004_NAME: '',
+        M0004_TYPE: '',
+        M0004_STATE: '',
+        M0004_PID: '',
+        M0004_LEVEL: 1,
+        M0005_STATE: '',
+        M0004_CHILD: [],
+        M0018_ID: ''
+      }
+      // this.form.M0003_DATA_STATE = true
       this.data = ''
     },
     deleteRow(index, row) {

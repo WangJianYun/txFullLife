@@ -226,11 +226,10 @@
           label-position="right"
           label-width="80px"
           :model="addSearch"
-          :rules="rules1"
           ref="searchForm"
         >
           <el-col :span="5">
-            <el-form-item label="资产类别" prop="T0001_ID" required>
+            <el-form-item label="资产类别">
               <el-select
                 v-model="addSearch.T0001_ID"
                 style="width:100%"
@@ -728,11 +727,11 @@ export default {
         time: []
       },
       // 表单验证规则
-      rules1: {
-        T0001_ID: [
-          { required: true, message: '请选择资产类别', trigger: 'change' }
-        ]
-      },
+      // rules1: {
+      //   T0001_ID: [
+      //     { required: true, message: '请选择资产类别', trigger: 'change' }
+      //   ]
+      // },
       rules: {
         T0002_ID: [
           { required: true, message: '请选择资产', trigger: 'change' }
@@ -807,6 +806,14 @@ export default {
       isAddSearch: false // 新建 修改 是否搜索
     }
   },
+  watch:{
+    addShow(newVal,oldVal){
+      if(oldVal && !newVal){
+      this.addReset()
+      }
+      // console.log(oldVal,newVal);
+    }
+  },
   methods: {
     // 请求所有的起点 / 终点桩号
     assetDataFun() {
@@ -858,6 +865,7 @@ export default {
       this.getCostBudgetList()
     },
     currentChange(val) {
+      console.log(this.currentPage);
       this.currentPage = val
       this.getCostBudgetList()
     },
@@ -1028,6 +1036,7 @@ export default {
       console.log(_data)
       this.$api.post(`/cycle/costBudget/listPage`, _data, null, r => {
         this.loading = false
+        console.log(r.data.returnParam);
         for (let i = 0; i < r.data.returnParam.length; i++) {
           if (r.data.returnParam[i].files.length > 0) {
             r.data.returnParam[i].pic = r.data.returnParam[i].files[0].FILE_URL
@@ -1057,6 +1066,9 @@ export default {
           {},
           null,
           r => {
+            if(this.tableData.length <= 1){
+              this.currentPage =  this.currentPage - 1;
+            }
             this.$message.success('删除成功')
             this.getCostBudgetList()
           }
@@ -1080,6 +1092,9 @@ export default {
             {},
             null,
             r => {
+              if(this.tableData.length = this.selectList.length){
+                this.currentPage =  this.currentPage - 1;
+              }
               this.$message.success('删除成功')
               this.getCostBudgetList()
               this.selectList = []

@@ -170,7 +170,7 @@
                 height="22"
                 frameborder="0"
                 allowtransparency="true"
-                src="//i.tianqi.com/index.php?c=code&id=1&icon=1&wind=0&num=1&site=15"
+                src="//i.tianqi.com/index.php?c=code&id=1&icon=1&py=tongchuan&wind=0&num=1&site=15"
               ></iframe>
             </div>
           </el-col>

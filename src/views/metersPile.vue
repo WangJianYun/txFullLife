@@ -660,6 +660,9 @@ export default {
           {},
           null,
           r => {
+            if(this.tableData.length <= 1){
+              this.currentPage =  this.currentPage - 1;
+            }
             this.$message.success('删除成功')
             this.getPileList()
           }
@@ -709,6 +712,9 @@ export default {
             {},
             null,
             r => {
+               if(this.tableData.length = this.selectList.length){
+                this.currentPage =  this.currentPage - 1;
+              }
               this.$message.success('删除成功')
               this.getPileList()
               this.selectList = []

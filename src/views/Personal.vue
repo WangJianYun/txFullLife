@@ -502,6 +502,7 @@ export default {
     cancel() {
       this.form = {}
       this.addShow = false
+      this.loadMsg()
     },
     loadMsg() {
       let userId = JSON.parse(sessionStorage.getItem('currentUser')).UserId

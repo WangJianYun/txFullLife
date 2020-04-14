@@ -834,11 +834,12 @@
           <el-amap-marker
             vid="component-marker"
             :position="mapData.position"
-            :content-render="mapData.contentRender"
+            :label="loclabel"
           ></el-amap-marker>
         </el-amap>
       </div>
     </el-dialog>
+  
   </div>
 </template>
 <script>
@@ -899,11 +900,23 @@ export default {
           return h(
             'div',
             {
-              style: { background: '#80cbc4', whiteSpace: 'nowrap' }
+              style: {
+                height: '26px',
+                lineHeight: '26px',
+                background: 'red',
+                whiteSpace: 'nowrap',
+                color: '#fff',
+                letterSpacing: '2px',
+                padding: '0 10px'
+              }
             },
             this.mapData.title
           )
         }
+      },
+      loclabel: {
+        content: '',
+        offset: [10, -20]
       },
       imageList: [],
       imgShow: false,
@@ -1014,6 +1027,14 @@ export default {
     },
     // 点击地图
     locationFun(data) {
+      console.log(data)
+      this.loclabel = {
+        content:
+          '<div style="background:red;color:#fff;padding:3px;letter-spacing:2px;">' +
+          data.T0002_ASSET_NAME +
+          '</div>',
+        offset: [-20, -22]
+      }
       this.mapData.title = []
       this.mapShow = true
       this.mapData.position = [data.T0002_ASSET_PRECI, data.T0002_ASSET_LATI]
@@ -1210,8 +1231,8 @@ export default {
           {},
           null,
           r => {
-             if(this.tableData.length <= 1){
-              this.currentPage =  this.currentPage - 1;
+            if (this.tableData.length <= 1) {
+              this.currentPage = this.currentPage - 1
             }
             this.$message.success('删除成功')
             this.getAssetList()
@@ -1236,8 +1257,8 @@ export default {
             {},
             null,
             r => {
-               if(this.tableData.length = this.selectList.length){
-                this.currentPage =  this.currentPage - 1;
+              if ((this.tableData.length = this.selectList.length)) {
+                this.currentPage = this.currentPage - 1
               }
               this.$message.success('删除成功')
               this.getAssetList()

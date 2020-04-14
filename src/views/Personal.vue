@@ -118,6 +118,7 @@
       :visible.sync="addShow"
       :close-on-click-modal="false"
       custom-class="dialog-div"
+      :before-close="cancel"
     >
       <el-form
         ref="form"
@@ -170,19 +171,23 @@
           <tr>
             <td class="bg-td">电子邮箱：</td>
             <td>
-              <el-input
-                type="text"
-                v-model="form.M0014_USER_EMAIL"
-                size="small"
-              ></el-input>
+              <el-form-item prop="M0014_USER_EMAIL">
+                <el-input
+                  type="text"
+                  v-model="form.M0014_USER_EMAIL"
+                  size="small"
+                ></el-input>
+              </el-form-item>
             </td>
             <td class="bg-td">手机号：</td>
             <td>
-              <el-input
-                type="text"
-                v-model="form.M0014_USER_TEL"
-                size="small"
-              ></el-input>
+              <el-form-item prop="M0014_USER_TEL">
+                <el-input
+                  type="text"
+                  v-model="form.M0014_USER_TEL"
+                  size="small"
+                ></el-input>
+              </el-form-item>
             </td>
           </tr>
           <tr>
@@ -210,12 +215,14 @@
           <tr>
             <td class="bg-td">新密码：</td>
             <td>
-              <el-input
-                type="password"
-                v-model="form.newpswd"
-                size="small"
-                show-password
-              ></el-input>
+              <el-form-item prop="newpswd">
+                <el-input
+                  type="password"
+                  v-model="form.newpswd"
+                  size="small"
+                  show-password
+                ></el-input>
+              </el-form-item>
             </td>
             <td class="bg-td">再次确认新密码：</td>
             <td>
@@ -258,13 +265,18 @@
         <el-col :span="18" :offset="3">
           <el-main id="authModel">
             <div v-for="item of permisionListData" :key="item.index">
-              <span class="tabs">{{ item.M0004_NAME }}</span>
+              <p class="tabs">{{ item.M0004_NAME }}</p>
               <table class="perstable authTable">
                 <thead>
                   <tr>
-                    <th width="10%" style="text-align:center">序号</th>
-                    <th width="40%">模块名称</th>
-                    <th width="50%">权限节点</th>
+                    <th
+                      width="10%"
+                      style="text-align:center;background:#f5f5f5"
+                    >
+                      序号
+                    </th>
+                    <th width="40%" style="text-align:center;background:#f5f5f5">模块名称</th>
+                    <th width="50%" style="text-align:center;background:#f5f5f5">权限节点</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -345,6 +357,18 @@ export default {
       userId: '',
       tip: '',
       rules: {
+        M0014_USER_EMAIL: [
+          // { required: true, message: '请输入电子邮箱', trigger: 'blur' },
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur' }
+        ],
+        M0014_USER_TEL: [
+          // { required: true, message: '请输入电话号码', trigger: 'blur' },
+          {
+            pattern: /^1[3|4|5|7|8][0-9]\d{8}$/,
+            message: '请输入11位手机号码',
+            trigger: 'blur'
+          }
+        ],
         newpswd: [
           {
             min: 6,
@@ -438,44 +462,44 @@ export default {
       this.form.M0014_ID = JSON.parse(
         sessionStorage.getItem('currentUser')
       ).UserId
-      // this.$refs['form'].validate(valid => {
-      //   if (valid) {
-      if (this.form.newpswd === this.form.confirmpswd) {
-        // this.$api.post('/cycle/userManagement/updatePassword?userId=' +this.userId +'&oldPassword=' +this.form.oldpswd +'&newPassword=' +this.form.newpswd,
-        this.$api.post(
-          '/cycle/userManagement/updateInformation',
-          this.form,
-          null,
-          r => {
-            console.log(r)
-            if (r.msg === 'success') {
-              Message({
-                showClose: true,
-                message: '修改成功',
-                type: 'success'
-              })
-              this.cancel()
-            } else {
-              Message({
-                showClose: true,
-                message: '原密码错误',
-                type: 'warning'
-              })
-            }
+      this.$refs['form'].validate(valid => {
+        if (valid) {
+          if (this.form.newpswd === this.form.confirmpswd) {
+            // this.$api.post('/cycle/userManagement/updatePassword?userId=' +this.userId +'&oldPassword=' +this.form.oldpswd +'&newPassword=' +this.form.newpswd,
+            this.$api.post(
+              '/cycle/userManagement/updateInformation',
+              this.form,
+              null,
+              r => {
+                console.log(r)
+                if (r.msg === 'success') {
+                  Message({
+                    showClose: true,
+                    message: '修改成功',
+                    type: 'success'
+                  })
+                  this.cancel()
+                } else {
+                  Message({
+                    showClose: true,
+                    message: '原密码错误',
+                    type: 'warning'
+                  })
+                }
+              }
+            )
+          } else {
+            Message({
+              showClose: true,
+              message: '两次密码不一致',
+              type: 'warning'
+            })
+            return false
           }
-        )
-      } else {
-        Message({
-          showClose: true,
-          message: '两次密码不一致',
-          type: 'warning'
-        })
-        return false
-      }
-      //   } else {
-      //     return false
-      //   }
-      // })
+        } else {
+          return false
+        }
+      })
     },
     openDialog(type) {
       if (type === 'look') {
@@ -500,6 +524,7 @@ export default {
       }
     },
     cancel() {
+      this.$refs['form'].resetFields()
       this.form = {}
       this.addShow = false
       this.loadMsg()
@@ -587,9 +612,11 @@ export default {
     padding: 0 30px;
   }
   .tabs {
+    text-align: center;
     padding: 8px 30px;
     background: rgb(76, 195, 165);
     color: #fff;
+    width: 160px;
   }
   .authTable {
     margin: 20px 0 30px 0;

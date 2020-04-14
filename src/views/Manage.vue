@@ -4,7 +4,7 @@
       <el-scrollbar style="height:100%">
         <el-row class="title">
           <h3>高速公路全寿命周期</h3>
-          <p style="height:40px;font-size:22px;line-height:40px;">
+          <p style="height:60px;font-size:18px;line-height:60px;">
             智能管理平台
           </p>
         </el-row>

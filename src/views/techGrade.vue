@@ -96,21 +96,31 @@
           </el-col>
         </el-form>
       </el-row>
-      <div class="div-btn">
+      <div
+        class="div-btn"
+        style="width:100%;display:flex;justify-content:space-between"
+      >
         <!-- <el-button type="primary" @click="searchFun">搜索</el-button>
         <el-button @click="reset">重置</el-button> -->
-        <el-button
-          type="primary"
-          icon="el-icon-delete"
-          @click="delListFun"
-          size="small"
-          >批量删除</el-button
+        <div>
+          <el-button
+            type="primary"
+            icon="el-icon-delete"
+            @click="delListFun"
+            size="small"
+            >批量删除</el-button
+          >
+          <span class="serach-span">
+            您的检索：
+            <span v-show="!isSearch" style="font-size:12px;color:#999">
+              无
+            </span>
+            <span style="font-size:12px;color:#999"> {{ searchVal }} </span>
+          </span>
+        </div>
+        <el-button type="primary"
+          >获取资产历年技术检测详情，请点击列表各资产名称</el-button
         >
-        <span class="serach-span">
-          您的检索：
-          <span v-show="!isSearch" style="font-size:12px;color:#999"> 无 </span>
-          <span style="font-size:12px;color:#999"> {{ searchVal }} </span>
-        </span>
       </div>
       <div class="table-div">
         <el-table
@@ -130,11 +140,12 @@
               ><span>{{ scope.$index + 1 }}</span></template
             >
           </el-table-column>
-          <el-table-column
-            prop="T0002_ASSET_NAME"
-            label="资产名称"
-            show-overflow-tooltip
-          >
+          <el-table-column label="资产名称" show-overflow-tooltip>
+            <template slot-scope="scope">
+              <span @click="clickTypeFun(scope.row)" style="cursor:pointer">{{
+                scope.row.T0002_ASSET_NAME
+              }}</span>
+            </template>
           </el-table-column>
           <el-table-column
             prop="T0001_ASSETTYPE_NAME"
@@ -145,8 +156,6 @@
           <el-table-column prop="T0006_TECHTYPE_NAME" label="技术状况">
             <template slot-scope="scope">
               <div
-                @click="clickTypeFun(scope.row)"
-                style="cursor: pointer;"
                 v-if="
                   scope.row.T0006_TECHTYPE_NAME == '五类' ||
                     scope.row.T0006_TECHTYPE_NAME == '四类'
@@ -155,11 +164,7 @@
                 {{ scope.row.T0006_TECHTYPE_NAME }}
                 <span class="error-span"> 危 </span>
               </div>
-              <div
-                v-else
-                @click="clickTypeFun(scope.row)"
-                style="cursor: pointer;"
-              >
+              <div v-else>
                 {{ scope.row.T0006_TECHTYPE_NAME }}
               </div>
             </template>
@@ -170,19 +175,15 @@
                 {{ scope.row.T0003_CHECK_TIME }}
                 <span
                   class="wraning-span"
-                  v-if="scope.row.STATE == 1"
-                  v-on:mouseover="changeActive($event)"
-                  v-on:mouseout="removeActive($event)"
+                  v-show="scope.row.HAVE_HIS == 0 && scope.row.STATE == 1"
+                  v-on:mouseover="changeActive(scope.row)"
+                  v-on:mouseout="removeActive(scope.row)"
                 >
                   检
                 </span>
               </div>
               <!-- 检字提示语 -->
-              <div
-                class="tip"
-                v-show="scope.row.STATE == 1 && isJian"
-                :style="tipPosition"
-              >
+              <div class="tip" v-if="scope.row.njShow" :style="tipPosition">
                 <span>{{ scope.row.T0001_ASSETTYPE_NAME }}</span>
                 <span>{{ scope.row.T0006_CHECK_YEAR }}</span
                 >年检测一次
@@ -210,23 +211,30 @@
           </el-table-column>
           <el-table-column prop="T0002_LOAD_NAME" label="所属路段">
           </el-table-column>
-          <el-table-column fixed="right" width="190" label="操作">
+          <el-table-column width="190" label="操作">
             <template slot-scope="scope">
-              <el-button type="info" size="mini" @click="handleInfo(scope.row)"
-                >查看</el-button
-              >
-              <el-button
-                type="primary"
-                size="mini"
-                @click="handleEdit(scope.row)"
-                >编辑</el-button
-              >
-              <el-button
-                type="danger"
-                size="mini"
-                @click="handleDelete(scope.row)"
-                >删除</el-button
-              >
+              <div style="text-align:left">
+                <el-button
+                  type="info"
+                  size="mini"
+                  @click="handleInfo(scope.row)"
+                  >查看</el-button
+                >
+                <el-button
+                  v-show="scope.row.HAVE_HIS == 0"
+                  type="primary"
+                  size="mini"
+                  @click="handleEdit(scope.row)"
+                  >编辑</el-button
+                >
+                <el-button
+                  v-show="scope.row.HAVE_HIS == 0"
+                  type="danger"
+                  size="mini"
+                  @click="handleDelete(scope.row)"
+                  >删除</el-button
+                >
+              </div>
             </template>
           </el-table-column>
         </el-table>
@@ -778,7 +786,7 @@
         :header-cell-style="{ background: '#f0f0f0' }"
       >
         >
-        <el-table-column label="序号" width="50" align="center">
+        <el-table-column label="序号" width="60" align="center">
           <template scope="scope"
             ><span>{{ scope.$index + 1 }}</span></template
           >
@@ -825,7 +833,7 @@
           show-overflow-tooltip
         >
         </el-table-column>
-        <el-table-column label="检测报告" align="center" width="80">
+        <el-table-column label="检测报告" align="center" width="100">
           <template slot-scope="scope">
             <el-image
               style="width: 50px; height: 18px"
@@ -929,6 +937,7 @@ export default {
       currentPage: 1,
       total: 0,
       searchMap: {
+        T0002_ID: '',
         T0001_ID: '',
         T0006_ID: '',
         YEAR: '',
@@ -957,14 +966,13 @@ export default {
     }
   },
   methods: {
-    changeActive(e) {
-      console.log(e.clientX)
-      this.isJian = true
-      // this.tipPosition.left = e.clientX + 'px'
-      // this.tipPosition.top = e.clientY + 'px'
+    // 鼠标移入'检'
+    changeActive(row) {
+      row.njShow = true
     },
-    removeActive(e) {
-      this.isJian = false
+    // 鼠标移出'检'
+    removeActive(row) {
+      row.njShow = false
     },
     // 请求所有的起点 / 终点桩号
     assetDataFun() {
@@ -1089,9 +1097,12 @@ export default {
                 this.addForm,
                 null,
                 r => {
-                  this.$message.success('新增成功')
-                  this.addShow = false
-                  this.getTechDataList()
+                  console.log(r)
+                  if (r.msg === 'success') {
+                    this.$message.success('新增成功')
+                    this.addShow = false
+                    this.getTechDataList()
+                  }
                 }
               )
             }
@@ -1175,6 +1186,7 @@ export default {
       this.$api.post(`/cycle/techData/listPage`, _data, null, r => {
         this.loading = false
         for (let i = 0; i < r.data.returnParam.length; i++) {
+          r.data.returnParam[i].njShow = false
           if (r.data.returnParam[i].files.length > 0) {
             r.data.returnParam[i].pic = r.data.returnParam[i].files[0].FILE_URL
             r.data.returnParam[i].srcList = []
@@ -1205,8 +1217,8 @@ export default {
           {},
           null,
           r => {
-            if(this.tableData.length <= 1){
-              this.currentPage =  this.currentPage - 1;
+            if (this.tableData.length <= 1) {
+              this.currentPage = this.currentPage - 1
             }
             this.$message.success('删除成功')
             this.getTechDataList()
@@ -1231,8 +1243,8 @@ export default {
             {},
             null,
             r => {
-               if(this.tableData.length = this.selectList.length){
-                this.currentPage =  this.currentPage - 1;
+              if ((this.tableData.length = this.selectList.length)) {
+                this.currentPage = this.currentPage - 1
               }
               this.$message.success('删除成功')
               this.getTechDataList()
@@ -1296,6 +1308,7 @@ export default {
     },
     // 查询检测报告列表
     clickTypeFun(data) {
+      console.log('eee')
       this.typeData.T0002_ID = data.T0002_ID
       this.typeData.T0002_ASSET_NAME = data.T0002_ASSET_NAME
       this.typeShow = true
@@ -1337,15 +1350,17 @@ export default {
     }
   },
   created() {
+    this.searchMap.T0002_ID = this.$route.query.T0002_ID
     this.getAssetTypeList()
     this.getTechDataList()
     this.assetDataFun()
+    console.log(this.$route.query)
   }
 }
 </script>
 <style lang="scss">
 .techgrade-wrap {
-   .add-table tr td {
+  .add-table tr td {
     padding: 5px 10px !important;
   }
   .tip {
@@ -1356,7 +1371,7 @@ export default {
     color: #fff;
     background-color: rgba(0, 0, 0, 0.5);
   }
- 
+
   .el-dialog__header {
     background: #f5f5f5;
   }

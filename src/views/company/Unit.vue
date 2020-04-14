@@ -1,29 +1,20 @@
-/*
- * @Description：下属单位管理
- */
+/* * @Description：下属单位管理 */
 <template>
   <div class="assets-wrap">
     <p class="title-p">
-      <span style="display:inline-block;margin-bottom:20px;"> >> 单位列表 </span>
-      <el-button
-        type="primary"
-        icon="el-icon-plus"
-        @click="openDialog('add')"
-      >添加单位</el-button>
+      <span style="display:inline-block;margin-bottom:20px;">
+        >> 单位列表
+      </span>
+      <el-button type="primary" icon="el-icon-plus" @click="openDialog('add')"
+        >添加单位</el-button
+      >
     </p>
     <div class="content">
       <el-row :gutter="10">
-        <el-form
-          label-position="right"
-          label-width="110px"
-          :model="form"
-        >
+        <el-form label-position="right" label-width="110px" :model="form">
           <el-col :span="5">
             <el-form-item label="请选择下属单位">
-              <el-select
-                v-model="searchMap.M0018_ID"
-                style="width:100%"
-              >
+              <el-select v-model="searchMap.M0018_ID" style="width:100%">
                 <el-option
                   v-for="item in listNameList"
                   :key="item.M0018_ID"
@@ -44,23 +35,19 @@
             </el-form-item>
           </el-col>
           <el-col :span="5">
-              <el-button
-          type="primary"
-          @click="searchFun"
-        >搜索</el-button>
-        <el-button @click="reset">重置</el-button>
-            </el-col>
+            <el-button type="primary" @click="searchFun">搜索</el-button>
+            <el-button @click="reset">重置</el-button>
+          </el-col>
         </el-form>
       </el-row>
       <div class="div-btn">
-        <el-button
-          type="primary"
-          icon="el-icon-delete"
-          @click="delListFun"
-        >批量删除</el-button>
-        <span class="serach-span"> 您的检索：
+        <el-button type="primary" icon="el-icon-delete" @click="delListFun"
+          >批量删除</el-button
+        >
+        <span class="serach-span">
+          您的检索：
           <span v-show="!isSearch"> 无 </span>
-          <span> {{searchVal}} </span>
+          <span> {{ searchVal }} </span>
         </span>
       </div>
       <div class="table-div">
@@ -72,20 +59,14 @@
           highlight-current-row
           @select="selectTable"
           @select-all="selectAll"
-          :header-cell-style="{background:'#f0f0f0'}"
+          :header-cell-style="{ background: '#f0f0f0' }"
         >
           >
-          <el-table-column
-            type="selection"
-            width="40"
-          >
-          </el-table-column>
-          <el-table-column
-            label="序号"
-            width="50"
-            align="center"
-          >
-            <template scope="scope"><span>{{scope.$index + 1}}</span></template>
+          <el-table-column type="selection" width="40"> </el-table-column>
+          <el-table-column label="序号" width="50" align="center">
+            <template scope="scope"
+              ><span>{{ scope.$index + 1 }}</span></template
+            >
           </el-table-column>
           <el-table-column
             prop="M0018_SIMPLE_NAME"
@@ -93,15 +74,9 @@
             show-overflow-tooltip
           >
           </el-table-column>
-           <el-table-column
-            prop="M0008_HIGHSPEED_ABBR"
-            label="管辖高速"
-          >
+          <el-table-column prop="M0008_HIGHSPEED_ABBR" label="管辖高速">
           </el-table-column>
-          <el-table-column
-            label="位置"
-            width="80"
-          >
+          <el-table-column label="位置" width="80">
             <template slot-scope="scope">
               <i
                 class="el-icon-location"
@@ -110,30 +85,15 @@
               ></i>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="M0018_COMPANY_ADRESS"
-            label="地址"
-          >
+          <el-table-column prop="M0018_COMPANY_ADRESS" label="地址">
           </el-table-column>
-          <el-table-column
-            prop="M0018_SENIOR_USER"
-            label="高级管理员"
-          >
+          <el-table-column prop="M0018_SENIOR_USER" label="高级管理员">
           </el-table-column>
-          <el-table-column
-            prop="M0018_REAL_NAME"
-            label="真实姓名"
-          >
+          <el-table-column prop="M0018_REAL_NAME" label="真实姓名">
           </el-table-column>
-           <el-table-column
-            prop="M0018_USER_EMAIL"
-            label="邮箱"
-          >
+          <el-table-column prop="M0018_USER_EMAIL" label="邮箱">
           </el-table-column>
-           <el-table-column
-            prop="M0018_USER_TEL"
-            label="手机号"
-          >
+          <el-table-column prop="M0018_USER_TEL" label="手机号">
           </el-table-column>
           <el-table-column
             prop="M0018_DATA_UPDATE"
@@ -141,27 +101,23 @@
             width="120"
           >
           </el-table-column>
-          <el-table-column
-            fixed="right"
-            width="170"
-            label="操作"
-          >
+          <el-table-column fixed="right" width="170" label="操作">
             <template slot-scope="scope">
               <el-button
                 type="info"
                 size="mini"
-                @click="openDialog('look',scope.row)"
-              >查看</el-button>
+                @click="openDialog('look', scope.row)"
+                >查看</el-button
+              >
               <el-button
                 type="primary"
                 size="mini"
-                @click="openDialog('edit',scope.row)"
-              >编辑</el-button>
-              <el-button
-                type="danger"
-                size="mini"
-                @click="deleteRow(scope.row)"
-              >删除</el-button>
+                @click="openDialog('edit', scope.row)"
+                >编辑</el-button
+              >
+              <el-button type="danger" size="mini" @click="deleteRow(scope.row)"
+                >删除</el-button
+              >
             </template>
           </el-table-column>
         </el-table>
@@ -178,13 +134,12 @@
       </div>
       <table class="table-title add-table">
         <tr>
-          <td
-            class="bg-td"
-            colspan="2"
-          > 小贴士 </td>
+          <td class="bg-td" colspan="2">小贴士</td>
         </tr>
         <tr>
-          <td class="title-info"> 各下属单位高级管理员由集团高级管理员分配；即在创建该下属公司的同时，分配该单位管理员； </td>
+          <td class="title-info">
+            各下属单位高级管理员由集团高级管理员分配；即在创建该下属公司的同时，分配该单位管理员；
+          </td>
         </tr>
       </table>
     </div>
@@ -192,14 +147,10 @@
     <el-dialog
       :title="dialogName"
       :visible.sync="addShow"
-       :before-close="closeDialog"
+      :before-close="closeDialog"
       custom-class="dialog-div"
     >
-      <el-form
-        :model="form"
-        :rules="rules"
-        ref="form"
-      >
+      <el-form :model="form" :rules="rules" ref="form">
         <table class="add-table">
           <tr>
             <td class="bg-td">单位名称：</td>
@@ -209,18 +160,18 @@
                   v-model.trim="form.M0018_COMPANY_NAME"
                   size="small"
                   maxlength="50"
-                   :disabled="islook"
+                  :disabled="islook"
                 ></el-input>
               </el-form-item>
             </td>
-            <td class="bg-td">简称 </td>
+            <td class="bg-td">简称</td>
             <td>
               <el-form-item prop="M0018_SIMPLE_NAME">
                 <el-input
                   v-model.trim="form.M0018_SIMPLE_NAME"
                   size="small"
                   maxlength="50"
-                   :disabled="islook"
+                  :disabled="islook"
                 ></el-input>
               </el-form-item>
             </td>
@@ -229,35 +180,34 @@
             <td class="bg-td">管辖高速</td>
             <td>
               <!-- <el-form-item prop="M0008_HIGHSPEED_ABBR"> -->
-                <el-select
-                  v-model="form.M0008_ID"
-                  style="width:100%"
-                  size="small"
-                   :disabled="islook"
+              <el-select
+                v-model="form.M0008_ID"
+                style="width:100%"
+                size="small"
+                :disabled="islook"
+              >
+                <el-option
+                  v-for="(item, index) in assetTypeList"
+                  :key="index"
+                  :label="item.M0008_HIGHSPEED_ABBR"
+                  :value="item.M0008_ID"
                 >
-                  <el-option
-                    v-for="(item,index ) in assetTypeList"
-                    :key="index"
-                    :label="item.M0008_HIGHSPEED_ABBR"
-                    :value="item.M0008_ID"
-                  >
-                  </el-option>
-                </el-select>
+                </el-option>
+              </el-select>
               <!-- </el-form-item> -->
             </td>
 
             <td class="bg-td">是否激活：</td>
-                <td>
-                  <el-switch
-                    v-model="form.isBlue"
-                    active-color="#409eff"
-                    inactive-color="#bbb"
-                    :disabled="islook"
-                    @change="isBlueChange"
-                  >
-                  </el-switch>
-                </td>
-
+            <td>
+              <el-switch
+                v-model="form.isBlue"
+                active-color="#409eff"
+                inactive-color="#bbb"
+                :disabled="islook"
+                @change="isBlueChange"
+              >
+              </el-switch>
+            </td>
           </tr>
           <tr>
             <td class="bg-td">高级管理员用户名</td>
@@ -268,7 +218,7 @@
                   size="small"
                   maxlength="20"
                   @change="isHaveName"
-                   :disabled="islook"
+                  :disabled="islook"
                 ></el-input>
               </el-form-item>
             </td>
@@ -279,7 +229,7 @@
                   v-model.trim="form.M0018_REAL_NAME"
                   size="small"
                   maxlength="20"
-                   :disabled="islook"
+                  :disabled="islook"
                 ></el-input>
               </el-form-item>
             </td>
@@ -291,53 +241,53 @@
                 <el-input
                   v-model.trim="form.M0018_USER_EMAIL"
                   size="small"
-                   :disabled="islook"
+                  :disabled="islook"
                 ></el-input>
               </el-form-item>
             </td>
-            <td class="bg-td"> 手机号 </td>
+            <td class="bg-td">手机号</td>
             <td>
               <el-form-item prop="M0018_USER_TEL">
                 <el-input
                   v-model.trim="form.M0018_USER_TEL"
                   size="small"
                   maxlength="20"
-                   :disabled="islook"
-                ></el-input>
-              </el-form-item>
-            </td>
-          </tr>
-           <tr>
-            <td class="bg-td">经度： </td>
-            <td>
-              <el-form-item prop="M0018_COMPANY_PRECI">
-                <el-input
-                  v-model.trim="form.M0018_COMPANY_PRECI"
-                  size="small"
-                   :disabled="islook"
-                ></el-input>
-              </el-form-item>
-            </td>
-            <td class="bg-td"> 纬度： </td>
-            <td>
-              <el-form-item prop="M0018_COMPANY_LATI">
-                <el-input
-                  v-model.trim="form.M0018_COMPANY_LATI"
-                  size="small"
-                   :disabled="islook"
+                  :disabled="islook"
                 ></el-input>
               </el-form-item>
             </td>
           </tr>
           <tr>
-            <td class="bg-td">地址 </td>
+            <td class="bg-td">经度：</td>
+            <td>
+              <el-form-item prop="M0018_COMPANY_PRECI">
+                <el-input
+                  v-model.trim="form.M0018_COMPANY_PRECI"
+                  size="small"
+                  :disabled="islook"
+                ></el-input>
+              </el-form-item>
+            </td>
+            <td class="bg-td">纬度：</td>
+            <td>
+              <el-form-item prop="M0018_COMPANY_LATI">
+                <el-input
+                  v-model.trim="form.M0018_COMPANY_LATI"
+                  size="small"
+                  :disabled="islook"
+                ></el-input>
+              </el-form-item>
+            </td>
+          </tr>
+          <tr>
+            <td class="bg-td">地址</td>
             <td colspan="3">
               <el-form-item prop="M0018_COMPANY_ADRESS">
                 <el-input
                   v-model.trim="form.M0018_COMPANY_ADRESS"
                   size="small"
                   maxlength="50"
-                   :disabled="islook"
+                  :disabled="islook"
                 ></el-input>
               </el-form-item>
             </td>
@@ -356,28 +306,18 @@
                 :show-file-list="false"
                 :auto-upload="false"
                 style="display: inline"
-                 :disabled="islook"
+                :disabled="islook"
               >
-                <img
-                  v-if="imageUrl"
-                  :src="imageUrl"
-                  class="avatar"
-                />
-                <i
-                  v-else
-                  class="el-icon-plus avatar-uploader-icon"
-                ></i>
+                <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
               </el-upload>
               <ul class="ul-img">
                 <li
                   class="avatar-uploader"
-                  v-for="(item, index) in  imageList"
+                  v-for="(item, index) in imageList"
                   :key="index"
                 >
-                  <img
-                    :src="item.FILE_URL"
-                    class="el-upload avatar"
-                  />
+                  <img :src="item.FILE_URL" class="el-upload avatar" />
                   <span class="actions-item">
                     <span>
                       <i
@@ -400,41 +340,30 @@
             <td class="bg-td">简介（备注）：</td>
             <td colspan="3">
               <el-input
+               style="line-height:30px"
                 type="textarea"
                 :rows="6"
                 v-model="form.M0018_COMPANY_REMARK"
                 maxlength="500"
-                 :disabled="islook"
+                :disabled="islook"
               ></el-input>
             </td>
           </tr>
         </table>
       </el-form>
-      <div
-        slot="footer"
-        class="dialog-footer"
-      >
+      <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="save">保 存</el-button>
         <el-button @click="resetDialog">取 消</el-button>
       </div>
     </el-dialog>
     <!-- 图片预览 -->
-    <el-dialog
-      :visible.sync="imgShow"
-      title="图片预览"
-    >
+    <el-dialog :visible.sync="imgShow" title="图片预览">
       <div style="text-align: center;">
         <el-image :src="imgShowUrl">
-          <div
-            slot="placeholder"
-            class="image-slot"
-          >
+          <div slot="placeholder" class="image-slot">
             加载中<span class="dot">...</span>
           </div>
-          <div
-            slot="error"
-            class="image-slot"
-          >
+          <div slot="error" class="image-slot">
             <i class="el-icon-picture-outline"></i>
           </div>
         </el-image>
@@ -456,38 +385,17 @@
           <el-amap-marker
             vid="component-marker"
             :position="mapData.position"
-            :content-render="mapData.contentRender"
+            :label="loclabel"
           ></el-amap-marker>
         </el-amap>
       </div>
     </el-dialog>
-    <!-- 查看单位 -->
-    <!--  -->
-    <!--  -->
-    <!--  -->
-    <el-dialog
-      :title="dialogName"
-      :visible.sync="lookShow"
-       :before-close="closeDialog"
+    <!-- <el-dialog
+      :visible.sync="mapShow"
       custom-class="dialog-div"
+      title="地图位置"
     >
-    <!-- // 图片 -->
-      <el-image :src="imgShowUrl" style='width:48%;float:right' v-if="this.imgShowUrl">
-          <div
-            slot="placeholder"
-            class="image-slot"
-          >
-            加载中<span class="dot">...</span>
-          </div>
-          <div
-            slot="error"
-            class="image-slot"
-          >
-            <i class="el-icon-picture-outline"></i>
-          </div>
-        </el-image>
-        <!-- 地图 -->
-        <div style="height: 350px;width:48%;float:left;margin-bottom:60px">
+      <div style="height: 400px;">
         <el-amap
           vid="amapDiv"
           :center="mapData.position"
@@ -501,75 +409,109 @@
           ></el-amap-marker>
         </el-amap>
       </div>
-      <!-- 表单 -->
-      <el-form
-        :model="form"
-        :rules="rules"
-        ref="form"
+    </el-dialog> -->
+    <!-- 查看单位 -->
+    <!--  -->
+    <!--  -->
+    <!--  -->
+    <el-dialog
+      :title="dialogName"
+      :visible.sync="lookShow"
+      :before-close="closeDialog"
+      custom-class="dialog-div"
+    >
+      <!-- // 图片 -->
+      <el-image
+        :src="imgShowUrl"
+        style="width:48%;float:right"
+        v-if="this.imgShowUrl"
       >
+        <div slot="placeholder" class="image-slot">
+          加载中<span class="dot">...</span>
+        </div>
+        <div slot="error" class="image-slot">
+          <i class="el-icon-picture-outline"></i>
+        </div>
+      </el-image>
+      <!-- 地图 -->
+      <div style="height: 350px;width:48%;float:left;margin-bottom:60px">
+        <!-- <el-amap
+          vid="amapDiv"
+          :center="mapData.position"
+          :zoom="mapData.zoom"
+          class="amap-demo"
+        >
+          <el-amap-marker
+            vid="component-marker"
+            :position="mapData.position"
+            :content-render="mapData.contentRender"
+          ></el-amap-marker>
+        </el-amap> -->
+        <el-amap
+          vid="amapDiv"
+          :center="mapData.position"
+          :zoom="mapData.zoom"
+          class="amap-demo"
+        >
+          <el-amap-marker
+            vid="component-marker"
+            :position="mapData.position"
+            :label="loclabel"
+          ></el-amap-marker>
+        </el-amap>
+      </div>
+      <!-- 表单 -->
+      <el-form :model="form" :rules="rules" ref="form">
         <table class="add-table">
           <tr>
             <td class="bg-td">单位名称：</td>
-            <td>{{this.form.M0018_COMPANY_NAME}}
-            </td>
-            <td class="bg-td">简称 </td>
-            <td>{{this.form.M0018_SIMPLE_NAME}}
-            </td>
+            <td>{{ this.form.M0018_COMPANY_NAME }}</td>
+            <td class="bg-td">简称</td>
+            <td>{{ this.form.M0018_SIMPLE_NAME }}</td>
           </tr>
           <tr>
             <td class="bg-td">管辖高速</td>
-            <td>{{this.form.M0008_HIGHSPEED_ABBR}}
-            </td>
-            <td class="bg-td">地址 </td>
-            <td>{{this.form.M0018_COMPANY_ADRESS}}
-            </td>
-
+            <td>{{ this.form.M0008_HIGHSPEED_ABBR }}</td>
+            <td class="bg-td">地址</td>
+            <td>{{ this.form.M0018_COMPANY_ADRESS }}</td>
           </tr>
           <tr>
             <td class="bg-td">高级管理员用户名</td>
-            <td>{{this.form.M0018_SENIOR_USER}}
-            </td>
+            <td>{{ this.form.M0018_SENIOR_USER }}</td>
             <td class="bg-td">真实姓名</td>
-            <td>{{this.form.M0018_REAL_NAME}}
-            </td>
+            <td>{{ this.form.M0018_REAL_NAME }}</td>
           </tr>
           <tr>
             <td class="bg-td">邮箱</td>
-            <td>{{this.form.M0018_USER_EMAIL}}
-            </td>
-            <td class="bg-td"> 手机号 </td>
-            <td>{{this.form.M0018_USER_TEL}}
-            </td>
-          </tr>
-           <tr>
-            <td class="bg-td">经度： </td>
-            <td>{{this.form.M0018_COMPANY_PRECI}}
-            </td>
-            <td class="bg-td"> 纬度： </td>
-            <td>{{this.form.M0018_COMPANY_LATI}}
-            </td>
+            <td>{{ this.form.M0018_USER_EMAIL }}</td>
+            <td class="bg-td">手机号</td>
+            <td>{{ this.form.M0018_USER_TEL }}</td>
           </tr>
           <tr>
-            <td class="bg-td">启用时间 </td>
-            <td>{{this.form.M0018_DATA_UPDATE}}
+            <td class="bg-td">经度：</td>
+            <td>{{ this.form.M0018_COMPANY_PRECI }}</td>
+            <td class="bg-td">纬度：</td>
+            <td>{{ this.form.M0018_COMPANY_LATI }}</td>
+          </tr>
+          <tr>
+            <td class="bg-td">启用时间</td>
+            <td>{{ this.form.M0018_DATA_UPDATE }}</td>
+            <td class="bg-td">状态</td>
+            <td>
+              <!-- <template slot-scope="scope"> -->
+              <el-switch
+                v-model="form.isBlue"
+                active-color="#409eff"
+                inactive-color="#bbb"
+                :disabled="islook"
+              >
+              </el-switch>
+              <!-- </template> -->
             </td>
-             <td class="bg-td">状态</td>
-                <td>
-                  <!-- <template slot-scope="scope"> -->
-                  <el-switch
-                    v-model="form.isBlue"
-                    active-color="#409eff"
-                    inactive-color="#bbb"
-                    :disabled="islook"
-                  >
-                  </el-switch>
-                  <!-- </template> -->
-                </td>
           </tr>
           <tr>
             <td class="bg-td">简介（备注）：</td>
-            <td colspan="3">{{this.form.M0018_COMPANY_REMARK}}
-          </td>
+            <td colspan="3">{{ this.form.M0018_COMPANY_REMARK }}</td>
           </tr>
         </table>
       </el-form>
@@ -578,7 +520,7 @@
 </template>
 <script>
 export default {
-  data () {
+  data() {
     // 电话验证
     const validTel = (rule, value, callback) => {
       let regPhone = /^1[3456789]\d{9}$/ // 手机
@@ -618,11 +560,23 @@ export default {
           return h(
             'div',
             {
-              style: { background: '#80cbc4', whiteSpace: 'nowrap' }
+              style: {
+                height: '26px',
+                lineHeight: '26px',
+                background: 'red',
+                whiteSpace: 'nowrap',
+                color: '#fff',
+                letterSpacing: '2px',
+                padding: '0 10px'
+              }
             },
             this.mapData.title
           )
         }
+      },
+      loclabel: {
+        content: '',
+        offset: [10, -20]
       },
       islook: false,
       isBlue: false,
@@ -662,7 +616,11 @@ export default {
       rules: {
         M0018_COMPANY_NAME: [
           { required: true, message: '请填写单位名称', trigger: 'blur' },
-          { pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9.·-]+$/, message: '单位名称不支持特殊字符', trigger: 'blur' }
+          {
+            pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9.·-]+$/,
+            message: '单位名称不支持特殊字符',
+            trigger: 'blur'
+          }
         ],
         M0018_SIMPLE_NAME: [
           { required: true, message: '请填写单位简称', trigger: 'blur' }
@@ -676,7 +634,12 @@ export default {
         ],
         M0018_REAL_NAME: [
           { required: true, message: '请填写真实姓名', trigger: 'blur' },
-          { min: 2, max: 10, message: '长度在 2 到 10 个字符', trigger: 'blur' },
+          {
+            min: 2,
+            max: 10,
+            message: '长度在 2 到 10 个字符',
+            trigger: 'blur'
+          },
           // { pattern: /^[\u4e00-\u9fa5_a-zA-Z0-9.·-]+$/, message: '姓名不支持特殊字符', trigger: 'blur' }
           { pattern: /^[\u4E00-\u9FA5]+$/, message: '用户名只能为中文' }
         ],
@@ -718,9 +681,8 @@ export default {
     }
   },
   methods: {
-
     // 搜索
-    searchFun () {
+    searchFun() {
       this.isSearch = true
       let _data = {
         currentPage: this.currentPage,
@@ -737,7 +699,7 @@ export default {
       })
     },
     // 重置
-    reset () {
+    reset() {
       this.isSearch = false
       this.pileList = []
       this.searchMap = {}
@@ -746,22 +708,22 @@ export default {
       this.getAssetList()
     },
     // 分页
-    sizeChange (val) {
+    sizeChange(val) {
       this.showCount = val
       this.getAssetList()
     },
-    currentChange (val) {
+    currentChange(val) {
       this.currentPage = val
       this.getAssetList()
     },
-    selectTable (selection) {
+    selectTable(selection) {
       this.selectList = selection
     },
-    selectAll (selection) {
+    selectAll(selection) {
       this.selectList = selection
     },
     // 列表页
-    getAssetList () {
+    getAssetList() {
       // this.searchMap.M0018_ID = sessionStorage.getItem('id')
       let _data = {
         currentPage: this.currentPage,
@@ -772,24 +734,29 @@ export default {
         this.loading = false
         this.tableData = r.data.returnParam
         this.tableData.forEach(v => {
-          v.isBlue = !!((v.M0018_DATA_STATE === '1' || v.M0018_DATA_STATE === 1))
+          v.isBlue = !!(v.M0018_DATA_STATE === '1' || v.M0018_DATA_STATE === 1)
         })
         this.total = r.data.totalResult
         this.searchVal = r.search_val
       })
     },
-    isBlueChange () {
+    isBlueChange() {
       this.$forceUpdate()
     },
-    isHaveName () {
-      this.$api.post('/cycle/userManagement/isExist?userName=' + this.form.M0018_SENIOR_USER, {}, null, r => {
-        if (r.data === true) {
-          this.$message.warning('用户名已存在，请重新输入')
-          this.form.M0018_SENIOR_USER = ''
+    isHaveName() {
+      this.$api.post(
+        '/cycle/userManagement/isExist?userName=' + this.form.M0018_SENIOR_USER,
+        {},
+        null,
+        r => {
+          if (r.data === true) {
+            this.$message.warning('用户名已存在，请重新输入')
+            this.form.M0018_SENIOR_USER = ''
+          }
         }
-      })
+      )
     },
-    openDialog (type, row) {
+    openDialog(type, row) {
       this.imageUrl = ''
       this.imageList = []
       if (type === 'add') {
@@ -808,7 +775,9 @@ export default {
         this.dialogName = '编辑单位'
         this.form = row
 
-        this.form.isBlue = !!((this.form.M0018_DATA_STATE === '1' || this.form.M0018_DATA_STATE === 1))
+        this.form.isBlue = !!(
+          this.form.M0018_DATA_STATE === '1' || this.form.M0018_DATA_STATE === 1
+        )
         // this.form.isBlue = Object.assign({}, row.isBlue)
 
         console.log(this.form)
@@ -830,7 +799,17 @@ export default {
         this.form = row
         this.islook = true
         // 地图显示
-        this.mapData.position = [row.M0018_COMPANY_PRECI, row.M0018_COMPANY_LATI]
+        this.mapData.position = [
+          row.M0018_COMPANY_PRECI,
+          row.M0018_COMPANY_LATI
+        ]
+        this.loclabel = {
+          content:
+            '<div style="background:red;color:#fff;padding:3px;letter-spacing:2px;">' +
+            row.M0008_HIGHSPEED_ABBR +
+            '</div>',
+          offset: [-20, -22]
+        }
         this.mapData.title.push(row.M0018_COMPANY_NAME)
         this.$api.post(
           `/cycle/companyManager/selectById?ID=${row.M0018_ID}`,
@@ -846,44 +825,59 @@ export default {
         )
       }
     },
-    save () {
+    save() {
       // this.form.M0018_ID = sessionStorage.getItem('id')
-      this.$refs['form'].validate((valid) => {
+      this.$refs['form'].validate(valid => {
         if (valid) {
           if (this.form.M0008_ID === '') {
             this.form.M0008_ID = '0'
           }
           if (this.dialogType === 'new') {
-            this.$api.post('/cycle/companyManager/insert', this.form, '新增成功', r => {
-              this.closeDialog()
-            })
+            this.$api.post(
+              '/cycle/companyManager/insert',
+              this.form,
+              '新增成功',
+              r => {
+                this.closeDialog()
+              }
+            )
           }
           if (this.dialogType === 'edit') {
             this.form.M0018_DATA_STATE = this.form.isBlue ? 1 : 0
             if (this.form.M0008_ID === '0') {
               this.form.M0008_ID = ''
             }
-            this.$api.post('/cycle/companyManager/update', this.form, '编辑成功', r => {
-              this.closeDialog()
-            })
+            this.$api.post(
+              '/cycle/companyManager/update',
+              this.form,
+              '编辑成功',
+              r => {
+                this.closeDialog()
+              }
+            )
           }
         } else {
           return false
         }
       })
     },
-    deleteRow (row) {
+    deleteRow(row) {
       this.$confirm('确认删除？此操作不可取消', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$api.post('/cycle/companyManager/deleteById?ID=' + row.M0018_ID, {}, '删除成功', r => {
-          this.getAssetList()
-        })
+        this.$api.post(
+          '/cycle/companyManager/deleteById?ID=' + row.M0018_ID,
+          {},
+          '删除成功',
+          r => {
+            this.getAssetList()
+          }
+        )
       })
     },
-    closeDialog () {
+    closeDialog() {
       this.$refs['form'].resetFields()
       this.addShow = false
       this.lookShow = false
@@ -893,30 +887,40 @@ export default {
       this.imgShowUrl = ''
       this.getAssetList()
     },
-    resetDialog () {
+    resetDialog() {
       this.addShow = false
       this.lookShow = false
       this.$refs['form'].resetFields()
       this.closeDialog()
     },
     // 获取管辖高速
-    getAssetTypeList () {
-      this.$api.post(`/cycle/highspeed/listAll`, { 'M0018_ID': this.form.M0018_ID }, null, r => {
-        console.log(r)
-        this.assetTypeList = r.data
-        console.log(this.assetTypeList)
-      })
+    getAssetTypeList() {
+      this.$api.post(
+        `/cycle/highspeed/listAll`,
+        { M0018_ID: this.form.M0018_ID },
+        null,
+        r => {
+          console.log(r)
+          this.assetTypeList = r.data
+          console.log(this.assetTypeList)
+        }
+      )
     },
     // 获取选择下属单位
-    getListNameList () {
-      this.$api.post('/cycle/companyManager/listAll', { 'M0018_ID': this.form.M0018_ID }, null, r => {
-        console.log(r.data)
-        this.listNameList = r.data
-      })
+    getListNameList() {
+      this.$api.post(
+        '/cycle/companyManager/listAll',
+        { M0018_ID: this.form.M0018_ID },
+        null,
+        r => {
+          console.log(r.data)
+          this.listNameList = r.data
+        }
+      )
     },
 
     // 批量删除
-    delListFun () {
+    delListFun() {
       let _list = []
       if (this.selectList.length > 0) {
         for (let i = 0; i < this.selectList.length; i++) {
@@ -943,7 +947,7 @@ export default {
       }
     },
     // 文件状态改变
-    imgChange (file) {
+    imgChange(file) {
       if (this.dataParams.ID === '') {
         this.$message.warning('请先增加单位')
         return false
@@ -956,7 +960,7 @@ export default {
       this.uploadImgFun(file)
     },
     // 上传文件
-    uploadImgFun (file) {
+    uploadImgFun(file) {
       let param = new FormData()
       param.append('files', file.raw)
       param.append('ID', this.dataParams.ID)
@@ -969,11 +973,11 @@ export default {
       })
     },
     // 点击图片
-    clickImgFun (data) {
+    clickImgFun(data) {
       this.imgShowUrl = data.FILE_URL
       this.imgShow = true
     },
-    clickDeleteFun (data) {
+    clickDeleteFun(data) {
       this.$confirm('确定要删除该图片?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -994,14 +998,24 @@ export default {
       })
     },
     // 点击地图
-    locationFun (data) {
+    locationFun(data) {
+      this.loclabel = {
+        content:
+          '<div style="background:red;color:#fff;padding:3px;letter-spacing:2px;">' +
+          data.M0008_HIGHSPEED_ABBR +
+          '</div>',
+        offset: [-20, -22]
+      }
       this.mapData.title = []
       this.mapShow = true
-      this.mapData.position = [data.M0018_COMPANY_PRECI, data.M0018_COMPANY_LATI]
+      this.mapData.position = [
+        data.M0018_COMPANY_PRECI,
+        data.M0018_COMPANY_LATI
+      ]
       this.mapData.title.push(data.M0018_COMPANY_NAME)
     }
   },
-  created () {
+  created() {
     this.getAssetTypeList()
     this.getAssetList()
     this.getListNameList()
@@ -1021,7 +1035,7 @@ export default {
     color: #666666;
     .title-info {
       width: 160px;
-      text-align: left ;
+      text-align: left;
     }
   }
   .content {
@@ -1055,15 +1069,17 @@ export default {
     border: 1px solid #dcdfe6;
     tr {
       border: 1px solid #dcdfe6;
+      height:50px;
       td {
         border: 1px solid #dcdfe6;
         padding: 20px 10px;
+        line-height: 30px;
       }
     }
     .bg-td {
       background: #f0f0f0;
       text-align: center;
-      width:20%;
+      width: 20%;
     }
   }
   .el-table {
@@ -1140,11 +1156,11 @@ export default {
     height: 120px;
     display: block;
   }
-//   .el-table td {
-//     border-bottom: none;
-// }
-.el-table .cell{
-  padding-right:0;
-}
+  //   .el-table td {
+  //     border-bottom: none;
+  // }
+  .el-table .cell {
+    padding-right: 0;
+  }
 }
 </style>

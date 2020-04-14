@@ -7,27 +7,28 @@
           class="mkTitle"
           style="width:100%;text-align:center;font-size:18px;margin-bottom:20px;background:#f5f5f5;line-height:40px;height:40px;"
         >
-          土桥
+          <input type="hidden" id="assetsId" v-model="sab" ref="assetsId" />
         </p>
+
         <table class="fgstb">
           <tr>
             <td rowspan="4" class="imgWrap">
               <img src="../assets/002.jpg" alt="" />
             </td>
             <td class="right">简称：</td>
-            <td class="left jc">铜旬分公司</td>
+            <td class="left jc"></td>
           </tr>
           <tr>
             <td class="right">起终点桩号：</td>
-            <td class="left fgszh">K692.265～K742.326</td>
+            <td class="left fgszh"></td>
           </tr>
           <tr>
             <td class="right">经度：</td>
-            <td class="left fgslg">108</td>
+            <td class="left fgslg"></td>
           </tr>
           <tr>
             <td class="right">纬度：</td>
-            <td class="left fgslat">34</td>
+            <td class="left fgslat"></td>
           </tr>
         </table>
 
@@ -37,37 +38,35 @@
               <img src="../assets/002.jpg" alt="" />
             </td>
             <td class="right">类别：</td>
-            <td class="left type">桥梁</td>
+            <td class="left type"></td>
           </tr>
           <tr>
             <td class="right">起终点桩号：</td>
-            <td class="left seZh">K692.265～K742.326</td>
+            <td class="left seZh"></td>
           </tr>
           <tr>
             <td class="right">归属年份：</td>
-            <td class="left year">2016年5月</td>
+            <td class="left year"></td>
           </tr>
           <tr>
             <td class="right">管理公司：</td>
-            <td class="left glgs">铜旬分公司</td>
+            <td class="left glgs"></td>
           </tr>
           <tr>
             <td class="right">养管单位：</td>
-            <td class="left ygdw">吕村养护工区</td>
+            <td class="left ygdw"></td>
           </tr>
           <tr>
             <td class="right">责任人：</td>
-            <td class="left zrr">王伟民</td>
+            <td class="left zrr"></td>
           </tr>
           <tr>
             <td class="right">联系电话：</td>
-            <td class="left phone">13333333333</td>
+            <td class="left phone"></td>
           </tr>
         </table>
 
-        <p class="remark">
-          土桥铜川市合凤高速南部塬区，建筑年代2015年，建设单位：*****建筑公司，属二类技术等级桥梁。
-        </p>
+        <p class="remark"></p>
         <table class="bdtable" id="techLevel">
           <thead>
             <tr>
@@ -79,11 +78,11 @@
           </thead>
           <tbody>
             <tr>
-              <td class="techlevel">二类</td>
-              <td class="techcomp">陕西建大维固质量检测技术有限公司</td>
-              <td class="techtime">2018-03-25</td>
+              <td class="techlevel"></td>
+              <td class="techcomp"></td>
+              <td class="techtime"></td>
               <td style="min-width:113px">
-                <el-button type="primary" size="small" @click="toTech"
+                <el-button type="primary" size="small" @click="toTech()"
                   >详细</el-button
                 >
               </td>
@@ -102,10 +101,10 @@
           </thead>
           <tbody>
             <tr>
-              <td class="fgsyy">1</td>
-              <td class="fgssr">1</td>
-              <td class="fgszc">1</td>
-              <td class="fgsnf">2018</td>
+              <td class="fgsyy"></td>
+              <td class="fgssr"></td>
+              <td class="fgszc"></td>
+              <td class="fgsnf"></td>
               <td style="min-width:113px">
                 <el-button type="primary" size="small" @click="toDayliCost"
                   >详细</el-button
@@ -126,10 +125,10 @@
           </thead>
           <tbody>
             <tr>
-              <td>1</td>
-              <td>1</td>
-              <td>1</td>
-              <td>2018</td>
+              <td class="day_cost"></td>
+              <td class="in_money"></td>
+              <td class="out_money"></td>
+              <td class="day_year"></td>
               <td style="width:113px">
                 <el-button type="primary" size="small" @click="toDayliCost"
                   >详细</el-button
@@ -149,10 +148,16 @@
           </thead>
           <tbody>
             <tr>
-              <td>二类</td>
-              <td>2018</td>
+              <td class="yh_cost"></td>
+              <td class="yh_year"></td>
               <td>
-                日常养护（80）小修保养（120）中修工程（120）大修工程（180）
+                日常养护（<span class="rc_detail"></span>）小修保养（<span
+                  class="xx_detail"
+                ></span
+                >）中修工程（<span class="zx_detail"></span>）大修工程（<span
+                  class="dx_detail"
+                ></span
+                >）
               </td>
               <td style="min-width:113px">
                 <el-button type="primary" size="small" @click="toConsCost"
@@ -381,7 +386,7 @@
                   <template slot-scope="scope">
                     <el-image
                       v-if="scope.row.pic.length > 0"
-                      style="width: 27px; height: 27px"
+                      style="width: 29px; height: 29px"
                       :src="scope.row.pic"
                       :preview-src-list="srcList"
                     >
@@ -592,25 +597,33 @@
       </el-col>
     </el-row>
     <el-row>
-      <!-- <el-dialog  title="位置查看" :visible.sync="locationDialog" width="60%" :before-close="closeLoclDialog">
-            <el-row>
-              <div id="localMap">
-                <div class="amap-wrapper">
-                  <el-amap class="amap-box" vid="loclmap"
-                    :zoom="loclZoom"
-                    :center="loclCenter">
-                    <el-amap-marker vid="loclmarker"
-                      :icon="loclicon"
-                      :position="locMcenter"
-                      :label="loclabel"
-                      >
-                    </el-amap-marker>
-                  </el-amap>
-                </div>
-              </div>
-            </el-row>
-        </el-dialog> -->
       <el-dialog
+        title="地图位置"
+        :visible.sync="locationDialog"
+        width="60%"
+        :before-close="closeLoclDialog"
+      >
+        <el-row>
+          <div id="localMap">
+            <div class="amap-wrapper">
+              <el-amap
+                class="amap-box"
+                vid="loclmap"
+                :zoom="loclZoom"
+                :center="loclCenter"
+              >
+                <el-amap-marker
+                  vid="loclmarker"
+                  :position="locMcenter"
+                  :label="loclabel"
+                >
+                </el-amap-marker>
+              </el-amap>
+            </div>
+          </div>
+        </el-row>
+      </el-dialog>
+      <!-- <el-dialog
         :visible.sync="mapShow"
         custom-class="dialog-div"
         title="地图位置"
@@ -626,10 +639,16 @@
               vid="component-marker"
               :position="mapData.position"
               :content-render="mapData.contentRender"
+              :icon="locIcon"
+            ></el-amap-marker>
+            <el-amap-marker
+              vid="component-marker"
+              :position="mapData.position"
+              :icon="locIcon"
             ></el-amap-marker>
           </el-amap>
         </div>
-      </el-dialog>
+      </el-dialog> -->
     </el-row>
     <el-row>
       <el-dialog
@@ -651,10 +670,13 @@
 </template>
 <script>
 import 'remixicon/fonts/remixicon.css'
+import router from '../router/index.js'
 import { Message } from 'element-ui'
 export default {
   data() {
     return {
+      T0002_ID: '',
+      sab: '',
       mapShow: false, // 地图是否显示
       mapData: {
         zoom: 10, // 当前地图缩放比列
@@ -665,10 +687,13 @@ export default {
             'div',
             {
               style: {
+                height: '26px',
+                lineHeight: '26px',
                 background: 'red',
                 whiteSpace: 'nowrap',
                 color: '#fff',
-                letterSpacing: '2px'
+                letterSpacing: '2px',
+                padding: '0 10px'
               }
             },
             this.mapData.title
@@ -680,7 +705,7 @@ export default {
       locationDialog: false,
       loclZoom: 10,
       loclCenter: [108.860159, 34.978],
-      loclicon: '',
+      // loclicon: '../assets/map.png',
       locMcenter: [108.860159, 34.978],
       loclabel: {
         content: '',
@@ -713,6 +738,7 @@ export default {
       markerEvents: {
         click(e) {
           // console.log(e)
+          // console.log(router)
           let data = e.target.w
           if (data.label.content.indexOf('分公司') > -1) {
             document
@@ -813,11 +839,23 @@ export default {
                       element.TOCOME_MONEY +
                       '</td><td>' +
                       element.YEAR +
-                      '</td><td><button type="primary" class="el-button el-button--primary el-button--small"  @click="toDayliCost">详细</button></td></tr>'
+                      '</td><td><button type="primary" class="el-button el-button--primary el-button--small fgsBtn">详细</button></td></tr>'
                   })
                   document
                     .getElementById('fgsCost')
                     .getElementsByTagName('tbody')[0].innerHTML = trs
+                }
+              }
+              // console.log(document.getElementsByClassName('fgsBtn')[0])
+              for (
+                var i = 0;
+                i < document.getElementsByClassName('fgsBtn').length;
+                i++
+              ) {
+                document.getElementsByClassName('fgsBtn')[
+                  i
+                ].onclick = function() {
+                  router.push('/dailyCostList')
                 }
               }
             }
@@ -853,7 +891,12 @@ export default {
               if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
                   let mkdt = JSON.parse(xhr.responseText)
-                  console.log(mkdt)
+                  var storage = window.sessionStorage
+                  storage.setItem('assetsId', mkdt.ASSET_INFO[0].T0002_ID)
+                  // console.log(document.getElementById('assetsId'))
+                  // document.getElementById('assetsId').value =
+                  //   mkdt.ASSET_INFO[0].T0002_ID
+
                   document.getElementById('mkDialog').style.display = 'block'
                   if (mkdt.ASSET_INFO.length === 0) mkdt.ASSET_INFO[0] = {}
                   if (mkdt.TECH_DATA.length === 0) mkdt.TECH_DATA[0] = {}
@@ -882,6 +925,52 @@ export default {
                     mkdt.TECH_DATA[0].T0003_CHECK_UNIT = ''
                   if (!mkdt.TECH_DATA[0].T0003_CHECK_TIME)
                     mkdt.TECH_DATA[0].T0003_CHECK_TIME = ''
+                  // 日常费用表
+                  mkdt.CURING_COST.forEach(v => {
+                    if (!v.INCOME_MONEY) {
+                      v.INCOME_MONEY = ''
+                    }
+                    if (!v.TOCOME_MONEY) {
+                      v.TOCOME_MONEY = ''
+                    }
+                    document
+                      .getElementById('dailyCost')
+                      .getElementsByClassName('day_cost')[0].innerHTML =
+                      v.TOCOME_MONEY + v.INCOME_MONEY
+                    document
+                      .getElementById('dailyCost')
+                      .getElementsByClassName('in_money')[0].innerHTML =
+                      v.INCOME_MONEY
+                    document
+                      .getElementById('dailyCost')
+                      .getElementsByClassName('out_money')[0].innerHTML =
+                      v.TOCOME_MONEY
+                    document
+                      .getElementById('dailyCost')
+                      .getElementsByClassName('day_year')[0].innerHTML = v.YEAR
+                  })
+                  // 养护费用表
+                  mkdt.COST_BUDGET.forEach(v => {
+                    document
+                      .getElementById('yhCost')
+                      .getElementsByClassName('yh_cost')[0].innerHTML =
+                      v.SUM_MOENY
+                    document
+                      .getElementById('yhCost')
+                      .getElementsByClassName('yh_year')[0].innerHTML = v.YEAR
+                    document
+                      .getElementById('yhCost')
+                      .getElementsByClassName('rc_detail')[0].innerHTML = v.RCYH
+                    document
+                      .getElementById('yhCost')
+                      .getElementsByClassName('xx_detail')[0].innerHTML = v.XXBY
+                    document
+                      .getElementById('yhCost')
+                      .getElementsByClassName('zx_detail')[0].innerHTML = v.ZXGC
+                    document
+                      .getElementById('yhCost')
+                      .getElementsByClassName('dx_detail')[0].innerHTML = v.DXGC
+                  })
                   document
                     .getElementById('mkBox')
                     .getElementsByClassName('mkTitle')[0].innerText =
@@ -1006,7 +1095,14 @@ export default {
     },
     toTech() {
       this.$bus.$emit('changeActMenu', '/techGrade')
-      this.$router.push('/techGradeList')
+      // this.$router.push('/techGradeList')
+      this.$router.push({
+        path: '/techGradeList',
+        query: {
+          // T0002_ID: this.$refs.assetsId.value
+          T0002_ID: sessionStorage.getItem('assetsId')
+        }
+      })
     },
     toDayliCost() {
       this.$bus.$emit('changeActMenu', '/dailyCost')
@@ -1018,17 +1114,20 @@ export default {
     },
     // 位置信息
     openDialog(data) {
-      // this.locationDialog = true
-      // this.loclCenter = local
-      // this.loclicon = icon
-      // this.loclabel = {
-      //   content: name,
-      //   offset: [10, -20]
-      // }
-      this.mapData.title = []
-      this.mapShow = true
-      this.mapData.position = [data.T0002_ASSET_PRECI, data.T0002_ASSET_LATI]
-      this.mapData.title.push(data.T0002_ASSET_NAME)
+      this.locationDialog = true
+      this.locMcenter = [data.location[0], data.location[1]]
+      this.loclCenter = [data.location[0], data.location[1]]
+      this.loclabel = {
+        content:
+          '<div style="background:red;color:#fff;padding:3px;letter-spacing:2px;">' +
+          data.name +
+          '</div>',
+        offset: [-20, -22]
+      }
+      // this.mapData.title = []
+      // this.mapShow = true
+      // this.mapData.position = [data.T0002_ASSET_PRECI, data.T0002_ASSET_LATI]
+      // this.mapData.title.push(data.T0002_ASSET_NAME)
     },
     changeMarkers() {
       // console.log(this.condition)
@@ -1252,6 +1351,10 @@ export default {
 .el-icon-circle-close {
   color: #fff;
 }
+.amap-marker-label {
+  padding: 0;
+  border: none;
+}
 #workBanck {
   position: relative;
   .el-dialog__header {
@@ -1282,10 +1385,10 @@ export default {
     margin: 15px 10px;
   }
   #assetsWrap .el-main {
-    height: 420px;
+    height: 430px;
   }
   .el-table .cell {
-    line-height: 30px;
+    line-height: 29px;
   }
   .el-table th,
   .el-table td {
@@ -1357,7 +1460,7 @@ export default {
     position: absolute;
     top: 0px;
     right: 0px;
-    z-index: 999;
+    z-index: 1;
     text-align: center;
     background: #fff;
     border-right: 1px solid #bbb;
@@ -1396,7 +1499,7 @@ export default {
   #mkDialog {
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0);
+    background: rgba(0, 0, 0, 0.5);
     position: absolute;
     left: 0;
     top: 0;

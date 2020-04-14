@@ -476,6 +476,9 @@ export default {
           {},
           '删除成功',
           r => {
+            if(this.dpData.length <= 1){
+              this.currentPage =  this.currentPage - 1;
+            }
             this.refreshTable(1)
           }
         )

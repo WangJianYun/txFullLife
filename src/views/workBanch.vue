@@ -431,7 +431,12 @@
                   align="center"
                 >
                 </el-table-column>
-                <el-table-column prop="name" label="资产名称" align="center" width="115">
+                <el-table-column
+                  prop="name"
+                  label="资产名称"
+                  align="center"
+                  width="115"
+                >
                 </el-table-column>
                 <el-table-column label="检查报告查看" align="center">
                   <template slot-scope="scope">
@@ -659,7 +664,12 @@ export default {
           return h(
             'div',
             {
-              style: { background: '#80cbc4', whiteSpace: 'nowrap' }
+              style: {
+                background: 'red',
+                whiteSpace: 'nowrap',
+                color: '#fff',
+                letterSpacing: '2px'
+              }
             },
             this.mapData.title
           )
@@ -715,9 +725,6 @@ export default {
               .getElementById('mkBox')
               .getElementsByClassName('fgstb')[0].style.display = 'block'
             document.getElementById('fgsCost').style.display = 'block'
-            document
-              .getElementById('mkBox')
-              .getElementsByClassName('mkTitle')[0].innerText = '分公司'
             let token = JSON.parse(sessionStorage.getItem('currentUser'))
               .TokenId
             let id = data.vid
@@ -767,6 +774,10 @@ export default {
                   }
                   document
                     .getElementById('mkBox')
+                    .getElementsByClassName('mkTitle')[0].innerText =
+                    mkdt.COMPANY_INFO[0].M0018_COMPANY_NAME
+                  document
+                    .getElementById('mkBox')
                     .getElementsByClassName('jc')[0].innerText =
                     mkdt.COMPANY_INFO[0].M0018_SIMPLE_NAME
                   document
@@ -790,9 +801,9 @@ export default {
                   let trs = ''
                   mkdt.CURING_COST.forEach(element => {
                     console.log(element)
-                    if(!element.INCOME_MONEY)element.INCOME_MONEY = 0
-                    if(!element.TOCOME_MONEY)element.TOCOME_MONEY = 0
-                    if(!element.YEAR)element.YEAR = ''
+                    if (!element.INCOME_MONEY) element.INCOME_MONEY = 0
+                    if (!element.TOCOME_MONEY) element.TOCOME_MONEY = 0
+                    if (!element.YEAR) element.YEAR = ''
                     trs +=
                       '<tr><td>' +
                       (element.INCOME_MONEY - element.TOCOME_MONEY) +
@@ -878,7 +889,7 @@ export default {
                   document
                     .getElementById('mkBox')
                     .getElementsByClassName('type')[0].innerText =
-                    mkdt.ASSET_INFO[0].T0002_ASSET_NAME
+                    mkdt.ASSET_INFO[0].T0001_ASSETTYPE_NAME
                   document
                     .getElementById('mkBox')
                     .getElementsByClassName('seZh')[0].innerText =
@@ -1238,7 +1249,9 @@ export default {
 }
 </script>
 <style lang="scss">
-.el-icon-circle-close{color: #fff;}
+.el-icon-circle-close {
+  color: #fff;
+}
 #workBanck {
   position: relative;
   .el-dialog__header {
@@ -1271,7 +1284,7 @@ export default {
   #assetsWrap .el-main {
     height: 420px;
   }
-  .el-table .cell{
+  .el-table .cell {
     line-height: 30px;
   }
   .el-table th,

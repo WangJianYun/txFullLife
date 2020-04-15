@@ -106,9 +106,7 @@
               <td class="fgszc"></td>
               <td class="fgsnf"></td>
               <td style="min-width:113px">
-                <el-button type="primary" size="small" @click="toDayliCost"
-                  >详细</el-button
-                >
+                <el-button type="primary" size="small">详细</el-button>
               </td>
             </tr>
           </tbody>
@@ -308,11 +306,12 @@
                 </tr>
               </thead>
               <tbody>
-                <tr
+                <!-- <tr
                   v-for="item in Assets"
                   :key="item.id"
                   @click="changeMarkers(item.id)"
-                >
+                > -->
+                <tr v-for="item in Assets" :key="item.id">
                   <td><img :src="item.src" alt="" /></td>
                   <td>{{ item.name }}</td>
                 </tr>
@@ -825,8 +824,10 @@ export default {
                     .getElementsByClassName('remark')[0].innerText =
                     mkdt.COMPANY_INFO[0].M0018_COMPANY_REMARK
                   let trs = ''
-                  mkdt.CURING_COST.forEach(element => {
-                    console.log(element)
+                  // 铜旬分公司，日常费用盈余
+                  mkdt.CURING_COST.forEach((element, index) => {
+                    console.log(index)
+                    sessionStorage.setItem('YEAR' + index + '', element.YEAR)
                     if (!element.INCOME_MONEY) element.INCOME_MONEY = 0
                     if (!element.TOCOME_MONEY) element.TOCOME_MONEY = 0
                     if (!element.YEAR) element.YEAR = ''
@@ -852,11 +853,20 @@ export default {
                 i < document.getElementsByClassName('fgsBtn').length;
                 i++
               ) {
-                document.getElementsByClassName('fgsBtn')[
-                  i
-                ].onclick = function() {
-                  router.push('/dailyCostList')
-                }
+                ;(function(n) {
+                  n = i
+                  document.getElementsByClassName('fgsBtn')[
+                    n
+                  ].onclick = function() {
+                    // router.push('/dailyCostList')
+                    router.push({
+                      path: '/dailyCostList',
+                      query: {
+                        YEAR: sessionStorage.getItem('YEAR' + n + '')
+                      }
+                    })
+                  }
+                })(i)
               }
             }
           } else {
@@ -1217,7 +1227,6 @@ export default {
       })
       this.$api.post('/cycle/assetType/listAll', {}, null, r => {
         this.zctypeArr = r.data
-        console.log(this.zctypeArr)
         r.data.forEach((item, index) => {
           if (item.T0001_PID !== '0') {
             item.T0001_ASSETTYPE_NAME = '-- ' + item.T0001_ASSETTYPE_NAME
@@ -1229,7 +1238,6 @@ export default {
       // let token = JSON.parse(sessionStorage.getItem('currentUser')).TokenId
       // console.log(token)
       this.$api.post('/cycle/assetData/listPage', {}, null, r => {
-        console.log(r.data.returnParam)
         r.data.returnParam.forEach((item, index) => {
           // if (item.T0002_ASSET_NAME.indexOf('加油站') > -1) {
           //   item.pic = require('../assets/addoil.png')

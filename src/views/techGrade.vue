@@ -118,7 +118,7 @@
             <span style="font-size:12px;color:#999"> {{ searchVal }} </span>
           </span>
         </div>
-        <el-button type="primary"
+        <el-button type="info" plain size="small" style="border:none;"
           >获取资产历年技术检测详情，请点击列表各资产名称</el-button
         >
       </div>
@@ -196,7 +196,7 @@
             show-overflow-tooltip
           >
           </el-table-column>
-          <el-table-column label="检测报告" align="center" width="80">
+          <el-table-column label="检测报告" align="center" width="90">
             <template slot-scope="scope">
               <el-image
                 style="width: 50px; height: 18px"
@@ -1098,10 +1098,12 @@ export default {
                 null,
                 r => {
                   console.log(r)
-                  if (r.msg === 'success') {
+                  if (r.code === 0) {
                     this.$message.success('新增成功')
                     this.addShow = false
                     this.getTechDataList()
+                  } else if (r.code === 222) {
+                    this.$message.warning(r.msg)
                   }
                 }
               )

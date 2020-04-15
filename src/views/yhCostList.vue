@@ -3,7 +3,7 @@
   <div id="yhCostMap">
     <p class="title-p">
       <span style="display:inline-block;margin-bottom:20px;"
-        >>> 历年费用收支详情</span
+        >>> 养护费用收支列表</span
       >
       <el-button type="primary" icon="el-icon-plus" @click="addFun"
         >增加养护费用收支</el-button

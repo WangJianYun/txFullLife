@@ -335,7 +335,7 @@
                 </el-select>
               </el-form-item>
             </td>
-            
+
             <td class="bg-td">费用名称：</td>
             <td>
               <el-form-item prop="T0004_CURINGCOST_NAME">
@@ -553,7 +553,7 @@
                 ></el-input>
               </el-form-item>
             </td>
-             <td class="bg-td">费用发生时间：</td>
+            <td class="bg-td">费用发生时间：</td>
             <td>
               <el-form-item prop="T0004_CURINGCOST_TIME">
                 <el-date-picker
@@ -575,7 +575,6 @@
                 <el-radio :label="2">支出</el-radio>
               </el-radio-group>
             </td>
-           
           </tr>
           <tr>
             <td class="bg-td">票据上传：</td>
@@ -755,7 +754,7 @@ export default {
         T0004_CURINGCOST_TYPE: 1,
         T0004_CREATE_TIME: '',
         T0004_CURINGCOST_REMARK: '',
-        T0004_CURINGCOST_TIME:''
+        T0004_CURINGCOST_TIME: ''
       },
       // 表单验证规则
       // rules1: {
@@ -788,6 +787,7 @@ export default {
       currentPage: 1,
       total: 0,
       searchMap: {
+        SEACH_YEAR: '',
         T0001_ID: '',
         T0004_CURINGCOST_TYPE: '',
         T0002_START_PILE: '',
@@ -806,11 +806,11 @@ export default {
       curincostList: [
         {
           name: '收入',
-          valve: 1
+          value: 1
         },
         {
           name: '支出',
-          valve: 2
+          value: 2
         }
       ],
       pileList: [],
@@ -822,12 +822,17 @@ export default {
     }
   },
   methods: {
-      getDateTime(){
-          let nDate=new Date()
-          let str=''
-          str=nDate.getFullYear()+'-'+(nDate.getMonth()+1)+'-'+nDate.getDate()
-          this.addForm.T0004_CURINGCOST_TIME=str
-      },
+    getDateTime() {
+      let nDate = new Date()
+      let str = ''
+      str =
+        nDate.getFullYear() +
+        '-' +
+        (nDate.getMonth() + 1) +
+        '-' +
+        nDate.getDate()
+      this.addForm.T0004_CURINGCOST_TIME = str
+    },
     // 请求所有的起点 / 终点桩号
     assetDataFun() {
       this.$api.post('/cycle/assetData/getPileList', {}, null, r => {
@@ -994,6 +999,7 @@ export default {
         showCount: this.showCount,
         searchMap: this.searchMap
       }
+      console.log(_data)
       this.$api.post(`/cycle/curingCost/listPage`, _data, null, r => {
         this.loading = false
         for (let i = 0; i < r.data.returnParam.length; i++) {
@@ -1078,8 +1084,8 @@ export default {
           {},
           null,
           r => {
-            if(this.tableData.length <= 1){
-              this.currentPage =  this.currentPage - 1;
+            if (this.tableData.length <= 1) {
+              this.currentPage = this.currentPage - 1
             }
             this.$message.success('删除成功')
             this.getCuringList()
@@ -1104,8 +1110,8 @@ export default {
             {},
             null,
             r => {
-               if(this.tableData.length = this.selectList.length){
-                this.currentPage =  this.currentPage - 1;
+              if ((this.tableData.length = this.selectList.length)) {
+                this.currentPage = this.currentPage - 1
               }
               this.$message.success('删除成功')
               this.getCuringList()
@@ -1171,9 +1177,11 @@ export default {
     }
   },
   created() {
+    this.searchMap.SEACH_YEAR = this.$route.query.YEAR
     this.getCuringList()
     this.getAssetTypeList()
     this.assetDataFun()
+    console.log(this.searchMap.SEACH_YEAR)
   }
 }
 </script>

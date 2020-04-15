@@ -366,7 +366,10 @@ export default {
       let _data = {
         currentPage: this.currentPage,
         showCount: this.showCount,
-        searchMap: { M0018_ID: this.form.M0018_ID }
+        searchMap: {
+          M0018_ID: this.form.M0018_ID,
+          SEACH_NAME: this.$route.query.yhArea
+        }
       }
       this.$api.post('/cycle/departmentManagement/listPage', _data, null, r => {
         this.dpData = r.data.returnParam
@@ -476,8 +479,8 @@ export default {
           {},
           '删除成功',
           r => {
-            if(this.dpData.length <= 1){
-              this.currentPage =  this.currentPage - 1;
+            if (this.dpData.length <= 1) {
+              this.currentPage = this.currentPage - 1
             }
             this.refreshTable(1)
           }

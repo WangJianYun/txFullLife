@@ -6,7 +6,7 @@
         >>> 分公司管辖路段列表</span
       >
       <el-button type="primary" icon="el-icon-plus" @click="addFun"
-        >分公司管辖路段配置</el-button
+        >增加分公司管辖路段</el-button
       >
     </p>
     <div class="content">
@@ -518,11 +518,11 @@ export default {
       imgShowUrl: '', // 预览图片
       imageUrl: '',
       header: {
-        TokenId: sessionStorage.getItem('TokenId'), // 上传文件token
+        TokenId: sessionStorage.getItem('TokenId') // 上传文件token
       },
       dataParams: {
         ID: '',
-        TABLE_NAME: 'LOAD',
+        TABLE_NAME: 'LOAD'
       },
       loading: true,
       addShow: false,
@@ -535,45 +535,45 @@ export default {
         M0010_END_PILE: '',
         M0010_LOAD_PRECI: '',
         M0010_LOAD_LATI: '',
-        M0010_LOAD_REMARK: '',
+        M0010_LOAD_REMARK: ''
       },
       editForm: {},
       infoForm: {},
       rules: {
         M0010_LOAD_NAME: [
-          { required: true, message: '请填写路段名称', trigger: 'blur' },
+          { required: true, message: '请填写路段名称', trigger: 'blur' }
         ],
         M0010_CURING_UNIT: [
-          { required: true, message: '请填写养管单位名称', trigger: 'blur' },
+          { required: true, message: '请填写养管单位名称', trigger: 'blur' }
         ],
         M0010_START_PILE: [
           { required: true, message: '请填写起点桩号', trigger: 'blur' },
-          { validator: validNoText, trigger: 'blur' },
+          { validator: validNoText, trigger: 'blur' }
         ],
         M0010_END_PILE: [
           { required: true, message: '请填写终点桩号', trigger: 'blur' },
-          { validator: validNoText, trigger: 'blur' },
+          { validator: validNoText, trigger: 'blur' }
         ],
         M0010_LOAD_PRECI: [
           { required: true, message: '请填写经度', trigger: 'blur' },
-          { validator: validPreci, trigger: 'blur' },
+          { validator: validPreci, trigger: 'blur' }
         ],
         M0010_LOAD_LATI: [
           { required: true, message: '请填写纬度', trigger: 'blur' },
-          { validator: validLati, trigger: 'blur' },
-        ],
+          { validator: validLati, trigger: 'blur' }
+        ]
       },
       tableData: [],
       showCount: 10,
       currentPage: 1,
       total: 0,
       searchMap: {
-        M0010_LOAD_NAME: '',
+        M0010_LOAD_NAME: ''
       },
       selectList: [],
       listNameList: [],
       isSearch: false, // 是否搜索
-      searchVal: '', // 搜索内容
+      searchVal: '' // 搜索内容
     }
   },
   methods: {
@@ -620,7 +620,7 @@ export default {
         `/cycle/load/selectById?ID=${data.M0010_ID}`,
         {},
         null,
-        (r) => {
+        r => {
           this.imageList = r.data.files
           this.editForm = Object.assign({}, r.data)
         }
@@ -628,9 +628,9 @@ export default {
     },
     // 修改保存
     editSaveFun() {
-      this.$refs['editFormRef'].validate((valid) => {
+      this.$refs['editFormRef'].validate(valid => {
         if (valid) {
-          this.$api.post(`/cycle//load/update`, this.editForm, null, (r) => {
+          this.$api.post(`/cycle//load/update`, this.editForm, null, r => {
             this.$message.success('修改成功')
             this.editShow = false
             this.getLoadList()
@@ -640,7 +640,7 @@ export default {
     },
     // 请求select 的所属路段
     getListNameList() {
-      this.$api.post('/cycle/load/listLoadName', {}, null, (r) => {
+      this.$api.post('/cycle/load/listLoadName', {}, null, r => {
         this.listNameList = r.data
       })
     },
@@ -653,16 +653,16 @@ export default {
       this.$nextTick(() => {
         this.$refs['addFormRef'].resetFields()
       })
-      this.$api.post(`/cycle/utilData/getId`, {}, null, (r) => {
+      this.$api.post(`/cycle/utilData/getId`, {}, null, r => {
         this.dataParams.ID = r.data
         this.addForm.M0010_ID = r.data
       })
     },
     // 新增保存
     addSaveFun() {
-      this.$refs['addFormRef'].validate((valid) => {
+      this.$refs['addFormRef'].validate(valid => {
         if (valid) {
-          this.$api.post('/cycle/load/insert', this.addForm, null, (r) => {
+          this.$api.post('/cycle/load/insert', this.addForm, null, r => {
             this.$message.success('新增成功')
             this.addShow = false
             this.getLoadList()
@@ -675,9 +675,9 @@ export default {
       let _data = {
         currentPage: this.currentPage,
         showCount: this.showCount,
-        searchMap: this.searchMap,
+        searchMap: this.searchMap
       }
-      this.$api.post(`/cycle/load/listPage`, _data, null, (r) => {
+      this.$api.post(`/cycle/load/listPage`, _data, null, r => {
         this.loading = false
         for (let i = 0; i < r.data.returnParam.length; i++) {
           if (r.data.returnParam[i].files.length > 0) {
@@ -702,15 +702,15 @@ export default {
       this.$confirm('确定要删除该条记录?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning',
+        type: 'warning'
       }).then(() => {
         this.$api.post(
           `/cycle/load/deleteById?ID=${data.M0010_ID}`,
           {},
           null,
-          (r) => {
-            if(this.tableData.length <= 1){
-              this.currentPage =  this.currentPage - 1;
+          r => {
+            if (this.tableData.length <= 1) {
+              this.currentPage = this.currentPage - 1
             }
             this.$message.success('删除成功')
             this.getLoadList()
@@ -729,15 +729,15 @@ export default {
         this.$confirm('确定要删除这些记录?', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
-          type: 'warning',
+          type: 'warning'
         }).then(() => {
           this.$api.post(
             `/cycle/load/deleteByIds?IDS=${_list}`,
             {},
             null,
-            (r) => {
-               if(this.tableData.length = this.selectList.length){
-                this.currentPage =  this.currentPage - 1;
+            r => {
+              if ((this.tableData.length = this.selectList.length)) {
+                this.currentPage = this.currentPage - 1
               }
               this.$message.success('删除成功')
               this.getLoadList()
@@ -768,7 +768,7 @@ export default {
       param.append('files', file.raw)
       param.append('ID', this.dataParams.ID)
       param.append('TABLE_NAME', this.dataParams.TABLE_NAME)
-      this.$api.post(`/cycle/fileInfo/uploadFile`, param, null, (r) => {
+      this.$api.post(`/cycle/fileInfo/uploadFile`, param, null, r => {
         this.$message.success('上传图片成功')
         this.getLoadList()
         this.imageUrl = ''
@@ -783,27 +783,27 @@ export default {
       this.$confirm('确定要删除该图片?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning',
+        type: 'warning'
       }).then(() => {
         this.$api.post(
           `/cycle/fileInfo/deleteById?ID=${data.M0013_ID}`,
           {},
           null,
-          (r) => {
+          r => {
             this.$message.success('删除成功')
             this.getLoadList()
-            this.imageList = this.imageList.filter((item) => {
+            this.imageList = this.imageList.filter(item => {
               return item.M0013_ID !== data.M0013_ID
             })
           }
         )
       })
-    },
+    }
   },
   created() {
     this.getLoadList()
     this.getListNameList()
-  },
+  }
 }
 </script>
 <style lang="scss">

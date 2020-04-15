@@ -19,7 +19,28 @@
         >
       </el-col>
     </el-row>
+
     <el-main id="tableWrap">
+      <el-form :model="searchMap" label-width="80px" :inline="true">
+        <el-form-item label="部门名称">
+          <el-input
+            type="text"
+            v-model="searchMap.SEACH_NAME"
+            size="small"
+          ></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="searchFun" size="small "
+            >搜索</el-button
+          >
+          <el-button @click="reset" size="small ">重置</el-button>
+        </el-form-item>
+      </el-form>
+      <!-- <p class="div-btn" style="padding-bottom:20px;">
+        <span class="serach-span" style="font-size:18px"> 您的检索：</span>
+        <span v-show="!isSearch" style="font-size:12px;color:#999"> 无 </span>
+        <span style="font-size:12px;color:#999"> {{ searchVal }} </span>
+      </p> -->
       <el-row>
         <el-col :span="24">
           <el-table
@@ -210,6 +231,12 @@
 export default {
   data() {
     return {
+      searchMap: {
+        SEACH_NAME_BIGDATA: '',
+        M0018_ID: '',
+        SEACH_NAME: ''
+      },
+      isSearch: false, // 是否搜索
       pageIndex: 1,
       dpData: [],
       currentPage: 1,
@@ -259,6 +286,37 @@ export default {
     this.currentUser = JSON.parse(sessionStorage.getItem('currentUser'))
   },
   methods: {
+    // 搜索
+    searchFun() {
+      // this.isSearch = true
+      this.refreshTable()
+    },
+    // 重置
+    reset() {
+      this.showCount = 10
+      this.currentPage = 1
+      // this.isSearch = false
+      this.searchMap.SEACH_NAME = ''
+      this.$route.query.yhArea = ''
+      this.refreshTable()
+    },
+    // 刷新列表
+    refreshTable() {
+      this.searchMap.M0018_ID = sessionStorage.getItem('id')
+      this.searchMap.SEACH_NAME_BIGDATA = this.$route.query.yhArea
+      // eslint-disable-next-line no-unused-vars
+      let _data = {
+        currentPage: this.currentPage,
+        showCount: this.showCount,
+        searchMap: this.searchMap
+      }
+      this.$api.post('/cycle/departmentManagement/listPage', _data, null, r => {
+        this.dpData = r.data.returnParam
+        this.total = r.data.totalResult
+        this.getRowSpan()
+      })
+      this.loadSelect()
+    },
     // 分页
     sizeChange(val) {
       this.showCount = val
@@ -360,24 +418,7 @@ export default {
         }
       })
     },
-    refreshTable() {
-      this.form.M0018_ID = sessionStorage.getItem('id')
-      // eslint-disable-next-line no-unused-vars
-      let _data = {
-        currentPage: this.currentPage,
-        showCount: this.showCount,
-        searchMap: {
-          M0018_ID: this.form.M0018_ID,
-          SEACH_NAME: this.$route.query.yhArea
-        }
-      }
-      this.$api.post('/cycle/departmentManagement/listPage', _data, null, r => {
-        this.dpData = r.data.returnParam
-        this.total = r.data.totalResult
-        this.getRowSpan()
-      })
-      this.loadSelect()
-    },
+
     save() {
       this.form.M0018_ID = sessionStorage.getItem('id')
       this.$refs['form'].validate(v => {
@@ -499,7 +540,7 @@ export default {
             M0016_ID: 0,
             M0016_DEPART_NAME: '请选择--'
           })
-          console.log(this.options)
+          // console.log(this.options)
           r.data.forEach((item, index) => {
             if (item.M0016_PID !== '0') {
               item.M0016_DEPART_NAME = '-- ' + item.M0016_DEPART_NAME

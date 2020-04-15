@@ -1004,6 +1004,7 @@ export default {
       this.searchVal = ''
       this.isSearch = false
       // this.pileList = []
+      this.$route.query.T0002_ID=''
       this.searchMap.T0001_ID = ''
       this.searchMap.YEAR = ''
       this.searchMap.T0006_ID = ''
@@ -1180,6 +1181,7 @@ export default {
     },
     // 获取资产技术等级list
     getTechDataList() {
+    this.searchMap.T0002_ID = this.$route.query.T0002_ID
       let _data = {
         currentPage: this.currentPage,
         showCount: this.showCount,
@@ -1352,7 +1354,6 @@ export default {
     }
   },
   created() {
-    this.searchMap.T0002_ID = this.$route.query.T0002_ID
     this.getAssetTypeList()
     this.getTechDataList()
     this.assetDataFun()

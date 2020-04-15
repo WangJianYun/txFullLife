@@ -184,6 +184,9 @@ export default {
 .login-form .el-form-item__content {
   margin-left: 0 !important;
 }
+.login-form .el-form-item__content .el-form-item__error {
+  margin-left: 20%;
+}
 .login-container-footer {
   width: 100%;
   text-align: center;
